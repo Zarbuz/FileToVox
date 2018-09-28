@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SchematicToVox.Vox;
+using SchematicToVox.Vox.Chunks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,6 +53,8 @@ namespace SchematicToVox
             }
             return true;
         }
+
+        
 
         private void ReadChunk(BinaryReader reader, VoxModel output)
         {

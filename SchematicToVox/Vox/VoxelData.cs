@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicToVox
+namespace SchematicToVox.Vox
 {
     public class VoxelData
     {

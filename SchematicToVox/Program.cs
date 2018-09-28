@@ -13,7 +13,7 @@ namespace SchematicToVox
             VoxParser voxParser = new VoxParser();
             VoxModel voxModel = new VoxModel();
 
-            voxParser.LoadModel("D:\\Documents\\MagicaVoxel\\test.vox", voxModel);
+            voxParser.LoadModel("D:\\Documents\\MagicaVoxel\\vox\\test.vox", voxModel);
             Console.WriteLine(voxModel.voxelFrames.Count);
             Console.ReadKey();
         }
