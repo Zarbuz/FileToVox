@@ -45,9 +45,16 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Vector3.cs" />
-    <Compile Include="VoxelData.cs" />
-    <Compile Include="VoxModel.cs" />
-    <Compile Include="VoxParser.cs" />
+    <Compile Include="Vox\Chunks\GroupNodeChunk.cs" />
+    <Compile Include="Vox\Chunks\LayerChunk.cs" />
+    <Compile Include="Vox\Chunks\MaterialChunk.cs" />
+    <Compile Include="Vox\Chunks\NodeChunk.cs" />
+    <Compile Include="Vox\Chunks\RendererSettingChunk.cs" />
+    <Compile Include="Vox\Chunks\ShapeNodeChunk.cs" />
+    <Compile Include="Vox\Chunks\TransformNodeChunk.cs" />
+    <Compile Include="Vox\VoxelData.cs" />
+    <Compile Include="Vox\VoxModel.cs" />
+    <Compile Include="Vox\VoxParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

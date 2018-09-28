@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicToVox
+namespace SchematicToVox.Vox
 {
     public class VoxParser
     {
@@ -27,8 +27,11 @@ namespace SchematicToVox
         private const string rOBJ = "rOBJ";
 
         private const int VERSION = 150;
-        private int childCount = 0;
 
+        private int _childCount = 0;
+        private int _chunkCount = 0;
+
+        #region Read
         public bool LoadModel(string absolutePath, VoxModel output)
         {
             var name = Path.GetFileNameWithoutExtension(absolutePath);
@@ -47,14 +50,12 @@ namespace SchematicToVox
                     Console.WriteLine("Version number: " + version + " Was designed for version: " + VERSION);
                 }
                 ResetModel(output);
-                childCount = 0;
+                _childCount = 0;
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                     ReadChunk(reader, output);
             }
             return true;
         }
-
-        
 
         private void ReadChunk(BinaryReader reader, VoxModel output)
         {
@@ -63,6 +64,8 @@ namespace SchematicToVox
             var childChunkSize = reader.ReadInt32();
             var chunk = reader.ReadBytes(chunkSize);
             var children = reader.ReadBytes(childChunkSize);
+            DisplayChunkSettings(chunkName, chunkSize, childChunkSize);
+            _chunkCount++;
             using (var chunkReader = new BinaryReader(new MemoryStream(chunk)))
             {
                 switch (chunkName)
@@ -73,14 +76,14 @@ namespace SchematicToVox
                         int w = chunkReader.ReadInt32();
                         int h = chunkReader.ReadInt32();
                         int d = chunkReader.ReadInt32();
-                        if (childCount >= output.voxelFrames.Count)
+                        if (_childCount >= output.voxelFrames.Count)
                             output.voxelFrames.Add(new VoxelData());
-                        output.voxelFrames[childCount].Resize(w, d, h);
-                        childCount++;
+                        output.voxelFrames[_childCount].Resize(w, d, h);
+                        _childCount++;
                         break;
                     case XYZI:
                         var voxelCount = chunkReader.ReadInt32();
-                        var frame = output.voxelFrames[childCount - 1];
+                        var frame = output.voxelFrames[_childCount - 1];
                         byte x, y, z;
                         for (int i = 0; i < voxelCount; i++)
                         {
@@ -133,6 +136,15 @@ namespace SchematicToVox
                     ReadChunk(childReader, output);
                 }
             }
+        }
+
+        private void DisplayChunkSettings(string chunkName, int chunkSize, int childChunkSize)
+        {
+            Console.WriteLine("CHUNK NAME: " + chunkName);
+            Console.WriteLine("CHUNK NUMBER: " + _chunkCount);
+            Console.WriteLine("CHUNK SIZE: " + chunkSize);
+            Console.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
+            Console.WriteLine("");
         }
 
         private static string ReadSTRING(BinaryReader reader)
@@ -238,4 +250,5 @@ namespace SchematicToVox
             model.rendererSettingChunks.Clear();
         }
     }
+    #endregion
 }
