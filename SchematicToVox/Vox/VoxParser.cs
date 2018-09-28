@@ -51,6 +51,7 @@ namespace SchematicToVox.Vox
                 }
                 ResetModel(output);
                 _childCount = 0;
+                _chunkCount = 0;
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                     ReadChunk(reader, output);
             }
@@ -64,8 +65,8 @@ namespace SchematicToVox.Vox
             var childChunkSize = reader.ReadInt32();
             var chunk = reader.ReadBytes(chunkSize);
             var children = reader.ReadBytes(childChunkSize);
-            DisplayChunkSettings(chunkName, chunkSize, childChunkSize);
             _chunkCount++;
+
             using (var chunkReader = new BinaryReader(new MemoryStream(chunk)))
             {
                 switch (chunkName)
@@ -127,6 +128,7 @@ namespace SchematicToVox.Vox
                         break;
                 }
             }
+            DisplayChunkSettings(chunkName, chunkSize, childChunkSize, output);
 
             //read child chunks
             using (var childReader = new BinaryReader(new MemoryStream(children)))
@@ -134,17 +136,81 @@ namespace SchematicToVox.Vox
                 while (childReader.BaseStream.Position != childReader.BaseStream.Length)
                 {
                     ReadChunk(childReader, output);
+
                 }
             }
         }
 
-        private void DisplayChunkSettings(string chunkName, int chunkSize, int childChunkSize)
+        private void DisplayChunkSettings(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
         {
-            Console.WriteLine("CHUNK NAME: " + chunkName);
-            Console.WriteLine("CHUNK NUMBER: " + _chunkCount);
-            Console.WriteLine("CHUNK SIZE: " + chunkSize);
+            Console.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");
+            Console.WriteLine("CHUNK SIZE: " + chunkSize + " BYTES");
             Console.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
+            switch (chunkName)
+            {
+                case SIZE:
+                    var frame = output.voxelFrames[_childCount - 1];
+                    Console.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
+                    break;
+                case nTRN:
+                    var transform = output.transformNodeChunks.Last();
+                    Console.WriteLine("-> TRANSFORM NODE: " + transform.id + " " +
+                        transform.childId + " " +
+                        transform.reservedId + " " +
+                        transform.layerId);
+                    DisplayAttributes(transform.attributes);
+                    DisplayFrameAttributes(transform.frameAttributes);
+                    break;
+                case nGRP:
+                    var group = output.groupNodeChunks.Last();
+                    Console.WriteLine("-> GROUP NODE: " + group.id);
+                    DisplayAttributes(group.attributes);
+                    break;
+                case nSHP:
+                    var shape = output.shapeNodeChunks.Last();
+                    Console.WriteLine("-> SHAPE NODE: " + shape.id);
+                    DisplayAttributes(shape.attributes);
+                    DisplayModelAttributes(shape.models);
+                    break;
+                case LAYR:
+                    var layer = output.layerChunks.Last();
+                    Console.WriteLine("-> LAYER NODE: " + layer.id + " " +
+                        layer.Name + " " +
+                        layer.Hidden + " " +
+                        layer.unknown);
+                    DisplayAttributes(layer.attributes);
+                    break;
+                case MATL:
+                    var material = output.materialChunks.Last();
+                    Console.WriteLine("-> MATERIAL NODE: " + material.id.ToString("F1"));
+                    Console.WriteLine("--> ALPHA: " + material.Alpha.ToString("F1"));
+                    Console.WriteLine("--> EMISSION: " + material.Emission.ToString("F1"));
+                    Console.WriteLine("--> FLUX: " + material.Flux.ToString("F1"));
+                    Console.WriteLine("--> METALLIC: " + material.Metallic.ToString("F1"));
+                    Console.WriteLine("--> ROUGH: " + material.Rough.ToString("F1"));
+                    Console.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
+                    Console.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
+                    Console.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
+                    DisplayAttributes(material.properties);
+                    break;
+            }
             Console.WriteLine("");
+        }
+
+        private void DisplayAttributes(KeyValue[] attributes)
+        {
+            attributes.ToList().ForEach(t => Console.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
+        }
+
+        private void DisplayFrameAttributes(DICT[] frameAttributes)
+        {
+            frameAttributes.ToList().ForEach(t => Console.WriteLine("--> FRAME ATTRIBUTE: " + t._r + " " + t._t.ToString()));
+        }
+
+        private void DisplayModelAttributes(ShapeModel[] models)
+        {
+            models.ToList().ForEach(t => Console.WriteLine("--> MODEL ATTRIBUTE: " + t.modelId));
+            models.ToList().ForEach(t => DisplayAttributes(t.attributes));
         }
 
         private static string ReadSTRING(BinaryReader reader)
@@ -225,7 +291,7 @@ namespace SchematicToVox.Vox
 
         private TransformNodeChunk ReadTransformNodeChunk(BinaryReader chunkReader)
         {
-            return new TransformNodeChunk()
+            var transformNodeChunk = new TransformNodeChunk()
             {
                 id = chunkReader.ReadInt32(),
                 attributes = ReadDICT(chunkReader),
@@ -234,6 +300,7 @@ namespace SchematicToVox.Vox
                 layerId = chunkReader.ReadInt32(),
                 frameAttributes = ReadArray(chunkReader, r => new DICT(ReadDICT(r)))
             };
+            return transformNodeChunk;
         }
 
         private void ResetModel(VoxModel model)

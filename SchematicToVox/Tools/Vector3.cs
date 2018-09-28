@@ -19,5 +19,10 @@ namespace SchematicToVox.Tools
 
         static readonly Vector3 zeroVector = new Vector3(0F, 0F, 0F);
         public static Vector3 zero { get { return zeroVector; } }
+
+        public override string ToString()
+        {
+            return string.Format("({0:F1}, {1:F1}, {2:F1})", x, y, z);
+        }
     }
 }
