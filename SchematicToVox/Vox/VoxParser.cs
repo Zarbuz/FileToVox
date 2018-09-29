@@ -30,7 +30,7 @@ namespace SchematicToVox.Vox
 
         private int _childCount = 0;
         private int _chunkCount = 0;
-        private string _logOutputFile;
+        private readonly string _logOutputFile;
 
         public VoxParser()
         {
@@ -162,16 +162,17 @@ namespace SchematicToVox.Vox
                         break;
                     case nTRN:
                         var transform = output.transformNodeChunks.Last();
-                        writer.WriteLine("-> TRANSFORM NODE: " + transform.id + " " +
-                            transform.childId + " " +
-                            transform.reservedId + " " +
-                            transform.layerId);
+                        writer.WriteLine("-> TRANSFORM NODE: " + transform.id);
+                        writer.WriteLine("--> CHILD ID: " + transform.childId);
+                        writer.WriteLine("--> RESERVED ID: " + transform.reservedId);
+                        writer.WriteLine("--> LAYER ID: " + transform.layerId);
                         DisplayAttributes(transform.attributes, writer);
                         DisplayFrameAttributes(transform.frameAttributes, writer);
                         break;
                     case nGRP:
                         var group = output.groupNodeChunks.Last();
                         writer.WriteLine("-> GROUP NODE: " + group.id);
+                        group.childIds.ToList().ForEach(t => writer.WriteLine("--> CHILD ID: " + t));
                         DisplayAttributes(group.attributes, writer);
                         break;
                     case nSHP:
