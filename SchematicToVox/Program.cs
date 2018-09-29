@@ -14,7 +14,7 @@ namespace SchematicToVox
             VoxParser voxParser = new VoxParser();
             VoxModel voxModel = new VoxModel();
 
-            voxParser.LoadModel("../../Models/1x1x1.vox", voxModel);
+            voxParser.LoadModel("../../models/1x1x1.vox", voxModel);
 
             Console.WriteLine("");
             Console.WriteLine("VOXEL MODEL COUNT FRAMES: " + voxModel.voxelFrames.Count);

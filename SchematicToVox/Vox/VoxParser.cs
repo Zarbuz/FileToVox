@@ -30,12 +30,17 @@ namespace SchematicToVox.Vox
 
         private int _childCount = 0;
         private int _chunkCount = 0;
+        private string _logOutputFile;
+
+        public VoxParser()
+        {
+            _logOutputFile = DateTime.Now.ToString("y-MM-d_HH.MM.s") + ".txt";
+        }
 
         #region Read
         public bool LoadModel(string absolutePath, VoxModel output)
         {
             var name = Path.GetFileNameWithoutExtension(absolutePath);
-            Console.WriteLine("load: " + name);
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
@@ -128,7 +133,7 @@ namespace SchematicToVox.Vox
                         break;
                 }
             }
-            DisplayChunkSettings(chunkName, chunkSize, childChunkSize, output);
+            WriteLogs(chunkName, chunkSize, childChunkSize, output);
 
             //read child chunks
             using (var childReader = new BinaryReader(new MemoryStream(children)))
@@ -141,60 +146,65 @@ namespace SchematicToVox.Vox
             }
         }
 
-        private void DisplayChunkSettings(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
+        private void WriteLogs(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
         {
-            Console.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");
-            Console.WriteLine("CHUNK SIZE: " + chunkSize + " BYTES");
-            Console.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
-            switch (chunkName)
+            string path = "../../logs/" + _logOutputFile;
+            using (var writer = new StreamWriter(path, true))
             {
-                case SIZE:
-                    var frame = output.voxelFrames[_childCount - 1];
-                    Console.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
-                    break;
-                case nTRN:
-                    var transform = output.transformNodeChunks.Last();
-                    Console.WriteLine("-> TRANSFORM NODE: " + transform.id + " " +
-                        transform.childId + " " +
-                        transform.reservedId + " " +
-                        transform.layerId);
-                    DisplayAttributes(transform.attributes);
-                    DisplayFrameAttributes(transform.frameAttributes);
-                    break;
-                case nGRP:
-                    var group = output.groupNodeChunks.Last();
-                    Console.WriteLine("-> GROUP NODE: " + group.id);
-                    DisplayAttributes(group.attributes);
-                    break;
-                case nSHP:
-                    var shape = output.shapeNodeChunks.Last();
-                    Console.WriteLine("-> SHAPE NODE: " + shape.id);
-                    DisplayAttributes(shape.attributes);
-                    DisplayModelAttributes(shape.models);
-                    break;
-                case LAYR:
-                    var layer = output.layerChunks.Last();
-                    Console.WriteLine("-> LAYER NODE: " + layer.id + " " +
-                        layer.Name + " " +
-                        layer.Hidden + " " +
-                        layer.unknown);
-                    DisplayAttributes(layer.attributes);
-                    break;
-                case MATL:
-                    var material = output.materialChunks.Last();
-                    Console.WriteLine("-> MATERIAL NODE: " + material.id.ToString("F1"));
-                    Console.WriteLine("--> ALPHA: " + material.Alpha.ToString("F1"));
-                    Console.WriteLine("--> EMISSION: " + material.Emission.ToString("F1"));
-                    Console.WriteLine("--> FLUX: " + material.Flux.ToString("F1"));
-                    Console.WriteLine("--> METALLIC: " + material.Metallic.ToString("F1"));
-                    Console.WriteLine("--> ROUGH: " + material.Rough.ToString("F1"));
-                    Console.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
-                    Console.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
-                    Console.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
-                    DisplayAttributes(material.properties);
-                    break;
+                writer.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");
+                writer.WriteLine("CHUNK SIZE: " + chunkSize + " BYTES");
+                writer.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
+                switch (chunkName)
+                {
+                    case SIZE:
+                        var frame = output.voxelFrames[_childCount - 1];
+                        writer.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
+                        break;
+                    case nTRN:
+                        var transform = output.transformNodeChunks.Last();
+                        writer.WriteLine("-> TRANSFORM NODE: " + transform.id + " " +
+                            transform.childId + " " +
+                            transform.reservedId + " " +
+                            transform.layerId);
+                        DisplayAttributes(transform.attributes);
+                        DisplayFrameAttributes(transform.frameAttributes);
+                        break;
+                    case nGRP:
+                        var group = output.groupNodeChunks.Last();
+                        writer.WriteLine("-> GROUP NODE: " + group.id);
+                        DisplayAttributes(group.attributes);
+                        break;
+                    case nSHP:
+                        var shape = output.shapeNodeChunks.Last();
+                        writer.WriteLine("-> SHAPE NODE: " + shape.id);
+                        DisplayAttributes(shape.attributes);
+                        DisplayModelAttributes(shape.models);
+                        break;
+                    case LAYR:
+                        var layer = output.layerChunks.Last();
+                        writer.WriteLine("-> LAYER NODE: " + layer.id + " " +
+                            layer.Name + " " +
+                            layer.Hidden + " " +
+                            layer.unknown);
+                        DisplayAttributes(layer.attributes);
+                        break;
+                    case MATL:
+                        var material = output.materialChunks.Last();
+                        writer.WriteLine("-> MATERIAL NODE: " + material.id.ToString("F1"));
+                        writer.WriteLine("--> ALPHA: " + material.Alpha.ToString("F1"));
+                        writer.WriteLine("--> EMISSION: " + material.Emission.ToString("F1"));
+                        writer.WriteLine("--> FLUX: " + material.Flux.ToString("F1"));
+                        writer.WriteLine("--> METALLIC: " + material.Metallic.ToString("F1"));
+                        writer.WriteLine("--> ROUGH: " + material.Rough.ToString("F1"));
+                        writer.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
+                        writer.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
+                        writer.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
+                        DisplayAttributes(material.properties);
+                        break;
+                }
+                writer.WriteLine("");
+                writer.Close();
             }
-            Console.WriteLine("");
         }
 
         private void DisplayAttributes(KeyValue[] attributes)
