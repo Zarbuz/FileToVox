@@ -34,7 +34,7 @@ namespace SchematicToVox.Vox
 
         public VoxParser()
         {
-            _logOutputFile = DateTime.Now.ToString("y-MM-d_HH.MM.s") + ".txt";
+            _logOutputFile = DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
         }
 
         #region Read
@@ -166,19 +166,19 @@ namespace SchematicToVox.Vox
                             transform.childId + " " +
                             transform.reservedId + " " +
                             transform.layerId);
-                        DisplayAttributes(transform.attributes);
-                        DisplayFrameAttributes(transform.frameAttributes);
+                        DisplayAttributes(transform.attributes, writer);
+                        DisplayFrameAttributes(transform.frameAttributes, writer);
                         break;
                     case nGRP:
                         var group = output.groupNodeChunks.Last();
                         writer.WriteLine("-> GROUP NODE: " + group.id);
-                        DisplayAttributes(group.attributes);
+                        DisplayAttributes(group.attributes, writer);
                         break;
                     case nSHP:
                         var shape = output.shapeNodeChunks.Last();
                         writer.WriteLine("-> SHAPE NODE: " + shape.id);
-                        DisplayAttributes(shape.attributes);
-                        DisplayModelAttributes(shape.models);
+                        DisplayAttributes(shape.attributes, writer);
+                        DisplayModelAttributes(shape.models, writer);
                         break;
                     case LAYR:
                         var layer = output.layerChunks.Last();
@@ -186,7 +186,7 @@ namespace SchematicToVox.Vox
                             layer.Name + " " +
                             layer.Hidden + " " +
                             layer.unknown);
-                        DisplayAttributes(layer.attributes);
+                        DisplayAttributes(layer.attributes, writer);
                         break;
                     case MATL:
                         var material = output.materialChunks.Last();
@@ -199,7 +199,7 @@ namespace SchematicToVox.Vox
                         writer.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
                         writer.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
                         writer.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
-                        DisplayAttributes(material.properties);
+                        DisplayAttributes(material.properties, writer);
                         break;
                 }
                 writer.WriteLine("");
@@ -207,20 +207,20 @@ namespace SchematicToVox.Vox
             }
         }
 
-        private void DisplayAttributes(KeyValue[] attributes)
+        private void DisplayAttributes(KeyValue[] attributes, StreamWriter writer)
         {
-            attributes.ToList().ForEach(t => Console.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
+            attributes.ToList().ForEach(t => writer.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
         }
 
-        private void DisplayFrameAttributes(DICT[] frameAttributes)
+        private void DisplayFrameAttributes(DICT[] frameAttributes, StreamWriter writer)
         {
-            frameAttributes.ToList().ForEach(t => Console.WriteLine("--> FRAME ATTRIBUTE: " + t._r + " " + t._t.ToString()));
+            frameAttributes.ToList().ForEach(t => writer.WriteLine("--> FRAME ATTRIBUTE: " + t._r + " " + t._t.ToString()));
         }
 
-        private void DisplayModelAttributes(ShapeModel[] models)
+        private void DisplayModelAttributes(ShapeModel[] models, StreamWriter writer)
         {
-            models.ToList().ForEach(t => Console.WriteLine("--> MODEL ATTRIBUTE: " + t.modelId));
-            models.ToList().ForEach(t => DisplayAttributes(t.attributes));
+            models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.modelId));
+            models.ToList().ForEach(t => DisplayAttributes(t.attributes, writer));
         }
 
         private static string ReadSTRING(BinaryReader reader)

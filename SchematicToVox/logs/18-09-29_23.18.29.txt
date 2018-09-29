@@ -15,6 +15,7 @@ CHUNK NAME: nTRN (4)
 CHUNK SIZE: 28 BYTES
 CHILD CHUNK SIZE: 0
 -> TRANSFORM NODE: 0 1 -1 -1
+--> FRAME ATTRIBUTE: _PX_PY_P (0.0, 0.0, 0.0)
 
 CHUNK NAME: nGRP (5)
 CHUNK SIZE: 16 BYTES
@@ -25,51 +26,61 @@ CHUNK NAME: nTRN (6)
 CHUNK SIZE: 44 BYTES
 CHILD CHUNK SIZE: 0
 -> TRANSFORM NODE: 2 3 -1 0
+--> FRAME ATTRIBUTE: _PX_PY_P (0.0, 0.0, 20.0)
 
 CHUNK NAME: nSHP (7)
 CHUNK SIZE: 20 BYTES
 CHILD CHUNK SIZE: 0
 -> SHAPE NODE: 3
+--> MODEL ATTRIBUTE: 0
 
 CHUNK NAME: LAYR (8)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 0 0 False -1
+--> ATTRIBUTE: Key=_name Value=0
 
 CHUNK NAME: LAYR (9)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 1 1 False -1
+--> ATTRIBUTE: Key=_name Value=1
 
 CHUNK NAME: LAYR (10)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 2 2 False -1
+--> ATTRIBUTE: Key=_name Value=2
 
 CHUNK NAME: LAYR (11)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 3 3 False -1
+--> ATTRIBUTE: Key=_name Value=3
 
 CHUNK NAME: LAYR (12)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 4 4 False -1
+--> ATTRIBUTE: Key=_name Value=4
 
 CHUNK NAME: LAYR (13)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 5 5 False -1
+--> ATTRIBUTE: Key=_name Value=5
 
 CHUNK NAME: LAYR (14)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 6 6 False -1
+--> ATTRIBUTE: Key=_name Value=6
 
 CHUNK NAME: LAYR (15)
 CHUNK SIZE: 26 BYTES
 CHILD CHUNK SIZE: 0
 -> LAYER NODE: 7 7 False -1
+--> ATTRIBUTE: Key=_name Value=7
 
 CHUNK NAME: RGBA (16)
 CHUNK SIZE: 1024 BYTES
@@ -87,6 +98,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (18)
 CHUNK SIZE: 93 BYTES
@@ -100,6 +116,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (19)
 CHUNK SIZE: 93 BYTES
@@ -113,6 +134,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (20)
 CHUNK SIZE: 93 BYTES
@@ -126,6 +152,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (21)
 CHUNK SIZE: 93 BYTES
@@ -139,6 +170,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (22)
 CHUNK SIZE: 93 BYTES
@@ -152,6 +188,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (23)
 CHUNK SIZE: 93 BYTES
@@ -165,6 +206,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (24)
 CHUNK SIZE: 93 BYTES
@@ -178,6 +224,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (25)
 CHUNK SIZE: 93 BYTES
@@ -191,6 +242,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (26)
 CHUNK SIZE: 93 BYTES
@@ -204,6 +260,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (27)
 CHUNK SIZE: 93 BYTES
@@ -217,6 +278,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (28)
 CHUNK SIZE: 93 BYTES
@@ -230,6 +296,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (29)
 CHUNK SIZE: 93 BYTES
@@ -243,6 +314,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (30)
 CHUNK SIZE: 93 BYTES
@@ -256,6 +332,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (31)
 CHUNK SIZE: 93 BYTES
@@ -269,6 +350,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (32)
 CHUNK SIZE: 93 BYTES
@@ -282,6 +368,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (33)
 CHUNK SIZE: 93 BYTES
@@ -295,6 +386,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (34)
 CHUNK SIZE: 93 BYTES
@@ -308,6 +404,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (35)
 CHUNK SIZE: 93 BYTES
@@ -321,6 +422,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (36)
 CHUNK SIZE: 93 BYTES
@@ -334,6 +440,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (37)
 CHUNK SIZE: 93 BYTES
@@ -347,6 +458,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (38)
 CHUNK SIZE: 93 BYTES
@@ -360,6 +476,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (39)
 CHUNK SIZE: 93 BYTES
@@ -373,6 +494,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (40)
 CHUNK SIZE: 93 BYTES
@@ -386,6 +512,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (41)
 CHUNK SIZE: 93 BYTES
@@ -399,6 +530,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (42)
 CHUNK SIZE: 93 BYTES
@@ -412,6 +548,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (43)
 CHUNK SIZE: 93 BYTES
@@ -425,6 +566,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (44)
 CHUNK SIZE: 93 BYTES
@@ -438,6 +584,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (45)
 CHUNK SIZE: 93 BYTES
@@ -451,6 +602,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (46)
 CHUNK SIZE: 93 BYTES
@@ -464,6 +620,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (47)
 CHUNK SIZE: 93 BYTES
@@ -477,6 +638,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (48)
 CHUNK SIZE: 93 BYTES
@@ -490,6 +656,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (49)
 CHUNK SIZE: 93 BYTES
@@ -503,6 +674,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (50)
 CHUNK SIZE: 93 BYTES
@@ -516,6 +692,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (51)
 CHUNK SIZE: 93 BYTES
@@ -529,6 +710,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (52)
 CHUNK SIZE: 93 BYTES
@@ -542,6 +728,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (53)
 CHUNK SIZE: 93 BYTES
@@ -555,6 +746,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (54)
 CHUNK SIZE: 93 BYTES
@@ -568,6 +764,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (55)
 CHUNK SIZE: 93 BYTES
@@ -581,6 +782,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (56)
 CHUNK SIZE: 93 BYTES
@@ -594,6 +800,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (57)
 CHUNK SIZE: 93 BYTES
@@ -607,6 +818,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (58)
 CHUNK SIZE: 93 BYTES
@@ -620,6 +836,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (59)
 CHUNK SIZE: 93 BYTES
@@ -633,6 +854,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (60)
 CHUNK SIZE: 93 BYTES
@@ -646,6 +872,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (61)
 CHUNK SIZE: 93 BYTES
@@ -659,6 +890,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (62)
 CHUNK SIZE: 93 BYTES
@@ -672,6 +908,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (63)
 CHUNK SIZE: 93 BYTES
@@ -685,6 +926,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (64)
 CHUNK SIZE: 93 BYTES
@@ -698,6 +944,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (65)
 CHUNK SIZE: 93 BYTES
@@ -711,6 +962,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (66)
 CHUNK SIZE: 93 BYTES
@@ -724,6 +980,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (67)
 CHUNK SIZE: 93 BYTES
@@ -737,6 +998,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (68)
 CHUNK SIZE: 93 BYTES
@@ -750,6 +1016,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (69)
 CHUNK SIZE: 93 BYTES
@@ -763,6 +1034,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (70)
 CHUNK SIZE: 93 BYTES
@@ -776,6 +1052,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (71)
 CHUNK SIZE: 93 BYTES
@@ -789,6 +1070,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (72)
 CHUNK SIZE: 93 BYTES
@@ -802,6 +1088,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (73)
 CHUNK SIZE: 93 BYTES
@@ -815,6 +1106,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (74)
 CHUNK SIZE: 93 BYTES
@@ -828,6 +1124,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (75)
 CHUNK SIZE: 93 BYTES
@@ -841,6 +1142,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (76)
 CHUNK SIZE: 93 BYTES
@@ -854,6 +1160,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (77)
 CHUNK SIZE: 93 BYTES
@@ -867,6 +1178,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (78)
 CHUNK SIZE: 93 BYTES
@@ -880,6 +1196,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (79)
 CHUNK SIZE: 93 BYTES
@@ -893,6 +1214,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (80)
 CHUNK SIZE: 93 BYTES
@@ -906,6 +1232,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (81)
 CHUNK SIZE: 93 BYTES
@@ -919,6 +1250,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (82)
 CHUNK SIZE: 93 BYTES
@@ -932,6 +1268,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (83)
 CHUNK SIZE: 93 BYTES
@@ -945,6 +1286,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (84)
 CHUNK SIZE: 93 BYTES
@@ -958,6 +1304,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (85)
 CHUNK SIZE: 93 BYTES
@@ -971,6 +1322,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (86)
 CHUNK SIZE: 93 BYTES
@@ -984,6 +1340,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (87)
 CHUNK SIZE: 93 BYTES
@@ -997,6 +1358,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (88)
 CHUNK SIZE: 93 BYTES
@@ -1010,6 +1376,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (89)
 CHUNK SIZE: 93 BYTES
@@ -1023,6 +1394,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (90)
 CHUNK SIZE: 93 BYTES
@@ -1036,6 +1412,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (91)
 CHUNK SIZE: 93 BYTES
@@ -1049,6 +1430,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (92)
 CHUNK SIZE: 93 BYTES
@@ -1062,6 +1448,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (93)
 CHUNK SIZE: 93 BYTES
@@ -1075,6 +1466,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (94)
 CHUNK SIZE: 93 BYTES
@@ -1088,6 +1484,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (95)
 CHUNK SIZE: 93 BYTES
@@ -1101,6 +1502,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (96)
 CHUNK SIZE: 93 BYTES
@@ -1114,6 +1520,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (97)
 CHUNK SIZE: 93 BYTES
@@ -1127,6 +1538,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (98)
 CHUNK SIZE: 93 BYTES
@@ -1140,6 +1556,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (99)
 CHUNK SIZE: 93 BYTES
@@ -1153,6 +1574,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (100)
 CHUNK SIZE: 93 BYTES
@@ -1166,6 +1592,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (101)
 CHUNK SIZE: 93 BYTES
@@ -1179,6 +1610,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (102)
 CHUNK SIZE: 93 BYTES
@@ -1192,6 +1628,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (103)
 CHUNK SIZE: 93 BYTES
@@ -1205,6 +1646,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (104)
 CHUNK SIZE: 93 BYTES
@@ -1218,6 +1664,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (105)
 CHUNK SIZE: 93 BYTES
@@ -1231,6 +1682,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (106)
 CHUNK SIZE: 93 BYTES
@@ -1244,6 +1700,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (107)
 CHUNK SIZE: 93 BYTES
@@ -1257,6 +1718,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (108)
 CHUNK SIZE: 93 BYTES
@@ -1270,6 +1736,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (109)
 CHUNK SIZE: 93 BYTES
@@ -1283,6 +1754,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (110)
 CHUNK SIZE: 93 BYTES
@@ -1296,6 +1772,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (111)
 CHUNK SIZE: 93 BYTES
@@ -1309,6 +1790,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (112)
 CHUNK SIZE: 93 BYTES
@@ -1322,6 +1808,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (113)
 CHUNK SIZE: 93 BYTES
@@ -1335,6 +1826,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (114)
 CHUNK SIZE: 93 BYTES
@@ -1348,6 +1844,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (115)
 CHUNK SIZE: 93 BYTES
@@ -1361,6 +1862,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (116)
 CHUNK SIZE: 93 BYTES
@@ -1374,6 +1880,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (117)
 CHUNK SIZE: 93 BYTES
@@ -1387,6 +1898,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (118)
 CHUNK SIZE: 93 BYTES
@@ -1400,6 +1916,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (119)
 CHUNK SIZE: 93 BYTES
@@ -1413,6 +1934,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (120)
 CHUNK SIZE: 93 BYTES
@@ -1426,6 +1952,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (121)
 CHUNK SIZE: 93 BYTES
@@ -1439,6 +1970,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (122)
 CHUNK SIZE: 93 BYTES
@@ -1452,6 +1988,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (123)
 CHUNK SIZE: 93 BYTES
@@ -1465,6 +2006,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (124)
 CHUNK SIZE: 93 BYTES
@@ -1478,6 +2024,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (125)
 CHUNK SIZE: 93 BYTES
@@ -1491,6 +2042,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (126)
 CHUNK SIZE: 93 BYTES
@@ -1504,6 +2060,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (127)
 CHUNK SIZE: 93 BYTES
@@ -1517,6 +2078,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (128)
 CHUNK SIZE: 93 BYTES
@@ -1530,6 +2096,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (129)
 CHUNK SIZE: 93 BYTES
@@ -1543,6 +2114,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (130)
 CHUNK SIZE: 93 BYTES
@@ -1556,6 +2132,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (131)
 CHUNK SIZE: 93 BYTES
@@ -1569,6 +2150,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (132)
 CHUNK SIZE: 93 BYTES
@@ -1582,6 +2168,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (133)
 CHUNK SIZE: 93 BYTES
@@ -1595,6 +2186,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (134)
 CHUNK SIZE: 93 BYTES
@@ -1608,6 +2204,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (135)
 CHUNK SIZE: 93 BYTES
@@ -1621,6 +2222,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (136)
 CHUNK SIZE: 93 BYTES
@@ -1634,6 +2240,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (137)
 CHUNK SIZE: 93 BYTES
@@ -1647,6 +2258,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (138)
 CHUNK SIZE: 93 BYTES
@@ -1660,6 +2276,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (139)
 CHUNK SIZE: 93 BYTES
@@ -1673,6 +2294,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (140)
 CHUNK SIZE: 93 BYTES
@@ -1686,6 +2312,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (141)
 CHUNK SIZE: 93 BYTES
@@ -1699,6 +2330,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (142)
 CHUNK SIZE: 93 BYTES
@@ -1712,6 +2348,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (143)
 CHUNK SIZE: 93 BYTES
@@ -1725,6 +2366,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (144)
 CHUNK SIZE: 93 BYTES
@@ -1738,6 +2384,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (145)
 CHUNK SIZE: 93 BYTES
@@ -1751,6 +2402,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (146)
 CHUNK SIZE: 93 BYTES
@@ -1764,6 +2420,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (147)
 CHUNK SIZE: 93 BYTES
@@ -1777,6 +2438,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (148)
 CHUNK SIZE: 93 BYTES
@@ -1790,6 +2456,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (149)
 CHUNK SIZE: 93 BYTES
@@ -1803,6 +2474,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (150)
 CHUNK SIZE: 93 BYTES
@@ -1816,6 +2492,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (151)
 CHUNK SIZE: 93 BYTES
@@ -1829,6 +2510,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (152)
 CHUNK SIZE: 93 BYTES
@@ -1842,6 +2528,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (153)
 CHUNK SIZE: 93 BYTES
@@ -1855,6 +2546,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (154)
 CHUNK SIZE: 93 BYTES
@@ -1868,6 +2564,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (155)
 CHUNK SIZE: 93 BYTES
@@ -1881,6 +2582,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (156)
 CHUNK SIZE: 93 BYTES
@@ -1894,6 +2600,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (157)
 CHUNK SIZE: 93 BYTES
@@ -1907,6 +2618,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (158)
 CHUNK SIZE: 93 BYTES
@@ -1920,6 +2636,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (159)
 CHUNK SIZE: 93 BYTES
@@ -1933,6 +2654,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (160)
 CHUNK SIZE: 93 BYTES
@@ -1946,6 +2672,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (161)
 CHUNK SIZE: 93 BYTES
@@ -1959,6 +2690,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (162)
 CHUNK SIZE: 93 BYTES
@@ -1972,6 +2708,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (163)
 CHUNK SIZE: 93 BYTES
@@ -1985,6 +2726,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (164)
 CHUNK SIZE: 93 BYTES
@@ -1998,6 +2744,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (165)
 CHUNK SIZE: 93 BYTES
@@ -2011,6 +2762,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (166)
 CHUNK SIZE: 93 BYTES
@@ -2024,6 +2780,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (167)
 CHUNK SIZE: 93 BYTES
@@ -2037,6 +2798,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (168)
 CHUNK SIZE: 93 BYTES
@@ -2050,6 +2816,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (169)
 CHUNK SIZE: 93 BYTES
@@ -2063,6 +2834,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (170)
 CHUNK SIZE: 93 BYTES
@@ -2076,6 +2852,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (171)
 CHUNK SIZE: 93 BYTES
@@ -2089,6 +2870,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (172)
 CHUNK SIZE: 93 BYTES
@@ -2102,6 +2888,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (173)
 CHUNK SIZE: 93 BYTES
@@ -2115,6 +2906,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (174)
 CHUNK SIZE: 93 BYTES
@@ -2128,6 +2924,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (175)
 CHUNK SIZE: 93 BYTES
@@ -2141,6 +2942,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (176)
 CHUNK SIZE: 93 BYTES
@@ -2154,6 +2960,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (177)
 CHUNK SIZE: 93 BYTES
@@ -2167,6 +2978,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (178)
 CHUNK SIZE: 93 BYTES
@@ -2180,6 +2996,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (179)
 CHUNK SIZE: 93 BYTES
@@ -2193,6 +3014,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (180)
 CHUNK SIZE: 93 BYTES
@@ -2206,6 +3032,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (181)
 CHUNK SIZE: 93 BYTES
@@ -2219,6 +3050,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (182)
 CHUNK SIZE: 93 BYTES
@@ -2232,6 +3068,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (183)
 CHUNK SIZE: 93 BYTES
@@ -2245,6 +3086,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (184)
 CHUNK SIZE: 93 BYTES
@@ -2258,6 +3104,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (185)
 CHUNK SIZE: 93 BYTES
@@ -2271,6 +3122,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (186)
 CHUNK SIZE: 93 BYTES
@@ -2284,6 +3140,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (187)
 CHUNK SIZE: 93 BYTES
@@ -2297,6 +3158,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (188)
 CHUNK SIZE: 93 BYTES
@@ -2310,6 +3176,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (189)
 CHUNK SIZE: 93 BYTES
@@ -2323,6 +3194,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (190)
 CHUNK SIZE: 93 BYTES
@@ -2336,6 +3212,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (191)
 CHUNK SIZE: 93 BYTES
@@ -2349,6 +3230,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (192)
 CHUNK SIZE: 93 BYTES
@@ -2362,6 +3248,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (193)
 CHUNK SIZE: 93 BYTES
@@ -2375,6 +3266,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (194)
 CHUNK SIZE: 93 BYTES
@@ -2388,6 +3284,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (195)
 CHUNK SIZE: 93 BYTES
@@ -2401,6 +3302,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (196)
 CHUNK SIZE: 93 BYTES
@@ -2414,6 +3320,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (197)
 CHUNK SIZE: 93 BYTES
@@ -2427,6 +3338,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (198)
 CHUNK SIZE: 93 BYTES
@@ -2440,6 +3356,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (199)
 CHUNK SIZE: 93 BYTES
@@ -2453,6 +3374,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (200)
 CHUNK SIZE: 93 BYTES
@@ -2466,6 +3392,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (201)
 CHUNK SIZE: 93 BYTES
@@ -2479,6 +3410,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (202)
 CHUNK SIZE: 93 BYTES
@@ -2492,6 +3428,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (203)
 CHUNK SIZE: 93 BYTES
@@ -2505,6 +3446,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (204)
 CHUNK SIZE: 93 BYTES
@@ -2518,6 +3464,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (205)
 CHUNK SIZE: 93 BYTES
@@ -2531,6 +3482,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (206)
 CHUNK SIZE: 93 BYTES
@@ -2544,6 +3500,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (207)
 CHUNK SIZE: 93 BYTES
@@ -2557,6 +3518,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (208)
 CHUNK SIZE: 93 BYTES
@@ -2570,6 +3536,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (209)
 CHUNK SIZE: 93 BYTES
@@ -2583,6 +3554,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (210)
 CHUNK SIZE: 93 BYTES
@@ -2596,6 +3572,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (211)
 CHUNK SIZE: 93 BYTES
@@ -2609,6 +3590,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (212)
 CHUNK SIZE: 93 BYTES
@@ -2622,6 +3608,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (213)
 CHUNK SIZE: 93 BYTES
@@ -2635,6 +3626,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (214)
 CHUNK SIZE: 93 BYTES
@@ -2648,6 +3644,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (215)
 CHUNK SIZE: 93 BYTES
@@ -2661,6 +3662,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (216)
 CHUNK SIZE: 93 BYTES
@@ -2674,6 +3680,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (217)
 CHUNK SIZE: 93 BYTES
@@ -2687,6 +3698,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (218)
 CHUNK SIZE: 93 BYTES
@@ -2700,6 +3716,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (219)
 CHUNK SIZE: 93 BYTES
@@ -2713,6 +3734,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (220)
 CHUNK SIZE: 93 BYTES
@@ -2726,6 +3752,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (221)
 CHUNK SIZE: 93 BYTES
@@ -2739,6 +3770,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (222)
 CHUNK SIZE: 93 BYTES
@@ -2752,6 +3788,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (223)
 CHUNK SIZE: 93 BYTES
@@ -2765,6 +3806,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (224)
 CHUNK SIZE: 93 BYTES
@@ -2778,6 +3824,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (225)
 CHUNK SIZE: 93 BYTES
@@ -2791,6 +3842,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (226)
 CHUNK SIZE: 93 BYTES
@@ -2804,6 +3860,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (227)
 CHUNK SIZE: 93 BYTES
@@ -2817,6 +3878,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (228)
 CHUNK SIZE: 93 BYTES
@@ -2830,6 +3896,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (229)
 CHUNK SIZE: 93 BYTES
@@ -2843,6 +3914,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (230)
 CHUNK SIZE: 93 BYTES
@@ -2856,6 +3932,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (231)
 CHUNK SIZE: 93 BYTES
@@ -2869,6 +3950,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (232)
 CHUNK SIZE: 93 BYTES
@@ -2882,6 +3968,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (233)
 CHUNK SIZE: 93 BYTES
@@ -2895,6 +3986,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (234)
 CHUNK SIZE: 93 BYTES
@@ -2908,6 +4004,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (235)
 CHUNK SIZE: 93 BYTES
@@ -2921,6 +4022,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (236)
 CHUNK SIZE: 93 BYTES
@@ -2934,6 +4040,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (237)
 CHUNK SIZE: 93 BYTES
@@ -2947,6 +4058,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (238)
 CHUNK SIZE: 93 BYTES
@@ -2960,6 +4076,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (239)
 CHUNK SIZE: 93 BYTES
@@ -2973,6 +4094,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (240)
 CHUNK SIZE: 93 BYTES
@@ -2986,6 +4112,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (241)
 CHUNK SIZE: 93 BYTES
@@ -2999,6 +4130,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (242)
 CHUNK SIZE: 93 BYTES
@@ -3012,6 +4148,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (243)
 CHUNK SIZE: 93 BYTES
@@ -3025,6 +4166,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (244)
 CHUNK SIZE: 93 BYTES
@@ -3038,6 +4184,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (245)
 CHUNK SIZE: 93 BYTES
@@ -3051,6 +4202,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (246)
 CHUNK SIZE: 93 BYTES
@@ -3064,6 +4220,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (247)
 CHUNK SIZE: 93 BYTES
@@ -3077,6 +4238,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (248)
 CHUNK SIZE: 93 BYTES
@@ -3090,6 +4256,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (249)
 CHUNK SIZE: 93 BYTES
@@ -3103,6 +4274,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (250)
 CHUNK SIZE: 93 BYTES
@@ -3116,6 +4292,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (251)
 CHUNK SIZE: 93 BYTES
@@ -3129,6 +4310,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (252)
 CHUNK SIZE: 93 BYTES
@@ -3142,6 +4328,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (253)
 CHUNK SIZE: 93 BYTES
@@ -3155,6 +4346,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (254)
 CHUNK SIZE: 93 BYTES
@@ -3168,6 +4364,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (255)
 CHUNK SIZE: 93 BYTES
@@ -3181,6 +4382,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (256)
 CHUNK SIZE: 93 BYTES
@@ -3194,6 +4400,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (257)
 CHUNK SIZE: 93 BYTES
@@ -3207,6 +4418,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (258)
 CHUNK SIZE: 93 BYTES
@@ -3220,6 +4436,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (259)
 CHUNK SIZE: 93 BYTES
@@ -3233,6 +4454,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (260)
 CHUNK SIZE: 93 BYTES
@@ -3246,6 +4472,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (261)
 CHUNK SIZE: 93 BYTES
@@ -3259,6 +4490,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (262)
 CHUNK SIZE: 93 BYTES
@@ -3272,6 +4508,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (263)
 CHUNK SIZE: 93 BYTES
@@ -3285,6 +4526,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (264)
 CHUNK SIZE: 93 BYTES
@@ -3298,6 +4544,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (265)
 CHUNK SIZE: 93 BYTES
@@ -3311,6 +4562,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (266)
 CHUNK SIZE: 93 BYTES
@@ -3324,6 +4580,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (267)
 CHUNK SIZE: 93 BYTES
@@ -3337,6 +4598,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (268)
 CHUNK SIZE: 93 BYTES
@@ -3350,6 +4616,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (269)
 CHUNK SIZE: 93 BYTES
@@ -3363,6 +4634,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (270)
 CHUNK SIZE: 93 BYTES
@@ -3376,6 +4652,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (271)
 CHUNK SIZE: 93 BYTES
@@ -3389,6 +4670,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: MATL (272)
 CHUNK SIZE: 93 BYTES
@@ -3402,6 +4688,11 @@ CHILD CHUNK SIZE: 0
 --> SMOOTHNESS: 0.9
 --> SPEC: 0.5
 --> WEIGHT: 1.0
+--> ATTRIBUTE: Key=_type Value=_diffuse
+--> ATTRIBUTE: Key=_weight Value=1
+--> ATTRIBUTE: Key=_rough Value=0.1
+--> ATTRIBUTE: Key=_spec Value=0.5
+--> ATTRIBUTE: Key=_ior Value=0.3
 
 CHUNK NAME: rOBJ (273)
 CHUNK SIZE: 91 BYTES
