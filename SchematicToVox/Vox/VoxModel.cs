@@ -10,6 +10,7 @@ namespace SchematicToVox.Vox
 {
     public class VoxModel
     {
+        public Color[] palette;
         public List<VoxelData> voxelFrames = new List<VoxelData>();
         public List<MaterialChunk> materialChunks = new List<MaterialChunk>();
         public List<TransformNodeChunk> transformNodeChunks = new List<TransformNodeChunk>();
@@ -17,6 +18,14 @@ namespace SchematicToVox.Vox
         public List<ShapeNodeChunk> shapeNodeChunks = new List<ShapeNodeChunk>();
         public List<LayerChunk> layerChunks = new List<LayerChunk>();
         public List<RendererSettingChunk> rendererSettingChunks = new List<RendererSettingChunk>();
+
+        public void SetAlphaFromTransparency()
+        {
+            for (int i = 0, count = Math.Min(palette.Length, materialChunks.Count); i < count; i++)
+            {
+                palette[i].a = materialChunks[i].Alpha;
+            }
+        }
     }
 
     public enum MaterialType

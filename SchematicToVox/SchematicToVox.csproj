@@ -59,5 +59,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include=".NETSchematicReader\fNbt\fNbt\fNbt.csproj">
+      <Project>{4488498d-976d-4da3-bf72-109531af0488}</Project>
+      <Name>fNbt</Name>
+    </ProjectReference>
+    <ProjectReference Include=".NETSchematicReader\SchematicReader\SchematicReader\SchematicReader.csproj">
+      <Project>{70942bcf-342e-4e3c-be5d-abb934c3a917}</Project>
+      <Name>SchematicReader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
