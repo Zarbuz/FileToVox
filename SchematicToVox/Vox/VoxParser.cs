@@ -10,351 +10,39 @@ using System.Threading.Tasks;
 
 namespace SchematicToVox.Vox
 {
-    public class VoxParser
+    public abstract class VoxParser
     {
-        private const string HEADER = "VOX ";
-        private const string MAIN = "MAIN";
-        private const string SIZE = "SIZE";
-        private const string XYZI = "XYZI";
-        private const string RGBA = "RGBA";
-        private const string MATT = "MATT";
-        private const string PACK = "PACK";
+        protected const string HEADER = "VOX ";
+        protected const string MAIN = "MAIN";
+        protected const string SIZE = "SIZE";
+        protected const string XYZI = "XYZI";
+        protected const string RGBA = "RGBA";
+        protected const string MATT = "MATT";
+        protected const string PACK = "PACK";
 
-        private const string nTRN = "nTRN";
-        private const string nGRP = "nGRP";
-        private const string nSHP = "nSHP";
-        private const string LAYR = "LAYR";
-        private const string MATL = "MATL";
-        private const string rOBJ = "rOBJ";
+        protected const string nTRN = "nTRN";
+        protected const string nGRP = "nGRP";
+        protected const string nSHP = "nSHP";
+        protected const string LAYR = "LAYR";
+        protected const string MATL = "MATL";
+        protected const string rOBJ = "rOBJ";
 
-        private const int VERSION = 150;
+        protected const int VERSION = 150;
 
-        private int _childCount = 0;
-        private int _chunkCount = 0;
-        private readonly string _logOutputFile;
+        protected int _childCount = 0;
+        protected int _chunkCount = 0;
+        protected readonly string _logOutputFile;
 
         public VoxParser()
         {
             _logOutputFile = DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
         }
 
-        #region Read
-        public bool LoadModel(string absolutePath, VoxModel output)
-        {
-            var name = Path.GetFileNameWithoutExtension(absolutePath);
-            using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
-            {
-                var head = new string(reader.ReadChars(4));
-                if (!head.Equals(HEADER))
-                {
-                    Console.WriteLine("Not a Magicavoxel file! " + output);
-                    return false;
-                }
-                int version = reader.ReadInt32();
-                if (version != VERSION)
-                {
-                    Console.WriteLine("Version number: " + version + " Was designed for version: " + VERSION);
-                }
-                ResetModel(output);
-                _childCount = 0;
-                _chunkCount = 0;
-                while (reader.BaseStream.Position != reader.BaseStream.Length)
-                    ReadChunk(reader, output);
-            }
-            if (output.palette == null)
-                output.palette = LoadDefaultPalette();
-            return true;
-        }
-
-        private Color[] LoadDefaultPalette()
-        {
-            var colorCount = default_palette.Length;
-            var result = new Color[256];
-            byte r, g, b, a;
-            for (int i = 0; i < colorCount; i++)
-            {
-                var source = default_palette[i];
-                r = (byte)(source & 0xff);
-                g = (byte)((source >> 8) & 0xff);
-                b = (byte)((source >> 16) & 0xff);
-                a = (byte)((source >> 26) & 0xff);
-                result[i] = new Color32(r, g, b, a);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Load the palette color. Plattes are offset by 1
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        private Color[] LoadPalette(BinaryReader reader)
-        {
-            var result = new Color[256];
-            for (int i = 1; i < 256; i++)
-            {
-                result[i] = new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
-            }
-            return result;
-        }
-
-        private void ReadChunk(BinaryReader reader, VoxModel output)
-        {
-            var chunkName = new string(reader.ReadChars(4));
-            var chunkSize = reader.ReadInt32();
-            var childChunkSize = reader.ReadInt32();
-            var chunk = reader.ReadBytes(chunkSize);
-            var children = reader.ReadBytes(childChunkSize);
-            _chunkCount++;
-
-            using (var chunkReader = new BinaryReader(new MemoryStream(chunk)))
-            {
-                switch (chunkName)
-                {
-                    case MAIN:
-                        break;
-                    case SIZE:
-                        int w = chunkReader.ReadInt32();
-                        int h = chunkReader.ReadInt32();
-                        int d = chunkReader.ReadInt32();
-                        if (_childCount >= output.voxelFrames.Count)
-                            output.voxelFrames.Add(new VoxelData());
-                        output.voxelFrames[_childCount].Resize(w, d, h);
-                        _childCount++;
-                        break;
-                    case XYZI:
-                        var voxelCount = chunkReader.ReadInt32();
-                        var frame = output.voxelFrames[_childCount - 1];
-                        byte x, y, z;
-                        for (int i = 0; i < voxelCount; i++)
-                        {
-                            x = chunkReader.ReadByte();
-                            y = chunkReader.ReadByte();
-                            z = chunkReader.ReadByte();
-                            frame.Set(x, y, z, chunkReader.ReadByte());
-                        }
-                        break;
-                    case RGBA:
-                        output.palette = LoadPalette(chunkReader);
-                        break;
-                    case MATT:
-                        break;
-                    case PACK:
-                        int frameCount = chunkReader.ReadInt32();
-                        for (int i = 0; i < frameCount; i++)
-                        {
-                            output.voxelFrames.Add(new VoxelData());
-                        }
-                        break;
-                    case nTRN:
-                        output.transformNodeChunks.Add(ReadTransformNodeChunk(chunkReader));
-                        break;
-                    case nGRP:
-                        output.groupNodeChunks.Add(ReadGroupNodeChunk(chunkReader));
-                        break;
-                    case nSHP:
-                        output.shapeNodeChunks.Add(ReadShapeNodeChunk(chunkReader));
-                        break;
-                    case LAYR:
-                        output.layerChunks.Add(ReadLayerChunk(chunkReader));
-                        break;
-                    case MATL:
-                        output.materialChunks.Add(ReadMaterialChunk(chunkReader));
-                        break;
-                    case rOBJ:
-                        output.rendererSettingChunks.Add(ReaddRObjectChunk(chunkReader));
-                        break;
-                    default:
-                        Console.WriteLine($"Unknown chunk: \"{chunkName}\"");
-                        break;
-                }
-            }
-            WriteLogs(chunkName, chunkSize, childChunkSize, output);
-
-            //read child chunks
-            using (var childReader = new BinaryReader(new MemoryStream(children)))
-            {
-                while (childReader.BaseStream.Position != childReader.BaseStream.Length)
-                {
-                    ReadChunk(childReader, output);
-
-                }
-            }
-        }
-
-        private void WriteLogs(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
-        {
-            string path = "../../logs/" + _logOutputFile;
-            using (var writer = new StreamWriter(path, true))
-            {
-                writer.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");
-                writer.WriteLine("CHUNK SIZE: " + chunkSize + " BYTES");
-                writer.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
-                switch (chunkName)
-                {
-                    case SIZE:
-                        var frame = output.voxelFrames[_childCount - 1];
-                        writer.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
-                        break;
-                    case nTRN:
-                        var transform = output.transformNodeChunks.Last();
-                        writer.WriteLine("-> TRANSFORM NODE: " + transform.id);
-                        writer.WriteLine("--> CHILD ID: " + transform.childId);
-                        writer.WriteLine("--> RESERVED ID: " + transform.reservedId);
-                        writer.WriteLine("--> LAYER ID: " + transform.layerId);
-                        DisplayAttributes(transform.attributes, writer);
-                        DisplayFrameAttributes(transform.frameAttributes, writer);
-                        break;
-                    case nGRP:
-                        var group = output.groupNodeChunks.Last();
-                        writer.WriteLine("-> GROUP NODE: " + group.id);
-                        group.childIds.ToList().ForEach(t => writer.WriteLine("--> CHILD ID: " + t));
-                        DisplayAttributes(group.attributes, writer);
-                        break;
-                    case nSHP:
-                        var shape = output.shapeNodeChunks.Last();
-                        writer.WriteLine("-> SHAPE NODE: " + shape.id);
-                        DisplayAttributes(shape.attributes, writer);
-                        DisplayModelAttributes(shape.models, writer);
-                        break;
-                    case LAYR:
-                        var layer = output.layerChunks.Last();
-                        writer.WriteLine("-> LAYER NODE: " + layer.id + " " +
-                            layer.Name + " " +
-                            layer.Hidden + " " +
-                            layer.unknown);
-                        DisplayAttributes(layer.attributes, writer);
-                        break;
-                    case MATL:
-                        var material = output.materialChunks.Last();
-                        writer.WriteLine("-> MATERIAL NODE: " + material.id.ToString("F1"));
-                        writer.WriteLine("--> ALPHA: " + material.Alpha.ToString("F1"));
-                        writer.WriteLine("--> EMISSION: " + material.Emission.ToString("F1"));
-                        writer.WriteLine("--> FLUX: " + material.Flux.ToString("F1"));
-                        writer.WriteLine("--> METALLIC: " + material.Metallic.ToString("F1"));
-                        writer.WriteLine("--> ROUGH: " + material.Rough.ToString("F1"));
-                        writer.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
-                        writer.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
-                        writer.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
-                        DisplayAttributes(material.properties, writer);
-                        break;
-                }
-                writer.WriteLine("");
-                writer.Close();
-            }
-        }
-
-        private void DisplayAttributes(KeyValue[] attributes, StreamWriter writer)
-        {
-            attributes.ToList().ForEach(t => writer.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
-        }
-
-        private void DisplayFrameAttributes(DICT[] frameAttributes, StreamWriter writer)
-        {
-            frameAttributes.ToList().ForEach(t => writer.WriteLine("--> FRAME ATTRIBUTE: " + t._r + " " + t._t.ToString()));
-        }
-
-        private void DisplayModelAttributes(ShapeModel[] models, StreamWriter writer)
-        {
-            models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.modelId));
-            models.ToList().ForEach(t => DisplayAttributes(t.attributes, writer));
-        }
-
-        private static string ReadSTRING(BinaryReader reader)
-        {
-            var size = reader.ReadInt32();
-            var bytes = reader.ReadBytes(size);
-            return System.Text.Encoding.UTF8.GetString(bytes);
-        }
-
-        private delegate T ItemReader<T>(BinaryReader reader);
-
-        private static T[] ReadArray<T>(BinaryReader reader, ItemReader<T> itemReader)
-        {
-            return Enumerable.Range(0, reader.ReadInt32())
-                .Select(i => itemReader(reader)).ToArray();
-        }
-
-        private static KeyValue[] ReadDICT(BinaryReader reader)
-        {
-            return Enumerable.Range(0, reader.ReadInt32())
-                .Select(i => new KeyValue
-                {
-                    Key = ReadSTRING(reader),
-                    Value = ReadSTRING(reader),
-                }).ToArray();
-        }
-
-        private RendererSettingChunk ReaddRObjectChunk(BinaryReader chunkReader)
-        {
-            return new RendererSettingChunk
-            {
-                attributes = ReadDICT(chunkReader)
-            };
-        }
-
-        private MaterialChunk ReadMaterialChunk(BinaryReader chunkReader)
-        {
-            return new MaterialChunk
-            {
-                id = chunkReader.ReadInt32(),
-                properties = ReadDICT(chunkReader)
-            };
-        }
-
-        private LayerChunk ReadLayerChunk(BinaryReader chunkReader)
-        {
-            return new LayerChunk
-            {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                unknown = chunkReader.ReadInt32()
-            };
-        }
-
-        private ShapeNodeChunk ReadShapeNodeChunk(BinaryReader chunkReader)
-        {
-            return new ShapeNodeChunk
-            {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                models = ReadArray(chunkReader, r => new ShapeModel
-                {
-                    modelId = r.ReadInt32(),
-                    attributes = ReadDICT(r)
-                })
-            };
-        }
-
-        private GroupNodeChunk ReadGroupNodeChunk(BinaryReader chunkReader)
-        {
-            return new GroupNodeChunk
-            {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                childIds = ReadArray(chunkReader, r => r.ReadInt32())
-            };
-        }
-
-        private TransformNodeChunk ReadTransformNodeChunk(BinaryReader chunkReader)
-        {
-            var transformNodeChunk = new TransformNodeChunk()
-            {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                childId = chunkReader.ReadInt32(),
-                reservedId = chunkReader.ReadInt32(),
-                layerId = chunkReader.ReadInt32(),
-                frameAttributes = ReadArray(chunkReader, r => new DICT(ReadDICT(r)))
-            };
-            return transformNodeChunk;
-        }
-
         /// <summary>
         /// Clear model data
         /// </summary>
         /// <param name="model"></param>
-        private void ResetModel(VoxModel model)
+        protected void ResetModel(VoxModel model)
         {
             if (model.voxelFrames != null)
                 model.voxelFrames.Clear();
@@ -367,10 +55,10 @@ namespace SchematicToVox.Vox
             model.layerChunks.Clear();
             model.rendererSettingChunks.Clear();
         }
-        #endregion
+
 
         #region Default Palette
-        private static uint[] default_palette = new uint[] {
+        protected static uint[] default_palette = new uint[] {
             0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
             0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
             0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
