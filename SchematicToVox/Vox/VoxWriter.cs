@@ -39,8 +39,8 @@ namespace SchematicToVox.Vox
             _height = (int)Math.Ceiling(((decimal)schematic.Heigth / 126));
 
             int countSize = _width * _length * _height;
-            int chunkSize = 24 * countSize;
-            int chunkXYZI = (16 * countSize) + schematic.Blocks.Count * 4;
+            int chunkSize = 24 * countSize; //24 = 12 bytes for header and 12 bytes of content
+            int chunkXYZI = (16 * countSize) + schematic.Blocks.Count * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
             _childrenChunkSize = chunkSize; //SIZE CHUNK
             _childrenChunkSize += chunkXYZI; //XYZI CHUNK
             return _childrenChunkSize;
