@@ -11,18 +11,17 @@ namespace SchematicToVox
     {
         static void Main(string[] args)
         {
-            //VoxReader reader = new VoxReader();
-            //VoxModel voxModel = new VoxModel();
+            VoxReader reader = new VoxReader();
+            VoxModel voxModel = new VoxModel();
 
-            //reader.LoadModel("../../models/126x126x126.vox", voxModel);
+            reader.LoadModel("../../exports/test.vox", voxModel);
 
-            //Console.WriteLine("");
-            //Console.WriteLine("VOXEL MODEL COUNT FRAMES: " + voxModel.voxelFrames.Count);
+            Console.WriteLine("");
+            Console.WriteLine("VOXEL MODEL COUNT FRAMES: " + voxModel.voxelFrames.Count);
 
-            VoxWriter writer = new VoxWriter();
-            var schematic = SchematicReader.SchematicReader.LoadSchematic("../../models/126x126x126.schematic");
-            writer.WriteModel("../../exports/test.vox", schematic);
-            Console.ReadKey();
+            //VoxWriter writer = new VoxWriter();
+            //var schematic = SchematicReader.SchematicReader.LoadSchematic("../../models/126x126x126.schematic");
+            //writer.WriteModel("../../exports/test.vox", schematic);
         }
     }
 }

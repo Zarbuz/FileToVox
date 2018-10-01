@@ -22,9 +22,9 @@ namespace SchematicToVox.Vox
             _width = _length = _height = 0;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
-                writer.Write(HEADER);
+                writer.Write(Encoding.UTF8.GetBytes(HEADER));
                 writer.Write(VERSION);
-                writer.Write(MAIN);
+                writer.Write(Encoding.UTF8.GetBytes(MAIN));
                 writer.Write(0); //MAIN CHUNK has a size of 0
                 writer.Write(CountChildrenSize(schematic));
                 WriteChunk(writer, schematic);
@@ -55,11 +55,19 @@ namespace SchematicToVox.Vox
             int countSize = _width * _length * _height;
             for (int i = 0; i < countSize; i++)
             {
-                writer.Write(SIZE);
-                writer.Write(126);
-                writer.Write(126);
-                writer.Write(126);
-                writer.Write(XYZI);
+                writer.Write(Encoding.UTF8.GetBytes(SIZE));
+                writer.Write(12); //Chunk Size (constant)
+                writer.Write(0); //Child Chunk Size (constant)
+
+                writer.Write(126); //Width
+                writer.Write(126); //Height
+                writer.Write(126); //Depth
+
+
+                writer.Write(Encoding.UTF8.GetBytes(XYZI));
+                writer.Write(8); //Chunk Size (constant)
+                writer.Write(0); //Child chunk size (constant)
+
                 var blocks = GetBlocksInRegion(new Vector3(i * 126, i * 126, i * 126), new Vector3((i * 126) + 126, (i * 126) + 126, (i * 126) + 126), schematic);
                 writer.Write(blocks.Count);
                 foreach (Block block in blocks)
