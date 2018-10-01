@@ -22,6 +22,7 @@ namespace SchematicToVox
             //VoxWriter writer = new VoxWriter();
             //var schematic = SchematicReader.SchematicReader.LoadSchematic("../../models/126x126x126.schematic");
             //writer.WriteModel("../../exports/test.vox", schematic);
+            Console.ReadLine();
         }
     }
 }

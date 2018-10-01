@@ -11,6 +11,7 @@ namespace SchematicToVox.Vox
 {
     public class VoxReader : VoxParser
     {
+        private int _voxelCountLastXYZIChunk = 0;
         public bool LoadModel(string absolutePath, VoxModel output)
         {
             var name = Path.GetFileNameWithoutExtension(absolutePath);
@@ -95,15 +96,16 @@ namespace SchematicToVox.Vox
                         _childCount++;
                         break;
                     case XYZI:
-                        var voxelCount = chunkReader.ReadInt32();
+                        _voxelCountLastXYZIChunk = chunkReader.ReadInt32();
                         var frame = output.voxelFrames[_childCount - 1];
-                        byte x, y, z;
-                        for (int i = 0; i < voxelCount; i++)
+                        byte x, y, z, color;
+                        for (int i = 0; i < _voxelCountLastXYZIChunk; i++)
                         {
                             x = chunkReader.ReadByte();
                             y = chunkReader.ReadByte();
                             z = chunkReader.ReadByte();
-                            frame.Set(x, y, z, chunkReader.ReadByte());
+                            color = chunkReader.ReadByte();
+                            frame.Set(x, y, z, color);
                         }
                         break;
                     case RGBA:
@@ -167,6 +169,9 @@ namespace SchematicToVox.Vox
                     case SIZE:
                         var frame = output.voxelFrames[_childCount - 1];
                         writer.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
+                        break;
+                    case XYZI:
+                        writer.WriteLine("-> XYZI: " + _voxelCountLastXYZIChunk);
                         break;
                     case nTRN:
                         var transform = output.transformNodeChunks.Last();

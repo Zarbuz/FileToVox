@@ -39,8 +39,10 @@ namespace SchematicToVox.Vox
             _height = (int)Math.Ceiling(((decimal)schematic.Heigth / 126));
 
             int countSize = _width * _length * _height;
-            _childrenChunkSize = (12 * countSize); //SIZE CHUNK
-            _childrenChunkSize += (4 + schematic.Blocks.Count * 4); //XYZI CHUNK
+            int chunkSize = 12 * countSize;
+            int chunkXYZI = 4 + schematic.Blocks.Count * 4; //Vérifier ce + 4 sorti de nul part
+            _childrenChunkSize = chunkSize; //SIZE CHUNK
+            _childrenChunkSize += chunkXYZI; //XYZI CHUNK
             return _childrenChunkSize;
         }
 
@@ -65,17 +67,18 @@ namespace SchematicToVox.Vox
 
 
                 writer.Write(Encoding.UTF8.GetBytes(XYZI));
-                writer.Write(8); //Chunk Size (constant)
+                var blocks = GetBlocksInRegion(new Vector3(i * 126, i * 126, i * 126), new Vector3((i * 126) + 126, (i * 126) + 126, (i * 126) + 126), schematic);
+                writer.Write((blocks.Count * 4) + 4);
                 writer.Write(0); //Child chunk size (constant)
 
-                var blocks = GetBlocksInRegion(new Vector3(i * 126, i * 126, i * 126), new Vector3((i * 126) + 126, (i * 126) + 126, (i * 126) + 126), schematic);
                 writer.Write(blocks.Count);
+
                 foreach (Block block in blocks)
                 {
-                    writer.Write(block.X);
-                    writer.Write(block.Y);
-                    writer.Write(block.Z);
-                    writer.Write((byte)default_palette[1]); //TODO: Apply color of the block
+                    writer.Write((byte)block.X);
+                    writer.Write((byte)block.Y);
+                    writer.Write((byte)block.Z);
+                    writer.Write((byte)79); //TODO: Apply color of the block
                 }
             }
 
