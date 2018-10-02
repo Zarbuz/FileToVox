@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{83C41F58-F6F7-46F2-85C3-CDD69E7FBEE6}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Changelog = docs\Changelog
+		docs\LICENSE = docs\LICENSE
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fNbt", "fNbt\fNbt.csproj", "{4488498D-976D-4DA3-BF72-109531AF0488}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fNbt.Test", "fNbt.Test\fNbt.Test.csproj", "{8DD93C35-682E-4C62-9012-EF15C80FFFEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{DF431E24-9487-434E-B11F-431950FCA573}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fNbt.Serialization", "fNbt.Serialization\fNbt.Serialization.csproj", "{95238D45-EC60-419F-90E1-7064EA738079}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fNbt.Serialization.Test", "fNbt.Serialization.Test\fNbt.Serialization.Test.csproj", "{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|x64.ActiveCfg = Debug|x64
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|x64.Build.0 = Debug|x64
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|x86.ActiveCfg = Debug|x86
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|x86.Build.0 = Debug|x86
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|x64.ActiveCfg = Release|x64
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|x64.Build.0 = Release|x64
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|x86.ActiveCfg = Release|x86
+		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|x86.Build.0 = Release|x86
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|x64.ActiveCfg = Debug|x64
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|x64.Build.0 = Debug|x64
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|x86.ActiveCfg = Debug|x86
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Debug|x86.Build.0 = Debug|x86
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|x64.ActiveCfg = Release|x64
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|x64.Build.0 = Release|x64
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|x86.ActiveCfg = Release|x86
+		{8DD93C35-682E-4C62-9012-EF15C80FFFEA}.Release|x86.Build.0 = Release|x86
+		{95238D45-EC60-419F-90E1-7064EA738079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Release|x64.ActiveCfg = Release|Any CPU
+		{95238D45-EC60-419F-90E1-7064EA738079}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A9A2746-62D1-49E6-80EF-FC3305A1CFE0}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = fNbt.csproj
+	EndGlobalSection
+EndGlobal
