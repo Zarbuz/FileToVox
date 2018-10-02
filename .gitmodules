@@ -1,3 +1,0 @@
-[submodule "SchematicToVox/NETSchematicReader"]
-	path = SchematicToVox/.NETSchematicReader
-	url = git://github.com/Oelkrug/.NETSchematicReader.git
