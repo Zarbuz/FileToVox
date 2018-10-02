@@ -47,13 +47,11 @@ namespace SchematicToVox.Vox
             int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
             int chunknTRN = 50 * _countSize;
+            int chunknSHP = 32 * _countSize; 
 
             for (int i = 0; i < _countSize; i++)
             {
-                int worldPosX = i / _width;
-                int worldPosY = (i / _width) % _height;
-                int worldPosZ = i / (_width * _height);
-                string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+                string pos = GetWorldPosString(i);
                 chunknTRN += Encoding.UTF8.GetByteCount(pos);
             }
             _childrenChunkSize = chunkSize; //SIZE CHUNK
@@ -61,6 +59,8 @@ namespace SchematicToVox.Vox
             _childrenChunkSize += chunknTRNMain; //First nTRN CHUNK (constant)
             _childrenChunkSize += chunknGRP; //nGRP CHUNK
             _childrenChunkSize += chunknTRN; //nTRN CHUNK
+            _childrenChunkSize += chunknSHP;
+
             return _childrenChunkSize;
         }
 
@@ -110,6 +110,7 @@ namespace SchematicToVox.Vox
             for (int i = 0; i < _countSize; i++)
             {
                 WriteTransformChunk(writer, i);
+                WriteShapeChunk(writer, i);
             }
         }
 
@@ -147,11 +148,7 @@ namespace SchematicToVox.Vox
         private void WriteTransformChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
-            int worldPosX = (index / _width) * 126;
-            int worldPosY = ((index / _width) % _height) * 126;
-            int worldPosZ = (index / (_width * _height)) *126;
-
-            string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+            string pos = GetWorldPosString(index);
             writer.Write(38 + Encoding.UTF8.GetByteCount(pos)); //nTRN chunk size
             writer.Write(0); //nTRN child chunk size
             writer.Write(2 * index + 2); //ID
@@ -167,9 +164,26 @@ namespace SchematicToVox.Vox
             writer.Write(Encoding.UTF8.GetBytes(pos));
         }
 
+        private string GetWorldPosString(int index)
+        {
+            int worldPosX = (index / _width) * 126;
+            int worldPosY = ((index / _width) % _height) * 126;
+            int worldPosZ = (index / (_width * _height)) * 126;
+
+            string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+            return pos;
+        }
+
         private void WriteShapeChunk(BinaryWriter writer, int index)
         {
-
+            writer.Write(Encoding.UTF8.GetBytes(nSHP));
+            writer.Write(20); //nSHP chunk size
+            writer.Write(0); //nSHP child chunk size
+            writer.Write(2 * index + 3); //ID
+            writer.Write(0);
+            writer.Write(1);
+            writer.Write(index);
+            writer.Write(0);
         }
 
         private void WriteGroupChunk(BinaryWriter writer)
