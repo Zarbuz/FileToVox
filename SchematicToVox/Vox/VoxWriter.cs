@@ -18,7 +18,7 @@ namespace SchematicToVox.Vox
 
         private int _childrenChunkSize = 0;
         private Schematic _schematic;
-        private Rotation _rotation = Rotation._NX_NZ_P;
+        private Rotation _rotation = Rotation._PZ_NX_P;
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
@@ -31,7 +31,7 @@ namespace SchematicToVox.Vox
                 writer.Write(Encoding.UTF8.GetBytes(MAIN));
                 writer.Write(0); //MAIN CHUNK has a size of 0
                 writer.Write(CountChildrenSize());
-                WriteChunk(writer);
+                WriteChunks(writer);
             }
             return true;
         }
@@ -48,7 +48,7 @@ namespace SchematicToVox.Vox
             int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
             int chunknTRN = 60 * _countSize;
-            int chunknSHP = 32 * _countSize; 
+            int chunknSHP = 32 * _countSize;
 
             for (int i = 0; i < _countSize; i++)
             {
@@ -66,29 +66,78 @@ namespace SchematicToVox.Vox
             return _childrenChunkSize;
         }
 
-        private List<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
+        private HashSet<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
         {
-            return _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
-            && t.X < max.x && t.Y < max.y && t.Z < max.z).ToList();
+            var list = _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
+            && t.X < max.x && t.Y < max.y && t.Z < max.z);
+            var hashset = new HashSet<Block>(list);
+            return hashset;
         }
 
-        private void RecenterBlocks(ref List<Block> blocks, int multiplier)
+        private HashSet<Block> RecenterBlocks(HashSet<Block> blocks)
         {
-            if (blocks[0].Z >= 126)
+            var list = blocks.ToList();
+            bool checkX = false, checkY = false, checkZ = false;
+            Block blockX = new Block(), blockY = new Block(), blockZ = new Block();
+            foreach (var block in list)
             {
-                blocks.ForEach(t => t.Z -= (126 * multiplier));
+                if (block.Z >= 126)
+                {
+                    checkZ = true;
+                    if (blockZ.Z < block.Z)
+                        blockZ = new Block(block.X, block.Y, block.Z, block.BlockID, block.Data, block.ID);
+                }
+                if (block.X >= 126)
+                {
+                    checkX = true;
+                    if (blockX.X < block.X)
+                        blockX = new Block(block.X, block.Y, block.Z, block.BlockID, block.Data, block.ID);
+                }
+                if (block.Y >= 126)
+                {
+                    checkY = true;
+                    if (blockY.Y < block.Y)
+                        blockY = new Block(block.X, block.Y, block.Z, block.BlockID, block.Data, block.ID);
+                }
             }
-            if (blocks[0].X >= 126)
+
+            int countZ = blockZ.Z / 126;
+            int countX = blockX.X / 126;
+            int countY = blockY.Y / 126;
+
+            for (int i = 0; i < list.Count; i++)
             {
-                blocks.ForEach(t => t.X -= (126 * multiplier));
+                if (checkZ)
+                {
+                    if (list[i].Z - (126 * countZ) < 0)
+                        list[i].Z -= (126 * (countZ - 1));
+                    else
+                        list[i].Z -= (126 * countZ);
+                }
+                if (checkX)
+                {
+                    if (list[i].X - (126 * countX) < 0)
+                        list[i].X -= (126 * (countX - 1));
+                    else
+                        list[i].X -= (126 * countX);
+
+                }
+                if (checkY)
+                {
+                    if (list[i].Y - (126 * countY) < 0)
+                        list[i].Y -= (126 * (countY - 1));
+                    else
+                        list[i].Y -= (126 * countY);
+
+                }
             }
-            if (blocks[0].Y >= 126)
-            {
-                blocks.ForEach(t => t.Y -= (126 * multiplier));
-            }
+
+            var hashset = new HashSet<Block>(list);
+            CheckBlocks(hashset);
+            return hashset;
         }
 
-        private void WriteChunk(BinaryWriter writer)
+        private void WriteChunks(BinaryWriter writer)
         {
             for (int i = 0; i < _countSize; i++)
             {
@@ -130,9 +179,13 @@ namespace SchematicToVox.Vox
         private void WriteXyziChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(XYZI));
-            Block firstBlock = _schematic.Blocks[0];
-            var blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
-            RecenterBlocks(ref blocks, index);
+            HashSet<Block> blocks = new HashSet<Block>();
+            if (_schematic.Blocks.Count > 0)
+            {
+                Block firstBlock = _schematic.Blocks.First();
+                blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
+                blocks = RecenterBlocks(blocks);
+            }
             writer.Write((blocks.Count * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
             writer.Write(blocks.Count); //Blocks count
@@ -145,6 +198,22 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)79); //TODO: Apply color of the block
                 _schematic.Blocks.Remove(block);
             }
+        }
+
+        private void CheckBlocks(HashSet<Block> blocks)
+        {
+            Console.WriteLine(blocks.Count);
+            foreach (var block in blocks)
+            {
+                if (block.X < 0 || block.X > 126
+                  || block.Y < 0 || block.Y > 126
+                  || block.Z < 0 || block.Z > 126)
+                {
+
+                    Console.WriteLine(block.ToString());
+                }
+            }
+
         }
 
         private void WriteTransformChunk(BinaryWriter writer, int index)
@@ -177,8 +246,8 @@ namespace SchematicToVox.Vox
         private string GetWorldPosString(int index)
         {
             int worldPosX = (index / _width) * 126;
-            int worldPosY = ((index / _width) % _height) * 126;
-            int worldPosZ = (index % (_width * _height)) * 126;
+            int worldPosZ = ((index / _width) % _height) * 126;
+            int worldPosY = ((index + 1) % (_width * _height)) * 126;
 
             string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
             return pos;
