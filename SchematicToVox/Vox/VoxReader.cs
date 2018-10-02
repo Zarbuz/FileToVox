@@ -241,7 +241,8 @@ namespace SchematicToVox.Vox
         {
             var size = reader.ReadInt32();
             var bytes = reader.ReadBytes(size);
-            return Encoding.UTF8.GetString(bytes);
+            string text = Encoding.UTF8.GetString(bytes);
+            return text;
         }
 
         private delegate T ItemReader<T>(BinaryReader reader);

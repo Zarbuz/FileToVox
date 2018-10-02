@@ -14,7 +14,7 @@ namespace SchematicToVox
             VoxReader reader = new VoxReader();
             VoxModel voxModel = new VoxModel();
 
-            reader.LoadModel("../../exports/test.vox", voxModel);
+            reader.LoadModel("../../models/2.vox", voxModel);
 
             Console.WriteLine("");
             Console.WriteLine("VOXEL MODEL COUNT FRAMES: " + voxModel.voxelFrames.Count);

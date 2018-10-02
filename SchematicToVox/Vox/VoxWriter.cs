@@ -96,7 +96,7 @@ namespace SchematicToVox.Vox
 
 
             WriteGroupChunk(writer);
-            for (int i =0; i < _countSize; i++)
+            for (int i = 0; i < _countSize; i++)
             {
                 WriteTransformChunk(writer, i);
             }
@@ -136,7 +136,24 @@ namespace SchematicToVox.Vox
         private void WriteTransformChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
+            int worldPosX = index / _width;
+            int worldPosY = (index / _width) % _height;
+            int worldPosZ = index / (_width * _height);
 
+            string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+            writer.Write(22 + Encoding.UTF8.GetByteCount(pos)); //nTRN chunk size
+            writer.Write(0); //nTRN child chunk size
+            writer.Write(2 * index + 2); //ID
+            writer.Write(0); //ReadDICT size for attributes (none)
+            writer.Write(2 * index + 3);//Child ID
+            writer.Write(-1); //Reserved ID
+            writer.Write(-1); //Layer ID
+            writer.Write(1); //Read Array Size
+            writer.Write(1); //Read DICT Size
+            writer.Write(2); //Read STRING Size
+            writer.Write(Encoding.UTF8.GetBytes("_t"));
+            writer.Write(Encoding.UTF8.GetByteCount(pos));
+            writer.Write(Encoding.UTF8.GetBytes(pos));
         }
 
         private void WriteGroupChunk(BinaryWriter writer)
