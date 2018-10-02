@@ -20,6 +20,7 @@ namespace SchematicToVox.Vox
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
             _width = _length = _height = 0;
+            schematic = PostTreatement(schematic);
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -30,6 +31,20 @@ namespace SchematicToVox.Vox
                 WriteChunk(writer, schematic);
             }
             return true;
+        }
+
+        private Schematic PostTreatement(Schematic schematic)
+        {
+            var result = schematic;
+            using (var writer = new StreamWriter(File.Open("../../logs/schematic.txt", FileMode.Create)))
+            {
+                foreach (var block in schematic.Blocks)
+                {
+                    writer.WriteLine(block.ToString());
+                }
+            }
+            
+            return result;
         }
 
         private int CountChildrenSize(Schematic schematic)
@@ -52,6 +67,22 @@ namespace SchematicToVox.Vox
             && t.X < max.x && t.Y < max.y && t.Z < max.z).ToList();
         }
 
+        private void RecenterBlocks(ref List<Block> blocks, int multiplier)
+        {
+            if (blocks[0].Z >= 126)
+            {
+                blocks.ForEach(t => t.Z -= (126 * multiplier));
+            }
+            if (blocks[0].X >= 126)
+            {
+                blocks.ForEach(t => t.X -= (126 * multiplier));
+            }
+            if (blocks[0].Y >= 126)
+            {
+                blocks.ForEach(t => t.Y -= (126 * multiplier));
+            }
+        }
+
         private void WriteChunk(BinaryWriter writer, Schematic schematic)
         {
             int countSize = _width * _length * _height;
@@ -67,7 +98,9 @@ namespace SchematicToVox.Vox
 
 
                 writer.Write(Encoding.UTF8.GetBytes(XYZI));
-                var blocks = GetBlocksInRegion(new Vector3(i * 126, i * 126, i * 126), new Vector3((i * 126) + 126, (i * 126) + 126, (i * 126) + 126), schematic);
+                Block firstBlock = schematic.Blocks[0];
+                var blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126), schematic);
+                RecenterBlocks(ref blocks, i);
                 writer.Write((blocks.Count * 4) + 4);
                 writer.Write(0); //Child chunk size (constant)
 
@@ -79,6 +112,7 @@ namespace SchematicToVox.Vox
                     writer.Write((byte)block.Y);
                     writer.Write((byte)block.Z);
                     writer.Write((byte)79); //TODO: Apply color of the block
+                    schematic.Blocks.Remove(block);
                 }
             }
 
