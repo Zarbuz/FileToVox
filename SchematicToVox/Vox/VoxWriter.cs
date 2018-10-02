@@ -44,12 +44,23 @@ namespace SchematicToVox.Vox
 
             int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
             int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
-            int chunknTRNMain = 40;
+            int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
+            int chunknTRN = 50 * _countSize;
+
+            for (int i = 0; i < _countSize; i++)
+            {
+                int worldPosX = i / _width;
+                int worldPosY = (i / _width) % _height;
+                int worldPosZ = i / (_width * _height);
+                string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+                chunknTRN += Encoding.UTF8.GetByteCount(pos);
+            }
             _childrenChunkSize = chunkSize; //SIZE CHUNK
             _childrenChunkSize += chunkXYZI; //XYZI CHUNK
             _childrenChunkSize += chunknTRNMain; //First nTRN CHUNK (constant)
             _childrenChunkSize += chunknGRP; //nGRP CHUNK
+            _childrenChunkSize += chunknTRN; //nTRN CHUNK
             return _childrenChunkSize;
         }
 
@@ -136,12 +147,12 @@ namespace SchematicToVox.Vox
         private void WriteTransformChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
-            int worldPosX = index / _width;
-            int worldPosY = (index / _width) % _height;
-            int worldPosZ = index / (_width * _height);
+            int worldPosX = (index / _width) * 126;
+            int worldPosY = ((index / _width) % _height) * 126;
+            int worldPosZ = (index / (_width * _height)) *126;
 
             string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
-            writer.Write(22 + Encoding.UTF8.GetByteCount(pos)); //nTRN chunk size
+            writer.Write(38 + Encoding.UTF8.GetByteCount(pos)); //nTRN chunk size
             writer.Write(0); //nTRN child chunk size
             writer.Write(2 * index + 2); //ID
             writer.Write(0); //ReadDICT size for attributes (none)
@@ -156,13 +167,18 @@ namespace SchematicToVox.Vox
             writer.Write(Encoding.UTF8.GetBytes(pos));
         }
 
+        private void WriteShapeChunk(BinaryWriter writer, int index)
+        {
+
+        }
+
         private void WriteGroupChunk(BinaryWriter writer)
         {
             writer.Write(Encoding.UTF8.GetBytes(nGRP));
             writer.Write(16 + (4 * (_countSize - 1))); //nGRP chunk size
             writer.Write(0); //Child nGRP chunk size
             writer.Write(1); //ID of nGRP
-            writer.Write(0); //ReadDICT size for attributes (none)
+            writer.Write(0); //Read DICT size for attributes (none)
             writer.Write(_countSize);
             for (int i = 0; i < _countSize; i++)
             {
