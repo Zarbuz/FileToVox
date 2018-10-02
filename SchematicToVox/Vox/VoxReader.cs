@@ -241,20 +241,22 @@ namespace SchematicToVox.Vox
         {
             var size = reader.ReadInt32();
             var bytes = reader.ReadBytes(size);
-            return System.Text.Encoding.UTF8.GetString(bytes);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         private delegate T ItemReader<T>(BinaryReader reader);
 
         private static T[] ReadArray<T>(BinaryReader reader, ItemReader<T> itemReader)
         {
-            return Enumerable.Range(0, reader.ReadInt32())
+            int size = reader.ReadInt32();
+            return Enumerable.Range(0, size)
                 .Select(i => itemReader(reader)).ToArray();
         }
 
         private static KeyValue[] ReadDICT(BinaryReader reader)
         {
-            return Enumerable.Range(0, reader.ReadInt32())
+            int size = reader.ReadInt32();
+            return Enumerable.Range(0, size)
                 .Select(i => new KeyValue
                 {
                     Key = ReadSTRING(reader),

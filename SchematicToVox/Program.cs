@@ -20,7 +20,7 @@ namespace SchematicToVox
             Console.WriteLine("VOXEL MODEL COUNT FRAMES: " + voxModel.voxelFrames.Count);
 
             //VoxWriter writer = new VoxWriter();
-            //var schematic = SchematicReader.SchematicReader.LoadSchematic("../../models/126x126x126.schematic");
+            //var schematic = SchematicReader.SchematicReader.LoadSchematic("../../schematics/4.schematic");
             //writer.WriteModel("../../exports/test.vox", schematic);
             Console.ReadLine();
         }
