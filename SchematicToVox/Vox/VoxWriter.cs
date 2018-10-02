@@ -18,6 +18,7 @@ namespace SchematicToVox.Vox
 
         private int _childrenChunkSize = 0;
         private Schematic _schematic;
+        private Rotation _rotation = Rotation._NX_NZ_P;
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
@@ -46,13 +47,14 @@ namespace SchematicToVox.Vox
             int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
             int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
-            int chunknTRN = 50 * _countSize;
+            int chunknTRN = 60 * _countSize;
             int chunknSHP = 32 * _countSize; 
 
             for (int i = 0; i < _countSize; i++)
             {
                 string pos = GetWorldPosString(i);
                 chunknTRN += Encoding.UTF8.GetByteCount(pos);
+                chunknTRN += Encoding.UTF8.GetByteCount(Convert.ToString((byte)_rotation));
             }
             _childrenChunkSize = chunkSize; //SIZE CHUNK
             _childrenChunkSize += chunkXYZI; //XYZI CHUNK
@@ -149,7 +151,8 @@ namespace SchematicToVox.Vox
         {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
             string pos = GetWorldPosString(index);
-            writer.Write(38 + Encoding.UTF8.GetByteCount(pos)); //nTRN chunk size
+            writer.Write(48 + Encoding.UTF8.GetByteCount(pos)
+                            + Encoding.UTF8.GetByteCount(Convert.ToString((byte)_rotation))); //nTRN chunk size
             writer.Write(0); //nTRN child chunk size
             writer.Write(2 * index + 2); //ID
             writer.Write(0); //ReadDICT size for attributes (none)
@@ -157,7 +160,14 @@ namespace SchematicToVox.Vox
             writer.Write(-1); //Reserved ID
             writer.Write(-1); //Layer ID
             writer.Write(1); //Read Array Size
-            writer.Write(1); //Read DICT Size
+            writer.Write(2); //Read DICT Size (previously 1)
+
+            writer.Write(2); //Read STRING size
+            writer.Write(Encoding.UTF8.GetBytes("_r"));
+            writer.Write(Encoding.UTF8.GetByteCount(Convert.ToString((byte)_rotation)));
+            writer.Write(Encoding.UTF8.GetBytes(Convert.ToString((byte)_rotation)));
+
+
             writer.Write(2); //Read STRING Size
             writer.Write(Encoding.UTF8.GetBytes("_t"));
             writer.Write(Encoding.UTF8.GetByteCount(pos));
@@ -168,7 +178,7 @@ namespace SchematicToVox.Vox
         {
             int worldPosX = (index / _width) * 126;
             int worldPosY = ((index / _width) % _height) * 126;
-            int worldPosZ = (index / (_width * _height)) * 126;
+            int worldPosZ = (index % (_width * _height)) * 126;
 
             string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
             return pos;
