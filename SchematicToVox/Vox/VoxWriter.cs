@@ -18,7 +18,8 @@ namespace SchematicToVox.Vox
 
         private int _childrenChunkSize = 0;
         private Schematic _schematic;
-        private Rotation _rotation = Rotation._PZ_NX_P;
+        private Rotation _rotation = Rotation._PZ_PX_P;
+        private HashSet<Block> _firstBlockInEachRegion = new HashSet<Block>();
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
@@ -50,6 +51,7 @@ namespace SchematicToVox.Vox
             int chunknTRN = 60 * _countSize;
             int chunknSHP = 32 * _countSize;
 
+            GetFirstBlockForEachRegion();
             for (int i = 0; i < _countSize; i++)
             {
                 string pos = GetWorldPosString(i);
@@ -74,6 +76,7 @@ namespace SchematicToVox.Vox
             return hashset;
         }
 
+        
         private HashSet<Block> RecenterBlocks(HashSet<Block> blocks)
         {
             var list = blocks.ToList();
@@ -200,6 +203,10 @@ namespace SchematicToVox.Vox
             }
         }
 
+        /// <summary>
+        /// TEMP METHOD ONLY FOR DEBUG
+        /// </summary>
+        /// <param name="blocks"></param>
         private void CheckBlocks(HashSet<Block> blocks)
         {
             Console.WriteLine(blocks.Count);
@@ -243,13 +250,37 @@ namespace SchematicToVox.Vox
             writer.Write(Encoding.UTF8.GetBytes(pos));
         }
 
+        private void GetFirstBlockForEachRegion()
+        {
+            HashSet<Block> copy = new HashSet<Block>(_schematic.Blocks);
+            for (int i = 0; i < _countSize; i++)
+            {
+                Block copyBlock = copy.First();
+                Block firstBlock = new Block(copyBlock.X, copyBlock.Y, copyBlock.Z, copyBlock.BlockID, copyBlock.Data, copyBlock.ID);
+                _firstBlockInEachRegion.Add(firstBlock);
+                HashSet<Block> blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
+                foreach (Block block in blocks)
+                {
+                    copy.Remove(block);
+                }
+            }
+            
+            foreach (Block block in _firstBlockInEachRegion)
+            {
+                block.X = (((block.X) / 126) * 126);
+                block.Y = (((block.Y) / 126) * 126);
+                block.Z = (((block.Z) / 126) * 126);
+            }
+
+        }
+
         private string GetWorldPosString(int index)
         {
-            int worldPosX = (index / _width) * 126;
-            int worldPosZ = ((index / _width) % _height) * 126;
-            int worldPosY = ((index + 1) % (_width * _height)) * 126;
+            int worldPosX = _firstBlockInEachRegion.ElementAt(index).X;
+            int worldPosZ = _firstBlockInEachRegion.ElementAt(index).Z;
+            int worldPosY = _firstBlockInEachRegion.ElementAt(index).Y;
 
-            string pos = worldPosX + " " + worldPosY + " " + worldPosZ;
+            string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
             return pos;
         }
 

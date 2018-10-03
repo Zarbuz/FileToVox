@@ -11,13 +11,14 @@ namespace SchematicToVox
     {
         static void Main(string[] args)
         {
-            VoxReader reader = new VoxReader();
-            VoxModel voxModel = new VoxModel();
-            reader.LoadModel("../../exports/export.vox", voxModel);
+            //VoxReader reader = new VoxReader();
+            //VoxModel voxModel = new VoxModel();
+            //reader.LoadModel("../../exports/export.vox", voxModel);
 
-            //var schematic = SchematicReader.SchematicReader.LoadSchematic("../../schematics/gateway.schematic");
-            //VoxWriter writer = new VoxWriter();
-            //writer.WriteModel("../../exports/" + "export" + ".vox", schematic);
+            var schematic = SchematicReader.SchematicReader.LoadSchematic("../../schematics/5.schematic");
+            VoxWriter writer = new VoxWriter();
+            writer.WriteModel("../../exports/" + "export" + ".vox", schematic);
+
             Console.ReadLine();
         }
 
