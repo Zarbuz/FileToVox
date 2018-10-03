@@ -19,9 +19,9 @@ namespace SchematicToVox
             VoxWriter writer = new VoxWriter();
             writer.WriteModel("../../exports/" + name + ".vox", schematic);
 
-            //VoxReader reader = new VoxReader();
-            //VoxModel voxModel = new VoxModel();
-            //reader.LoadModel("../../exports/gateway.vox", voxModel);
+            VoxReader reader = new VoxReader();
+            VoxModel voxModel = new VoxModel();
+            reader.LoadModel("../../exports/gateway.vox", voxModel);
             Console.WriteLine("Done");
             Console.ReadLine();
         }

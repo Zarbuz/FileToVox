@@ -31,12 +31,6 @@ namespace SchematicToVox.Vox
 
         protected int _childCount = 0;
         protected int _chunkCount = 0;
-        protected readonly string _logOutputFile;
-
-        public VoxParser()
-        {
-            _logOutputFile = DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
-        }
 
         /// <summary>
         /// Clear model data

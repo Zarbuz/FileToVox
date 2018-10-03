@@ -12,9 +12,13 @@ namespace SchematicToVox.Vox
     public class VoxReader : VoxParser
     {
         private int _voxelCountLastXYZIChunk = 0;
+        protected string _logOutputFile;
+
         public bool LoadModel(string absolutePath, VoxModel output)
         {
             var name = Path.GetFileNameWithoutExtension(absolutePath);
+            _logOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
+
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
@@ -308,12 +312,13 @@ namespace SchematicToVox.Vox
 
         private GroupNodeChunk ReadGroupNodeChunk(BinaryReader chunkReader)
         {
-            return new GroupNodeChunk
+            var groupNodeChunk = new GroupNodeChunk
             {
                 id = chunkReader.ReadInt32(),
                 attributes = ReadDICT(chunkReader),
                 childIds = ReadArray(chunkReader, r => r.ReadInt32())
             };
+            return groupNodeChunk;
         }
 
         private TransformNodeChunk ReadTransformNodeChunk(BinaryReader chunkReader)
