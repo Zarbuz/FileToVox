@@ -113,7 +113,8 @@ namespace SchematicReader
                         int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
                         Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], index);
                         //TileEntities (Schilder, Hopper..) werden woanders geladen
-                        if (block.BlockID != 0) blocks.Add(block);
+                        if (block.BlockID != 0)
+                            blocks.Add(block);
                     }
                 }
             }

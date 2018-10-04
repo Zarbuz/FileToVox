@@ -12,16 +12,16 @@ namespace SchematicToVox
     {
         static void Main(string[] args)
         {
-            var path = "../../schematics/gateway.schematic";
+            var path = "../../schematics/mushroom.schematic";
             var schematic = SchematicReader.SchematicReader.LoadSchematic(path);
             var name = Path.GetFileNameWithoutExtension(path);
 
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel("../../exports/" + name + ".vox", schematic);
-
             VoxReader reader = new VoxReader();
-            VoxModel voxModel = new VoxModel();
-            reader.LoadModel("../../exports/gateway.vox", voxModel);
+
+            writer.WriteModel("../../exports/" + name + ".vox", schematic);
+            reader.LoadModel("../../exports/" + name + ".vox");
+
             Console.WriteLine("Done");
             Console.ReadLine();
         }

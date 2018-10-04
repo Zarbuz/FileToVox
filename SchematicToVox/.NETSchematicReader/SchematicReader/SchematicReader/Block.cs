@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SchematicReader
 {
-    public class Block : IEquatable<Block>
+    public class Block : IEquatable<Block>,
+                         IComparable<Block>
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -48,6 +49,11 @@ namespace SchematicReader
         public override string ToString()
         {
             return string.Format("ID: {3}:{4}, X: {0}, Y: {1}, Z: {2}", X, Y, Z, BlockID, Data);
+        }
+
+        public int CompareTo(Block other)
+        {
+            return ID.CompareTo(other.ID);
         }
     }
 }

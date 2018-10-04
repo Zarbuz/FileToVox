@@ -14,8 +14,9 @@ namespace SchematicToVox.Vox
         private int _voxelCountLastXYZIChunk = 0;
         protected string _logOutputFile;
 
-        public bool LoadModel(string absolutePath, VoxModel output)
+        public VoxModel LoadModel(string absolutePath)
         {
+            VoxModel output = new VoxModel();
             var name = Path.GetFileNameWithoutExtension(absolutePath);
             _logOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
 
@@ -25,7 +26,7 @@ namespace SchematicToVox.Vox
                 if (!head.Equals(HEADER))
                 {
                     Console.WriteLine("Not a Magicavoxel file! " + output);
-                    return false;
+                    return null;
                 }
                 int version = reader.ReadInt32();
                 if (version != VERSION)
@@ -40,7 +41,7 @@ namespace SchematicToVox.Vox
             }
             if (output.palette == null)
                 output.palette = LoadDefaultPalette();
-            return true;
+            return output;
         }
 
         private Color[] LoadDefaultPalette()

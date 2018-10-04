@@ -1,4 +1,5 @@
 ﻿using SchematicReader;
+using SchematicToVox.Extensions;
 using SchematicToVox.Tools;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace SchematicToVox.Vox
             _countSize = _width * _length * _height;
 
             int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
-            int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
+            int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count() * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
             int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
             int chunknTRN = 60 * _countSize;
@@ -70,29 +71,20 @@ namespace SchematicToVox.Vox
 
         private HashSet<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
         {
-            var list = _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
-            && t.X < max.x && t.Y < max.y && t.Z < max.z);
-            return new HashSet<Block>(list);
+            return _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
+            && t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
         }
 
 
         private HashSet<Block> RecenterBlocks(HashSet<Block> blocks)
         {
-            int countZ = blocks.Max(t => t.Z) / 126;
-            int countX = blocks.Max(t => t.X) / 126;
-            int countY = blocks.Max(t => t.Y) / 126;
-
-            var list = blocks.ToList();
-
-            for (int i = 0; i < list.Count; i++)
+            foreach (Block block in blocks)
             {
-                list[i].Z = (list[i].Z - (126 * countZ) < 0) ? list[i].Z - (126 * (countZ - 1)) : list[i].Z - (126 * countZ);
-                list[i].X = (list[i].X - (126 * countX) < 0) ? list[i].X - (126 * (countX - 1)) : list[i].X - (126 * countX);
-                list[i].Y = (list[i].Y - (126 * countY) < 0) ? list[i].Y - (126 * (countY - 1)) : list[i].Y - (126 * countY);
+                block.X %= 126;
+                block.Y %= 126;
+                block.Z %= 126;
             }
-
-            var hashset = new HashSet<Block>(list);
-            return hashset;
+            return blocks;
         }
 
         private void WriteChunks(BinaryWriter writer)
@@ -140,13 +132,14 @@ namespace SchematicToVox.Vox
             HashSet<Block> blocks = new HashSet<Block>();
             if (_schematic.Blocks.Count > 0)
             {
-                Block firstBlock = _schematic.Blocks.First();
+                Block firstBlock = _firstBlockInEachRegion[index];
                 blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
                 blocks = RecenterBlocks(blocks);
             }
-            writer.Write((blocks.Count * 4) + 4); //XYZI chunk size
+            Console.WriteLine(blocks.Count());
+            writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
-            writer.Write(blocks.Count); //Blocks count
+            writer.Write(blocks.Count()); //Blocks count
 
             foreach (Block block in blocks)
             {
@@ -187,38 +180,23 @@ namespace SchematicToVox.Vox
 
         private void GetFirstBlockForEachRegion()
         {
-            HashSet<Block> copy = new HashSet<Block>(_schematic.Blocks);
             _firstBlockInEachRegion = new Block[_countSize];
+            
             for (int i = 0; i < _countSize; i++)
             {
-                if (copy.Count > 0)
-                {
-                    Block copyBlock = copy.First();
-                    Block firstBlock = new Block(copyBlock.X, copyBlock.Y, copyBlock.Z, copyBlock.BlockID, copyBlock.Data, copyBlock.ID);
-                    HashSet<Block> blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
-
-                    firstBlock.X = (((firstBlock.X) / 126) * 126) - (_width / 2) * 126;
-                    firstBlock.Y = (((firstBlock.Y) / 126) * 126) + 126;
-                    firstBlock.Z = (((firstBlock.Z) / 126) * 126) - (_length / 2) * 126;
-                    _firstBlockInEachRegion[i] = firstBlock;
-
-                    foreach (Block block in blocks)
-                    {
-                        copy.Remove(block);
-                    }
-                }
-                else
-                {
-                    _firstBlockInEachRegion[i] = new Block();
-                }
+                int z = ((i % _width) * 126);
+                int y = (((i / _width) % _height) * 126);
+                int x = (i / (_width * _height) * 126);
+                Block block = new Block(x, y, z, 0, 0, 0);
+                _firstBlockInEachRegion[i] = block;
             }
         }
 
         private string GetWorldPosString(int index)
         {
-            int worldPosX = _firstBlockInEachRegion[index].X;
-            int worldPosZ = _firstBlockInEachRegion[index].Z;
-            int worldPosY = _firstBlockInEachRegion[index].Y;
+            int worldPosX = _firstBlockInEachRegion[index].X - (_length / 2) * 126;
+            int worldPosZ = _firstBlockInEachRegion[index].Z - (_width / 2) * 126;
+            int worldPosY = _firstBlockInEachRegion[index].Y + 126;
 
             string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
             return pos;
