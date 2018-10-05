@@ -12,7 +12,7 @@ namespace SchematicToVox
     {
         static void Main(string[] args)
         {
-            var path = "../../schematics/music.schematic";
+            var path = "../../schematics/gateway.schematic";
             var schematic = SchematicReader.SchematicReader.LoadSchematic(path);
             var name = Path.GetFileNameWithoutExtension(path);
 

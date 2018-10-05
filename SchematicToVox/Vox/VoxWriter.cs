@@ -21,6 +21,7 @@ namespace SchematicToVox.Vox
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
         private Block[] _firstBlockInEachRegion;
+        private List<Color32> _usedColors;
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
@@ -55,6 +56,7 @@ namespace SchematicToVox.Vox
             int chunknGRP = 24 + _countSize * 4;
             int chunknTRN = 60 * _countSize;
             int chunknSHP = 32 * _countSize;
+            int chunkRGBA = 1024 + 12;
 
             GetFirstBlockForEachRegion();
             for (int i = 0; i < _countSize; i++)
@@ -69,6 +71,7 @@ namespace SchematicToVox.Vox
             _childrenChunkSize += chunknGRP; //nGRP CHUNK
             _childrenChunkSize += chunknTRN; //nTRN CHUNK
             _childrenChunkSize += chunknSHP;
+            _childrenChunkSize += chunkRGBA;
 
             return _childrenChunkSize;
         }
@@ -139,6 +142,7 @@ namespace SchematicToVox.Vox
         /// <param name="writer"></param>
         private void WriteChunks(BinaryWriter writer)
         {
+            WritePaletteChunk(writer);
             for (int i = 0; i < _countSize; i++)
             {
                 WriteSizeChunk(writer);
@@ -211,7 +215,11 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)block.X);
                 writer.Write((byte)block.Y);
                 writer.Write((byte)block.Z);
-                writer.Write((byte)79); //TODO: Apply color of the block
+                int i = _usedColors.IndexOf(block.GetBlockColor());
+                if (i != -1)
+                    writer.Write((byte)i); //TODO: Apply color of the block
+                else
+                    writer.Write((byte)1);
                 _schematic.Blocks.Remove(block);
             }
         }
@@ -280,6 +288,38 @@ namespace SchematicToVox.Vox
             for (int i = 0; i < _countSize; i++)
             {
                 writer.Write((2 * i) + 2); //id for childrens (start at 2, increment by 2)
+            }
+        }
+
+        /// <summary>
+        /// Write RGBA chunk
+        /// </summary>
+        /// <param name="writer"></param>
+        private void WritePaletteChunk(BinaryWriter writer)
+        {
+            writer.Write(Encoding.UTF8.GetBytes(RGBA));
+            writer.Write(1024);
+            writer.Write(0);
+            _usedColors = new List<Color32>(256);
+            foreach (Block block in _schematic.Blocks)
+            {
+                var color = block.GetBlockColor();
+                if (_usedColors.Count < 256 && !_usedColors.Contains(color))
+                {
+                    _usedColors.Add(color);
+                    writer.Write(color.r);
+                    writer.Write(color.g);
+                    writer.Write(color.b);
+                    writer.Write(color.a);
+                }
+            }
+
+            for (int i = (256 - _usedColors.Count); i >= 1; i--)
+            {
+                writer.Write((byte)0);
+                writer.Write((byte)0);
+                writer.Write((byte)0);
+                writer.Write((byte)0);
             }
         }
     }

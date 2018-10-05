@@ -389,6 +389,80 @@ namespace SchematicToVox.Extensions
             { new Tuple<int, int>(206, 0), new Color32(225, 230, 170, 255) }, //End Stone Bricks
             { new Tuple<int, int>(208, 0), new Color32(152, 125, 69, 255) }, //Grass Path
             { new Tuple<int, int>(209, 0), new Color32(240, 240, 240, 255) }, //End Gateway
+            { new Tuple<int, int>(210, 0), new Color32(155, 137, 39, 255) }, //Repeating Command Block
+            { new Tuple<int, int>(211, 0), new Color32(118, 178, 151, 255) }, //Chain Command Block
+            { new Tuple<int, int>(212, 0), new Color32(118, 162, 252, 255) }, //Frosted Ice
+            { new Tuple<int, int>(213, 0), new Color32(202, 78, 6, 255) }, //Magma Block
+            { new Tuple<int, int>(214, 0), new Color32(129, 0, 8, 255) }, //Nether Wart Block
+            { new Tuple<int, int>(215, 0), new Color32(86, 0, 4, 255) }, //Red Nether Brick
+            { new Tuple<int, int>(216, 0), new Color32(143, 147, 131, 255) }, //Bone Block
+            { new Tuple<int, int>(217, 0), new Color32(0, 0, 0, 0) }, //Void Block
+            { new Tuple<int, int>(218, 0), new Color32(43, 43, 43, 255) }, //Observer
+            { new Tuple<int, int>(219, 0), new Color32(223, 223, 220, 255) }, //White Shulker Box
+            { new Tuple<int, int>(220, 0), new Color32(208, 118, 59, 255) }, //Orange Shulker Box
+            { new Tuple<int, int>(221, 0), new Color32(186, 100, 194, 255) }, //Magenta Shulker Box
+            { new Tuple<int, int>(222, 0), new Color32(103, 143, 204, 255) }, //Light Blue Shulker Box
+            { new Tuple<int, int>(223, 0), new Color32(193, 183, 61, 255) }, //Yellow Shulker Box
+            { new Tuple<int, int>(224, 0), new Color32(73, 185, 61, 255) }, //Lime Shulker Box
+            { new Tuple<int, int>(225, 0), new Color32(208, 140, 161, 255) }, //Pink Shulker Box
+            { new Tuple<int, int>(226, 0), new Color32(84, 82, 82, 255) }, //Gray Shulker Box
+            { new Tuple<int, int>(227, 0), new Color32(165, 162, 162, 255) }, //Light Gray Shulker Box
+            { new Tuple<int, int>(228, 0), new Color32(69, 137, 165, 255) }, //Cyan Shulker Box
+            { new Tuple<int, int>(229, 0), new Color32(151, 105, 151, 255) }, //Purple Shulker Box
+            { new Tuple<int, int>(230, 0), new Color32(102, 114, 202, 255) }, //Blue Shulker Box
+            { new Tuple<int, int>(231, 0), new Color32(142, 113, 94, 255) }, //Brown Shulker Box
+            { new Tuple<int, int>(232, 0), new Color32(112, 131, 85, 255) }, //Green Shulker Box
+            { new Tuple<int, int>(233, 0), new Color32(195, 89, 86, 255) }, //Red Shulker Box
+            { new Tuple<int, int>(234, 0), new Color32(58, 55, 55, 255) }, //Black Shulker Box
+            { new Tuple<int, int>(235, 0), new Color32(249, 255, 254, 255) }, //White Glazed Terracota
+            { new Tuple<int, int>(236, 0), new Color32(225, 97, 0, 255) }, //Orange Glazed Terracota
+            { new Tuple<int, int>(237, 0), new Color32(241, 165, 191, 255) }, //Magenta Glazed Terracota
+            { new Tuple<int, int>(238, 0), new Color32(77, 185, 221, 255) }, //Light Blue Glazed Terracota
+            { new Tuple<int, int>(239, 0), new Color32(238, 170, 13, 255) }, //Yellow Glazed Terracota
+            { new Tuple<int, int>(240, 0), new Color32(133, 207, 33, 255) }, //Lime Glazed Terracota
+            { new Tuple<int, int>(241, 0), new Color32(244, 181, 203, 255) }, //Pink Glazed Terracota
+            { new Tuple<int, int>(242, 0), new Color32(96, 114, 119, 255) }, //Gray Glazed Terracota
+            { new Tuple<int, int>(243, 0), new Color32(204, 208, 210, 255) }, //Light Gray Glazed Terracota
+            { new Tuple<int, int>(244, 0), new Color32(23, 168, 168, 255) }, //Cyan Glazed Terracota
+            { new Tuple<int, int>(245, 0), new Color32(100, 31, 156, 255) }, //Purple Glazed Terracota
+            { new Tuple<int, int>(246, 0), new Color32(44, 46, 143, 255) }, //Blue Glazed Terracota
+            { new Tuple<int, int>(247, 0), new Color32(171, 123, 80, 255) }, //Brown Glazed Terracota
+            { new Tuple<int, int>(248, 0), new Color32(117, 160, 37, 255) }, //Green Glazed Terracota
+            { new Tuple<int, int>(249, 0), new Color32(209, 86, 80, 255) }, //Red Glazed Terracota
+            { new Tuple<int, int>(250, 0), new Color32(62, 14, 14, 255) }, //Black Glazed Terracota
+            { new Tuple<int, int>(251, 0), new Color32(207, 213, 214, 255) }, //White Concrete
+            { new Tuple<int, int>(251, 1), new Color32(224, 97, 0, 255) }, //Orange Concrete
+            { new Tuple<int, int>(251, 2), new Color32(169, 48, 159, 255) }, //Magenta Concrete
+            { new Tuple<int, int>(251, 3), new Color32(35, 137, 199, 255) }, //Light Blue Concrete
+            { new Tuple<int, int>(251, 4), new Color32(239, 174, 21, 255) }, //Yellow Concrete
+            { new Tuple<int, int>(251, 5), new Color32(95, 170, 25, 255) }, //Lime Concrete
+            { new Tuple<int, int>(251, 6), new Color32(213, 100, 142, 255) }, //Pink Concrete
+            { new Tuple<int, int>(251, 7), new Color32(54, 57, 61, 255) }, //Gray Concrete
+            { new Tuple<int, int>(251, 8), new Color32(125, 125, 115, 255) }, //Light Gray Concrete
+            { new Tuple<int, int>(251, 9), new Color32(21, 119, 136, 255) }, //Cyan Concrete
+            { new Tuple<int, int>(251, 10), new Color32(99, 31, 155, 255) }, //Purple Concrete
+            { new Tuple<int, int>(251, 11), new Color32(45, 47, 144, 255) }, //Blue Concrete
+            { new Tuple<int, int>(251, 12), new Color32(97, 60, 32, 255) }, //Brown Concrete
+            { new Tuple<int, int>(251, 13), new Color32(73, 91, 36, 255) }, //Green Concrete
+            { new Tuple<int, int>(251, 14), new Color32(143, 33, 33, 255) }, //Red Concrete
+            { new Tuple<int, int>(251, 15), new Color32(7, 9, 14, 255) }, //Black Concrete
+            { new Tuple<int, int>(252, 0), new Color32(230, 232, 233, 255) }, //White Concrete Powder
+            { new Tuple<int, int>(252, 1), new Color32(234, 136, 34, 255) }, //Orange Concrete Powder
+            { new Tuple<int, int>(252, 2), new Color32(195, 81, 186, 255) }, //Magenta Concrete Powder
+            { new Tuple<int, int>(252, 3), new Color32(90, 197, 221, 255) }, //Light Blue Concrete Powder
+            { new Tuple<int, int>(252, 4), new Color32(237, 198, 48, 255) }, //Yellow Concrete Powder
+            { new Tuple<int, int>(252, 5), new Color32(128, 191, 41, 255) }, //Lime Concrete Powder
+            { new Tuple<int, int>(252, 6), new Color32(239, 174, 197, 255) }, //Pink Concrete Powder
+            { new Tuple<int, int>(252, 7), new Color32(76, 80, 85, 255) }, //Gray Concrete Powder
+            { new Tuple<int, int>(252, 8), new Color32(154, 154, 147, 255) }, //Light Gray Concrete Powder
+            { new Tuple<int, int>(252, 9), new Color32(35, 148, 154, 255) }, //Cyan Concrete Powder
+            { new Tuple<int, int>(252, 10), new Color32(120, 48, 169, 255) }, //Purple Concrete Powder
+            { new Tuple<int, int>(252, 11), new Color32(72, 74, 171, 255) }, //Blue Concrete Powder
+            { new Tuple<int, int>(252, 12), new Color32(121, 81, 51, 255) }, //Brown Concrete Powder
+            { new Tuple<int, int>(252, 13), new Color32(103, 124, 55, 255) }, //Green Concrete Powder
+            { new Tuple<int, int>(252, 14), new Color32(164, 51, 50, 255) }, //Red Concrete Powder
+            { new Tuple<int, int>(252, 15), new Color32(22, 24, 28, 255) }, //Black Concrete Powder
+
             { new Tuple<int, int>(255, 0), new Color32(50, 33, 36, 255) }, //Structure Block
 
         };
@@ -398,6 +472,17 @@ namespace SchematicToVox.Extensions
 
 
         public static Color32 GetBlockColor(this Block block)
-            => _colors[new Tuple<int, int>(block.BlockID, block.Data)];
+        {
+            Color32 color;
+            if (_colors.TryGetValue(new Tuple<int, int>(block.BlockID, block.Data), out color))
+            {
+                return color;
+            }
+            else
+            {
+                Console.WriteLine("Applying default color of the block ID: " + block.BlockID + ":" + block.Data);
+                return _colors[new Tuple<int, int>(block.BlockID, 0)];
+            }
+        }
     }
 }
