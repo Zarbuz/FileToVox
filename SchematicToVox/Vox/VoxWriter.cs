@@ -147,6 +147,8 @@ namespace SchematicToVox.Vox
             {
                 WriteSizeChunk(writer);
                 WriteXyziChunk(writer, i);
+                float progress = ((float)i / _countSize) * 100;
+                Console.WriteLine("Progress: " + progress.ToString("00.0") + "%");
             }
             WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
@@ -205,7 +207,6 @@ namespace SchematicToVox.Vox
                 blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
                 blocks = RecenterBlocks(blocks);
             }
-            Console.WriteLine(blocks.Count());
             writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
             writer.Write(blocks.Count()); //Blocks count

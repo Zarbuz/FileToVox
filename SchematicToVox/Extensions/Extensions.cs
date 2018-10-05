@@ -480,7 +480,7 @@ namespace SchematicToVox.Extensions
             }
             else
             {
-                Console.WriteLine("Applying default color of the block ID: " + block.BlockID + ":" + block.Data);
+                //Console.WriteLine("Applying default color of the block ID: " + block.BlockID + ":" + block.Data);
                 return _colors[new Tuple<int, int>(block.BlockID, 0)];
             }
         }

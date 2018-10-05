@@ -1,3 +1,11 @@
+# How to use SchematicToVox
+
+```
+./SchematicToVox.exe file.schematic [outputdir]
+```
+
+* outputdir is an optional argument
+
 # MagicaVoxel .vox File Format [10/18/2016]
 
 ## 1. File Structure : RIFF style

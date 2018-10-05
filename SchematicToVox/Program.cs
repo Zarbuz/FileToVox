@@ -12,18 +12,37 @@ namespace SchematicToVox
     {
         static void Main(string[] args)
         {
-            var path = "../../schematics/gateway.schematic";
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Missing arguments");
+                Console.ReadKey();
+                return;
+            }
+
+            var path = args[0];
+            if (Path.GetExtension(path) != ".schematic")
+            {
+                Console.WriteLine("File is not a schematic");
+                Console.ReadKey();
+                return;
+            }
             var schematic = SchematicReader.SchematicReader.LoadSchematic(path);
-            var name = Path.GetFileNameWithoutExtension(path);
-
             VoxWriter writer = new VoxWriter();
-            VoxReader reader = new VoxReader();
 
-            writer.WriteModel("../../exports/" + name + ".vox", schematic);
-            reader.LoadModel("../../exports/" + name + ".vox");
+            if (args.Length == 2)
+            {
+                var outputPath = args[1];
+                Console.WriteLine("Specified output path: " + Path.GetFullPath(outputPath));
+                writer.WriteModel(outputPath + ".vox", schematic);
+            }
+            else
+            {
+                var name = Path.GetFileNameWithoutExtension(path);
+                writer.WriteModel(name + ".vox", schematic);
+            }
 
             Console.WriteLine("Done");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         
