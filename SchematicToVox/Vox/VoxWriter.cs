@@ -38,6 +38,10 @@ namespace SchematicToVox.Vox
             return true;
         }
 
+        /// <summary>
+        /// Count the total bytes of all children chunks
+        /// </summary>
+        /// <returns></returns>
         private int CountChildrenSize()
         {
             _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126));
@@ -69,13 +73,23 @@ namespace SchematicToVox.Vox
             return _childrenChunkSize;
         }
 
+        /// <summary>
+        /// Get all blocks in the specified coordinates
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         private HashSet<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
         {
             return _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
             && t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
         }
 
-
+        /// <summary>
+        /// Set absolute coordinates to relative coordinates in one region
+        /// </summary>
+        /// <param name="blocks"></param>
+        /// <returns></returns>
         private HashSet<Block> RecenterBlocks(HashSet<Block> blocks)
         {
             foreach (Block block in blocks)
@@ -87,6 +101,42 @@ namespace SchematicToVox.Vox
             return blocks;
         }
 
+        /// <summary>
+        /// Get world coordinates of the first block in each region
+        /// </summary>
+        private void GetFirstBlockForEachRegion()
+        {
+            _firstBlockInEachRegion = new Block[_countSize];
+
+            for (int i = 0; i < _countSize; i++)
+            {
+                int z = ((i % _width) * 126);
+                int y = (((i / _width) % _height) * 126);
+                int x = (i / (_width * _height) * 126);
+                Block block = new Block(x, y, z, 0, 0, 0);
+                _firstBlockInEachRegion[i] = block;
+            }
+        }
+
+        /// <summary>
+        /// Convert the coordinates of the first block in each region into string
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private string GetWorldPosString(int index)
+        {
+            int worldPosX = _firstBlockInEachRegion[index].X - (_length / 2) * 126;
+            int worldPosZ = _firstBlockInEachRegion[index].Z - (_width / 2) * 126;
+            int worldPosY = _firstBlockInEachRegion[index].Y + 126;
+
+            string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
+            return pos;
+        }
+
+        /// <summary>
+        /// Main loop for write all chunks
+        /// </summary>
+        /// <param name="writer"></param>
         private void WriteChunks(BinaryWriter writer)
         {
             for (int i = 0; i < _countSize; i++)
@@ -94,7 +144,21 @@ namespace SchematicToVox.Vox
                 WriteSizeChunk(writer);
                 WriteXyziChunk(writer, i);
             }
+            WriteMainTranformNode(writer);
+            WriteGroupChunk(writer);
+            for (int i = 0; i < _countSize; i++)
+            {
+                WriteTransformChunk(writer, i);
+                WriteShapeChunk(writer, i);
+            }
+        }
 
+        /// <summary>
+        /// Write the main trande node chunk
+        /// </summary>
+        /// <param name="writer"></param>
+        private void WriteMainTranformNode(BinaryWriter writer)
+        {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
             writer.Write(28); //Main nTRN has always a 28 bytes size
             writer.Write(0); //Child nTRN chunk size
@@ -105,16 +169,12 @@ namespace SchematicToVox.Vox
             writer.Write(-1); //Layer ID
             writer.Write(1); //Read Array Size
             writer.Write(0); //ReadDICT size
-
-
-            WriteGroupChunk(writer);
-            for (int i = 0; i < _countSize; i++)
-            {
-                WriteTransformChunk(writer, i);
-                WriteShapeChunk(writer, i);
-            }
         }
 
+        /// <summary>
+        /// Write SIZE chunk
+        /// </summary>
+        /// <param name="writer"></param>
         private void WriteSizeChunk(BinaryWriter writer)
         {
             writer.Write(Encoding.UTF8.GetBytes(SIZE));
@@ -126,6 +186,11 @@ namespace SchematicToVox.Vox
             writer.Write(126); //Depth
         }
 
+        /// <summary>
+        /// Write XYZI chunk
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="index"></param>
         private void WriteXyziChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(XYZI));
@@ -151,6 +216,11 @@ namespace SchematicToVox.Vox
             }
         }
 
+        /// <summary>
+        /// Write nTRN chunk
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="index"></param>
         private void WriteTransformChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(nTRN));
@@ -178,30 +248,11 @@ namespace SchematicToVox.Vox
             writer.Write(Encoding.UTF8.GetBytes(pos));
         }
 
-        private void GetFirstBlockForEachRegion()
-        {
-            _firstBlockInEachRegion = new Block[_countSize];
-            
-            for (int i = 0; i < _countSize; i++)
-            {
-                int z = ((i % _width) * 126);
-                int y = (((i / _width) % _height) * 126);
-                int x = (i / (_width * _height) * 126);
-                Block block = new Block(x, y, z, 0, 0, 0);
-                _firstBlockInEachRegion[i] = block;
-            }
-        }
-
-        private string GetWorldPosString(int index)
-        {
-            int worldPosX = _firstBlockInEachRegion[index].X - (_length / 2) * 126;
-            int worldPosZ = _firstBlockInEachRegion[index].Z - (_width / 2) * 126;
-            int worldPosY = _firstBlockInEachRegion[index].Y + 126;
-
-            string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
-            return pos;
-        }
-
+        /// <summary>
+        /// Write nSHP chunk
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="index"></param>
         private void WriteShapeChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(nSHP));
@@ -214,6 +265,10 @@ namespace SchematicToVox.Vox
             writer.Write(0);
         }
 
+        /// <summary>
+        /// Write nGRP chunk
+        /// </summary>
+        /// <param name="writer"></param>
         private void WriteGroupChunk(BinaryWriter writer)
         {
             writer.Write(Encoding.UTF8.GetBytes(nGRP));
