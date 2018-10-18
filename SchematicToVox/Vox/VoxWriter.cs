@@ -17,6 +17,7 @@ namespace SchematicToVox.Vox
         private int _height = 0;
         private int _countSize = 0;
 
+        private int _countBlocks = 0;
         private int _childrenChunkSize = 0;
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
@@ -49,6 +50,7 @@ namespace SchematicToVox.Vox
             _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126));
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
             _countSize = _width * _length * _height;
+            Console.WriteLine("COUNT SIZE: " + _schematic.Blocks.Count);
 
             int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
             int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count() * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
@@ -110,14 +112,13 @@ namespace SchematicToVox.Vox
         private void GetFirstBlockForEachRegion()
         {
             _firstBlockInEachRegion = new Block[_countSize];
-
+            int min = (_width < _length) ? _width : _length;
             for (int i = 0; i < _countSize; i++)
             {
-                int z = ((i % _width) * 126);
-                int y = (((i / _width) % _height) * 126);
-                int x = (i / (_width * _height) * 126);
-                Block block = new Block(x, y, z, 0, 0, 0);
-                _firstBlockInEachRegion[i] = block;
+                int x = (i / (min * _height) * 126);
+                int y = (((i / min) % _height) * 126);
+                int z = ((i % min) * 126);
+                _firstBlockInEachRegion[i] = new Block(x, y, z, 0, 0, 0);
             }
         }
 
@@ -157,6 +158,7 @@ namespace SchematicToVox.Vox
                 WriteTransformChunk(writer, i);
                 WriteShapeChunk(writer, i);
             }
+            Console.WriteLine("BLOCKS COUNT AFTER: " + _countBlocks);
         }
 
         /// <summary>
@@ -210,6 +212,7 @@ namespace SchematicToVox.Vox
             writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
             writer.Write(blocks.Count()); //Blocks count
+            _countBlocks += blocks.Count;
 
             foreach (Block block in blocks)
             {

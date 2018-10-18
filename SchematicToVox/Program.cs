@@ -10,6 +10,7 @@ namespace SchematicToVox
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             if (args.Length < 1)
@@ -28,24 +29,27 @@ namespace SchematicToVox
             }
             var schematic = SchematicReader.SchematicReader.LoadSchematic(path);
             VoxWriter writer = new VoxWriter();
+            VoxReader reader = new VoxReader();
 
             if (args.Length == 2)
             {
                 var outputPath = args[1];
                 Console.WriteLine("Specified output path: " + Path.GetFullPath(outputPath));
                 writer.WriteModel(outputPath + ".vox", schematic);
+                reader.LoadModel(outputPath + ".vox");
             }
             else
             {
                 var name = Path.GetFileNameWithoutExtension(path);
                 writer.WriteModel(name + ".vox", schematic);
+                reader.LoadModel(name + ".vox");
             }
 
             Console.WriteLine("Done");
             Console.ReadKey();
         }
 
-        
+
     }
 }
 

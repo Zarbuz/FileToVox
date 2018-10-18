@@ -28,5 +28,10 @@ namespace SchematicToVox.Tools
             this.b = b;
             this.a = 1.0f;
         }
+
+        public override string ToString()
+        {
+            return r + " " + g + " " + b + " " + a;
+        }
     }
 }

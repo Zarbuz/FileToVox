@@ -19,7 +19,6 @@ namespace SchematicToVox.Vox
             VoxModel output = new VoxModel();
             var name = Path.GetFileNameWithoutExtension(absolutePath);
             _logOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
-
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
@@ -156,9 +155,9 @@ namespace SchematicToVox.Vox
                 while (childReader.BaseStream.Position != childReader.BaseStream.Length)
                 {
                     ReadChunk(childReader, output);
-
                 }
             }
+
         }
 
         private void WriteLogs(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
@@ -233,7 +232,11 @@ namespace SchematicToVox.Vox
 
         private void DisplayFrameAttributes(DICT[] frameAttributes, StreamWriter writer)
         {
-            frameAttributes.ToList().ForEach(t => writer.WriteLine("--> FRAME ATTRIBUTE: " + t._r + " " + t._t.ToString()));
+            var list = frameAttributes.ToList();
+            foreach (var item in list )
+            {
+                writer.WriteLine("--> FRAME ATTRIBUTE: " + item._r + " " + item._t.ToString());
+            }
         }
 
         private void DisplayModelAttributes(ShapeModel[] models, StreamWriter writer)
