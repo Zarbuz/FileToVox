@@ -14,7 +14,7 @@ namespace SchematicReader
         public short Heigth { get; set; }
         public short Length { get; set; }
         /// <summary>Contains all usual blocks</summary>
-        public HashSet<Block> Blocks { get; set; }
+        public List<HashSet<Block>> Blocks { get; set; }
         /// <summary>Contains TileEntities such as hoppers and chests</summary>
         public List<TileEntity> TileEntities { get; set; }
         /// <summary>Returns how much blocks and tile entities there are in total.</summary>
@@ -22,7 +22,7 @@ namespace SchematicReader
 
         public Schematic()
         {
-            Blocks = new HashSet<Block>();
+            Blocks = new List<HashSet<Block>>();
             TileEntities = new List<TileEntity>();
         }
 
@@ -38,7 +38,7 @@ namespace SchematicReader
             this.Length = length;
         }
 
-        public Schematic(string name, short width, short heigth, short length, HashSet<Block> blocks, List<TileEntity> tileEntities) : this(name, width, heigth, length)
+        public Schematic(string name, short width, short heigth, short length, List<HashSet<Block>> blocks, List<TileEntity> tileEntities) : this(name, width, heigth, length)
         {
             this.Blocks = blocks;
             this.TileEntities = tileEntities;

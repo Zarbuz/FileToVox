@@ -387,6 +387,7 @@ namespace SchematicToVox.Extensions
             { new Tuple<int, int>(204, 0), new Color32(168, 121, 168, 255) }, //Purpur Slab (Double)
             { new Tuple<int, int>(205, 0), new Color32(168, 121, 168, 255) }, //Purpur Slab
             { new Tuple<int, int>(206, 0), new Color32(225, 230, 170, 255) }, //End Stone Bricks
+            { new Tuple<int, int>(207, 0), new Color32(179, 134, 0, 255) }, //Beetroot Block
             { new Tuple<int, int>(208, 0), new Color32(152, 125, 69, 255) }, //Grass Path
             { new Tuple<int, int>(209, 0), new Color32(240, 240, 240, 255) }, //End Gateway
             { new Tuple<int, int>(210, 0), new Color32(155, 137, 39, 255) }, //Repeating Command Block

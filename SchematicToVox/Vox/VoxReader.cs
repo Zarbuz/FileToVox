@@ -162,7 +162,10 @@ namespace SchematicToVox.Vox
 
         private void WriteLogs(string chunkName, int chunkSize, int childChunkSize, VoxModel output)
         {
-            string path = "../../logs/" + _logOutputFile;
+            if (!Directory.Exists("logs"))
+                Directory.CreateDirectory("logs");
+
+            string path = "logs/" + _logOutputFile;
             using (var writer = new StreamWriter(path, true))
             {
                 writer.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");

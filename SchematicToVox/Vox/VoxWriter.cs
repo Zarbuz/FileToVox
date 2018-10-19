@@ -16,6 +16,7 @@ namespace SchematicToVox.Vox
         private int _length = 0;
         private int _height = 0;
         private int _countSize = 0;
+        private int _totalBlockCount = 0;
 
         private int _countBlocks = 0;
         private int _childrenChunkSize = 0;
@@ -26,7 +27,7 @@ namespace SchematicToVox.Vox
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
-            _width = _length = _height = _countSize = 0;
+            _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
@@ -50,10 +51,12 @@ namespace SchematicToVox.Vox
             _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126));
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
             _countSize = _width * _length * _height;
-            Console.WriteLine("COUNT SIZE: " + _schematic.Blocks.Count);
+            _totalBlockCount = _schematic.Blocks.Sum(hashset => hashset.Count);
+
+            Console.WriteLine("COUNT SIZE: " + _totalBlockCount);
 
             int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
-            int chunkXYZI = (16 * _countSize) + _schematic.Blocks.Count() * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
+            int chunkXYZI = (16 * _countSize) + _totalBlockCount * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
             int chunknTRNMain = 40; //40 = 
             int chunknGRP = 24 + _countSize * 4;
             int chunknTRN = 60 * _countSize;
@@ -86,8 +89,20 @@ namespace SchematicToVox.Vox
         /// <returns></returns>
         private HashSet<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
         {
-            return _schematic.Blocks.Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
-            && t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
+            HashSet<Block> blocks = new HashSet<Block>();
+            foreach (var hashset in _schematic.Blocks)
+            {
+                foreach (Block block in hashset)
+                {
+                    if (block.X >= min.x && block.Y >= min.y && block.Z >= min.z && block.X < max.x && block.Y < max.y && block.Z < max.z)
+                    {
+                        blocks.Add(block);
+                    }
+                }
+            }
+            return blocks;
+            //return _schematic.Blocks[index].Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
+            //&& t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
         }
 
         /// <summary>
@@ -203,7 +218,16 @@ namespace SchematicToVox.Vox
         {
             writer.Write(Encoding.UTF8.GetBytes(XYZI));
             HashSet<Block> blocks = new HashSet<Block>();
-            if (_schematic.Blocks.Count > 0)
+            int globalIndex = 0;
+            for (int i = 0; i < _schematic.Blocks.Count; i++)
+            {
+                if (_schematic.Blocks[i].Count == 0)
+                {
+                    globalIndex++;
+                }
+            }
+
+            if (_schematic.Blocks[globalIndex].Count > 0)
             {
                 Block firstBlock = _firstBlockInEachRegion[index];
                 blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
@@ -224,7 +248,7 @@ namespace SchematicToVox.Vox
                     writer.Write((byte)i); //TODO: Apply color of the block
                 else
                     writer.Write((byte)1);
-                _schematic.Blocks.Remove(block);
+                _schematic.Blocks[globalIndex].Remove(block);
             }
         }
 
@@ -305,16 +329,19 @@ namespace SchematicToVox.Vox
             writer.Write(1024);
             writer.Write(0);
             _usedColors = new List<Color32>(256);
-            foreach (Block block in _schematic.Blocks)
+            for (int i = 0; i < _schematic.Blocks.Count; i++)
             {
-                var color = block.GetBlockColor();
-                if (_usedColors.Count < 256 && !_usedColors.Contains(color))
+                foreach (Block block in _schematic.Blocks[i])
                 {
-                    _usedColors.Add(color);
-                    writer.Write(color.r);
-                    writer.Write(color.g);
-                    writer.Write(color.b);
-                    writer.Write(color.a);
+                    var color = block.GetBlockColor();
+                    if (_usedColors.Count < 256 && !_usedColors.Contains(color))
+                    {
+                        _usedColors.Add(color);
+                        writer.Write(color.r);
+                        writer.Write(color.g);
+                        writer.Write(color.b);
+                        writer.Write(color.a);
+                    }
                 }
             }
 

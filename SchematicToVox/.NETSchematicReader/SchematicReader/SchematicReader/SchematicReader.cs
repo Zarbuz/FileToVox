@@ -19,7 +19,7 @@ namespace SchematicReader
         private static Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            HashSet<Block> blocks = GetBlocks(raw);
+            List<HashSet<Block>> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks, raw.TileEntities);
             return schematic;
@@ -100,10 +100,16 @@ namespace SchematicReader
             return list;
         }
 
-        private static HashSet<Block> GetBlocks(RawSchematic rawSchematic)
+        private static List<HashSet<Block>> GetBlocks(RawSchematic rawSchematic)
         {
+            if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
+                throw new Exception("Schematic too big");
+
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            HashSet<Block> blocks = new HashSet<Block>();
+            List<HashSet<Block>> blocks = new List<HashSet<Block>>();
+            blocks.Add(new HashSet<Block>());
+            int global = 0;
+
             for (int Y = 0; Y < rawSchematic.Heigth; Y++)
             {
                 for (int Z = 0; Z < rawSchematic.Length; Z++)
@@ -112,9 +118,19 @@ namespace SchematicReader
                     {
                         int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
                         Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], index);
-                        //TileEntities (Schilder, Hopper..) werden woanders geladen
-                        if (block.BlockID != 0)
-                            blocks.Add(block);
+                        try
+                        {
+                            if (block.BlockID != 0)
+                            {
+                                blocks[global].Add(block);
+                            }
+                        }
+                        catch (OutOfMemoryException e)
+                        {
+                            global++;
+                            blocks.Add(new HashSet<Block>());
+                            blocks[global].Add(block);
+                        }
                     }
                 }
             }
