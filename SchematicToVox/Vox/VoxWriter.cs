@@ -221,7 +221,7 @@ namespace SchematicToVox.Vox
             int globalIndex = 0;
             for (int i = 0; i < _schematic.Blocks.Count; i++)
             {
-                if (_schematic.Blocks[i].Count == 0)
+                if (_schematic.Blocks[i].Count == 0 && globalIndex < _schematic.Blocks.Count - 1)
                 {
                     globalIndex++;
                 }
