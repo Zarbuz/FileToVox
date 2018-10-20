@@ -17,6 +17,7 @@ namespace SchematicToVox.Vox
         private int _height = 0;
         private int _countSize = 0;
         private int _totalBlockCount = 0;
+        private int _direction = 0;
 
         private int _countBlocks = 0;
         private int _childrenChunkSize = 0;
@@ -25,10 +26,11 @@ namespace SchematicToVox.Vox
         private Block[] _firstBlockInEachRegion;
         private List<Color32> _usedColors;
 
-        public bool WriteModel(string absolutePath, Schematic schematic)
+        public bool WriteModel(string absolutePath, Schematic schematic, int direction)
         {
             _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
+            _direction = direction;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -127,7 +129,12 @@ namespace SchematicToVox.Vox
         private void GetFirstBlockForEachRegion()
         {
             _firstBlockInEachRegion = new Block[_countSize];
-            int min = (_width < _length) ? _width : _length;
+            int min = 0;
+            if (_direction == 0)
+                min = (_width < _length) ? _width : _length;
+            else
+                min = (_width > _length) ? _width : _length;
+
             for (int i = 0; i < _countSize; i++)
             {
                 int x = (i / (min * _height) * 126);
@@ -174,6 +181,11 @@ namespace SchematicToVox.Vox
                 WriteShapeChunk(writer, i);
             }
             Console.WriteLine("BLOCKS COUNT AFTER: " + _countBlocks);
+            if (_totalBlockCount != _countBlocks)
+            {
+                Console.WriteLine("Different total blocks count before and after conversion.");
+                Console.WriteLine("Try to export with the option --way=1");
+            }
         }
 
         /// <summary>
