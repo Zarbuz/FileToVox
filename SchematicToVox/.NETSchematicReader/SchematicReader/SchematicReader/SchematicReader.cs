@@ -110,7 +110,7 @@ namespace SchematicReader
             blocks.Add(new HashSet<Block>());
             int global = 0;
 
-            for (int Y = 0; Y < rawSchematic.Heigth; Y++)
+            Parallel.For(0, rawSchematic.Heigth, Y =>
             {
                 for (int Z = 0; Z < rawSchematic.Length; Z++)
                 {
@@ -133,7 +133,12 @@ namespace SchematicReader
                         }
                     }
                 }
-            }
+            });
+            //for (int Y = 0; Y < rawSchematic.Heigth; Y++)
+            //{
+
+            //}
+            //}
             return blocks;
         }
     }
