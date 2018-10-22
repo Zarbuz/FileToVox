@@ -6,44 +6,35 @@ using System.Threading.Tasks;
 
 namespace SchematicReader
 {
-    public class Block : IEquatable<Block>,
-                         IComparable<Block>
+    public struct Block : IEquatable<Block>
+                         //IComparable<Block>
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
-        public int BlockID { get; set; }
-        public int Data { get; set; }
-        public int ID { get; set; }
-        /// <summary>Returns ItemID:SubID</summary>
-        public string ItemID { get { return BlockID + ":" + Data; } }
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
+        public readonly byte BlockID;
+        public readonly byte Data;
+        //public readonly int ID;
 
-        public Block()
-        {
-            X = 0;
-            Y = 0;
-            Z = 0;
-            BlockID = 0;
-            ID = -1;
-        }
-
-        public Block(int x, int y, int z, int blockID, int data, int iD)
+        public Block(int x, int y, int z, byte blockID, byte data/*, int iD*/)
         {
             X = x;
             Y = y;
             Z = z;
             BlockID = blockID;
             Data = data;
-            ID = iD;
+            //ID = iD;
         }
 
         public override int GetHashCode()
         {
-            return ID.GetHashCode();
+            //the index of the block at X,Y,Z is (Y×length + Z)×width + X
+            return (Y * SchematicReader.LengthSchematic + Z) * SchematicReader.WidthSchematic + X;
         }
+
         public bool Equals(Block other)
         {
-            return this.ID.Equals(other.ID);
+            return this.GetHashCode() == other.GetHashCode();
         }
 
         public override string ToString()
@@ -51,9 +42,9 @@ namespace SchematicReader
             return string.Format("ID: {3}:{4}, X: {0}, Y: {1}, Z: {2}", X, Y, Z, BlockID, Data);
         }
 
-        public int CompareTo(Block other)
-        {
-            return ID.CompareTo(other.ID);
-        }
+        //public int CompareTo(Block other)
+        //{
+        //    return this.GetHashCode().CompareTo(other.GetHashCode());
+        //}
     }
 }

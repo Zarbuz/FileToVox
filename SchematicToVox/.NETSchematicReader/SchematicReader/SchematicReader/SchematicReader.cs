@@ -10,6 +10,10 @@ namespace SchematicReader
 {
     public static class SchematicReader
     {
+        public static short WidthSchematic;
+        public static short LengthSchematic;
+        public static short HeightSchematic;
+
         public static Schematic LoadSchematic(string path)
         {
             NbtFile file = new NbtFile(path);
@@ -36,12 +40,15 @@ namespace SchematicReader
                 {
                     case "Width": //Short
                         raw.Width = tag.ShortValue;
+                        WidthSchematic = raw.Width;
                         break;
                     case "Height": //Short
                         raw.Heigth = tag.ShortValue;
+                        HeightSchematic = raw.Heigth;
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
+                        LengthSchematic = raw.Length;
                         break;
                     case "Materials": //String
                         raw.Materials = tag.StringValue;
@@ -105,24 +112,28 @@ namespace SchematicReader
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
                 throw new Exception("Schematic too big");
 
+            Console.WriteLine("Started to read all blocks of schematic ...");
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
             blocks.Add(new HashSet<Block>());
             int global = 0;
-
-            Parallel.For(0, rawSchematic.Heigth, Y =>
+            int count = 0;
+            long totalCount = rawSchematic.Width * rawSchematic.Heigth * rawSchematic.Length;
+            
+            for (int Y = 0; Y < rawSchematic.Heigth; Y++)
             {
                 for (int Z = 0; Z < rawSchematic.Length; Z++)
                 {
                     for (int X = 0; X < rawSchematic.Width; X++)
                     {
                         int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
-                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], index);
+                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index]/*, index*/);
                         try
                         {
-                            if (block.BlockID != 0)
+                            if (block.BlockID != 0) //don't add air block
                             {
                                 blocks[global].Add(block);
+                                count++;
                             }
                         }
                         catch (OutOfMemoryException e)
@@ -133,12 +144,7 @@ namespace SchematicReader
                         }
                     }
                 }
-            });
-            //for (int Y = 0; Y < rawSchematic.Heigth; Y++)
-            //{
-
-            //}
-            //}
+            }
             return blocks;
         }
     }

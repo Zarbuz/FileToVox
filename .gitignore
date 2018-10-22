@@ -2,3 +2,6 @@ SchematicToVox/bin/
 SchematicToVox/obj/
 .vs/
 
+Build/schematics/
+Build/vox/
+Build/logs/

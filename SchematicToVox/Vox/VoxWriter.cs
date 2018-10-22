@@ -23,7 +23,7 @@ namespace SchematicToVox.Vox
         private int _childrenChunkSize = 0;
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
-        private Block[] _firstBlockInEachRegion;
+        private BlockGlobal[] _firstBlockInEachRegion;
         private List<Color32> _usedColors;
 
         public bool WriteModel(string absolutePath, Schematic schematic, int direction)
@@ -108,27 +108,11 @@ namespace SchematicToVox.Vox
         }
 
         /// <summary>
-        /// Set absolute coordinates to relative coordinates in one region
-        /// </summary>
-        /// <param name="blocks"></param>
-        /// <returns></returns>
-        private HashSet<Block> RecenterBlocks(HashSet<Block> blocks)
-        {
-            foreach (Block block in blocks)
-            {
-                block.X %= 126;
-                block.Y %= 126;
-                block.Z %= 126;
-            }
-            return blocks;
-        }
-
-        /// <summary>
         /// Get world coordinates of the first block in each region
         /// </summary>
         private void GetFirstBlockForEachRegion()
         {
-            _firstBlockInEachRegion = new Block[_countSize];
+            _firstBlockInEachRegion = new BlockGlobal[_countSize];
             int min = 0;
             if (_direction == 0)
                 min = (_width < _length) ? _width : _length;
@@ -140,7 +124,7 @@ namespace SchematicToVox.Vox
                 int x = (i / (min * _height) * 126);
                 int y = (((i / min) % _height) * 126);
                 int z = ((i % min) * 126);
-                _firstBlockInEachRegion[i] = new Block(x, y, z, 0, 0, 0);
+                _firstBlockInEachRegion[i] = new BlockGlobal(x, y, z);
             }
         }
 
@@ -241,9 +225,8 @@ namespace SchematicToVox.Vox
 
             if (_schematic.Blocks[globalIndex].Count > 0)
             {
-                Block firstBlock = _firstBlockInEachRegion[index];
+                BlockGlobal firstBlock = _firstBlockInEachRegion[index];
                 blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
-                blocks = RecenterBlocks(blocks);
             }
             writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
@@ -252,9 +235,9 @@ namespace SchematicToVox.Vox
 
             foreach (Block block in blocks)
             {
-                writer.Write((byte)block.X);
-                writer.Write((byte)block.Y);
-                writer.Write((byte)block.Z);
+                writer.Write((byte)(block.X % 126));
+                writer.Write((byte)(block.Y) % 126);
+                writer.Write((byte)(block.Z % 126));
                 int i = _usedColors.IndexOf(block.GetBlockColor());
                 if (i != -1)
                     writer.Write((byte)i); //TODO: Apply color of the block
@@ -364,6 +347,20 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)0);
                 writer.Write((byte)0);
             }
+        }
+    }
+
+    struct BlockGlobal
+    {
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
+
+        public BlockGlobal(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
         }
     }
 }
