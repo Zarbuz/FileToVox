@@ -184,7 +184,7 @@ namespace SchematicReader
                     || rawSchematic.Blocks[indexAhead] == 0 || rawSchematic.Blocks[indexBehind] == 0);
 
             }
-            return true;
+            return false;
         }
     }
 }
