@@ -94,20 +94,18 @@ namespace SchematicToVox.Vox
         {
             ConcurrentBag<Block> concurrent = new ConcurrentBag<Block>();
 
-            foreach (var hashset in _schematic.Blocks)
+            Parallel.ForEach(_schematic.Blocks, hashset =>
             {
-                Parallel.ForEach(hashset, block =>
+                foreach (var block in hashset)
                 {
                     if (block.X >= min.x && block.Y >= min.y && block.Z >= min.z && block.X < max.x && block.Y < max.y && block.Z < max.z)
                     {
                         concurrent.Add(block);
                     }
-                });
+                }
+            });
 
-            }
             return concurrent.ToHashSet();
-            //return _schematic.Blocks[index].Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
-            //&& t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
         }
 
         /// <summary>
