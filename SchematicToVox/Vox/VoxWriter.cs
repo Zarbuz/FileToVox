@@ -105,7 +105,7 @@ namespace SchematicToVox.Vox
                 });
 
             }
-            return concurrent.ToHashSet();
+            return concurrent.ToHashSet(new BlockComparer());
             //return _schematic.Blocks[index].Where(t => t.X >= min.x && t.Y >= min.y && t.Z >= min.z
             //&& t.X < max.x && t.Y < max.y && t.Z < max.z).ToHashSet();
         }
@@ -216,7 +216,7 @@ namespace SchematicToVox.Vox
         private void WriteXyziChunk(BinaryWriter writer, int index)
         {
             writer.Write(Encoding.UTF8.GetBytes(XYZI));
-            HashSet<Block> blocks = new HashSet<Block>();
+            HashSet<Block> blocks = new HashSet<Block>(new BlockComparer());
             int globalIndex = 0;
             for (int i = 0; i < _schematic.Blocks.Count; i++)
             {

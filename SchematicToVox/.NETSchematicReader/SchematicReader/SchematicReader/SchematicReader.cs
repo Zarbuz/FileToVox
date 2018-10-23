@@ -115,7 +115,7 @@ namespace SchematicReader
             Console.WriteLine("Started to read all blocks of schematic ...");
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
-            blocks.Add(new HashSet<Block>());
+            blocks.Add(new HashSet<Block>(new BlockComparer()));
             int global = 0;
             int count = 0;
             long totalCount = rawSchematic.Width * rawSchematic.Heigth * rawSchematic.Length;
@@ -139,7 +139,7 @@ namespace SchematicReader
                         catch (OutOfMemoryException e)
                         {
                             global++;
-                            blocks.Add(new HashSet<Block>());
+                            blocks.Add(new HashSet<Block>(new BlockComparer()));
                             blocks[global].Add(block);
                         }
                     }

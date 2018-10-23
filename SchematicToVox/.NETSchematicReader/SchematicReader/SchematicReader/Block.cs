@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchematicReader
 {
-    public struct Block : IEquatable<Block>
+    public struct Block /*: IEquatable<Block>*/
                          //IComparable<Block>
     {
         public readonly int X;
@@ -26,16 +26,16 @@ namespace SchematicReader
             //ID = iD;
         }
 
-        public override int GetHashCode()
-        {
-            //the index of the block at X,Y,Z is (Y×length + Z)×width + X
-            return (Y * SchematicReader.LengthSchematic + Z) * SchematicReader.WidthSchematic + X;
-        }
+        //public override int GetHashCode()
+        //{
+        //    //the index of the block at X,Y,Z is (Y×length + Z)×width + X
+        //    return (Y * SchematicReader.LengthSchematic + Z) * SchematicReader.WidthSchematic + X;
+        //}
 
-        public bool Equals(Block other)
-        {
-            return this.GetHashCode() == other.GetHashCode();
-        }
+        //public bool Equals(Block other)
+        //{
+        //    return this.GetHashCode() == other.GetHashCode();
+        //}
 
         public override string ToString()
         {
@@ -46,5 +46,18 @@ namespace SchematicReader
         //{
         //    return this.GetHashCode().CompareTo(other.GetHashCode());
         //}
+    }
+
+    public class BlockComparer : IEqualityComparer<Block>
+    {
+        public bool Equals(Block x, Block y)
+        {
+            return x.X == y.X && x.Y == y.Y && x.Z == y.Z;
+        }
+
+        public int GetHashCode(Block obj)
+        {
+            return obj.X.GetHashCode() ^ (obj.Y.GetHashCode() << 2) ^ (obj.Z.GetHashCode() >> 2);
+        }
     }
 }
