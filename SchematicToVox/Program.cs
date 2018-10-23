@@ -18,13 +18,17 @@ namespace SchematicToVox
             int direction = 0;
             bool show_help = false;
             bool verbose = false;
+            int ignore_min_y = -1;
+            int ignore_max_y = 256;
 
             var p = new OptionSet() {
                 { "i|input=", "the {NAME} of input schematic file.", v => inputFile = v },
                 { "o|output=", "the {NAME} of output directory.", v => outputDir = v },
                 { "h|help", "show this message and exit", v => show_help = v != null },
                 { "v|verbose", "enable the verbose mode", v => verbose = v != null },
-                { "w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => direction = v }
+                { "w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => direction = v },
+                { "iminy|ignore-min-y=", "Ignore blocks below the specified layer", (int v) => ignore_min_y = v },
+                { "imaxy|ignore-max-y=", "Ignore blocks above the specified layer", (int v) => ignore_max_y = v },
             };
 
             List<string> extra;
@@ -39,9 +43,13 @@ namespace SchematicToVox
                 }
 
                 if (inputFile == null)
-                    throw new InvalidOperationException("Missing required option -i=FILE");
+                    throw new ArgumentNullException("Missing required option -i=FILE");
                 if (outputDir == null)
-                    throw new InvalidOperationException("Missing required option -o=FILE");
+                    throw new ArgumentNullException("Missing required option -o=FILE");
+                if (ignore_min_y < -1)
+                    throw new ArgumentException("ignore-min-y argument must be positive");
+                if (ignore_max_y > 256)
+                    throw new ArgumentException("ignore-max-y argument must be lower than 256");
 
                 if (Path.GetExtension(inputFile) != ".schematic")
                 {
@@ -50,7 +58,12 @@ namespace SchematicToVox
                     return;
                 }
 
-                var schematic = SchematicReader.SchematicReader.LoadSchematic(inputFile);
+                if (ignore_min_y != -1)
+                    Console.WriteLine("Specified min Y layer : " + ignore_min_y);
+                if (ignore_max_y != 256)
+                    Console.WriteLine("Specified max Y layer : " + ignore_max_y);
+
+                var schematic = SchematicReader.SchematicReader.LoadSchematic(inputFile, ignore_min_y, ignore_max_y);
                 VoxWriter writer = new VoxWriter();
 
                 Console.WriteLine("Specified output path: " + Path.GetFullPath(outputDir));

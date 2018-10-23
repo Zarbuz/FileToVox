@@ -14,9 +14,14 @@ namespace SchematicReader
         public static short LengthSchematic;
         public static short HeightSchematic;
 
-        public static Schematic LoadSchematic(string path)
+        private static int _ignore_min_y;
+        private static int _ignore_max_y;
+
+        public static Schematic LoadSchematic(string path, int min, int max)
         {
             NbtFile file = new NbtFile(path);
+            _ignore_min_y = min;
+            _ignore_max_y = max;
             return LoadSchematic(file);
         }
 
@@ -112,34 +117,39 @@ namespace SchematicReader
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
                 throw new Exception("Schematic too big");
 
-            Console.WriteLine("Started to read all blocks of schematic ...");
+            Console.WriteLine("Started to read all blocks of the schematic ...");
+            Console.WriteLine("[INFO] Raw schematic Width: " + rawSchematic.Width);
+            Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
+            Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
+            Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
+
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
-            blocks.Add(new HashSet<Block>(new BlockComparer()));
+            blocks.Add(new HashSet<Block>());
             int global = 0;
-            int count = 0;
-            long totalCount = rawSchematic.Width * rawSchematic.Heigth * rawSchematic.Length;
-            
-            for (int Y = 0; Y < rawSchematic.Heigth; Y++)
+
+            int minY = Math.Max(_ignore_min_y, 0);
+            int maxY = Math.Min(_ignore_max_y, rawSchematic.Heigth);
+
+            for (int Y = minY; Y < maxY; Y++)
             {
                 for (int Z = 0; Z < rawSchematic.Length; Z++)
                 {
                     for (int X = 0; X < rawSchematic.Width; X++)
                     {
                         int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
-                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index]/*, index*/);
+                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index]);
                         try
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
                                 blocks[global].Add(block);
-                                count++;
                             }
                         }
                         catch (OutOfMemoryException e)
                         {
                             global++;
-                            blocks.Add(new HashSet<Block>(new BlockComparer()));
+                            blocks.Add(new HashSet<Block>());
                             blocks[global].Add(block);
                         }
                     }
