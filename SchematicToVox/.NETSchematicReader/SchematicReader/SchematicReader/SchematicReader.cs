@@ -16,12 +16,14 @@ namespace SchematicReader
 
         private static int _ignore_min_y;
         private static int _ignore_max_y;
+        private static bool _excavate;
 
-        public static Schematic LoadSchematic(string path, int min, int max)
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
+            _excavate = excavate;
             return LoadSchematic(file);
         }
 
@@ -143,7 +145,14 @@ namespace SchematicReader
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
-                                blocks[global].Add(block);
+                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
+                                {
+                                    blocks[global].Add(block);
+                                }
+                                else if (!_excavate)
+                                {
+                                    blocks[global].Add(block);
+                                }
                             }
                         }
                         catch (OutOfMemoryException e)
@@ -156,6 +165,26 @@ namespace SchematicReader
                 }
             }
             return blocks;
+        }
+
+        private static bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
+        {
+            if (block.X - 1 >= 0 && block.X + 1 < rawSchematic.Width && block.Y - 1 >= minY && block.Y + 1 < maxY && block.Z - 1 >= 0 && block.Z < rawSchematic.Length)
+            {
+                int indexLeftX = (block.Y * rawSchematic.Length + block.Z) * rawSchematic.Width + (block.X - 1);
+                int indexRightX = (block.Y * rawSchematic.Length + block.Z) * rawSchematic.Width + (block.X + 1);
+
+                int indexTop = ((block.Y + 1) * rawSchematic.Length + block.Z) * rawSchematic.Width + block.X;
+                int indexBottom = ((block.Y - 1) * rawSchematic.Length + block.Z) * rawSchematic.Width + block.X;
+
+                int indexAhead = (block.Y * rawSchematic.Length + block.Z + 1) * rawSchematic.Width + block.X;
+                int indexBehind = (block.Y * rawSchematic.Length + block.Z - 1) * rawSchematic.Width + block.X;
+                return (rawSchematic.Blocks[indexLeftX] == 0 || rawSchematic.Blocks[indexRightX] == 0
+                    || rawSchematic.Blocks[indexTop] == 0 || rawSchematic.Blocks[indexBottom] == 0
+                    || rawSchematic.Blocks[indexAhead] == 0 || rawSchematic.Blocks[indexBehind] == 0);
+
+            }
+            return true;
         }
     }
 }
