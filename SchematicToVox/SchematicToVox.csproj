@@ -38,6 +38,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.5.1\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,9 +78,9 @@
       <Project>{4488498d-976d-4da3-bf72-109531af0488}</Project>
       <Name>fNbt</Name>
     </ProjectReference>
-    <ProjectReference Include=".NETSchematicReader\SchematicReader\SchematicReader\SchematicReader.csproj">
+    <ProjectReference Include=".NETSchematicReader\SchematicReader\SchematicReader\Schematics.csproj">
       <Project>{70942bcf-342e-4e3c-be5d-abb934c3a917}</Project>
-      <Name>SchematicReader</Name>
+      <Name>Schematics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

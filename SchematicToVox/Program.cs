@@ -55,25 +55,29 @@ namespace SchematicToVox
                 if (_ignore_max_y > 256)
                     throw new ArgumentException("ignore-max-y argument must be lower than 256");
 
-                if (Path.GetExtension(_inputFile) != ".schematic")
-                {
-                    Console.WriteLine("File is not a schematic");
-                    Console.ReadKey();
-                    return;
-                }
-
-                if (_ignore_min_y != -1)
+                               if (_ignore_min_y != -1)
                     Console.WriteLine("Specified min Y layer : " + _ignore_min_y);
                 if (_ignore_max_y != 256)
                     Console.WriteLine("Specified max Y layer : " + _ignore_max_y);
                 if (_excavate)
                     Console.WriteLine("Enabled option: excavate");
 
-                var schematic = SchematicReader.SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate);
-                VoxWriter writer = new VoxWriter();
-
+                string extension = Path.GetExtension(_inputFile);
                 Console.WriteLine("Specified output path: " + Path.GetFullPath(_outputDir));
-                writer.WriteModel(_outputDir + ".vox", schematic, _direction);
+
+                switch (extension)
+                {
+                    case ".schematic":
+                        ProcessSchematicFile();
+                        break;
+                    case ".png":
+                        ProcessImageFile();
+                        break;
+                    default:
+                        Console.WriteLine("Unknown file extension ! ");
+                        Console.ReadKey();
+                        return;
+                }
 
                 if (_verbose)
                 {
@@ -93,6 +97,20 @@ namespace SchematicToVox
 
             
             Console.ReadKey();
+        }
+
+        private static void ProcessSchematicFile()
+        {
+            var schematic = SchematicReader.SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate);
+            VoxWriter writer = new VoxWriter();
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true);
+        }
+
+        private static void ProcessImageFile()
+        {
+            var schematic = SchematicReader.SchematicWriter.WriteSchematic(_inputFile);
+            VoxWriter writer = new VoxWriter();
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, false);
         }
 
         private static void ShowHelp(OptionSet p)

@@ -36,6 +36,11 @@ namespace SchematicToVox.Tools
             return new Color(c.r / 255f, c.g / 255f, c.b / 255f, c.a / 255f);
         }
 
+        public static implicit operator Color32(System.Drawing.Color c)
+        {
+            return new Color32(c.R, c.G, c.B, c.A);
+        }
+
         public override string ToString()
         {
             return string.Format("RGBA({0}, {1}, {2}, {3})", r, g, b, a);

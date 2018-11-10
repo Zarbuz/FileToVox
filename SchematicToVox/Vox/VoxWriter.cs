@@ -19,6 +19,7 @@ namespace SchematicToVox.Vox
         private int _countSize = 0;
         private int _totalBlockCount = 0;
         private int _direction = 0;
+        private bool _isRealSchematic = true;
 
         private int _countBlocks = 0;
         private int _childrenChunkSize = 0;
@@ -27,11 +28,12 @@ namespace SchematicToVox.Vox
         private BlockGlobal[] _firstBlockInEachRegion;
         private List<Color32> _usedColors;
 
-        public bool WriteModel(string absolutePath, Schematic schematic, int direction)
+        public bool WriteModel(string absolutePath, Schematic schematic, int direction, bool isRealShematic)
         {
             _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
             _direction = direction;
+            _isRealSchematic = isRealShematic;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -239,11 +241,8 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)(block.X % 126));
                 writer.Write((byte)(block.Y % 126));
                 writer.Write((byte)(block.Z % 126));
-                int i = _usedColors.IndexOf(block.GetBlockColor());
-                if (i != -1)
-                    writer.Write((byte)i); //TODO: Apply color of the block
-                else
-                    writer.Write((byte)1);
+                int i = (_isRealSchematic) ? _usedColors.IndexOf(block.GetBlockColor()) : _usedColors.IndexOf(block.Color);
+                writer.Write((i != -1) ? (byte)i : (byte)1);
                 _schematic.Blocks[globalIndex].Remove(block);
             }
         }
@@ -329,7 +328,7 @@ namespace SchematicToVox.Vox
             {
                 foreach (Block block in _schematic.Blocks[i])
                 {
-                    var color = block.GetBlockColor();
+                    Color32 color = (_isRealSchematic) ? block.GetBlockColor() : block.Color;
                     if (_usedColors.Count < 256 && !_usedColors.Contains(color))
                     {
                         _usedColors.Add(color);

@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchematicToVox", "Schematic
 		{70942BCF-342E-4E3C-BE5D-ABB934C3A917} = {70942BCF-342E-4E3C-BE5D-ABB934C3A917}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchematicReader", "SchematicToVox\.NETSchematicReader\SchematicReader\SchematicReader\SchematicReader.csproj", "{70942BCF-342E-4E3C-BE5D-ABB934C3A917}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schematics", "SchematicToVox\.NETSchematicReader\SchematicReader\SchematicReader\Schematics.csproj", "{70942BCF-342E-4E3C-BE5D-ABB934C3A917}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4488498D-976D-4DA3-BF72-109531AF0488} = {4488498D-976D-4DA3-BF72-109531AF0488}
 	EndProjectSection
