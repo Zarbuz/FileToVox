@@ -53,9 +53,6 @@
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\Color.cs" />
-    <Compile Include="Tools\Color32.cs" />
-    <Compile Include="Tools\Vector3.cs" />
     <Compile Include="Vox\Chunks\GroupNodeChunk.cs" />
     <Compile Include="Vox\Chunks\LayerChunk.cs" />
     <Compile Include="Vox\Chunks\MaterialChunk.cs" />

@@ -1,4 +1,5 @@
 ﻿using fNbt;
+using SchematicReader.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -140,7 +141,7 @@ namespace SchematicReader
                     for (int X = 0; X < rawSchematic.Width; X++)
                     {
                         int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
-                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new System.Drawing.Color());
+                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0,0,0));
                         try
                         {
                             if (block.BlockID != 0) //don't add air block

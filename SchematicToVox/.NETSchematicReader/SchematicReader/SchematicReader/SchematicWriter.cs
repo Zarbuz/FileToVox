@@ -27,14 +27,14 @@ namespace SchematicReader
                 Length = (short)bitmap.Height,
                 Blocks = new List<HashSet<Block>>()
             };
-
+            SchematicReader.LengthSchematic = schematic.Length;
+            SchematicReader.WidthSchematic = schematic.Width;
             schematic.Blocks.Add(new HashSet<Block>());
             int size = schematic.Width * schematic.Length;
             for (int i = 0; i < size; i++)
             {
                 int x = i % schematic.Width;
                 int y = i / schematic.Width;
-
                 var color = bitmap.GetPixel(x, y);
                 if (color.A != 0)
                 {

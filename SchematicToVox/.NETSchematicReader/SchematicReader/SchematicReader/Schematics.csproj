@@ -56,6 +56,9 @@
     <Compile Include="SchematicWriter.cs" />
     <Compile Include="Sign.cs" />
     <Compile Include="TileEntity.cs" />
+    <Compile Include="Tools\Color.cs" />
+    <Compile Include="Tools\Color32.cs" />
+    <Compile Include="Tools\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

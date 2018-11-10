@@ -1,5 +1,4 @@
-﻿using SchematicToVox.Tools;
-using SchematicToVox.Vox;
+﻿using SchematicToVox.Vox;
 using SchematicToVox.Vox.Chunks;
 using System;
 using System.Collections.Generic;

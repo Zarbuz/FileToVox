@@ -1,5 +1,5 @@
 ﻿using SchematicReader;
-using SchematicToVox.Tools;
+using SchematicReader.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace SchematicToVox.Extensions
     public static class Extensions
     {
         private static readonly Dictionary<Tuple<int, int>, Color32> _colors = new Dictionary<Tuple<int, int>, Color32>()
+
         {
             { new Tuple<int, int>(1, 0), new Color32(125, 125, 125, 255) }, //Stone
             { new Tuple<int, int>(1, 1), new Color32(153, 113, 98, 255) }, //Granite

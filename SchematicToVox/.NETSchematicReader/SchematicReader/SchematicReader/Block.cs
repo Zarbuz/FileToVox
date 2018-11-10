@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SchematicReader.Tools;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace SchematicReader
         public readonly int Z;
         public readonly byte BlockID;
         public readonly byte Data;
-        public readonly Color Color;
+        public readonly Color32 Color;
 
-        public Block(int x, int y, int z, byte blockID, byte data, Color color)
+        public Block(int x, int y, int z, byte blockID, byte data, Color32 color)
         {
             X = x;
             Y = y;

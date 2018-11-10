@@ -55,7 +55,7 @@ namespace SchematicToVox
                 if (_ignore_max_y > 256)
                     throw new ArgumentException("ignore-max-y argument must be lower than 256");
 
-                               if (_ignore_min_y != -1)
+                if (_ignore_min_y != -1)
                     Console.WriteLine("Specified min Y layer : " + _ignore_min_y);
                 if (_ignore_max_y != 256)
                     Console.WriteLine("Specified max Y layer : " + _ignore_max_y);
@@ -84,7 +84,7 @@ namespace SchematicToVox
                     VoxReader reader = new VoxReader();
                     reader.LoadModel(_outputDir + ".vox");
                 }
-                
+
                 Console.WriteLine("Done");
 
             }
@@ -95,7 +95,7 @@ namespace SchematicToVox
                 Console.WriteLine("Try `SchematicToVox --help` for more informations.");
             }
 
-            
+
             Console.ReadKey();
         }
 
