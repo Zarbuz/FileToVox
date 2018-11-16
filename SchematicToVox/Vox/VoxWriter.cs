@@ -19,6 +19,7 @@ namespace SchematicToVox.Vox
         private int _countSize = 0;
         private int _totalBlockCount = 0;
         private int _direction = 0;
+        private int _scale = 1;
         private bool _isRealSchematic = true;
 
         private int _countBlocks = 0;
@@ -28,11 +29,12 @@ namespace SchematicToVox.Vox
         private BlockGlobal[] _firstBlockInEachRegion;
         private List<Color32> _usedColors;
 
-        public bool WriteModel(string absolutePath, Schematic schematic, int direction, bool isRealShematic)
+        public bool WriteModel(string absolutePath, Schematic schematic, int direction, bool isRealShematic, int scale)
         {
             _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
             _direction = direction;
+            _scale = scale;
             _isRealSchematic = isRealShematic;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
@@ -55,6 +57,11 @@ namespace SchematicToVox.Vox
             _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126));
             _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126));
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
+
+            _width *= _scale;
+            _length *= _scale;
+            _height *= _scale;
+
             _countSize = _width * _length * _height;
             _totalBlockCount = _schematic.Blocks.Sum(hashset => hashset.Count);
 

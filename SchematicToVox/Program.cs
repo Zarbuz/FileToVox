@@ -20,7 +20,7 @@ namespace SchematicToVox
 
         private static int _ignore_min_y = -1;
         private static int _ignore_max_y = 256;
-        private static int _increase_size = 1;
+        private static int _scale = 1;
         private static int _direction = 0;
 
         static void Main(string[] args)
@@ -34,7 +34,7 @@ namespace SchematicToVox
                 { "iminy|ignore-min-y=", "Ignore blocks below the specified layer", (int v) => _ignore_min_y = v },
                 { "imaxy|ignore-max-y=", "Ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
                 { "e|excavate", "Delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
-                { "in|increase-size=", "Increase the size of each block", (int v) => _increase_size = v }
+                { "s|scale=", "Increase the scale of each block", (int v) => _scale = v }
             };
 
             List<string> extra;
@@ -56,7 +56,7 @@ namespace SchematicToVox
                     throw new ArgumentException("ignore-min-y argument must be positive");
                 if (_ignore_max_y > 256)
                     throw new ArgumentException("ignore-max-y argument must be lower than 256");
-                if (_increase_size <= 0)
+                if (_scale <= 0)
                     throw new ArgumentException("increase-size must be greater than 0");
 
                 if (_ignore_min_y != -1)
@@ -65,8 +65,8 @@ namespace SchematicToVox
                     Console.WriteLine("Specified max Y layer : " + _ignore_max_y);
                 if (_excavate)
                     Console.WriteLine("Enabled option: excavate");
-                if (_increase_size > 1)
-                    Console.WriteLine("Specified increase size : " + _increase_size);
+                if (_scale > 1)
+                    Console.WriteLine("Specified increase size : " + _scale);
 
                 string extension = Path.GetExtension(_inputFile);
                 Console.WriteLine("Specified output path: " + Path.GetFullPath(_outputDir));
@@ -107,16 +107,16 @@ namespace SchematicToVox
 
         private static void ProcessSchematicFile()
         {
-            var schematic = SchematicReader.SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _increase_size);
+            var schematic = SchematicReader.SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true, _scale);
         }
 
         private static void ProcessImageFile()
         {
             var schematic = SchematicReader.SchematicWriter.WriteSchematic(_inputFile);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, false);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, false, _scale);
         }
 
         private static void ShowHelp(OptionSet p)

@@ -127,6 +127,7 @@ namespace SchematicReader
             Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
             Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
+            Console.WriteLine("[INFO] Raw schematic total blocks with multiplier " + (rawSchematic.Data.Length * _increase_size));
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
             blocks.Add(new HashSet<Block>());
@@ -134,44 +135,26 @@ namespace SchematicReader
 
             int minY = Math.Max(_ignore_min_y, 0);
             int maxY = Math.Min(_ignore_max_y, rawSchematic.Heigth);
-            int addX = 0, addY = 0, addZ = 0;
 
-            for (int Y = minY; Y < maxY + addY; Y++)
+            for (int Y = minY; Y < (maxY * _increase_size); Y++)
             {
-                for (int Z = 0; Z < rawSchematic.Length + addZ; Z++)
+                for (int Z = 0; Z < (rawSchematic.Length * _increase_size); Z++)
                 {
-                    for (int X = 0; X < rawSchematic.Width + addX; X++)
+                    for (int X = 0; X < (rawSchematic.Width * _increase_size); X++)
                     {
-                        int index = ((Y - addY) * rawSchematic.Length + (Z - addZ)) * rawSchematic.Width + (X - addX);
-                        Block block = new Block((X + addX), (Y + addY), (Z + addZ), rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0,0,0));
+                        int index = (Y % maxY) * rawSchematic.Length + (Z % rawSchematic.Length) * rawSchematic.Width + (X % rawSchematic.Width);
+                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
                         try
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
-                                if (_increase_size > 1)
+                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {
-                                    for (int y = Y; y < Y + _increase_size; y++, addY++)
-                                    {
-                                        for (int z = Z; z < Z + _increase_size; z++, addZ++)
-                                        {
-                                            for (int x = X; x < X + _increase_size; x++, addX++)
-                                            {
-                                                Block b = new Block(x, y, z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
-                                                blocks[global].Add(block);
-                                            }
-                                        }
-                                    }
+                                    blocks[global].Add(block);
                                 }
-                                else
+                                else if (!_excavate)
                                 {
-                                    if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
-                                    {
-                                        blocks[global].Add(block);
-                                    }
-                                    else if (!_excavate)
-                                    {
-                                        blocks[global].Add(block);
-                                    }
+                                    blocks[global].Add(block);
                                 }
                             }
                         }
