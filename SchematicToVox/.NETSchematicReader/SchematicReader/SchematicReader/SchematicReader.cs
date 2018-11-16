@@ -17,13 +17,15 @@ namespace SchematicReader
 
         private static int _ignore_min_y;
         private static int _ignore_max_y;
+        private static int _increase_size;
         private static bool _excavate;
 
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate)
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int increase_size)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
+            _increase_size = increase_size;
             _excavate = excavate;
             return LoadSchematic(file);
         }
@@ -125,7 +127,6 @@ namespace SchematicReader
             Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
             Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
-
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
             blocks.Add(new HashSet<Block>());
@@ -133,26 +134,44 @@ namespace SchematicReader
 
             int minY = Math.Max(_ignore_min_y, 0);
             int maxY = Math.Min(_ignore_max_y, rawSchematic.Heigth);
+            int addX = 0, addY = 0, addZ = 0;
 
-            for (int Y = minY; Y < maxY; Y++)
+            for (int Y = minY; Y < maxY + addY; Y++)
             {
-                for (int Z = 0; Z < rawSchematic.Length; Z++)
+                for (int Z = 0; Z < rawSchematic.Length + addZ; Z++)
                 {
-                    for (int X = 0; X < rawSchematic.Width; X++)
+                    for (int X = 0; X < rawSchematic.Width + addX; X++)
                     {
-                        int index = (Y * rawSchematic.Length + Z) * rawSchematic.Width + X;
-                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0,0,0));
+                        int index = ((Y - addY) * rawSchematic.Length + (Z - addZ)) * rawSchematic.Width + (X - addX);
+                        Block block = new Block((X + addX), (Y + addY), (Z + addZ), rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0,0,0));
                         try
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
-                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
+                                if (_increase_size > 1)
                                 {
-                                    blocks[global].Add(block);
+                                    for (int y = Y; y < Y + _increase_size; y++, addY++)
+                                    {
+                                        for (int z = Z; z < Z + _increase_size; z++, addZ++)
+                                        {
+                                            for (int x = X; x < X + _increase_size; x++, addX++)
+                                            {
+                                                Block b = new Block(x, y, z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
+                                                blocks[global].Add(block);
+                                            }
+                                        }
+                                    }
                                 }
-                                else if (!_excavate)
+                                else
                                 {
-                                    blocks[global].Add(block);
+                                    if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
+                                    {
+                                        blocks[global].Add(block);
+                                    }
+                                    else if (!_excavate)
+                                    {
+                                        blocks[global].Add(block);
+                                    }
                                 }
                             }
                         }
