@@ -248,7 +248,8 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)(block.X % 126));
                 writer.Write((byte)(block.Y % 126));
                 writer.Write((byte)(block.Z % 126));
-                int i = (_isRealSchematic) ? _usedColors.IndexOf(block.GetBlockColor()) : _usedColors.IndexOf(block.Color);
+                int i = (_isRealSchematic) ? _usedColors.IndexOf(block.GetBlockColor()) + 1 : _usedColors.IndexOf(block.Color) + 1;
+                Console.WriteLine(i);
                 writer.Write((i != -1) ? (byte)i : (byte)1);
                 _schematic.Blocks[globalIndex].Remove(block);
             }
