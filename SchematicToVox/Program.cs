@@ -26,15 +26,15 @@ namespace SchematicToVox
         static void Main(string[] args)
         {
             var p = new OptionSet() {
-                { "i|input=", "the {NAME} of input schematic file.", v => _inputFile = v },
-                { "o|output=", "the {NAME} of output directory.", v => _outputDir = v },
+                { "i|input=", "input schematic file", v => _inputFile = v },
+                { "o|output=", "output vox file", v => _outputDir = v },
                 { "h|help", "show this message and exit", v => _show_help = v != null },
                 { "v|verbose", "enable the verbose mode", v => _verbose = v != null },
                 { "w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => _direction = v },
-                { "iminy|ignore-min-y=", "Ignore blocks below the specified layer", (int v) => _ignore_min_y = v },
-                { "imaxy|ignore-max-y=", "Ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
-                { "e|excavate", "Delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
-                { "s|scale=", "Increase the scale of each block", (int v) => _scale = v }
+                { "iminy|ignore-min-y=", "ignore blocks below the specified layer", (int v) => _ignore_min_y = v },
+                { "imaxy|ignore-max-y=", "ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
+                { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
+                { "s|scale=", "increase the scale of each block", (int v) => _scale = v }
             };
 
             List<string> extra;
