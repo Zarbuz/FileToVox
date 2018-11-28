@@ -17,15 +17,15 @@ namespace SchematicReader
 
         private static int _ignore_min_y;
         private static int _ignore_max_y;
-        private static int _increase_size;
+        private static int _scale;
         private static bool _excavate;
 
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int increase_size)
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
-            _increase_size = increase_size;
+            _scale = scale;
             _excavate = excavate;
             return LoadSchematic(file);
         }
@@ -127,7 +127,7 @@ namespace SchematicReader
             Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
             Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
-            Console.WriteLine("[INFO] Raw schematic total blocks with multiplier " + (rawSchematic.Data.Length * _increase_size));
+            Console.WriteLine("[INFO] Raw schematic total blocks with multiplier " + (rawSchematic.Data.Length * _scale));
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
             blocks.Add(new HashSet<Block>());
@@ -136,13 +136,13 @@ namespace SchematicReader
             int minY = Math.Max(_ignore_min_y, 0);
             int maxY = Math.Min(_ignore_max_y, rawSchematic.Heigth);
 
-            for (int Y = minY; Y < (maxY * _increase_size); Y++)
+            for (int Y = minY; Y < (maxY * _scale); Y++)
             {
-                for (int Z = 0; Z < (rawSchematic.Length * _increase_size); Z++)
+                for (int Z = 0; Z < (rawSchematic.Length * _scale); Z++)
                 {
-                    for (int X = 0; X < (rawSchematic.Width * _increase_size); X++)
+                    for (int X = 0; X < (rawSchematic.Width * _scale); X++)
                     {
-                        int index = (Y % maxY) * rawSchematic.Length + (Z % rawSchematic.Length) * rawSchematic.Width + (X % rawSchematic.Width);
+                        int index = ((Y % maxY) * rawSchematic.Length + (Z % rawSchematic.Length)) * rawSchematic.Width + (X % rawSchematic.Width);
                         Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
                         try
                         {

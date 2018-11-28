@@ -57,7 +57,7 @@ namespace SchematicToVox
                 if (_ignore_max_y > 256)
                     throw new ArgumentException("ignore-max-y argument must be lower than 256");
                 if (_scale <= 0)
-                    throw new ArgumentException("increase-size must be greater than 0");
+                    throw new ArgumentException("scale must be greater than 0");
 
                 if (_ignore_min_y != -1)
                     Console.WriteLine("Specified min Y layer : " + _ignore_min_y);
