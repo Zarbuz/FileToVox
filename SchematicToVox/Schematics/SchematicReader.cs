@@ -130,7 +130,10 @@ namespace SchematicToVox.Schematics
                 {
                     for (int X = 0; X < (rawSchematic.Width * _scale); X++)
                     {
-                        int index = ((Y % maxY) * rawSchematic.Length + (Z % rawSchematic.Length)) * rawSchematic.Width + (X % rawSchematic.Width);
+                        int yProgress = Y / _scale;
+                        int zProgress = Z / _scale;
+                        int xProgress = X / _scale;
+                        int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
                         Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
                         try
                         {

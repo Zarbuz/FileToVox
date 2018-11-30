@@ -483,6 +483,30 @@ namespace SchematicToVox.Extensions
             { new Tuple<int, int>(3, 0), new Bitmap("Textures/dirt.png") }, //Dirt
             { new Tuple<int, int>(3, 1), new Bitmap("Textures/coarse_dirt.png") }, //Coarse Dirt
 
+            { new Tuple<int, int>(5, 0), new Bitmap("Textures/oak_planks.png") }, //Wooden Plank (Oak)
+            { new Tuple<int, int>(5, 1), new Bitmap("Textures/spruce_planks.png") }, //Wooden Plank (Spruce)
+            { new Tuple<int, int>(5, 2), new Bitmap("Textures/birch_planks.png") }, //Wooden Plank (Birch)
+            { new Tuple<int, int>(5, 3), new Bitmap("Textures/jungle_planks.png") }, //Wooden Plank (Jungle)
+            { new Tuple<int, int>(5, 4), new Bitmap("Textures/acacia_planks.png") }, //Wooden Plank (Acacia)
+            { new Tuple<int, int>(5, 5), new Bitmap("Textures/dark_oak_planks.png") }, //Wooden Plank (Dark Oak)
+
+            { new Tuple<int, int>(35, 0), new Bitmap("Textures/white_wool.png") }, //Wool
+            { new Tuple<int, int>(35, 1), new Bitmap("Textures/orange_wool.png") }, //Orange Wool
+            { new Tuple<int, int>(35, 2), new Bitmap("Textures/magenta_wool.png") }, //Magenta Wool
+            { new Tuple<int, int>(35, 3), new Bitmap("Textures/light_blue_wool.png") }, //Light Blue Wool
+            { new Tuple<int, int>(35, 4), new Bitmap("Textures/yellow_wool.png") }, //Yellow Wool
+            { new Tuple<int, int>(35, 5), new Bitmap("Textures/lime_wool.png") }, //Lime Wool
+            { new Tuple<int, int>(35, 6), new Bitmap("Textures/pink_wool.png") }, //Pink Wool
+            { new Tuple<int, int>(35, 7), new Bitmap("Textures/gray_wool.png") }, //Gray Wool
+            { new Tuple<int, int>(35, 8), new Bitmap("Textures/light_gray_wool.png") }, //Light Gray Wool
+            { new Tuple<int, int>(35, 9), new Bitmap("Textures/cyan_wool.png") }, //Cyan Wool
+            { new Tuple<int, int>(35, 10), new Bitmap("Textures/purple_wool.png") }, //Purple Wool
+            { new Tuple<int, int>(35, 11), new Bitmap("Textures/blue_wool.png") }, //Blue Wool
+            { new Tuple<int, int>(35, 12), new Bitmap("Textures/brown_wool.png") }, //Brown Wool
+            { new Tuple<int, int>(35, 13), new Bitmap("Textures/green_wool.png") }, //Green Wool
+            { new Tuple<int, int>(35, 14), new Bitmap("Textures/red_wool.png") }, //Red Wool
+            { new Tuple<int, int>(35, 15), new Bitmap("Textures/black_wool.png") }, //Black Wool
+
             { new Tuple<int, int>(235, 0), new Bitmap("Textures/white_glazed_terracotta.png") }, //White Glazed Terracota
             { new Tuple<int, int>(236, 0), new Bitmap("Textures/orange_glazed_terracotta.png") }, //Orange Glazed Terracota
             { new Tuple<int, int>(237, 0), new Bitmap("Textures/magenta_glazed_terracotta.png") }, //Magenta Glazed Terracota
@@ -499,7 +523,18 @@ namespace SchematicToVox.Extensions
             { new Tuple<int, int>(248, 0), new Bitmap("Textures/green_glazed_terracotta.png") }, //Green Glazed Terracota
             { new Tuple<int, int>(249, 0), new Bitmap("Textures/red_glazed_terracotta.png") }, //Red Glazed Terracota
             { new Tuple<int, int>(250, 0), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
+            { new Tuple<int, int>(250, 1), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
+            //{ new Tuple<int, int>(250, 2), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
+            //{ new Tuple<int, int>(250, 3), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
         };
+
+        private static Bitmap CheckIfCanRotate(this Bitmap bitmap, Block block)
+        {
+            if (block.BlockID == 250 && block.Data == 1)
+                bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            return bitmap;
+        }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
@@ -520,10 +555,11 @@ namespace SchematicToVox.Extensions
         {
             if (_textures.TryGetValue(new Tuple<int, int>(block.BlockID, block.Data), out Bitmap bitmap))
             {
-                return bitmap.GetPixel((x % 16), (z % 16));
+                return bitmap.CheckIfCanRotate(block).GetPixel((x % 16), (z % 16));
             }
             else
             {
+                //Console.WriteLine(block.BlockID + " : " + block.Data);
                 return null;
             }
         }
