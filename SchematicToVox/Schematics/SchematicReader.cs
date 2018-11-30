@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SchematicToVox.Schematics
 {
@@ -32,6 +33,10 @@ namespace SchematicToVox.Schematics
             _scale = scale;
             _excavate = excavate;
             _texture = texture;
+
+            if (_texture)
+                _scale = 16;
+
             return LoadSchematic(file);
         }
 
@@ -41,6 +46,10 @@ namespace SchematicToVox.Schematics
             List<HashSet<Block>> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks);
+
+            schematic.Width *= (short)_scale;
+            schematic.Heigth *= (short)_scale;
+            schematic.Length *= (short)_scale;
             return schematic;
         }
 
@@ -63,7 +72,6 @@ namespace SchematicToVox.Schematics
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
-                        LengthSchematic = raw.Length;
                         break;
                     case "Materials": //String
                         raw.Materials = tag.StringValue;
@@ -101,6 +109,13 @@ namespace SchematicToVox.Schematics
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
             Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
             Console.WriteLine("[INFO] Raw schematic total blocks with multiplier " + (rawSchematic.Data.Length * _scale));
+
+            WidthSchematic = (short)(rawSchematic.Width * _scale);
+            LengthSchematic = (short)(rawSchematic.Length * _scale);
+            HeightSchematic = (short)(rawSchematic.Heigth * _scale);
+
+
+
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();
             blocks.Add(new HashSet<Block>());
@@ -123,15 +138,20 @@ namespace SchematicToVox.Schematics
                             {
                                 if (_texture)
                                 {
-                                    ProcessTexture(ref blocks, block);
+                                    var color = block.GetBlockColor(X, Z);
+                                    if (color != null)
+                                        blocks[global].Add(new Block(X, Y, Z, 1, 1, color));
                                 }
-                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
+                                else
                                 {
-                                    blocks[global].Add(block);
-                                }
-                                else if (!_excavate)
-                                {
-                                    blocks[global].Add(block);
+                                    if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
+                                    {
+                                        blocks[global].Add(block);
+                                    }
+                                    else if (!_excavate)
+                                    {
+                                        blocks[global].Add(block);
+                                    }
                                 }
                             }
                         }
@@ -167,23 +187,6 @@ namespace SchematicToVox.Schematics
             return false;
         }
 
-        private static void ProcessTexture(ref List<HashSet<Block>> blocks, Block currentBlock)
-        {
-            FileInfo info = new FileInfo(currentBlock.GetBlockTexture());
-            Bitmap bitmap = new Bitmap(info.FullName);
 
-            int width = bitmap.Width; //16px //32px ...
-
-            for (int Y = 0; Y < width; Y++)
-            {
-                for (int Z = 0; Z < width; Z++)
-                {
-                    for (int X = 0; X < width; X++)
-                    {
-
-                    }
-                }
-            }
-        }
     }
 }

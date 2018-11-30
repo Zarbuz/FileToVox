@@ -114,7 +114,7 @@ namespace SchematicToVox
         {
             var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale, _texture);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true, _scale);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, !_texture, _scale);
         }
 
         private static void ProcessImageFile()
