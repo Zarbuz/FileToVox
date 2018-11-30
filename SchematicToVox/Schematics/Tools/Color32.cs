@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicReader.Tools
+namespace SchematicToVox.Schematics.Tools
 {
     public class Color32 : IEquatable<Color32>
     {

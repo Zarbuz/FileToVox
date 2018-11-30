@@ -1,5 +1,5 @@
-﻿using SchematicReader;
-using SchematicReader.Tools;
+﻿using SchematicToVox.Schematics;
+using SchematicToVox.Schematics.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -469,9 +469,13 @@ namespace SchematicToVox.Extensions
 
         };
 
+        private static readonly Dictionary<Tuple<int, int>, string> _textures = new Dictionary<Tuple<int, int>, string>()
+        {
+            { new Tuple<int, int>(2, 0), "Textures/grass.png" }
+        };
+
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
-
 
         public static Color32 GetBlockColor(this Block block)
         {
@@ -484,6 +488,19 @@ namespace SchematicToVox.Extensions
             {
                 //Console.WriteLine("Applying default color of the block ID: " + block.BlockID + ":" + block.Data);
                 return _colors[new Tuple<int, int>(block.BlockID, 0)];
+            }
+        }
+
+        public static string GetBlockTexture(this Block block)
+        {
+            string texturePath;
+            if (_textures.TryGetValue(new Tuple<int, int>(block.BlockID, block.Data), out texturePath))
+            {
+                return texturePath;
+            }
+            else
+            {
+                return "";
             }
         }
     }

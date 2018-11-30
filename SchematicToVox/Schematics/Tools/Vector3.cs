@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicReader.Tools
+namespace SchematicToVox.Schematics.Tools
 {
     public struct Vector3 : IEquatable<Vector3>
     {

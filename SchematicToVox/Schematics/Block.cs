@@ -1,11 +1,11 @@
-﻿using SchematicReader.Tools;
+﻿using SchematicToVox.Schematics.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicReader
+namespace SchematicToVox.Schematics
 {
     public struct Block : IEquatable<Block>
     {

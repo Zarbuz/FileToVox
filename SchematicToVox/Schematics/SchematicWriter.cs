@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicReader
+namespace SchematicToVox.Schematics
 {
     public static class SchematicWriter
     {

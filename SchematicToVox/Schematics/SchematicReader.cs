@@ -1,13 +1,15 @@
 ﻿using fNbt;
-using SchematicReader.Tools;
+using SchematicToVox.Schematics.Tools;
+using SchematicToVox.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchematicReader
+namespace SchematicToVox.Schematics
 {
     public static class SchematicReader
     {
@@ -18,15 +20,18 @@ namespace SchematicReader
         private static int _ignore_min_y;
         private static int _ignore_max_y;
         private static int _scale;
-        private static bool _excavate;
 
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
+        private static bool _excavate;
+        private static bool _texture;
+
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale, bool texture)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
             _scale = scale;
             _excavate = excavate;
+            _texture = texture;
             return LoadSchematic(file);
         }
 
@@ -35,7 +40,7 @@ namespace SchematicReader
             RawSchematic raw = LoadRaw(nbtFile);
             List<HashSet<Block>> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
-            Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks, raw.TileEntities);
+            Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks);
             return schematic;
         }
 
@@ -72,7 +77,6 @@ namespace SchematicReader
                     case "Entities": //List
                         break; //Ignore
                     case "TileEntities": //List
-                        raw.TileEntities = GetTileEntities(tag);
                         break;
                     case "Icon": //Compound
                         break; //Ignore
@@ -84,37 +88,6 @@ namespace SchematicReader
                 }
             }
             return raw;
-        }
-
-        private static List<TileEntity> GetTileEntities(NbtTag tileEntitiesList)
-        {
-            List<TileEntity> list = new List<TileEntity>();
-            NbtList TileEntities = tileEntitiesList as NbtList;
-            if (TileEntities != null)
-            {
-                foreach (NbtCompound compTag in TileEntities)
-                {
-                    NbtTag xTag = compTag["x"];
-                    NbtTag yTag = compTag["y"];
-                    NbtTag zTag = compTag["z"];
-                    NbtTag idTag = compTag["id"];
-                    TileEntity entity = new TileEntity(xTag.IntValue, yTag.IntValue, zTag.IntValue, idTag.StringValue);
-
-                    if (entity.ID == "Sign")
-                    {
-                        NbtTag Text1Tag = compTag["Text1"];
-                        NbtTag Text2Tag = compTag["Text2"];
-                        NbtTag Text3Tag = compTag["Text3"];
-                        NbtTag Text4Tag = compTag["Text4"];
-                        Sign sign = new Sign(xTag.IntValue, yTag.IntValue, zTag.IntValue, Text1Tag.StringValue, Text2Tag.StringValue, Text3Tag.StringValue, Text4Tag.StringValue);
-                        list.Add(sign);
-                        continue;
-                    }
-
-                    list.Add(entity);
-                }
-            }
-            return list;
         }
 
         private static List<HashSet<Block>> GetBlocks(RawSchematic rawSchematic)
@@ -148,6 +121,10 @@ namespace SchematicReader
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
+                                if (_texture)
+                                {
+                                    ProcessTexture(ref blocks, block);
+                                }
                                 if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {
                                     blocks[global].Add(block);
@@ -188,6 +165,25 @@ namespace SchematicReader
 
             }
             return false;
+        }
+
+        private static void ProcessTexture(ref List<HashSet<Block>> blocks, Block currentBlock)
+        {
+            FileInfo info = new FileInfo(currentBlock.GetBlockTexture());
+            Bitmap bitmap = new Bitmap(info.FullName);
+
+            int width = bitmap.Width; //16px //32px ...
+
+            for (int Y = 0; Y < width; Y++)
+            {
+                for (int Z = 0; Z < width; Z++)
+                {
+                    for (int X = 0; X < width; X++)
+                    {
+
+                    }
+                }
+            }
         }
     }
 }

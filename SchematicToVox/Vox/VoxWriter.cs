@@ -1,6 +1,6 @@
-﻿using SchematicReader;
-using SchematicReader.Tools;
-using SchematicToVox.Extensions;
+﻿using SchematicToVox.Extensions;
+using SchematicToVox.Schematics;
+using SchematicToVox.Schematics.Tools;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
