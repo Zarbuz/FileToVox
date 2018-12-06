@@ -106,8 +106,8 @@ namespace SchematicToVox
                 Console.WriteLine("Try `SchematicToVox --help` for more informations.");
             }
 
-
-            Console.ReadKey();
+            if (_verbose)
+                Console.ReadKey();
         }
 
         private static void ProcessSchematicFile()

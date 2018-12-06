@@ -524,14 +524,37 @@ namespace SchematicToVox.Extensions
             { new Tuple<int, int>(249, 0), new Bitmap("Textures/red_glazed_terracotta.png") }, //Red Glazed Terracota
             { new Tuple<int, int>(250, 0), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
             { new Tuple<int, int>(250, 1), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-            //{ new Tuple<int, int>(250, 2), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-            //{ new Tuple<int, int>(250, 3), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
+            { new Tuple<int, int>(250, 2), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
+            { new Tuple<int, int>(250, 3), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
         };
 
+        /// <summary>
+        /// Check if the current block can be rotated
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="block"></param>
+        /// <returns></returns>
         private static Bitmap CheckIfCanRotate(this Bitmap bitmap, Block block)
         {
+            ///To reduce a lot the memory, we need to create a new bitmap only if it's necessary to limit slow down
             if (block.BlockID == 250 && block.Data == 1)
-                bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            {
+                Bitmap b = new Bitmap(bitmap);
+                b.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                return b;
+            }
+            else if (block.BlockID == 250 && block.Data == 2)
+            {
+                Bitmap b = new Bitmap(bitmap);
+                b.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                return b;
+            }
+            else if (block.BlockID == 250 && block.Data == 3)
+            {
+                Bitmap b = new Bitmap(bitmap);
+                b.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                return b;
+            }
 
             return bitmap;
         }

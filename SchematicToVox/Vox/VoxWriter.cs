@@ -58,10 +58,6 @@ namespace SchematicToVox.Vox
             _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126));
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
 
-            //_width *= _scale;
-            //_length *= _scale;
-            //_height *= _scale;
-
             _countSize = _width * _length * _height;
             _totalBlockCount = _schematic.Blocks.Sum(hashset => hashset.Count);
 
