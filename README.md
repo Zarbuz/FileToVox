@@ -3,7 +3,7 @@
 `./SchematicToVox.exe --i [INPUT] --o [OUTPUT]`
 
 [INPUT] refer to a .schematic file or .png file (mandatory)
-[OUTPUT] refer to the destination path
+[OUTPUT] refer to the destination path (mandatory)
 
 ## Options
 

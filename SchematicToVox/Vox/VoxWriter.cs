@@ -62,7 +62,7 @@ namespace SchematicToVox.Vox
             _countSize = _width * _length * _height;
             _totalBlockCount = _schematic.Blocks.Sum(hashset => hashset.Count);
 
-            Console.WriteLine("COUNT SIZE: " + _totalBlockCount);
+            Console.WriteLine("[INFO] Total blocks: " + _totalBlockCount);
 
             int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
             int chunkXYZI = (16 * _countSize) + _totalBlockCount * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
@@ -159,7 +159,7 @@ namespace SchematicToVox.Vox
             WritePaletteChunk(writer);
             using (var progressbar = new ProgressBar())
             {
-                Console.WriteLine("Started to write chunks ...");
+                Console.WriteLine("[LOG] Started to write chunks ...");
                 for (int i = 0; i < _countSize; i++)
                 {
                     WriteSizeChunk(writer);
@@ -167,7 +167,7 @@ namespace SchematicToVox.Vox
                     float progress = ((float)i / _countSize);
                     progressbar.Report(progress);
                 }
-                Console.WriteLine("Done.");
+                Console.WriteLine("[LOG] Done.");
             }
             WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
@@ -176,11 +176,11 @@ namespace SchematicToVox.Vox
                 WriteTransformChunk(writer, i);
                 WriteShapeChunk(writer, i);
             }
-            Console.WriteLine("BLOCKS COUNT AFTER: " + _countBlocks);
+            Console.WriteLine("[LOG] Check total blocks after conversion: " + _countBlocks);
             if (_totalBlockCount != _countBlocks)
             {
-                Console.WriteLine("Different total blocks count before and after conversion.");
-                Console.WriteLine("Try to export with the option --way=1");
+                Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
+                Console.WriteLine("[ERROR] Try to export with this option: --way=1");
             }
         }
 

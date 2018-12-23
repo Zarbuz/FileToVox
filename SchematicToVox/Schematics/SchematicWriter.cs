@@ -100,5 +100,25 @@ namespace SchematicToVox.Schematics
             }
             return schematic;
         }
+
+        private static bool IsBlockConnectedToAir(Schematic schematic, Block block, int minY, int maxY)
+        {
+            if (block.X - 1 >= 0 && block.X + 1 < schematic.Width && block.Y - 1 >= minY && block.Y + 1 < maxY && block.Z - 1 >= 0 && block.Z < schematic.Length)
+            {
+                int indexLeftX = (block.Y * schematic.Length + block.Z) * schematic.Width + (block.X - 1);
+                int indexRightX = (block.Y * schematic.Length + block.Z) * schematic.Width + (block.X + 1);
+
+                int indexTop = ((block.Y + 1) * schematic.Length + block.Z) * schematic.Width + block.X;
+                int indexBottom = ((block.Y - 1) * schematic.Length + block.Z) * schematic.Width + block.X;
+
+                int indexAhead = (block.Y * schematic.Length + block.Z + 1) * schematic.Width + block.X;
+                int indexBehind = (block.Y * schematic.Length + block.Z - 1) * schematic.Width + block.X;
+                return (schematic.Blocks[indexLeftX] == 0 || schematic.Blocks[indexRightX] == 0
+                    || schematic.Blocks[indexTop] == 0 || schematic.Blocks[indexBottom] == 0
+                    || schematic.Blocks[indexAhead] == 0 || schematic.Blocks[indexBehind] == 0);
+
+            }
+            return false;
+        }
     }
 }

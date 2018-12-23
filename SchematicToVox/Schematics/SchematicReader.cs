@@ -101,9 +101,9 @@ namespace SchematicToVox.Schematics
         private static List<HashSet<Block>> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
-                throw new Exception("Schematic too big");
+                throw new Exception("Schematic is too big");
 
-            Console.WriteLine("Started to read all blocks of the schematic ...");
+            Console.WriteLine("[Log] Started to read all blocks of the schematic ...");
             Console.WriteLine("[INFO] Raw schematic Width: " + rawSchematic.Width);
             Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);

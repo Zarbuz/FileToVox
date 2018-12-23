@@ -29,8 +29,8 @@ namespace SchematicToVox
         static void Main(string[] args)
         {
             var p = new OptionSet() {
-                { "i|input=", "input schematic file", v => _inputFile = v },
-                { "o|output=", "output vox file", v => _outputDir = v },
+                { "i|input=", "input file", v => _inputFile = v },
+                { "o|output=", "output file", v => _outputDir = v },
                 { "h|help", "show this message and exit", v => _show_help = v != null },
                 { "v|verbose", "enable the verbose mode", v => _verbose = v != null },
                 { "w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => _direction = v },
@@ -65,18 +65,20 @@ namespace SchematicToVox
                     throw new ArgumentException("scale must be greater than 0");
 
                 if (_ignore_min_y != -1)
-                    Console.WriteLine("Specified min Y layer : " + _ignore_min_y);
+                    Console.WriteLine("[INFO] Specified min Y layer : " + _ignore_min_y);
                 if (_ignore_max_y != 256)
-                    Console.WriteLine("Specified max Y layer : " + _ignore_max_y);
+                    Console.WriteLine("[INFO] Specified max Y layer : " + _ignore_max_y);
                 if (_excavate)
-                    Console.WriteLine("Enabled option: excavate");
+                    Console.WriteLine("[INFO] Enabled option: excavate");
                 if (_texture)
-                    Console.WriteLine("Enabled option: texture");
+                    Console.WriteLine("[INFO] Enabled option: texture");
+                if (_heightmap)
+                    Console.WriteLine("[INFO] Enabled option: heightmap");
                 if (_scale > 1)
-                    Console.WriteLine("Specified increase size : " + _scale);
+                    Console.WriteLine("[INFO] Specified increase size : " + _scale);
 
                 string extension = Path.GetExtension(_inputFile);
-                Console.WriteLine("Specified output path: " + Path.GetFullPath(_outputDir));
+                Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputDir));
 
                 switch (extension)
                 {
@@ -87,7 +89,7 @@ namespace SchematicToVox
                         ProcessImageFile();
                         break;
                     default:
-                        Console.WriteLine("Unknown file extension ! ");
+                        Console.WriteLine("[ERROR] Unknown file extension ! ");
                         Console.ReadKey();
                         return;
                 }
@@ -98,7 +100,7 @@ namespace SchematicToVox
                     reader.LoadModel(_outputDir + ".vox");
                 }
 
-                Console.WriteLine("Done");
+                Console.WriteLine("Done.");
 
             }
             catch (OptionException e)
