@@ -14,5 +14,7 @@
 -iminy, --ignore-min-y=VALUE   ignore blocks below the specified layer
 -imaxy, --ignore-max-y=VALUE   ignore blocks above the specified layer
 -e, --excavate                 delete all blocks which doesn't have at lease one face connected with air
--s, --scale=VALUE              increase the scale of each block  
+-s, --scale=VALUE              increase the scale of each block
+-t --texture                   export schematic with texture
+-hm --heightmap                create voxels terrain from heightmap
   ```

@@ -62,6 +62,7 @@
     <Compile Include="Schematics\Tools\Color.cs" />
     <Compile Include="Schematics\Tools\Color32.cs" />
     <Compile Include="Schematics\Tools\Vector3.cs" />
+    <Compile Include="Utils\ProgressBar.cs" />
     <Compile Include="Vox\Chunks\GroupNodeChunk.cs" />
     <Compile Include="Vox\Chunks\LayerChunk.cs" />
     <Compile Include="Vox\Chunks\MaterialChunk.cs" />

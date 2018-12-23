@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>--i map1.schematic --o map1 --way=1 --t</StartArguments>
+    <StartArguments>--i JS-Classic-2018-12-23-02-05-29.png --o heightmap --hm</StartArguments>
   </PropertyGroup>
 </Project>

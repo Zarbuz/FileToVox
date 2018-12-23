@@ -19,6 +19,7 @@ namespace SchematicToVox
         private static bool _verbose = false;
         private static bool _excavate = false;
         private static bool _texture = false;
+        private static bool _heightmap = false;
 
         private static int _ignore_min_y = -1;
         private static int _ignore_max_y = 256;
@@ -38,6 +39,7 @@ namespace SchematicToVox
                 { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
                 { "s|scale=", "increase the scale of each block", (int v) => _scale = v },
                 { "t|texture", "export schematic with texture", v => _texture = v != null},
+                { "hm|heightmap", "create voxels terrain from heightmap", v => _heightmap = v != null }
             };
 
             List<string> extra;
@@ -119,7 +121,7 @@ namespace SchematicToVox
 
         private static void ProcessImageFile()
         {
-            var schematic = SchematicWriter.WriteSchematic(_inputFile);
+            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, false, _scale);
         }

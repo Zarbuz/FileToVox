@@ -1,6 +1,7 @@
 ﻿using SchematicToVox.Extensions;
 using SchematicToVox.Schematics;
 using SchematicToVox.Schematics.Tools;
+using SchematicToVox.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -156,12 +157,17 @@ namespace SchematicToVox.Vox
         private void WriteChunks(BinaryWriter writer)
         {
             WritePaletteChunk(writer);
-            for (int i = 0; i < _countSize; i++)
+            using (var progressbar = new ProgressBar())
             {
-                WriteSizeChunk(writer);
-                WriteXyziChunk(writer, i);
-                float progress = ((float)i / _countSize) * 100;
-                Console.WriteLine("Progress: " + progress.ToString("00.0") + "%");
+                Console.WriteLine("Started to write chunks ...");
+                for (int i = 0; i < _countSize; i++)
+                {
+                    WriteSizeChunk(writer);
+                    WriteXyziChunk(writer, i);
+                    float progress = ((float)i / _countSize);
+                    progressbar.Report(progress);
+                }
+                Console.WriteLine("Done.");
             }
             WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
