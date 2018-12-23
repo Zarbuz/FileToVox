@@ -25,6 +25,9 @@ namespace SchematicToVox.Schematics
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
 
+            if (bitmap.Width > 2016 || bitmap.Height > 2016)
+                throw new Exception("Image is too big");
+
             Schematic schematic = new Schematic
             {
                 Width = (short)bitmap.Width,
@@ -55,6 +58,9 @@ namespace SchematicToVox.Schematics
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
+
+            if (bitmap.Width > 2016 || bitmap.Height > 2016)
+                throw new Exception("Image is too big");
 
             Schematic schematic = new Schematic
             {
