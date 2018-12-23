@@ -6,7 +6,7 @@ It support world region, so you can convert a terrain greater than 126^3 voxels 
 You can also convert an image (only PNG) also with support of world region ! (So you can convert a picture greater than 126 * 126 pixels)
 And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 
-#How use it ? 
+# How use it ? 
 
 - You need to open a console (like cmd or Powershell in Windows)
 - Go to the emplacement of the binary
