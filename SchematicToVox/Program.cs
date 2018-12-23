@@ -18,7 +18,7 @@ namespace SchematicToVox
         private static bool _show_help = false;
         private static bool _verbose = false;
         private static bool _excavate = false;
-        private static bool _texture = false;
+        //private static bool _texture = false;
         private static bool _heightmap = false;
 
         private static int _ignore_min_y = -1;
@@ -38,7 +38,7 @@ namespace SchematicToVox
                 { "imaxy|ignore-max-y=", "ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
                 { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
                 { "s|scale=", "increase the scale of each block", (int v) => _scale = v },
-                { "t|texture", "export schematic with texture", v => _texture = v != null},
+                //{ "t|texture", "export schematic with texture", v => _texture = v != null},
                 { "hm|heightmap", "create voxels terrain from heightmap", v => _heightmap = v != null }
             };
 
@@ -70,8 +70,8 @@ namespace SchematicToVox
                     Console.WriteLine("[INFO] Specified max Y layer : " + _ignore_max_y);
                 if (_excavate)
                     Console.WriteLine("[INFO] Enabled option: excavate");
-                if (_texture)
-                    Console.WriteLine("[INFO] Enabled option: texture");
+                //if (_texture)
+                //    Console.WriteLine("[INFO] Enabled option: texture");
                 if (_heightmap)
                     Console.WriteLine("[INFO] Enabled option: heightmap");
                 if (_scale > 1)
@@ -100,7 +100,7 @@ namespace SchematicToVox
                     reader.LoadModel(_outputDir + ".vox");
                 }
 
-                Console.WriteLine("Done.");
+                Console.WriteLine("[LOG] Done.");
 
             }
             catch (OptionException e)
@@ -116,9 +116,9 @@ namespace SchematicToVox
 
         private static void ProcessSchematicFile()
         {
-            var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale, _texture);
+            var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale /*_texture*/);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, !_texture, _scale);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true, _scale);
         }
 
         private static void ProcessImageFile()

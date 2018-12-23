@@ -23,19 +23,19 @@ namespace SchematicToVox.Schematics
         private static int _scale;
 
         private static bool _excavate;
-        private static bool _texture;
+        //private static bool _texture;
 
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale, bool texture)
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale/*, bool texture*/)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
             _scale = scale;
             _excavate = excavate;
-            _texture = texture;
+            //_texture = texture;
 
-            if (_texture)
-                _scale = 16;
+            //if (_texture)
+            //    _scale = 16;
 
             return LoadSchematic(file);
         }
@@ -139,23 +139,23 @@ namespace SchematicToVox.Schematics
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
-                                if (_texture)
+                                //if (_texture)
+                                //{
+                                //    var color = block.GetBlockColor(X, Z);
+                                //    if (color != null)
+                                //        blocks[global].Add(new Block(X, Y, Z, 1, 1, color));
+                                //}
+                                //else
+                                //{
+                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {
-                                    var color = block.GetBlockColor(X, Z);
-                                    if (color != null)
-                                        blocks[global].Add(new Block(X, Y, Z, 1, 1, color));
+                                    blocks[global].Add(block);
                                 }
-                                else
+                                else if (!_excavate)
                                 {
-                                    if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
-                                    {
-                                        blocks[global].Add(block);
-                                    }
-                                    else if (!_excavate)
-                                    {
-                                        blocks[global].Add(block);
-                                    }
+                                    blocks[global].Add(block);
                                 }
+                                //}
                             }
                         }
                         catch (OutOfMemoryException e)
