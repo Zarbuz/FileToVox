@@ -73,9 +73,6 @@ namespace SchematicToVox.Schematics
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
                         break;
-                    case "Materials": //String
-                        raw.Materials = tag.StringValue;
-                        break;
                     case "Blocks": //ByteArray
                         raw.Blocks = tag.ByteArrayValue;
                         break;
@@ -139,14 +136,6 @@ namespace SchematicToVox.Schematics
                         {
                             if (block.BlockID != 0) //don't add air block
                             {
-                                //if (_texture)
-                                //{
-                                //    var color = block.GetBlockColor(X, Z);
-                                //    if (color != null)
-                                //        blocks[global].Add(new Block(X, Y, Z, 1, 1, color));
-                                //}
-                                //else
-                                //{
                                 if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {
                                     blocks[global].Add(block);
@@ -155,7 +144,6 @@ namespace SchematicToVox.Schematics
                                 {
                                     blocks[global].Add(block);
                                 }
-                                //}
                             }
                         }
                         catch (OutOfMemoryException e)

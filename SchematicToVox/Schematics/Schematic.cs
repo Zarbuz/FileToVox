@@ -9,7 +9,6 @@ namespace SchematicToVox.Schematics
 {
     public class Schematic
     {
-        public string Name { get; set; }
         public short Width { get; set; }
         public short Heigth { get; set; }
         public short Length { get; set; }
@@ -21,11 +20,6 @@ namespace SchematicToVox.Schematics
         public Schematic()
         {
             Blocks = new List<HashSet<Block>>();
-        }
-
-        public Schematic(string name) : this()
-        {
-            Name = name;
         }
 
         public Schematic(string name, short width, short heigth, short length) : this(name)
@@ -40,5 +34,6 @@ namespace SchematicToVox.Schematics
             this.Blocks = blocks;
         }
        
+        
     }
 }
