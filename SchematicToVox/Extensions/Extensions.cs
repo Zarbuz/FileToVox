@@ -470,64 +470,10 @@ namespace SchematicToVox.Extensions
 
         };
 
-        private static readonly Dictionary<Tuple<int, int>, Bitmap> _textures = new Dictionary<Tuple<int, int>, Bitmap>()
+        public static int GetColorIntensity(this System.Drawing.Color color)
         {
-            { new Tuple<int, int>(1, 0), new Bitmap("Textures/stone.png") }, //Stone
-            { new Tuple<int, int>(1, 1), new Bitmap("Textures/granite.png") }, //Granite
-            { new Tuple<int, int>(1, 2), new Bitmap("Textures/polished_granite.png") }, //Polished Granite
-            { new Tuple<int, int>(1, 3), new Bitmap("Textures/diorite.png") }, //Diorite
-            { new Tuple<int, int>(1, 4), new Bitmap("Textures/polished_diorite.png") }, //Polished Diorite
-            { new Tuple<int, int>(1, 5), new Bitmap("Textures/andesite.png") }, //Andesite
-            { new Tuple<int, int>(1, 6), new Bitmap("Textures/polished_andesite.png") }, //Polished Andesite
-            { new Tuple<int, int>(2, 0), new Bitmap("Textures/grass.png") }, //grass
-            { new Tuple<int, int>(3, 0), new Bitmap("Textures/dirt.png") }, //Dirt
-            { new Tuple<int, int>(3, 1), new Bitmap("Textures/coarse_dirt.png") }, //Coarse Dirt
-
-            { new Tuple<int, int>(5, 0), new Bitmap("Textures/oak_planks.png") }, //Wooden Plank (Oak)
-            { new Tuple<int, int>(5, 1), new Bitmap("Textures/spruce_planks.png") }, //Wooden Plank (Spruce)
-            { new Tuple<int, int>(5, 2), new Bitmap("Textures/birch_planks.png") }, //Wooden Plank (Birch)
-            { new Tuple<int, int>(5, 3), new Bitmap("Textures/jungle_planks.png") }, //Wooden Plank (Jungle)
-            { new Tuple<int, int>(5, 4), new Bitmap("Textures/acacia_planks.png") }, //Wooden Plank (Acacia)
-            { new Tuple<int, int>(5, 5), new Bitmap("Textures/dark_oak_planks.png") }, //Wooden Plank (Dark Oak)
-
-            { new Tuple<int, int>(35, 0), new Bitmap("Textures/white_wool.png") }, //Wool
-            { new Tuple<int, int>(35, 1), new Bitmap("Textures/orange_wool.png") }, //Orange Wool
-            { new Tuple<int, int>(35, 2), new Bitmap("Textures/magenta_wool.png") }, //Magenta Wool
-            { new Tuple<int, int>(35, 3), new Bitmap("Textures/light_blue_wool.png") }, //Light Blue Wool
-            { new Tuple<int, int>(35, 4), new Bitmap("Textures/yellow_wool.png") }, //Yellow Wool
-            { new Tuple<int, int>(35, 5), new Bitmap("Textures/lime_wool.png") }, //Lime Wool
-            { new Tuple<int, int>(35, 6), new Bitmap("Textures/pink_wool.png") }, //Pink Wool
-            { new Tuple<int, int>(35, 7), new Bitmap("Textures/gray_wool.png") }, //Gray Wool
-            { new Tuple<int, int>(35, 8), new Bitmap("Textures/light_gray_wool.png") }, //Light Gray Wool
-            { new Tuple<int, int>(35, 9), new Bitmap("Textures/cyan_wool.png") }, //Cyan Wool
-            { new Tuple<int, int>(35, 10), new Bitmap("Textures/purple_wool.png") }, //Purple Wool
-            { new Tuple<int, int>(35, 11), new Bitmap("Textures/blue_wool.png") }, //Blue Wool
-            { new Tuple<int, int>(35, 12), new Bitmap("Textures/brown_wool.png") }, //Brown Wool
-            { new Tuple<int, int>(35, 13), new Bitmap("Textures/green_wool.png") }, //Green Wool
-            { new Tuple<int, int>(35, 14), new Bitmap("Textures/red_wool.png") }, //Red Wool
-            { new Tuple<int, int>(35, 15), new Bitmap("Textures/black_wool.png") }, //Black Wool
-
-            { new Tuple<int, int>(235, 0), new Bitmap("Textures/white_glazed_terracotta.png") }, //White Glazed Terracota
-            { new Tuple<int, int>(236, 0), new Bitmap("Textures/orange_glazed_terracotta.png") }, //Orange Glazed Terracota
-            { new Tuple<int, int>(237, 0), new Bitmap("Textures/magenta_glazed_terracotta.png") }, //Magenta Glazed Terracota
-            { new Tuple<int, int>(238, 0), new Bitmap("Textures/light_blue_glazed_terracotta.png") }, //Light Blue Glazed Terracota
-            { new Tuple<int, int>(239, 0), new Bitmap("Textures/yellow_glazed_terracotta.png") }, //Yellow Glazed Terracota
-            { new Tuple<int, int>(240, 0), new Bitmap("Textures/lime_glazed_terracotta.png") }, //Lime Glazed Terracota
-            { new Tuple<int, int>(241, 0), new Bitmap("Textures/pink_glazed_terracotta.png") }, //Pink Glazed Terracota
-            { new Tuple<int, int>(242, 0), new Bitmap("Textures/gray_glazed_terracotta.png") }, //Gray Glazed Terracota
-            { new Tuple<int, int>(243, 0), new Bitmap("Textures/light_gray_glazed_terracotta.png") }, //Light Gray Glazed Terracota
-            { new Tuple<int, int>(244, 0), new Bitmap("Textures/cyan_glazed_terracotta.png") }, //Cyan Glazed Terracota
-            { new Tuple<int, int>(245, 0), new Bitmap("Textures/purple_glazed_terracotta.png") }, //Purple Glazed Terracota
-            { new Tuple<int, int>(246, 0), new Bitmap("Textures/blue_glazed_terracotta.png") }, //Blue Glazed Terracota
-            { new Tuple<int, int>(247, 0), new Bitmap("Textures/brown_glazed_terracotta.png") }, //Brown Glazed Terracota
-            { new Tuple<int, int>(248, 0), new Bitmap("Textures/green_glazed_terracotta.png") }, //Green Glazed Terracota
-            { new Tuple<int, int>(249, 0), new Bitmap("Textures/red_glazed_terracotta.png") }, //Red Glazed Terracota
-            { new Tuple<int, int>(250, 0), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-            { new Tuple<int, int>(250, 1), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-            { new Tuple<int, int>(250, 2), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-            { new Tuple<int, int>(250, 3), new Bitmap("Textures/black_glazed_terracotta.png") }, //Black Glazed Terracota
-        };
-
+            return color.R + color.G + color.B;
+        }
         /// <summary>
         /// Check if the current block can be rotated
         /// </summary>
@@ -571,19 +517,6 @@ namespace SchematicToVox.Extensions
             else
             {
                 return _colors[new Tuple<int, int>(block.BlockID, 0)];
-            }
-        }
-
-        public static Color32 GetBlockColor(this Block block, int x, int z)
-        {
-            if (_textures.TryGetValue(new Tuple<int, int>(block.BlockID, block.Data), out Bitmap bitmap))
-            {
-                return bitmap.CheckIfCanRotate(block).GetPixel((x % 16), (z % 16));
-            }
-            else
-            {
-                //Console.WriteLine(block.BlockID + " : " + block.Data);
-                return null;
             }
         }
     }

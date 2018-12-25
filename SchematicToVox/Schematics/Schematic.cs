@@ -22,7 +22,7 @@ namespace SchematicToVox.Schematics
             Blocks = new List<HashSet<Block>>();
         }
 
-        public Schematic(string name, short width, short heigth, short length) : this(name)
+        public Schematic(string name, short width, short heigth, short length)
         {
             this.Width = width;
             this.Heigth = heigth;

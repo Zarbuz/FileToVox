@@ -123,7 +123,7 @@ namespace SchematicToVox
 
         private static void ProcessImageFile()
         {
-            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap);
+            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, false, _scale);
         }

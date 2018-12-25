@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SchematicToVox.Extensions;
+using SchematicToVox.Utils;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -41,31 +43,74 @@ namespace SchematicToVox.Schematics
             SchematicReader.LengthSchematic = schematic.Length;
             SchematicReader.WidthSchematic = schematic.Width;
             schematic.Blocks.Add(new HashSet<Block>());
-            for (int i = 0, global = 0; i < schematic.Width * schematic.Length; i++)
+            using (var progressbar = new ProgressBar())
             {
-                int x = i % schematic.Width;
-                int y = i / schematic.Width;
-                var color = bitmap.GetPixel(x, y);
-                if (color.A != 0)
+                Console.WriteLine("[LOG] Started to write schematic from picture...");
+                int size = schematic.Width * schematic.Length;
+                for (int i = 0, global = 0; i < size; i++)
                 {
-                    if (_heightmap)
+                    int x = i % schematic.Width;
+                    int y = i / schematic.Width;
+                    var color = bitmap.GetPixel(x, y);
+                    if (color.A != 0)
                     {
-                        int intensity = color.R + color.G + color.B;
-                        float position = intensity / (float)765;
-                        int height = (int)(position * HEIGHT_SIZE_HEIGHTMAP);
-                        for (int z = 0; z < height; z++)
+                        if (_heightmap)
                         {
-                            Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                            int intensity = color.R + color.G + color.B;
+                            float position = intensity / (float)765;
+                            int height = (int)(position * HEIGHT_SIZE_HEIGHTMAP);
+
+                            if (_excavate)
+                            {
+                                bool createAll = true;
+                                if (x - 1 > 0 && x + 1 < bitmap.Width && y - 1 > 0 && y + 1 < bitmap.Height)
+                                {
+                                    var colorLeft = bitmap.GetPixel(x - 1, y);
+                                    var colorTop = bitmap.GetPixel(x, y - 1);
+                                    var colorRight = bitmap.GetPixel(x + 1, y);
+                                    var colorBottom = bitmap.GetPixel(x, y + 1);
+
+                                    if (color == colorLeft && color == colorTop && color == colorRight && color == colorBottom)
+                                    {
+                                        createAll = false;
+                                    }
+                                }
+
+                                if (createAll)
+                                {
+                                    for (int z = 0; z < height; z++)
+                                    {
+                                        Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                                        AddBlock(ref schematic, ref global, block);
+                                    }
+                                }
+                                else
+                                {
+                                    Block block = new Block(x, height - 1, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                                    AddBlock(ref schematic, ref global, block);
+                                }
+                            }
+                            else
+                            {
+                                for (int z = 0; z < height; z++)
+                                {
+                                    Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                                    AddBlock(ref schematic, ref global, block);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            Block block = new Block(x, 1, y, 1, 1, color);
                             AddBlock(ref schematic, ref global, block);
                         }
                     }
-                    else
-                    {
-                        Block block = new Block(x, 1, y, 1, 1, color);
-                        AddBlock(ref schematic, ref global, block);
-                    }
+                    progressbar.Report((i / (float)size));
                 }
             }
+
+            Console.WriteLine("[LOG] Done.");
 
             return schematic;
         }
