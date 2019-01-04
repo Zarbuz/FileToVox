@@ -18,17 +18,16 @@ namespace SchematicToVox
         private static bool _show_help = false;
         private static bool _verbose = false;
         private static bool _excavate = false;
-        //private static bool _texture = false;
-        private static bool _heightmap = false;
 
         private static int _ignore_min_y = -1;
         private static int _ignore_max_y = 256;
         private static int _scale = 1;
         private static int _direction = 0;
+        private static int _heightmap = 1;
 
         static void Main(string[] args)
         {
-            var p = new OptionSet() {
+            OptionSet options = new OptionSet() {
                 { "i|input=", "input file", v => _inputFile = v },
                 { "o|output=", "output file", v => _outputDir = v },
                 { "h|help", "show this message and exit", v => _show_help = v != null },
@@ -38,67 +37,17 @@ namespace SchematicToVox
                 { "imaxy|ignore-max-y=", "ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
                 { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
                 { "s|scale=", "increase the scale of each block", (int v) => _scale = v },
-                //{ "t|texture", "export schematic with texture", v => _texture = v != null},
-                { "hm|heightmap", "create voxels terrain from heightmap", v => _heightmap = v != null }
+                { "hm|heightmap=", "create voxels terrain from heightmap", (int v)=> _heightmap = v }
             };
 
-            List<string> extra;
             try
             {
-                extra = p.Parse(args);
-
-                if (_show_help)
-                {
-                    ShowHelp(p);
-                    return;
-                }
-
-                if (_inputFile == null)
-                    throw new ArgumentNullException("Missing required option -i=FILE");
-                if (_outputDir == null)
-                    throw new ArgumentNullException("Missing required option -o=FILE");
-                if (_ignore_min_y < -1)
-                    throw new ArgumentException("ignore-min-y argument must be positive");
-                if (_ignore_max_y > 256)
-                    throw new ArgumentException("ignore-max-y argument must be lower than 256");
-                if (_scale <= 0)
-                    throw new ArgumentException("scale must be greater than 0");
-
-                if (_ignore_min_y != -1)
-                    Console.WriteLine("[INFO] Specified min Y layer : " + _ignore_min_y);
-                if (_ignore_max_y != 256)
-                    Console.WriteLine("[INFO] Specified max Y layer : " + _ignore_max_y);
-                if (_excavate)
-                    Console.WriteLine("[INFO] Enabled option: excavate");
-                //if (_texture)
-                //    Console.WriteLine("[INFO] Enabled option: texture");
-                if (_heightmap)
-                    Console.WriteLine("[INFO] Enabled option: heightmap");
-                if (_scale > 1)
-                    Console.WriteLine("[INFO] Specified increase size : " + _scale);
-
-                string extension = Path.GetExtension(_inputFile);
-                Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputDir));
-
-                switch (extension)
-                {
-                    case ".schematic":
-                        ProcessSchematicFile();
-                        break;
-                    case ".png":
-                        ProcessImageFile();
-                        break;
-                    default:
-                        Console.WriteLine("[ERROR] Unknown file extension ! ");
-                        Console.ReadKey();
-                        return;
-                }
-
-                if (_verbose)
-                {
-                    VoxReader reader = new VoxReader();
-                    reader.LoadModel(_outputDir + ".vox");
-                }
+                List<string> extra = options.Parse(args);
+                CheckHelp(options);
+                CheckArguments();
+                DisplayArguments();
+                ProcessFile();
+                CheckVerbose();
 
                 Console.WriteLine("[LOG] Done.");
 
@@ -114,9 +63,68 @@ namespace SchematicToVox
                 Console.ReadKey();
         }
 
+        private static void CheckHelp(OptionSet options)
+        {
+            if (_show_help)
+            {
+                ShowHelp(options);
+                Environment.Exit(0);
+            }
+        }
+
+        private static void CheckArguments()
+        {
+            if (_inputFile == null)
+                throw new ArgumentNullException("[ERROR] Missing required option: --i=FILE");
+            if (_outputDir == null)
+                throw new ArgumentNullException("[ERROR] Missing required option: --o=FILE");
+            if (_ignore_min_y < -1)
+                throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
+            if (_ignore_max_y > 256)
+                throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
+            if (_scale <= 0)
+                throw new ArgumentException("[ERROR] --scale argument must be positive");
+            if (_heightmap <= 1)
+                throw new ArgumentException("[ERROR] --heightmap argument must be positive");
+        }
+
+        private static void DisplayArguments()
+        {
+            if (_ignore_min_y != -1)
+                Console.WriteLine("[INFO] Specified min Y layer : " + _ignore_min_y);
+            if (_ignore_max_y != 256)
+                Console.WriteLine("[INFO] Specified max Y layer : " + _ignore_max_y);
+            if (_excavate)
+                Console.WriteLine("[INFO] Enabled option: excavate");
+            if (_heightmap != 1)
+                Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
+            if (_scale > 1)
+                Console.WriteLine("[INFO] Specified increase size: " + _scale);
+            Console.WriteLine("[INFO] Way: " + _direction);
+
+            Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputDir));
+        }
+
+        private static void ProcessFile()
+        {
+            switch (Path.GetExtension(_inputFile))
+            {
+                case ".schematic":
+                    ProcessSchematicFile();
+                    break;
+                case ".png":
+                    ProcessImageFile();
+                    break;
+                default:
+                    Console.WriteLine("[ERROR] Unknown file extension ! ");
+                    Console.ReadKey();
+                    return;
+            }
+        }
+
         private static void ProcessSchematicFile()
         {
-            var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale /*_texture*/);
+            var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, true, _scale);
         }
@@ -133,6 +141,15 @@ namespace SchematicToVox
             Console.WriteLine("Usage: SchematicToVox [OPTIONS]+ INPUT OUTPUT");
             Console.WriteLine("Options: ");
             p.WriteOptionDescriptions(Console.Out);
+        }
+
+        private static void CheckVerbose()
+        {
+            if (_verbose)
+            {
+                VoxReader reader = new VoxReader();
+                reader.LoadModel(_outputDir + ".vox");
+            }
         }
     }
 }

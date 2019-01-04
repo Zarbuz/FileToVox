@@ -100,18 +100,15 @@ namespace SchematicToVox.Schematics
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
                 throw new Exception("Schematic is too big");
 
-            Console.WriteLine("[Log] Started to read all blocks of the schematic ...");
+            Console.WriteLine("[LOG] Started to read all blocks of the schematic...");
             Console.WriteLine("[INFO] Raw schematic Width: " + rawSchematic.Width);
             Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
             Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
             Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
-            Console.WriteLine("[INFO] Raw schematic total blocks with multiplier " + (rawSchematic.Data.Length * _scale));
 
             WidthSchematic = (short)(rawSchematic.Width * _scale);
             LengthSchematic = (short)(rawSchematic.Length * _scale);
             HeightSchematic = (short)(rawSchematic.Heigth * _scale);
-
-
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             List<HashSet<Block>> blocks = new List<HashSet<Block>>();

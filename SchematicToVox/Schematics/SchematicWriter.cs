@@ -12,12 +12,11 @@ namespace SchematicToVox.Schematics
 {
     public static class SchematicWriter
     {
-        private const int HEIGHT_SIZE_HEIGHTMAP = 100;
-
         private static bool _excavate;
-        private static bool _heightmap;
+        private static int _heightmap;
+        private static int _maxHeight = 1;
 
-        public static Schematic WriteSchematic(string path, bool heightmap, bool excavate)
+        public static Schematic WriteSchematic(string path, int heightmap, bool excavate)
         {
             _excavate = excavate;
             _heightmap = heightmap;
@@ -36,12 +35,14 @@ namespace SchematicToVox.Schematics
             Schematic schematic = new Schematic
             {
                 Width = (short)bitmap.Width,
-                Heigth = 1,
                 Length = (short)bitmap.Height,
+                Heigth = (short)_heightmap,
                 Blocks = new List<HashSet<Block>>()
             };
             SchematicReader.LengthSchematic = schematic.Length;
             SchematicReader.WidthSchematic = schematic.Width;
+            SchematicReader.HeightSchematic = schematic.Heigth;
+
             schematic.Blocks.Add(new HashSet<Block>());
             using (var progressbar = new ProgressBar())
             {
@@ -49,40 +50,24 @@ namespace SchematicToVox.Schematics
                 int size = schematic.Width * schematic.Length;
                 for (int i = 0, global = 0; i < size; i++)
                 {
+
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
                     var color = bitmap.GetPixel(x, y);
                     if (color.A != 0)
                     {
-                        if (_heightmap)
+                        if (_heightmap != 1)
                         {
                             int intensity = color.R + color.G + color.B;
                             float position = intensity / (float)765;
-                            int height = (int)(position * HEIGHT_SIZE_HEIGHTMAP);
+                            int height = (int)(position * _heightmap);
+                            _maxHeight = (height > _maxHeight) ? height : _maxHeight;
 
                             if (_excavate)
                             {
-                                bool createAll = true;
-                                if (x - 1 > 0 && x + 1 < bitmap.Width && y - 1 > 0 && y + 1 < bitmap.Height)
+                                if (CheckCornerPixels(bitmap, color, x, y))
                                 {
-                                    var colorLeft = bitmap.GetPixel(x - 1, y);
-                                    var colorTop = bitmap.GetPixel(x, y - 1);
-                                    var colorRight = bitmap.GetPixel(x + 1, y);
-                                    var colorBottom = bitmap.GetPixel(x, y + 1);
-
-                                    if (color == colorLeft && color == colorTop && color == colorRight && color == colorBottom)
-                                    {
-                                        createAll = false;
-                                    }
-                                }
-
-                                if (createAll)
-                                {
-                                    for (int z = 0; z < height; z++)
-                                    {
-                                        Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
-                                        AddBlock(ref schematic, ref global, block);
-                                    }
+                                    AddMultipleBlocks(ref schematic, ref global, height, x, y);
                                 }
                                 else
                                 {
@@ -92,13 +77,8 @@ namespace SchematicToVox.Schematics
                             }
                             else
                             {
-                                for (int z = 0; z < height; z++)
-                                {
-                                    Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
-                                    AddBlock(ref schematic, ref global, block);
-                                }
+                                AddMultipleBlocks(ref schematic, ref global, height, x, y);
                             }
-
                         }
                         else
                         {
@@ -109,10 +89,17 @@ namespace SchematicToVox.Schematics
                     progressbar.Report((i / (float)size));
                 }
             }
-
             Console.WriteLine("[LOG] Done.");
-
             return schematic;
+        }
+
+        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                AddBlock(ref schematic, ref global, block);
+            }
         }
 
         private static void AddBlock(ref Schematic schematic, ref int global, Block block)
@@ -127,6 +114,24 @@ namespace SchematicToVox.Schematics
                 schematic.Blocks.Add(new HashSet<Block>());
                 schematic.Blocks[global].Add(block);
             }
+        }
+
+        private static bool CheckCornerPixels(Bitmap bitmap, Color color, int x, int y)
+        {
+            bool createAll = true;
+            if (x - 1 > 0 && x + 1 < bitmap.Width && y - 1 > 0 && y + 1 < bitmap.Height)
+            {
+                var colorLeft = bitmap.GetPixel(x - 1, y);
+                var colorTop = bitmap.GetPixel(x, y - 1);
+                var colorRight = bitmap.GetPixel(x + 1, y);
+                var colorBottom = bitmap.GetPixel(x, y + 1);
+
+                if (color == colorLeft && color == colorTop && color == colorRight && color == colorBottom)
+                {
+                    createAll = false;
+                }
+            }
+            return createAll;
         }
     }
 }
