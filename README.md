@@ -1,9 +1,9 @@
 # What is SchematicToVox ? 
 
 SchematicToVox is a console program which allow you to convert a schematic file (Minecraft save) into a vox file (Magicavoxel).
-It support world region, so you can convert a terrain greater than 126^3 voxels ! 
+It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
-You can also convert an image (only PNG) also with support of world region ! (So you can convert a picture greater than 126 * 126 pixels)
+You can also convert an image (only PNG) also with support of world region ! (So you can convert a picture bigger than 126 * 126 pixels)
 And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 
 # How use it ? 
