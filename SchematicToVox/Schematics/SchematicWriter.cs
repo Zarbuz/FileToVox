@@ -14,12 +14,16 @@ namespace SchematicToVox.Schematics
     {
         private static bool _excavate;
         private static int _heightmap;
+        private static bool _color;
+
         private static int _maxHeight = 1;
 
-        public static Schematic WriteSchematic(string path, int heightmap, bool excavate)
+
+        public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color)
         {
             _excavate = excavate;
             _heightmap = heightmap;
+            _color = color;
 
             return WriteSchematicFromImage(path);
         }
@@ -67,17 +71,18 @@ namespace SchematicToVox.Schematics
                             {
                                 if (CheckCornerPixels(bitmap, color, x, y))
                                 {
-                                    AddMultipleBlocks(ref schematic, ref global, height, x, y);
+                                    AddMultipleBlocks(ref schematic, ref global, height, x, y, color);
                                 }
                                 else
                                 {
-                                    Block block = new Block(x, height - 1, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                                    Block block = (_color) ? new Block(x, height - 1, y, 1, 1, color) : 
+                                        new Block(x, height - 1, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
                                     AddBlock(ref schematic, ref global, block);
                                 }
                             }
                             else
                             {
-                                AddMultipleBlocks(ref schematic, ref global, height, x, y);
+                                AddMultipleBlocks(ref schematic, ref global, height, x, y, color);
                             }
                         }
                         else
@@ -93,11 +98,12 @@ namespace SchematicToVox.Schematics
             return schematic;
         }
 
-        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y)
+        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y,  Color color)
         {
             for (int z = 0; z < height; z++)
             {
-                Block block = new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                Block block = (_color) ? new Block(x, height - 1, y, 1, 1, color) :
+                                        new Block(x, height - 1, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
                 AddBlock(ref schematic, ref global, block);
             }
         }

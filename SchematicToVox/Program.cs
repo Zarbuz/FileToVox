@@ -18,6 +18,7 @@ namespace SchematicToVox
         private static bool _show_help = false;
         private static bool _verbose = false;
         private static bool _excavate = false;
+        private static bool _color = false;
 
         private static int _ignore_min_y = -1;
         private static int _ignore_max_y = 256;
@@ -37,7 +38,8 @@ namespace SchematicToVox
                 { "imaxy|ignore-max-y=", "ignore blocks above the specified layer", (int v) => _ignore_max_y = v },
                 { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
                 { "s|scale=", "increase the scale of each block", (int v) => _scale = v },
-                { "hm|heightmap=", "create voxels terrain from heightmap", (int v)=> _heightmap = v }
+                { "hm|heightmap=", "create voxels terrain from heightmap", (int v)=> _heightmap = v },
+                { "c|color", "enable color when generating heightmap", v => _color = v != null }
             };
 
             try
@@ -86,6 +88,8 @@ namespace SchematicToVox
                 throw new ArgumentException("[ERROR] --scale argument must be positive");
             if (_heightmap <= 1)
                 throw new ArgumentException("[ERROR] --heightmap argument must be positive");
+            if (_color && _heightmap == 1)
+                throw new ArgumentException("[ERROR] --color argument must be used with --heightmap");
         }
 
         private static void DisplayArguments()
@@ -96,6 +100,8 @@ namespace SchematicToVox
                 Console.WriteLine("[INFO] Specified max Y layer : " + _ignore_max_y);
             if (_excavate)
                 Console.WriteLine("[INFO] Enabled option: excavate");
+            if (_color)
+                Console.WriteLine("[INFO] Enabled option: color");
             if (_heightmap != 1)
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
             if (_scale > 1)
@@ -131,7 +137,7 @@ namespace SchematicToVox
 
         private static void ProcessImageFile()
         {
-            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate);
+            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate, _color);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, false, _scale);
         }
