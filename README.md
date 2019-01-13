@@ -27,5 +27,5 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 -imaxy, --ignore-max-y=VALUE   ignore blocks above the specified layer
 -e, --excavate                 delete all blocks which doesn't have at lease one face connected with air
 -s, --scale=VALUE              increase the scale of each block
--hm --heightmap                create voxels terrain from heightmap
+-hm --heightmap=VALUE          create voxels terrain from heightmap with the specified height
  ```
