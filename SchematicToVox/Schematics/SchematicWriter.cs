@@ -102,8 +102,8 @@ namespace SchematicToVox.Schematics
         {
             for (int z = 0; z < height; z++)
             {
-                Block block = (_color) ? new Block(x, height - 1, y, 1, 1, color) :
-                                        new Block(x, height - 1, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
+                Block block = (_color) ? new Block(x, z, y, 1, 1, color) :
+                                        new Block(x, z, y, 1, 1, new Tools.Color32(211, 211, 211, 255));
                 AddBlock(ref schematic, ref global, block);
             }
         }
