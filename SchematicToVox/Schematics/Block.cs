@@ -12,17 +12,13 @@ namespace SchematicToVox.Schematics
         public readonly int X;
         public readonly int Y;
         public readonly int Z;
-        public readonly byte BlockID;
-        public readonly byte Data;
         public readonly Color32 Color;
 
-        public Block(int x, int y, int z, byte blockID, byte data, Color32 color)
+        public Block(int x, int y, int z, Color32 color)
         {
             X = x;
             Y = y;
             Z = z;
-            BlockID = blockID;
-            Data = data;
             Color = color;
         }
 
@@ -39,7 +35,7 @@ namespace SchematicToVox.Schematics
 
         public override string ToString()
         {
-            return string.Format("ID: {3}:{4}, X: {0}, Y: {1}, Z: {2}", X, Y, Z, BlockID, Data);
+            return string.Format("X: {0}, Y: {1}, Z: {2}, Color: {3}", X, Y, Z, Color.ToString());
         }
 
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchematicToVox.Schematics.Tools
 {
-    public class Color32 : IEquatable<Color32>
+    public struct Color32 : IEquatable<Color32>
     {
         public byte r;
 

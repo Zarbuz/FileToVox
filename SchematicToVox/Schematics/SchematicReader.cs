@@ -23,20 +23,15 @@ namespace SchematicToVox.Schematics
         private static int _scale;
 
         private static bool _excavate;
-        //private static bool _texture;
 
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale/*, bool texture*/)
+        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
         {
             NbtFile file = new NbtFile(path);
             _ignore_min_y = min;
             _ignore_max_y = max;
             _scale = scale;
             _excavate = excavate;
-            //_texture = texture;
-
-            //if (_texture)
-            //    _scale = 16;
-
+            
             return LoadSchematic(file);
         }
 
@@ -128,10 +123,11 @@ namespace SchematicToVox.Schematics
                         int zProgress = Z / _scale;
                         int xProgress = X / _scale;
                         int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
-                        Block block = new Block(X, Y, Z, rawSchematic.Blocks[index], rawSchematic.Data[index], new Color32(0, 0, 0, 0));
+                        int blockID = rawSchematic.Blocks[index];
+                        Block block = new Block(X, Y, Z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
                         try
                         {
-                            if (block.BlockID != 0) //don't add air block
+                            if (blockID != 0) //don't add air block
                             {
                                 if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {

@@ -474,49 +474,20 @@ namespace SchematicToVox.Extensions
         {
             return color.R + color.G + color.B;
         }
-        /// <summary>
-        /// Check if the current block can be rotated
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <param name="block"></param>
-        /// <returns></returns>
-        private static Bitmap CheckIfCanRotate(this Bitmap bitmap, Block block)
-        {
-            ///To reduce a lot the memory, we need to create a new bitmap only if it's necessary to limit slow down
-            if (block.BlockID == 250 && block.Data == 1)
-            {
-                Bitmap b = new Bitmap(bitmap);
-                b.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                return b;
-            }
-            else if (block.BlockID == 250 && block.Data == 2)
-            {
-                Bitmap b = new Bitmap(bitmap);
-                b.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                return b;
-            }
-            else if (block.BlockID == 250 && block.Data == 3)
-            {
-                Bitmap b = new Bitmap(bitmap);
-                b.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                return b;
-            }
-
-            return bitmap;
-        }
+       
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
 
-        public static Color32 GetBlockColor(this Block block)
+        public static Color32 GetBlockColor(int blockID, int data)
         {
-            if (_colors.TryGetValue(new Tuple<int, int>(block.BlockID, block.Data), out Color32 color))
+            if (_colors.TryGetValue(new Tuple<int, int>(blockID, data), out Color32 color))
             {
                 return color;
             }
             else
             {
-                return _colors[new Tuple<int, int>(block.BlockID, 0)];
+                return _colors[new Tuple<int, int>(blockID, 0)];
             }
         }
     }

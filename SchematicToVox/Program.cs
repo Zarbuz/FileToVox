@@ -1,10 +1,12 @@
 ﻿using NDesk.Options;
 using SchematicToVox.Schematics;
+using SchematicToVox.Schematics.Tools;
 using SchematicToVox.Vox;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +52,6 @@ namespace SchematicToVox
                 DisplayArguments();
                 ProcessFile();
                 CheckVerbose();
-
                 Console.WriteLine("[LOG] Done.");
 
             }
@@ -132,14 +133,14 @@ namespace SchematicToVox
         {
             var schematic = SchematicReader.LoadSchematic(_inputFile, _ignore_min_y, _ignore_max_y, _excavate, _scale);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, true, _scale);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
         }
 
         private static void ProcessImageFile()
         {
             var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate, _color);
             VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, false, _scale);
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
         }
 
         private static void ShowHelp(OptionSet p)
