@@ -16,9 +16,6 @@ namespace SchematicToVox.Schematics
         private static int _heightmap;
         private static bool _color;
 
-        private static int _maxHeight = 1;
-
-
         public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color)
         {
             _excavate = excavate;
@@ -65,7 +62,6 @@ namespace SchematicToVox.Schematics
                             int intensity = color.R + color.G + color.B;
                             float position = intensity / (float)765;
                             int height = (int)(position * _heightmap);
-                            _maxHeight = (height > _maxHeight) ? height : _maxHeight;
 
                             if (_excavate)
                             {
