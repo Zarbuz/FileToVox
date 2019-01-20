@@ -3,6 +3,7 @@ using SchematicToVox.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace SchematicToVox.Schematics
         private static bool _excavate;
         private static int _heightmap;
         private static bool _color;
+
 
         public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color)
         {
@@ -44,6 +46,8 @@ namespace SchematicToVox.Schematics
             SchematicReader.WidthSchematic = schematic.Width;
             SchematicReader.HeightSchematic = schematic.Heigth;
 
+            Bitmap grayScale = MakeGrayscale3(bitmap);
+
             schematic.Blocks.Add(new HashSet<Block>());
             using (var progressbar = new ProgressBar())
             {
@@ -55,11 +59,12 @@ namespace SchematicToVox.Schematics
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
                     var color = bitmap.GetPixel(x, y);
+                    var colorGray = grayScale.GetPixel(x, y);
                     if (color.A != 0)
                     {
                         if (_heightmap != 1)
                         {
-                            int intensity = color.R + color.G + color.B;
+                            int intensity = colorGray.R + colorGray.G + colorGray.B;
                             float position = intensity / (float)765;
                             int height = (int)(position * _heightmap);
 
@@ -67,18 +72,18 @@ namespace SchematicToVox.Schematics
                             {
                                 if (CheckCornerPixels(bitmap, color, x, y))
                                 {
-                                    AddMultipleBlocks(ref schematic, ref global, height, x, y, color);
+                                    AddMultipleBlocks(ref schematic, ref global, height, x, y, color, colorGray);
                                 }
                                 else
                                 {
-                                    Block block = (_color) ? new Block(x, height - 1, y, color) : 
-                                        new Block(x, height - 1, y, new Tools.Color32(211, 211, 211, 255));
+                                    Block block = (_color) ? new Block(x, height - 1, y, color) :
+                                        new Block(x, height - 1, y, colorGray);
                                     AddBlock(ref schematic, ref global, block);
                                 }
                             }
                             else
                             {
-                                AddMultipleBlocks(ref schematic, ref global, height, x, y, color);
+                                AddMultipleBlocks(ref schematic, ref global, height, x, y, color, colorGray);
                             }
                         }
                         else
@@ -94,12 +99,47 @@ namespace SchematicToVox.Schematics
             return schematic;
         }
 
-        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y,  Color color)
+        private static Bitmap MakeGrayscale3(Bitmap original)
+        {
+            //create a blank bitmap the same size as original
+            Bitmap newBitmap = new Bitmap(original.Width, original.Height);
+
+            //get a graphics object from the new image
+            Graphics g = Graphics.FromImage(newBitmap);
+
+            //create the grayscale ColorMatrix
+            ColorMatrix colorMatrix = new ColorMatrix(
+               new float[][]
+               {
+                 new float[] {.3f, .3f, .3f, 0, 0},
+                 new float[] {.59f, .59f, .59f, 0, 0},
+                 new float[] {.11f, .11f, .11f, 0, 0},
+                 new float[] {0, 0, 0, 1, 0},
+                 new float[] {0, 0, 0, 0, 1}
+               });
+
+            //create some image attributes
+            ImageAttributes attributes = new ImageAttributes();
+
+            //set the color matrix attribute
+            attributes.SetColorMatrix(colorMatrix);
+
+            //draw the original image on the new image
+            //using the grayscale color matrix
+            g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
+               0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+
+            //dispose the Graphics object
+            g.Dispose();
+            return newBitmap;
+        }
+
+        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y, Color color, Color colorGray)
         {
             for (int z = 0; z < height; z++)
             {
                 Block block = (_color) ? new Block(x, z, y, color) :
-                                        new Block(x, z, y, new Tools.Color32(211, 211, 211, 255));
+                                        new Block(x, z, y, colorGray);
                 AddBlock(ref schematic, ref global, block);
             }
         }
