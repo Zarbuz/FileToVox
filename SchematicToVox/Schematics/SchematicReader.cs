@@ -31,7 +31,7 @@ namespace SchematicToVox.Schematics
             _ignore_max_y = max;
             _scale = scale;
             _excavate = excavate;
-            
+
             return LoadSchematic(file);
         }
 
@@ -124,10 +124,10 @@ namespace SchematicToVox.Schematics
                         int xProgress = X / _scale;
                         int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
                         int blockID = rawSchematic.Blocks[index];
-                        Block block = new Block(X, Y, Z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
-                        try
+                        if (blockID != 0)
                         {
-                            if (blockID != 0) //don't add air block
+                            Block block = new Block(X, Y, Z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
+                            try
                             {
                                 if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
                                 {
@@ -138,12 +138,12 @@ namespace SchematicToVox.Schematics
                                     blocks[global].Add(block);
                                 }
                             }
-                        }
-                        catch (OutOfMemoryException e)
-                        {
-                            global++;
-                            blocks.Add(new HashSet<Block>());
-                            blocks[global].Add(block);
+                            catch (OutOfMemoryException)
+                            {
+                                global++;
+                                blocks.Add(new HashSet<Block>());
+                                blocks[global].Add(block);
+                            }
                         }
                     }
                 }

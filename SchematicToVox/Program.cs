@@ -87,7 +87,7 @@ namespace SchematicToVox
                 throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
             if (_scale <= 0)
                 throw new ArgumentException("[ERROR] --scale argument must be positive");
-            if (_heightmap <= 1)
+            if (_heightmap < 1)
                 throw new ArgumentException("[ERROR] --heightmap argument must be positive");
             if (_color && _heightmap == 1)
                 throw new ArgumentException("[ERROR] --color argument must be used with --heightmap");
