@@ -21,6 +21,7 @@ namespace SchematicToVox
         private static bool _verbose = false;
         private static bool _excavate = false;
         private static bool _color = false;
+        private static bool _top = false;
 
         private static int _ignore_min_y = -1;
         private static int _ignore_max_y = 256;
@@ -41,7 +42,8 @@ namespace SchematicToVox
                 { "e|excavate", "delete all blocks which doesn't have at lease one face connected with air", v => _excavate = v != null },
                 { "s|scale=", "increase the scale of each block", (int v) => _scale = v },
                 { "hm|heightmap=", "create voxels terrain from heightmap", (int v)=> _heightmap = v },
-                { "c|color", "enable color when generating heightmap", v => _color = v != null }
+                { "c|color", "enable color when generating heightmap", v => _color = v != null },
+                { "t|top", "create voxels only for top", v => _top = v != null }
             };
 
             try
@@ -105,6 +107,8 @@ namespace SchematicToVox
                 Console.WriteLine("[INFO] Enabled option: color");
             if (_heightmap != 1)
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
+            if (_top)
+                Console.WriteLine("[INFO] Enabled option: top");
             if (_scale > 1)
                 Console.WriteLine("[INFO] Specified increase size: " + _scale);
             Console.WriteLine("[INFO] Way: " + _direction);
@@ -138,7 +142,7 @@ namespace SchematicToVox
 
         private static void ProcessImageFile()
         {
-            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate, _color);
+            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate, _color, _top);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
         }

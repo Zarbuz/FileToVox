@@ -16,13 +16,14 @@ namespace SchematicToVox.Schematics
         private static bool _excavate;
         private static int _heightmap;
         private static bool _color;
+        private static bool _top;
 
-
-        public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color)
+        public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color, bool top)
         {
             _excavate = excavate;
             _heightmap = heightmap;
             _color = color;
+            _top = top;
 
             return WriteSchematicFromImage(path);
         }
@@ -60,30 +61,28 @@ namespace SchematicToVox.Schematics
                     int y = i / schematic.Width;
                     var color = bitmap.GetPixel(x, y);
                     var colorGray = grayScale.GetPixel(x, y);
+                    var finalColor = (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
                         if (_heightmap != 1)
                         {
-                            int intensity = colorGray.R + colorGray.G + colorGray.B;
-                            float position = intensity / (float)765;
-                            int height = (int)(position * _heightmap);
+                            int height = GetHeight(colorGray);
 
                             if (_excavate)
                             {
-                                if (CheckCornerPixels(bitmap, color, x, y))
-                                {
-                                    AddMultipleBlocks(ref schematic, ref global, height, x, y, color, colorGray);
-                                }
-                                else
-                                {
-                                    Block block = (_color) ? new Block(x, height - 1, y, color) :
-                                        new Block(x, height - 1, y, colorGray);
-                                    AddBlock(ref schematic, ref global, block);
-                                }
+                                GenerateFromMinNeighbor(ref schematic, ref global, grayScale, finalColor, x, y);
                             }
                             else
                             {
-                                AddMultipleBlocks(ref schematic, ref global, height, x, y, color, colorGray);
+                                if (_top)
+                                {
+                                    Block block = new Block(x, height - 1, y, finalColor);
+                                    AddBlock(ref schematic, ref global, block);
+                                }
+                                else
+                                {
+                                    AddMultipleBlocks(ref schematic, ref global, 0, height, x, y, finalColor);
+                                }
                             }
                         }
                         else
@@ -134,12 +133,11 @@ namespace SchematicToVox.Schematics
             return newBitmap;
         }
 
-        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int height, int x, int y, Color color, Color colorGray)
+        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int minZ, int maxZ, int x, int y, Color color)
         {
-            for (int z = 0; z < height; z++)
+            for (int z = minZ; z < maxZ; z++)
             {
-                Block block = (_color) ? new Block(x, z, y, color) :
-                                        new Block(x, z, y, colorGray);
+                Block block = new Block(x, z, y, color);
                 AddBlock(ref schematic, ref global, block);
             }
         }
@@ -158,9 +156,17 @@ namespace SchematicToVox.Schematics
             }
         }
 
-        private static bool CheckCornerPixels(Bitmap bitmap, Color color, int x, int y)
+        private static int GetHeight(Color color)
         {
-            bool createAll = true;
+            int intensity = color.R + color.G + color.B;
+            float position = intensity / (float)765;
+            return (int)(position * _heightmap);
+        }
+
+        private static void GenerateFromMinNeighbor(ref Schematic schematic, ref int global, Bitmap bitmap, Color color, int x, int y)
+        {
+            int height = GetHeight(color);
+
             if (x - 1 > 0 && x + 1 < bitmap.Width && y - 1 > 0 && y + 1 < bitmap.Height)
             {
                 var colorLeft = bitmap.GetPixel(x - 1, y);
@@ -168,12 +174,31 @@ namespace SchematicToVox.Schematics
                 var colorRight = bitmap.GetPixel(x + 1, y);
                 var colorBottom = bitmap.GetPixel(x, y + 1);
 
-                if (color == colorLeft && color == colorTop && color == colorRight && color == colorBottom)
+                int heightLeft = GetHeight(colorLeft);
+                int heightTop = GetHeight(colorTop);
+                int heightRight = GetHeight(colorRight);
+                int heightBottom = GetHeight(colorBottom);
+
+                var list = new List<int>
                 {
-                    createAll = false;
+                    heightLeft, heightTop, heightRight, heightBottom
+                };
+
+                int min = list.Min();
+                if (min < height)
+                    AddMultipleBlocks(ref schematic, ref global, list.Min(), height, x, y, color);
+                else
+                {
+                    Block block = new Block(x, height - 1, y, color);
+                    AddBlock(ref schematic, ref global, block);
                 }
+
             }
-            return createAll;
+            else
+            {
+                AddMultipleBlocks(ref schematic, ref global, 0, height, x, y, color);
+
+            }
         }
     }
 }
