@@ -35,11 +35,11 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 `./SchematicToVox.exe --i heighmap.png --o heightmap --hm 100`
 
 ## Input file
-![](img/heightmap?png)
+![](img/heightmap.png)
 
 ## Ouput file
-![](img/Annotation 2019-02-11 220808.jpg)
+![](img/output.jpg)
 
 ## Render
-![](img/snap2019-02-11-22-07-25.png)
+![](img/render.png)
 
