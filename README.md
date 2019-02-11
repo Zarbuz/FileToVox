@@ -29,3 +29,17 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 -s, --scale=VALUE              increase the scale of each block
 -hm --heightmap=VALUE          create voxels terrain from heightmap with the specified height
  ```
+
+# Examples
+
+`./SchematicToVox.exe --i heighmap.png --o heightmap --hm 100`
+
+## Input file
+![](img/heightmap?png)
+
+## Ouput file
+![](img/Annotation 2019-02-11 220808.jpg)
+
+## Render
+![](img/snap2019-02-11-22-07-25.png)
+
