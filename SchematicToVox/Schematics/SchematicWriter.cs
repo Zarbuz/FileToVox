@@ -15,6 +15,8 @@ namespace SchematicToVox.Schematics
         private static int _heightmap;
         private static bool _color;
         private static bool _top;
+        private static Color[,] _mainColors;
+        private static Color[,] _grayColors;
 
         public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color, bool top)
         {
@@ -30,6 +32,10 @@ namespace SchematicToVox.Schematics
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
+            Bitmap grayScale = MakeGrayscale3(bitmap);
+
+            _mainColors = GetColors(bitmap);
+            _grayColors = GetColors(grayScale);
 
             if (bitmap.Width > 2016 || bitmap.Height > 2016)
             {
@@ -47,18 +53,20 @@ namespace SchematicToVox.Schematics
             SchematicReader.WidthSchematic = schematic.Width;
             SchematicReader.HeightSchematic = schematic.Heigth;
 
-            Bitmap grayScale = MakeGrayscale3(bitmap);
 
             using (var progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write schematic from picture...");
+                Console.WriteLine("[INFO] Picture Width: " + schematic.Width);
+                Console.WriteLine("[INFO] Picture Length: " + schematic.Length);
+
                 int size = schematic.Width * schematic.Length;
                 for (int i = 0; i < size; i++)
                 {
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
-                    var color = bitmap.GetPixel(x, y);
-                    var colorGray = grayScale.GetPixel(x, y);
+                    var color = _mainColors[x, y];
+                    var colorGray = _grayColors[x, y];
                     var finalColor = (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
@@ -68,7 +76,7 @@ namespace SchematicToVox.Schematics
 
                             if (_excavate)
                             {
-                                GenerateFromMinNeighbor(ref schematic, grayScale, finalColor, x, y);
+                                GenerateFromMinNeighbor(ref schematic, finalColor, x, y);
                             }
                             else
                             {
@@ -131,6 +139,19 @@ namespace SchematicToVox.Schematics
             return newBitmap;
         }
 
+        private static Color[,] GetColors(Bitmap bitmap)
+        {
+            Color[, ] colors = new Color[bitmap.Height, bitmap.Width];
+            for (int i = 0; i < bitmap.Height; i++)
+            {
+                for (int j = 0; j < bitmap.Width; j++)
+                {
+                    colors[i, j] = bitmap.GetPixel(i, j);
+                }
+            }
+            return colors;
+        }
+
         private static void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
         {
             for (int z = minZ; z < maxZ; z++)
@@ -152,16 +173,16 @@ namespace SchematicToVox.Schematics
             return (int)(position * _heightmap);
         }
 
-        private static void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap bitmap, Color color, int x, int y)
+        private static void GenerateFromMinNeighbor(ref Schematic schematic, Color color, int x, int y)
         {
             int height = GetHeight(color);
 
-            if (x - 1 > 0 && x + 1 < bitmap.Width && y - 1 > 0 && y + 1 < bitmap.Height)
+            if (x - 1 > 0 && x + 1 < schematic.Width && y - 1 > 0 && y + 1 < schematic.Length)
             {
-                var colorLeft = bitmap.GetPixel(x - 1, y);
-                var colorTop = bitmap.GetPixel(x, y - 1);
-                var colorRight = bitmap.GetPixel(x + 1, y);
-                var colorBottom = bitmap.GetPixel(x, y + 1);
+                var colorLeft = _grayColors[x - 1, y];
+                var colorTop = _grayColors[x, y - 1];
+                var colorRight = _grayColors[x + 1, y];
+                var colorBottom = _grayColors[x, y + 1];
 
                 int heightLeft = GetHeight(colorLeft);
                 int heightTop = GetHeight(colorTop);

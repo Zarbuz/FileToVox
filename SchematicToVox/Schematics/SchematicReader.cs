@@ -1,7 +1,10 @@
 ﻿using fNbt;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using SchematicToVox.Extensions;
 
 namespace SchematicToVox.Schematics
 {
@@ -101,12 +104,12 @@ namespace SchematicToVox.Schematics
             HeightSchematic = (short)(rawSchematic.Heigth * _scale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            HashSet<Block> blocks = new HashSet<Block>();
+            ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
 
             int minY = Math.Max(_ignoreMinY, 0);
             int maxY = Math.Min(_ignoreMaxY, rawSchematic.Heigth);
 
-            for (int y = minY; y < (maxY * _scale); y++)
+            Parallel.For(minY, (maxY * _scale), y =>
             {
                 for (int z = 0; z < (rawSchematic.Length * _scale); z++)
                 {
@@ -119,7 +122,9 @@ namespace SchematicToVox.Schematics
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block(x, y, z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
+                            Block block = new Block(x, y, z,
+                                Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
+                                    rawSchematic.Data[index]));
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {
                                 blocks.Add(block);
@@ -127,8 +132,9 @@ namespace SchematicToVox.Schematics
                         }
                     }
                 }
-            }
-            return blocks;
+
+            });
+            return blocks.ToHashSet();
         }
 
         private static bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
