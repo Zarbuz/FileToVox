@@ -35,7 +35,7 @@ namespace SchematicToVox.Schematics
 
         public override string ToString()
         {
-            return string.Format("X: {0}, Y: {1}, Z: {2}, Color: {3}", X, Y, Z, Color.ToString());
+            return $"X: {X}, Y: {Y}, Z: {Z}, Color: {Color.ToString()}";
         }
 
     }

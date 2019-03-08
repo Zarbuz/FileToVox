@@ -14,16 +14,16 @@ namespace SchematicToVox.Vox
 {
     public class VoxWriter : VoxParser
     {
-        private int _width = 0;
-        private int _length = 0;
-        private int _height = 0;
-        private int _countSize = 0;
-        private int _totalBlockCount = 0;
-        private int _direction = 0;
+        private int _width;
+        private int _length;
+        private int _height;
+        private int _countSize;
+        private int _totalBlockCount;
+        private int _direction;
         private int _scale = 1;
 
-        private int _countBlocks = 0;
-        private int _childrenChunkSize = 0;
+        private int _countBlocks;
+        private int _childrenChunkSize;
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
         private BlockGlobal[] _firstBlockInEachRegion;
@@ -58,7 +58,7 @@ namespace SchematicToVox.Vox
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
 
             _countSize = _width * _length * _height;
-            _totalBlockCount = _schematic.Blocks.Sum(hashset => hashset.Count);
+            _totalBlockCount = _schematic.Blocks.Count;
 
             Console.WriteLine("[INFO] Total blocks: " + _totalBlockCount);
 
@@ -98,14 +98,11 @@ namespace SchematicToVox.Vox
         {
             ConcurrentBag<Block> concurrent = new ConcurrentBag<Block>();
 
-            Parallel.ForEach(_schematic.Blocks, hashset =>
+            Parallel.ForEach(_schematic.Blocks, block =>
             {
-                foreach (var block in hashset)
+                if (block.X >= min.x && block.Y >= min.y && block.Z >= min.z && block.X < max.x && block.Y < max.y && block.Z < max.z)
                 {
-                    if (block.X >= min.x && block.Y >= min.y && block.Z >= min.z && block.X < max.x && block.Y < max.y && block.Z < max.z)
-                    {
-                        concurrent.Add(block);
-                    }
+                    concurrent.Add(block);
                 }
             });
 
@@ -120,9 +117,13 @@ namespace SchematicToVox.Vox
             _firstBlockInEachRegion = new BlockGlobal[_countSize];
             int min = 0;
             if (_direction == 0)
+            {
                 min = (_width < _length) ? _width : _length;
+            }
             else
+            {
                 min = (_width > _length) ? _width : _length;
+            }
 
             for (int i = 0; i < _countSize; i++)
             {
@@ -224,16 +225,8 @@ namespace SchematicToVox.Vox
         {
             writer.Write(Encoding.UTF8.GetBytes(XYZI));
             HashSet<Block> blocks = new HashSet<Block>();
-            int globalIndex = 0;
-            for (int i = 0; i < _schematic.Blocks.Count; i++)
-            {
-                if (_schematic.Blocks[i].Count == 0 && globalIndex < _schematic.Blocks.Count - 1)
-                {
-                    globalIndex++;
-                }
-            }
 
-            if (_schematic.Blocks[globalIndex].Count > 0)
+            if (_schematic.Blocks.Count > 0)
             {
                 BlockGlobal firstBlock = _firstBlockInEachRegion[index];
                 blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
@@ -250,7 +243,7 @@ namespace SchematicToVox.Vox
                 writer.Write((byte)(block.Z % 126));
                 int i = _usedColors.IndexOf(block.Color) + 1;
                 writer.Write((i != 0) ? (byte)i : (byte)1);
-                _schematic.Blocks[globalIndex].Remove(block);
+                _schematic.Blocks.Remove(block);
             }
         }
 
@@ -331,19 +324,16 @@ namespace SchematicToVox.Vox
             writer.Write(1024);
             writer.Write(0);
             _usedColors = new List<Color32>(256);
-            for (int i = 0; i < _schematic.Blocks.Count; i++)
+            foreach (Block block in _schematic.Blocks)
             {
-                foreach (Block block in _schematic.Blocks[i])
+                Color32 color = block.Color;
+                if (_usedColors.Count < 256 && !_usedColors.Contains(color))
                 {
-                    Color32 color = block.Color;
-                    if (_usedColors.Count < 256 && !_usedColors.Contains(color))
-                    {
-                        _usedColors.Add(color);
-                        writer.Write(color.r);
-                        writer.Write(color.g);
-                        writer.Write(color.b);
-                        writer.Write(color.a);
-                    }
+                    _usedColors.Add(color);
+                    writer.Write(color.r);
+                    writer.Write(color.g);
+                    writer.Write(color.b);
+                    writer.Write(color.a);
                 }
             }
 

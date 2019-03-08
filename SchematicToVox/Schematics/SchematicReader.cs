@@ -1,14 +1,7 @@
 ﻿using fNbt;
-using SchematicToVox.Schematics.Tools;
-using SchematicToVox.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace SchematicToVox.Schematics
 {
@@ -18,8 +11,8 @@ namespace SchematicToVox.Schematics
         public static short LengthSchematic;
         public static short HeightSchematic;
 
-        private static int _ignore_min_y;
-        private static int _ignore_max_y;
+        private static int _ignoreMinY;
+        private static int _ignoreMaxY;
         private static int _scale;
 
         private static bool _excavate;
@@ -27,8 +20,8 @@ namespace SchematicToVox.Schematics
         public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
         {
             NbtFile file = new NbtFile(path);
-            _ignore_min_y = min;
-            _ignore_max_y = max;
+            _ignoreMinY = min;
+            _ignoreMaxY = max;
             _scale = scale;
             _excavate = excavate;
 
@@ -38,7 +31,7 @@ namespace SchematicToVox.Schematics
         private static Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            List<HashSet<Block>> blocks = GetBlocks(raw);
+            HashSet<Block> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks);
 
@@ -90,10 +83,12 @@ namespace SchematicToVox.Schematics
             return raw;
         }
 
-        private static List<HashSet<Block>> GetBlocks(RawSchematic rawSchematic)
+        private static HashSet<Block> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
+            {
                 throw new Exception("Schematic is too big");
+            }
 
             Console.WriteLine("[LOG] Started to read all blocks of the schematic...");
             Console.WriteLine("[INFO] Raw schematic Width: " + rawSchematic.Width);
@@ -106,43 +101,28 @@ namespace SchematicToVox.Schematics
             HeightSchematic = (short)(rawSchematic.Heigth * _scale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            List<HashSet<Block>> blocks = new List<HashSet<Block>>();
-            blocks.Add(new HashSet<Block>());
-            int global = 0;
+            HashSet<Block> blocks = new HashSet<Block>();
 
-            int minY = Math.Max(_ignore_min_y, 0);
-            int maxY = Math.Min(_ignore_max_y, rawSchematic.Heigth);
+            int minY = Math.Max(_ignoreMinY, 0);
+            int maxY = Math.Min(_ignoreMaxY, rawSchematic.Heigth);
 
-            for (int Y = minY; Y < (maxY * _scale); Y++)
+            for (int y = minY; y < (maxY * _scale); y++)
             {
-                for (int Z = 0; Z < (rawSchematic.Length * _scale); Z++)
+                for (int z = 0; z < (rawSchematic.Length * _scale); z++)
                 {
-                    for (int X = 0; X < (rawSchematic.Width * _scale); X++)
+                    for (int x = 0; x < (rawSchematic.Width * _scale); x++)
                     {
-                        int yProgress = Y / _scale;
-                        int zProgress = Z / _scale;
-                        int xProgress = X / _scale;
+                        int yProgress = y / _scale;
+                        int zProgress = z / _scale;
+                        int xProgress = x / _scale;
                         int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
-                        int blockID = rawSchematic.Blocks[index];
-                        if (blockID != 0)
+                        int blockId = rawSchematic.Blocks[index];
+                        if (blockId != 0)
                         {
-                            Block block = new Block(X, Y, Z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
-                            try
+                            Block block = new Block(x, y, z, Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]));
+                            if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {
-                                if (_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY))
-                                {
-                                    blocks[global].Add(block);
-                                }
-                                else if (!_excavate)
-                                {
-                                    blocks[global].Add(block);
-                                }
-                            }
-                            catch (OutOfMemoryException)
-                            {
-                                global++;
-                                blocks.Add(new HashSet<Block>());
-                                blocks[global].Add(block);
+                                blocks.Add(block);
                             }
                         }
                     }

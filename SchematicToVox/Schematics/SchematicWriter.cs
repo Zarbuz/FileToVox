@@ -1,12 +1,10 @@
-﻿using SchematicToVox.Extensions;
-using SchematicToVox.Utils;
+﻿using SchematicToVox.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SchematicToVox.Schematics
@@ -34,14 +32,16 @@ namespace SchematicToVox.Schematics
             Bitmap bitmap = new Bitmap(info.FullName);
 
             if (bitmap.Width > 2016 || bitmap.Height > 2016)
+            {
                 throw new Exception("Image is too big");
+            }
 
             Schematic schematic = new Schematic
             {
                 Width = (short)bitmap.Width,
                 Length = (short)bitmap.Height,
                 Heigth = (short)_heightmap,
-                Blocks = new List<HashSet<Block>>()
+                Blocks = new HashSet<Block>()
             };
             SchematicReader.LengthSchematic = schematic.Length;
             SchematicReader.WidthSchematic = schematic.Width;
@@ -49,14 +49,12 @@ namespace SchematicToVox.Schematics
 
             Bitmap grayScale = MakeGrayscale3(bitmap);
 
-            schematic.Blocks.Add(new HashSet<Block>());
             using (var progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write schematic from picture...");
                 int size = schematic.Width * schematic.Length;
-                for (int i = 0, global = 0; i < size; i++)
+                for (int i = 0; i < size; i++)
                 {
-
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
                     var color = bitmap.GetPixel(x, y);
@@ -70,25 +68,25 @@ namespace SchematicToVox.Schematics
 
                             if (_excavate)
                             {
-                                GenerateFromMinNeighbor(ref schematic, ref global, grayScale, finalColor, x, y);
+                                GenerateFromMinNeighbor(ref schematic, grayScale, finalColor, x, y);
                             }
                             else
                             {
                                 if (_top)
                                 {
                                     Block block = new Block(x, height - 1, y, finalColor);
-                                    AddBlock(ref schematic, ref global, block);
+                                    AddBlock(ref schematic, block);
                                 }
                                 else
                                 {
-                                    AddMultipleBlocks(ref schematic, ref global, 0, height, x, y, finalColor);
+                                    AddMultipleBlocks(ref schematic, 0, height, x, y, finalColor);
                                 }
                             }
                         }
                         else
                         {
                             Block block = new Block(x, 1, y, color);
-                            AddBlock(ref schematic, ref global, block);
+                            AddBlock(ref schematic, block);
                         }
                     }
                     progressbar.Report((i / (float)size));
@@ -133,27 +131,18 @@ namespace SchematicToVox.Schematics
             return newBitmap;
         }
 
-        private static void AddMultipleBlocks(ref Schematic schematic, ref int global, int minZ, int maxZ, int x, int y, Color color)
+        private static void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
         {
             for (int z = minZ; z < maxZ; z++)
             {
                 Block block = new Block(x, z, y, color);
-                AddBlock(ref schematic, ref global, block);
+                AddBlock(ref schematic, block);
             }
         }
 
-        private static void AddBlock(ref Schematic schematic, ref int global, Block block)
+        private static void AddBlock(ref Schematic schematic, Block block)
         {
-            try
-            {
-                schematic.Blocks[global].Add(block);
-            }
-            catch (OutOfMemoryException)
-            {
-                global++;
-                schematic.Blocks.Add(new HashSet<Block>());
-                schematic.Blocks[global].Add(block);
-            }
+            schematic.Blocks.Add(block);
         }
 
         private static int GetHeight(Color color)
@@ -163,7 +152,7 @@ namespace SchematicToVox.Schematics
             return (int)(position * _heightmap);
         }
 
-        private static void GenerateFromMinNeighbor(ref Schematic schematic, ref int global, Bitmap bitmap, Color color, int x, int y)
+        private static void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap bitmap, Color color, int x, int y)
         {
             int height = GetHeight(color);
 
@@ -186,17 +175,19 @@ namespace SchematicToVox.Schematics
 
                 int min = list.Min();
                 if (min < height)
-                    AddMultipleBlocks(ref schematic, ref global, list.Min(), height, x, y, color);
+                {
+                    AddMultipleBlocks(ref schematic, list.Min(), height, x, y, color);
+                }
                 else
                 {
                     Block block = new Block(x, height - 1, y, color);
-                    AddBlock(ref schematic, ref global, block);
+                    AddBlock(ref schematic, block);
                 }
 
             }
             else
             {
-                AddMultipleBlocks(ref schematic, ref global, 0, height, x, y, color);
+                AddMultipleBlocks(ref schematic, 0, height, x, y, color);
 
             }
         }

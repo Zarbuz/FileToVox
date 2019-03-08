@@ -13,13 +13,13 @@ namespace SchematicToVox.Schematics
         public short Heigth { get; set; }
         public short Length { get; set; }
         /// <summary>Contains all usual blocks</summary>
-        public List<HashSet<Block>> Blocks { get; set; }
+        public HashSet<Block> Blocks { get; set; }
         /// <summary>Returns how much blocks and tile entities there are in total.</summary>
         public int TotalCount { get { return Blocks.Count; } }
 
         public Schematic()
         {
-            Blocks = new List<HashSet<Block>>();
+            Blocks = new HashSet<Block>();
         }
 
         public Schematic(string name, short width, short heigth, short length)
@@ -29,7 +29,7 @@ namespace SchematicToVox.Schematics
             this.Length = length;
         }
 
-        public Schematic(string name, short width, short heigth, short length, List<HashSet<Block>> blocks) : this(name, width, heigth, length)
+        public Schematic(string name, short width, short heigth, short length, HashSet<Block> blocks) : this(name, width, heigth, length)
         {
             this.Blocks = blocks;
         }
