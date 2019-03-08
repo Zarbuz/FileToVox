@@ -3,12 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchematicToVox", "SchematicToVox\SchematicToVox.csproj", "{1FD626C4-7AD2-4866-AFF0-3B465DF46E2D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4488498D-976D-4DA3-BF72-109531AF0488} = {4488498D-976D-4DA3-BF72-109531AF0488}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fNbt", "SchematicToVox\.NETSchematicReader\fNbt\fNbt\fNbt.csproj", "{4488498D-976D-4DA3-BF72-109531AF0488}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchematicToVoxCore", "SchematicToVoxCore\SchematicToVoxCore.csproj", "{F24C61D3-C2D6-4208-BB30-79236DA8019E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1FD626C4-7AD2-4866-AFF0-3B465DF46E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FD626C4-7AD2-4866-AFF0-3B465DF46E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FD626C4-7AD2-4866-AFF0-3B465DF46E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FD626C4-7AD2-4866-AFF0-3B465DF46E2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4488498D-976D-4DA3-BF72-109531AF0488}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4488498D-976D-4DA3-BF72-109531AF0488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F24C61D3-C2D6-4208-BB30-79236DA8019E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F24C61D3-C2D6-4208-BB30-79236DA8019E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F24C61D3-C2D6-4208-BB30-79236DA8019E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F24C61D3-C2D6-4208-BB30-79236DA8019E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,0 @@
-_ReSharper.LibNbt
-fNbt/obj
-fNbt.Test/obj
-fNbt.Serialization/obj
-bin/
-*.user
-*.suo
