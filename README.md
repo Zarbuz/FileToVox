@@ -30,6 +30,11 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 -hm        --heightmap=VALUE          create voxels terrain from heightmap with the specified height
 -c,        --color                enable color when generating heightmap
  ```
+ 
+ # Installation 
+ 
+ Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of SchematicToVox. Be sure to download the binary and not the source code. 
+Then extract the content of zip file in the folder of your choice.
 
 # Examples
 
