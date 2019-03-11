@@ -12,7 +12,12 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 - Go to the emplacement of the binary
 - Lanch the command
 
+## Windows
 `./SchematicToVoxCore.exe --i [INPUT] --o [OUTPUT]`
+
+## MacOS or Linux
+
+`./SchematicToVoxCore --i [INPUT] --o [OUTPUT]`
 
 [INPUT] refer to a .schematic file or .png file (mandatory)
 [OUTPUT] refer to the destination path (mandatory)
