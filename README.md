@@ -19,6 +19,8 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 
 `./SchematicToVoxCore --i [INPUT] --o [OUTPUT]`
 
+If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
+
 [INPUT] refer to a .schematic file or .png file (mandatory)
 [OUTPUT] refer to the destination path (mandatory)
 
