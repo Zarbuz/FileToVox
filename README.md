@@ -27,15 +27,15 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
 ## Options
 
 ```
--h,        --help                     show this message and exit
--v,        --verbose                  enable the verbose mode
--w,        --way=VALUE                the way of schematic (0 or 1), default value is 0
--iminy,    --ignore-min-y=VALUE   ignore blocks below the specified layer
--imaxy,    --ignore-max-y=VALUE   ignore blocks above the specified layer
--e,        --excavate                 delete all blocks which doesn't have at lease one face connected with air
--s,        --scale=VALUE              increase the scale of each block
--hm        --heightmap=VALUE          create voxels terrain from heightmap with the specified height
--c,        --color                enable color when generating heightmap
+--h,        -help                     show this message and exit
+--v,        -verbose                  enable the verbose mode
+--w,        -way=VALUE                the way of schematic (0 or 1), default value is 0
+--iminy,    -ignore-min-y=VALUE   ignore blocks below the specified layer
+--imaxy,    -ignore-max-y=VALUE   ignore blocks above the specified layer
+--e,        -excavate                 delete all blocks which doesn't have at lease one face connected with air
+--s,        -scale=VALUE              increase the scale of each block
+--hm        -heightmap=VALUE          create voxels terrain from heightmap with the specified height
+--c,        -color                enable color when generating heightmap
  ```
  
  # Installation 
