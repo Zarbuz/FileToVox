@@ -29,6 +29,11 @@ namespace SchematicToVoxCore.Schematics
 
         private static Schematic WriteSchematicFromImage(string path)
         {
+            if (!File.Exists(path))
+            {
+                throw new Exception("Invalid image path: " + path);
+            }
+
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
             Bitmap grayScale = MakeGrayscale3(bitmap);
@@ -64,8 +69,8 @@ namespace SchematicToVoxCore.Schematics
                 {
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
-                    var color = _mainColors[x, y];
-                    var colorGray = _grayColors[x, y];
+                    var color = _mainColors[y, x];
+                    var colorGray = _grayColors[y, x];
                     var finalColor = (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
@@ -141,11 +146,11 @@ namespace SchematicToVoxCore.Schematics
         private static Color[,] GetColors(Bitmap bitmap)
         {
             Color[, ] colors = new Color[bitmap.Height, bitmap.Width];
-            for (int i = 0; i < bitmap.Height; i++)
+            for (int y = 0; y < bitmap.Height; y++)
             {
-                for (int j = 0; j < bitmap.Width; j++)
+                for (int x = 0; x < bitmap.Width; x++)
                 {
-                    colors[i, j] = bitmap.GetPixel(i, j);
+                    colors[y, x] = bitmap.GetPixel(x, y);
                 }
             }
             return colors;
