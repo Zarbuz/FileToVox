@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SchematicToVoxCore": {
+      "commandName": "Project",
+      "commandLineArgs": "--i sparticles.png --o sparticles"
+    }
+  }
+}

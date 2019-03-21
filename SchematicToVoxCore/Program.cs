@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NDesk.Options;
+using SchematicToVoxCore.Converter;
 using SchematicToVoxCore.Schematics;
 using SchematicToVoxCore.Vox;
 
@@ -141,7 +142,7 @@ namespace SchematicToVoxCore
 
         private static void ProcessImageFile()
         {
-            var schematic = SchematicWriter.WriteSchematic(_inputFile, _heightmap, _excavate, _color, _top);
+            var schematic = PNGToSchematic.WriteSchematic(_inputFile, _heightmap, _excavate, _color, _top);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
         }

@@ -4,11 +4,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using SchematicToVoxCore.Schematics;
 using SchematicToVoxCore.Utils;
 
-namespace SchematicToVoxCore.Schematics
+namespace SchematicToVoxCore.Converter
 {
-    public static class SchematicWriter
+    public static class PNGToSchematic
     {
         private static bool _excavate;
         private static int _heightmap;
