@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using SchematicToVoxCore.Schematics.Tools;
 using SchematicToVoxCore.Vox.Chunks;
@@ -16,14 +17,6 @@ namespace SchematicToVoxCore.Vox
         public List<ShapeNodeChunk> shapeNodeChunks = new List<ShapeNodeChunk>();
         public List<LayerChunk> layerChunks = new List<LayerChunk>();
         public List<RendererSettingChunk> rendererSettingChunks = new List<RendererSettingChunk>();
-
-        public void SetAlphaFromTransparency()
-        {
-            for (int i = 0, count = Math.Min(palette.Length, materialChunks.Count); i < count; i++)
-            {
-                palette[i].a = materialChunks[i].Alpha;
-            }
-        }
     }
 
     public enum MaterialType
@@ -39,7 +32,6 @@ namespace SchematicToVoxCore.Vox
         {
             this.items = items;
         }
-        public DICT() { }
 
         public Rotation _r
         {

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchematicToVoxCore.Extensions;
 using SchematicToVoxCore.Schematics;
 using SchematicToVoxCore.Schematics.Tools;
 using SchematicToVoxCore.Utils;
@@ -26,7 +28,7 @@ namespace SchematicToVoxCore.Vox
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
         private BlockGlobal[] _firstBlockInEachRegion;
-        private List<Color32> _usedColors;
+        private List<Color> _usedColors;
 
         public bool WriteModel(string absolutePath, Schematic schematic, int direction, int scale)
         {
@@ -240,7 +242,7 @@ namespace SchematicToVoxCore.Vox
                 writer.Write((byte)(block.X % 126));
                 writer.Write((byte)(block.Y % 126));
                 writer.Write((byte)(block.Z % 126));
-                int i = _usedColors.IndexOf(block.Color) + 1;
+                int i = _usedColors.IndexOf(block.Color.UIntToColor()) + 1;
                 writer.Write((i != 0) ? (byte)i : (byte)1);
                 _schematic.Blocks.Remove(block);
             }
@@ -322,10 +324,10 @@ namespace SchematicToVoxCore.Vox
             writer.Write(Encoding.UTF8.GetBytes(RGBA));
             writer.Write(1024);
             writer.Write(0);
-            _usedColors = new List<Color32>(256);
+            _usedColors = new List<Color>(256);
             foreach (Block block in _schematic.Blocks)
             {
-                Color32 color = block.Color;
+                Color color = block.Color.UIntToColor();
                 if (_usedColors.Count < 256 && !_usedColors.Contains(color))
                 {
                     _usedColors.Add(color);

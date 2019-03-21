@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i sparticles.png --o sparticles"
+      "commandLineArgs": "--i schematics/everbloom.schematic --o everbloom --e"
     }
   }
 }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using fNbt;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using fNbt;
-using SchematicToVoxCore.Extensions;
 
 namespace SchematicToVoxCore.Schematics
 {
@@ -93,11 +94,12 @@ namespace SchematicToVoxCore.Schematics
                 throw new Exception("Schematic is too big");
             }
 
-            Console.WriteLine("[LOG] Started to read all blocks of the schematic...");
-            Console.WriteLine("[INFO] Raw schematic Width: " + rawSchematic.Width);
-            Console.WriteLine("[INFO] Raw schematic Length: " + rawSchematic.Length);
-            Console.WriteLine("[INFO] Raw schematic Height: " + rawSchematic.Heigth);
-            Console.WriteLine("[INFO] Raw schematic total blocks " + rawSchematic.Data.Length);
+            Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
+            Console.WriteLine($"[INFO] Raw schematic Width: {rawSchematic.Width}");
+            Console.WriteLine($"[INFO] Raw schematic Length: {rawSchematic.Length}");
+            Console.WriteLine($"[INFO] Raw schematic Height: {rawSchematic.Heigth}");
+            Console.WriteLine($"[INFO] Raw schematic total blocks: {rawSchematic.Data.Length}");
+            Console.WriteLine($"[INFO] Memory: {rawSchematic.Data.Length * Marshal.SizeOf(typeof(Block))} bytes");
 
             WidthSchematic = (short)(rawSchematic.Width * _scale);
             LengthSchematic = (short)(rawSchematic.Length * _scale);
@@ -115,16 +117,16 @@ namespace SchematicToVoxCore.Schematics
                 {
                     for (int x = 0; x < (rawSchematic.Width * _scale); x++)
                     {
-                        int yProgress = y / _scale;
-                        int zProgress = z / _scale;
-                        int xProgress = x / _scale;
+                        int yProgress = (y / _scale);
+                        int zProgress = (z / _scale);
+                        int xProgress = (x / _scale);
                         int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block(x, y, z,
+                            Block block = new Block((ushort)x, (ushort)y, (ushort)z,
                                 Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
-                                    rawSchematic.Data[index]));
+                                    rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {
                                 blocks.Add(block);
@@ -132,7 +134,6 @@ namespace SchematicToVoxCore.Schematics
                         }
                     }
                 }
-
             });
             return blocks.ToHashSet();
         }

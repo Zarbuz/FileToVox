@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -53,7 +54,7 @@ namespace SchematicToVoxCore.Vox
                 g = (byte)((source >> 8) & 0xff);
                 b = (byte)((source >> 16) & 0xff);
                 a = (byte)((source >> 26) & 0xff);
-                result[i] = new Color32(r, g, b, a);
+                result[i] = Color.FromArgb(r, g, b, a);
             }
             return result;
         }
@@ -68,7 +69,7 @@ namespace SchematicToVoxCore.Vox
             var result = new Color[256];
             for (int i = 1; i < 256; i++)
             {
-                result[i] = new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                result[i] = Color.FromArgb(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
             }
             return result;
         }

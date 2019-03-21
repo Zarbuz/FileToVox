@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using SchematicToVoxCore.Extensions;
 using SchematicToVoxCore.Schematics;
 using SchematicToVoxCore.Utils;
 
@@ -87,7 +88,7 @@ namespace SchematicToVoxCore.Converter
                             {
                                 if (_top)
                                 {
-                                    Block block = new Block(x, height - 1, y, finalColor);
+                                    Block block = new Block((ushort)x, (ushort)(height - 1), (ushort)y, finalColor.ColorToUInt());
                                     AddBlock(ref schematic, block);
                                 }
                                 else
@@ -98,7 +99,7 @@ namespace SchematicToVoxCore.Converter
                         }
                         else
                         {
-                            Block block = new Block(x, 1, y, color);
+                            Block block = new Block((ushort)x, (ushort)1, (ushort)y, color.ColorToUInt());
                             AddBlock(ref schematic, block);
                         }
                     }
@@ -161,7 +162,7 @@ namespace SchematicToVoxCore.Converter
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                Block block = new Block(x, z, y, color);
+                Block block = new Block((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt());
                 AddBlock(ref schematic, block);
             }
         }
@@ -206,7 +207,7 @@ namespace SchematicToVoxCore.Converter
                 }
                 else
                 {
-                    Block block = new Block(x, height - 1, y, color);
+                    Block block = new Block((ushort)x, (ushort)(height - 1), (ushort)y, color.ColorToUInt());
                     AddBlock(ref schematic, block);
                 }
 
