@@ -1,10 +1,12 @@
-# What is SchematicToVox ? 
+# What is FileToVox ? 
 
-SchematicToVox is a console program which allow you to convert a schematic file (Minecraft save) into a vox file (Magicavoxel).
+FileToVox is a console program which allow you to convert a file into a vox file (Magicavoxel).
+Current file support: 
+- .schematic
+- .png
+- .asc
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
-You can also convert an image (only PNG) also with support of world region ! (So you can convert a picture bigger than 126 * 126 pixels)
-And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 
 # How use it ? 
 
@@ -13,15 +15,15 @@ And you can create terrain from heightmap like in Magicavoxel Viewer directly !
 - Lanch the command
 
 ## Windows
-`./SchematicToVoxCore.exe --i [INPUT] --o [OUTPUT]`
+`./FileToVox.exe --i [INPUT] --o [OUTPUT]`
 
 ## MacOS or Linux
 
-`./SchematicToVoxCore --i [INPUT] --o [OUTPUT]`
+`./FileToVox --i [INPUT] --o [OUTPUT]`
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
 
-[INPUT] refer to a .schematic file or .png file (mandatory)
+[INPUT] refer to a input filepath (mandatory)
 [OUTPUT] refer to the destination path (mandatory)
 
 ## Options
@@ -40,12 +42,12 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
  
  # Installation 
  
- Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of SchematicToVox. Be sure to download the binary and not the source code. 
+ Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
 Then extract the content of zip file in the folder of your choice.
 
 # Examples
 
-`./SchematicToVoxCore.exe --i heightmap.png --o heightmap --hm 100`
+`./FileToVox.exe --i heightmap.png --o heightmap --hm 100`
 
 ## Input file
 ![](img/heightmap.png)
