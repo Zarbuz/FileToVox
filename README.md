@@ -45,7 +45,7 @@ Then extract the content of zip file in the folder of your choice.
 
 # Examples
 
-`./SchematicToVox.exe --i heightmap.png --o heightmap --hm 100`
+`./SchematicToVoxCore.exe --i heightmap.png --o heightmap --hm 100`
 
 ## Input file
 ![](img/heightmap.png)
