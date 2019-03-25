@@ -4,7 +4,7 @@ FileToVox is a console program which allow you to convert a file into a vox file
 Current file support: 
 - .schematic
 - .png
-- .asc
+- .asc (Esri ASCII raster format)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
