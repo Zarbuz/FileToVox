@@ -31,11 +31,6 @@ namespace SchematicToVoxCore.Converter
 
         private static Schematic WriteSchematicFromImage(string path)
         {
-            if (!File.Exists(path))
-            {
-                throw new Exception("Invalid image path: " + path);
-            }
-
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
             Bitmap grayScale = MakeGrayscale3(bitmap);

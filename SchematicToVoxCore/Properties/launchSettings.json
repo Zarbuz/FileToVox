@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i schematics/everbloom.schematic --o everbloom --e"
+      "commandLineArgs": "--i sj1580_DSM_1M.asc --o test"
     }
   }
 }

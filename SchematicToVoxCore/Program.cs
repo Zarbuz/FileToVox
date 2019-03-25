@@ -118,6 +118,9 @@ namespace SchematicToVoxCore
 
         private static void ProcessFile()
         {
+            if (!File.Exists(_inputFile))
+                throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
+
             switch (Path.GetExtension(_inputFile))
             {
                 case ".schematic":
@@ -125,6 +128,9 @@ namespace SchematicToVoxCore
                     break;
                 case ".png":
                     ProcessImageFile();
+                    break;
+                case ".asc":
+                    ProcessAscFile();
                     break;
                 default:
                     Console.WriteLine("[ERROR] Unknown file extension ! ");
@@ -143,6 +149,13 @@ namespace SchematicToVoxCore
         private static void ProcessImageFile()
         {
             var schematic = PNGToSchematic.WriteSchematic(_inputFile, _heightmap, _excavate, _color, _top);
+            VoxWriter writer = new VoxWriter();
+            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
+        }
+
+        private static void ProcessAscFile()
+        {
+            var schematic = ASCToSchematic.WriteSchematic(_inputFile);
             VoxWriter writer = new VoxWriter();
             writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
         }
