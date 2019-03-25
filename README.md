@@ -2,7 +2,7 @@
 
 FileToVox is a console program which allow you to convert a file into a vox file (Magicavoxel).
 
-Current file support: 
+Current files support: 
 - .schematic
 - .png
 - .asc (Esri ASCII raster format)
