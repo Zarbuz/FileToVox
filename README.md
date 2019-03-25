@@ -1,6 +1,7 @@
 # What is FileToVox ? 
 
 FileToVox is a console program which allow you to convert a file into a vox file (Magicavoxel).
+
 Current file support: 
 - .schematic
 - .png
