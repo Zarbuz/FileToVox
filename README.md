@@ -5,6 +5,7 @@ Current file support:
 - .schematic
 - .png
 - .asc
+
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
 
