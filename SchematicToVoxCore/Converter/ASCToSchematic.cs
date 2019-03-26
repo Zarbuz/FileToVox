@@ -80,7 +80,11 @@ namespace SchematicToVoxCore.Converter
             {
                 for (int j = 0; j < points.GetLength(1); j++)
                 {
-                    schematic.Blocks.Add(new Block((ushort) i, (ushort) points[i, j], (ushort) j, Color.White.ColorToUInt()));
+                    if (points[i, j] != nodata)
+                    {
+                        schematic.Blocks.Add(new Block((ushort) i, (ushort) points[i, j], (ushort) j,
+                            Color.White.ColorToUInt()));
+                    }
                 }
             }
 

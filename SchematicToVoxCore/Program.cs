@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using NDesk.Options;
+﻿using NDesk.Options;
 using SchematicToVoxCore.Converter;
 using SchematicToVoxCore.Schematics;
 using SchematicToVoxCore.Vox;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SchematicToVoxCore
 {
@@ -12,6 +13,7 @@ namespace SchematicToVoxCore
     {
         private static string _inputFile;
         private static string _outputDir;
+        private static string _inputColorFile;
 
         private static bool _show_help;
         private static bool _verbose;
@@ -41,31 +43,59 @@ namespace SchematicToVoxCore
                     v => _excavate = v != null
                 },
                 {"s|scale=", "increase the scale of each block", (int v) => _scale = v},
-                {"hm|heightmap=", "create voxels terrain from heightmap", (int v) => _heightmap = v},
-                {"c|color", "enable color when generating heightmap", v => _color = v != null},
-                {"t|top", "create voxels only for top", v => _top = v != null}
+                {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
+                {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
+                {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null}
             };
 
             try
             {
-                List<string> extra = options.Parse(args);
+                List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
                 CheckHelp(options);
                 CheckArguments();
                 DisplayArguments();
                 ProcessFile();
                 CheckVerbose();
                 Console.WriteLine("[LOG] Done.");
-
+                if (_verbose)
+                {
+                    Console.ReadKey();
+                }
             }
-            catch (OptionException e)
+            catch (Exception e)
             {
-                Console.Write("SchematicToVox: ");
+                Console.Write("FileToVox: ");
                 Console.WriteLine(e.Message);
-                Console.WriteLine("Try `SchematicToVox --help` for more informations.");
+                Console.WriteLine("Try `FileToVox --help` for more informations.");
+                Console.ReadLine();
+            }
+        }
+
+        private static string[] CheckArgumentsFile()
+        {
+            if (!File.Exists("settings.ini"))
+            {
+                File.Create("settings.ini");
             }
 
-            if (_verbose)
-                Console.ReadKey();
+            Console.WriteLine("[INFO] Reading arguments from settings.ini");
+            string[] args = new string[0];
+            using (StreamReader file = new StreamReader("settings.ini"))
+            {
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line.Contains("#"))
+                    {
+                        continue;
+                    }
+
+                    Console.WriteLine($"[INFO] {line}");
+                    args = line.Split(" ");
+                }
+            }
+
+            return args;
         }
 
         private static void CheckHelp(OptionSet options)
@@ -133,7 +163,7 @@ namespace SchematicToVoxCore
                     ProcessAscFile();
                     break;
                 default:
-                    Console.WriteLine("[ERROR] Unknown file extension ! ");
+                    Console.WriteLine("[ERROR] Unknown file extension !");
                     Console.ReadKey();
                     return;
             }
@@ -162,7 +192,7 @@ namespace SchematicToVoxCore
 
         private static void ShowHelp(OptionSet p)
         {
-            Console.WriteLine("Usage: SchematicToVox [OPTIONS]+ INPUT OUTPUT");
+            Console.WriteLine("Usage: FileToVox --i INPUT --o OUTPUT");
             Console.WriteLine("Options: ");
             p.WriteOptionDescriptions(Console.Out);
         }

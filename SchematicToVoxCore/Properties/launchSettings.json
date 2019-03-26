@@ -1,8 +1,7 @@
 {
   "profiles": {
     "SchematicToVoxCore": {
-      "commandName": "Project",
-      "commandLineArgs": "--i sj1580_DSM_1M.asc --o test"
+      "commandName": "Project"
     }
   }
 }
