@@ -6,6 +6,7 @@ Current files support:
 - .schematic
 - .png
 - .asc (Esri ASCII raster format)
+- .binvox
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 

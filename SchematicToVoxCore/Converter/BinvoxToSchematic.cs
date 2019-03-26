@@ -64,6 +64,8 @@ namespace FileToVox.Converter
                         }
                     }
                 }
+
+                return schematic;
             }
         }
 

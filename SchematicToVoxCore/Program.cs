@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FileToVox.Converter;
 
 namespace SchematicToVoxCore
 {
@@ -169,6 +170,9 @@ namespace SchematicToVoxCore
                 case ".asc":
                     ProcessAscFile();
                     break;
+                case ".binvox":
+                    ProcessBinvoxFile();
+                    break;
                 default:
                     Console.WriteLine("[ERROR] Unknown file extension !");
                     Console.ReadKey();
@@ -180,7 +184,22 @@ namespace SchematicToVoxCore
         {
             try
             {
-                var schematic = SchematicReader.LoadSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                Schematic schematic = SchematicReader.LoadSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
+        }
+
+        private static void ProcessBinvoxFile()
+        {
+            try
+            {
+                Schematic schematic = BinvoxToSchematic.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
             }
@@ -195,7 +214,7 @@ namespace SchematicToVoxCore
         {
             try
             {
-                var schematic = PNGToSchematic.WriteSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
+                Schematic schematic = PNGToSchematic.WriteSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
             }
@@ -210,7 +229,7 @@ namespace SchematicToVoxCore
         {
             try
             {
-                var schematic = ASCToSchematic.WriteSchematic(_inputFile);
+                Schematic schematic = ASCToSchematic.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
             }

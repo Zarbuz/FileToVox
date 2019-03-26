@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i wr_height.png --o test --hm 100 --cm wr_greyscale.png"
+      "commandLineArgs": "--i 8a85.binvox --o test2"
     }
   }
 }
