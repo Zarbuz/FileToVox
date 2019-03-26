@@ -13,17 +13,17 @@ namespace SchematicToVoxCore.Converter
     public static class PNGToSchematic
     {
         private static bool _excavate;
-        private static int _heightmap;
+        private static int _height;
         private static bool _color;
         private static bool _top;
         private static Color[,] _mainColors;
         private static Color[,] _grayColors;
         private static Color[,] _fileColors;
 
-        public static Schematic WriteSchematic(string path, string colorPath, int heightmap, bool excavate, bool color, bool top)
+        public static Schematic WriteSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
         {
             _excavate = excavate;
-            _heightmap = heightmap;
+            _height = height;
             _color = color;
             _top = top;
             return WriteSchematicFromImage(path, colorPath);
@@ -59,7 +59,7 @@ namespace SchematicToVoxCore.Converter
             {
                 Width = (short)bitmap.Width,
                 Length = (short)bitmap.Height,
-                Heigth = (short)_heightmap,
+                Heigth = (short)_height,
                 Blocks = new HashSet<Block>()
             };
             SchematicReader.LengthSchematic = schematic.Length;
@@ -83,7 +83,7 @@ namespace SchematicToVoxCore.Converter
                     Color finalColor = (colorPath != null) ? _fileColors[y, x] : (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
-                        if (_heightmap != 1)
+                        if (_height != 1)
                         {
                             int height = GetHeight(colorGray);
 
@@ -187,7 +187,7 @@ namespace SchematicToVoxCore.Converter
         {
             int intensity = color.R + color.G + color.B;
             float position = intensity / (float)765;
-            return (int)(position * _heightmap);
+            return (int)(position * _height);
         }
 
         private static void GenerateFromMinNeighbor(ref Schematic schematic, Color color, int x, int y)
