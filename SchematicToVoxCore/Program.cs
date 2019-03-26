@@ -12,7 +12,7 @@ namespace SchematicToVoxCore
     class Program
     {
         private static string _inputFile;
-        private static string _outputDir;
+        private static string _outputFile;
         private static string _inputColorFile;
 
         private static bool _show_help;
@@ -32,20 +32,21 @@ namespace SchematicToVoxCore
             OptionSet options = new OptionSet()
             {
                 {"i|input=", "input file", v => _inputFile = v},
-                {"o|output=", "output file", v => _outputDir = v},
+                {"o|output=", "output file", v => _outputFile = v},
                 {"h|help", "show this message and exit", v => _show_help = v != null},
                 {"v|verbose", "enable the verbose mode", v => _verbose = v != null},
                 {"w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => _direction = v},
-                {"iminy|ignore-min-y=", "ignore blocks below the specified layer", (int v) => _ignoreMinY = v},
-                {"imaxy|ignore-max-y=", "ignore blocks above the specified layer", (int v) => _ignoreMaxY = v},
-                {
-                    "e|excavate", "delete all blocks which doesn't have at lease one face connected with air",
+                {"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
+                {"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
+                { 
+                    "e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
                     v => _excavate = v != null
                 },
-                {"s|scale=", "increase the scale of each block", (int v) => _scale = v},
+                {"s|scale=", "increase the scale of each block (only schematic file)", (int v) => _scale = v},
                 {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
                 {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
-                {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null}
+                {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
+                {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v }
             };
 
             try
@@ -110,9 +111,9 @@ namespace SchematicToVoxCore
         private static void CheckArguments()
         {
             if (_inputFile == null)
-                throw new ArgumentNullException("[ERROR] Missing required option: --i=FILE");
-            if (_outputDir == null)
-                throw new ArgumentNullException("[ERROR] Missing required option: --o=FILE");
+                throw new ArgumentNullException("[ERROR] Missing required option: --i");
+            if (_outputFile == null)
+                throw new ArgumentNullException("[ERROR] Missing required option: --o");
             if (_ignoreMinY < -1)
                 throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
             if (_ignoreMaxY > 256)
@@ -127,6 +128,12 @@ namespace SchematicToVoxCore
 
         private static void DisplayArguments()
         {
+            if (_inputFile != null)
+                Console.WriteLine("[INFO] Specified input file: " + _inputFile);
+            if (_outputFile != null)
+                Console.WriteLine("[INFO] Specifid output file: " + _outputFile);
+            if (_inputColorFile != null)
+                Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
             if (_ignoreMinY != -1)
                 Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
             if (_ignoreMaxY != 256)
@@ -143,7 +150,7 @@ namespace SchematicToVoxCore
                 Console.WriteLine("[INFO] Specified increase size: " + _scale);
             Console.WriteLine("[INFO] Way: " + _direction);
 
-            Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputDir));
+            Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
 
         private static void ProcessFile()
@@ -171,23 +178,47 @@ namespace SchematicToVoxCore
 
         private static void ProcessSchematicFile()
         {
-            var schematic = SchematicReader.LoadSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
-            VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
+            try
+            {
+                var schematic = SchematicReader.LoadSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
         }
 
         private static void ProcessImageFile()
         {
-            var schematic = PNGToSchematic.WriteSchematic(_inputFile, _heightmap, _excavate, _color, _top);
-            VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
+            try
+            {
+                var schematic = PNGToSchematic.WriteSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
         }
 
         private static void ProcessAscFile()
         {
-            var schematic = ASCToSchematic.WriteSchematic(_inputFile);
-            VoxWriter writer = new VoxWriter();
-            writer.WriteModel(_outputDir + ".vox", schematic, _direction, _scale);
+            try
+            {
+                var schematic = ASCToSchematic.WriteSchematic(_inputFile);
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction, _scale);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
         }
 
         private static void ShowHelp(OptionSet p)
@@ -202,7 +233,7 @@ namespace SchematicToVoxCore
             if (_verbose)
             {
                 VoxReader reader = new VoxReader();
-                reader.LoadModel(_outputDir + ".vox");
+                reader.LoadModel(_outputFile + ".vox");
             }
         }
     }

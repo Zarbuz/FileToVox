@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SchematicToVoxCore.Extensions;
+using SchematicToVoxCore.Schematics;
+using SchematicToVoxCore.Utils;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using SchematicToVoxCore.Extensions;
-using SchematicToVoxCore.Schematics;
-using SchematicToVoxCore.Utils;
 
 namespace SchematicToVoxCore.Converter
 {
@@ -18,21 +18,33 @@ namespace SchematicToVoxCore.Converter
         private static bool _top;
         private static Color[,] _mainColors;
         private static Color[,] _grayColors;
+        private static Color[,] _fileColors;
 
-        public static Schematic WriteSchematic(string path, int heightmap, bool excavate, bool color, bool top)
+        public static Schematic WriteSchematic(string path, string colorPath, int heightmap, bool excavate, bool color, bool top)
         {
             _excavate = excavate;
             _heightmap = heightmap;
             _color = color;
             _top = top;
-
-            return WriteSchematicFromImage(path);
+            return WriteSchematicFromImage(path, colorPath);
         }
 
-        private static Schematic WriteSchematicFromImage(string path)
+        private static Schematic WriteSchematicFromImage(string path, string colorPath)
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
+
+            if (colorPath != null)
+            {
+                FileInfo infoColor = new FileInfo(colorPath);
+                Bitmap bitmapColor = new Bitmap(infoColor.FullName);
+                if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
+                {
+                    throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
+                }
+                _fileColors = GetColors(bitmapColor);
+            }
+
             Bitmap grayScale = MakeGrayscale3(bitmap);
 
             _mainColors = GetColors(bitmap);
@@ -40,7 +52,7 @@ namespace SchematicToVoxCore.Converter
 
             if (bitmap.Width > 2016 || bitmap.Height > 2016)
             {
-                throw new Exception("Image is too big");
+                throw new Exception("Image is too big (max size 2016x2016 px)");
             }
 
             Schematic schematic = new Schematic
@@ -66,9 +78,9 @@ namespace SchematicToVoxCore.Converter
                 {
                     int x = i % schematic.Width;
                     int y = i / schematic.Width;
-                    var color = _mainColors[y, x];
-                    var colorGray = _grayColors[y, x];
-                    var finalColor = (_color) ? color : colorGray;
+                    Color color = _mainColors[y, x];
+                    Color colorGray = _grayColors[y, x];
+                    Color finalColor = (colorPath != null) ? _fileColors[y, x] : (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
                         if (_heightmap != 1)
@@ -101,6 +113,10 @@ namespace SchematicToVoxCore.Converter
                     progressbar.Report((i / (float)size));
                 }
             }
+
+            _mainColors = null;
+            _fileColors = null;
+            _grayColors = null;
             Console.WriteLine("[LOG] Done.");
             return schematic;
         }
@@ -142,7 +158,7 @@ namespace SchematicToVoxCore.Converter
 
         private static Color[,] GetColors(Bitmap bitmap)
         {
-            Color[, ] colors = new Color[bitmap.Height, bitmap.Width];
+            Color[,] colors = new Color[bitmap.Height, bitmap.Width];
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)

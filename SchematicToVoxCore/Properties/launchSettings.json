@@ -1,7 +1,8 @@
 {
   "profiles": {
     "SchematicToVoxCore": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "--i wr_height.png --o test --hm 100 --cm wr_greyscale.png"
     }
   }
 }

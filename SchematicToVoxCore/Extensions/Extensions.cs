@@ -482,7 +482,7 @@ namespace SchematicToVoxCore.Extensions
             byte r = (byte)(color >> 16);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 0);
-            return Color.FromArgb(r, g, b, a);
+            return Color.FromArgb(a, r, g, b);
         }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
