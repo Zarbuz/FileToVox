@@ -73,16 +73,13 @@ namespace SchematicToVoxCore.Converter
             SchematicReader.HeightSchematic = schematic.Heigth;
             SchematicReader.LengthSchematic = schematic.Length;
 
-            Console.WriteLine(points.GetLength(0));
-            Console.WriteLine(points.GetLength(1));
-
             for (int i = 0; i < points.GetLength(0); i++)
             {
                 for (int j = 0; j < points.GetLength(1); j++)
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.Blocks.Add(new Block((ushort) i, (ushort) points[i, j], (ushort) j,
+                        schematic.Blocks.Add(new Block((short) i, (short) points[i, j], (short) j,
                             Color.White.ColorToUInt()));
                     }
                 }

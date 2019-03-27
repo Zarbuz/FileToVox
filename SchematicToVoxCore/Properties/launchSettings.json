@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i 8a85.binvox --o test2"
+      "commandLineArgs": "--i Terrain.qb --o terrain"
     }
   }
 }

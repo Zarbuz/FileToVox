@@ -124,7 +124,7 @@ namespace SchematicToVoxCore.Schematics
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block((ushort)x, (ushort)y, (ushort)z,
+                            Block block = new Block((short)x, (short)y, (short)z,
                                 Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))

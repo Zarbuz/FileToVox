@@ -21,7 +21,6 @@ namespace SchematicToVoxCore.Vox
         private int _countSize;
         private int _totalBlockCount;
         private int _direction;
-        private int _scale = 1;
 
         private int _countBlocks;
         private int _childrenChunkSize;
@@ -30,12 +29,11 @@ namespace SchematicToVoxCore.Vox
         private BlockGlobal[] _firstBlockInEachRegion;
         private List<Color> _usedColors;
 
-        public bool WriteModel(string absolutePath, Schematic schematic, int direction, int scale)
+        public bool WriteModel(string absolutePath, Schematic schematic, int direction)
         {
             _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
             _direction = direction;
-            _scale = scale;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));

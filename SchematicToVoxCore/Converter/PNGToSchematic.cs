@@ -67,7 +67,7 @@ namespace SchematicToVoxCore.Converter
             SchematicReader.HeightSchematic = schematic.Heigth;
 
 
-            using (var progressbar = new ProgressBar())
+            using (ProgressBar progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write schematic from picture...");
                 Console.WriteLine("[INFO] Picture Width: " + schematic.Width);
@@ -95,7 +95,7 @@ namespace SchematicToVoxCore.Converter
                             {
                                 if (_top)
                                 {
-                                    Block block = new Block((ushort)x, (ushort)(height - 1), (ushort)y, finalColor.ColorToUInt());
+                                    Block block = new Block((short)x, (short)(height - 1), (short)y, finalColor.ColorToUInt());
                                     AddBlock(ref schematic, block);
                                 }
                                 else
@@ -106,7 +106,7 @@ namespace SchematicToVoxCore.Converter
                         }
                         else
                         {
-                            Block block = new Block((ushort)x, (ushort)1, (ushort)y, color.ColorToUInt());
+                            Block block = new Block((short)x, (short)1, (short)y, color.ColorToUInt());
                             AddBlock(ref schematic, block);
                         }
                     }
@@ -173,7 +173,7 @@ namespace SchematicToVoxCore.Converter
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                Block block = new Block((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt());
+                Block block = new Block((short)x, (short)z, (short)y, color.ColorToUInt());
                 AddBlock(ref schematic, block);
             }
         }
@@ -218,7 +218,7 @@ namespace SchematicToVoxCore.Converter
                 }
                 else
                 {
-                    Block block = new Block((ushort)x, (ushort)(height - 1), (ushort)y, color.ColorToUInt());
+                    Block block = new Block((short)x, (short)(height - 1), (short)y, color.ColorToUInt());
                     AddBlock(ref schematic, block);
                 }
 

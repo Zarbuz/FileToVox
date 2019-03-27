@@ -476,6 +476,11 @@ namespace SchematicToVoxCore.Extensions
                           (color.G << 8) | (color.B << 0));
         }
 
+        public static uint ByteArrayToUInt(byte r, byte g, byte b, byte a)
+        {
+            return (uint) ((a << 24) | (r << 16) | (g << 8) | (b << 0));
+        }
+
         public static Color UIntToColor(this uint color)
         {
             byte a = (byte)(color >> 24);
