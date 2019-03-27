@@ -7,6 +7,7 @@ Current files support:
 - .png
 - .asc (Esri ASCII raster format)
 - .binvox
+- .qb (Qubicle)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
