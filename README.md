@@ -19,11 +19,11 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 - Lanch the command
 
 ## Windows
-`./FileToVox.exe --i [INPUT] --o [OUTPUT]`
+`FileToVox.exe --i [INPUT] --o [OUTPUT]`
 
 ## MacOS or Linux
 
-`./FileToVox --i [INPUT] --o [OUTPUT]`
+`FileToVox --i [INPUT] --o [OUTPUT]`
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
 
@@ -42,6 +42,7 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
 --s,        -scale=VALUE              increase the scale of each block (only for schematic file)
 --hm        -heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
 --c,        -color                    enable color when generating heightmap (only for PNG file)
+--cm,       -color-from-file          load color from another file
  ```
  
  # Installation 
@@ -51,7 +52,7 @@ Then extract the content of zip file in the folder of your choice.
 
 # Examples
 
-`./FileToVox.exe --i heightmap.png --o heightmap --hm 100`
+`FileToVox.exe --i heightmap.png --o heightmap --hm 100`
 
 ## Input file
 ![](img/heightmap.png)
