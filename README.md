@@ -1,3 +1,5 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](nicolas/.perrier2@numericable.fr)
+
 # What is FileToVox ? 
 
 FileToVox is a console program which allow you to convert a file into a vox file (Magicavoxel).
