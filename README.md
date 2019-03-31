@@ -1,4 +1,4 @@
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](nicolas.perrier2@numericable.fr)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](HD237H36A5DTN)
 
 # What is FileToVox ? 
 
