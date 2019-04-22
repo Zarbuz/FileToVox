@@ -6,12 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
 using SchematicToVoxCore.Extensions;
-using SchematicToVoxCore.Schematics;
-using SchematicToVoxCore.Schematics.Tools;
-using SchematicToVoxCore.Utils;
 
-namespace SchematicToVoxCore.Vox
+namespace FileToVox.Vox
 {
     public class VoxWriter : VoxParser
     {

@@ -1,19 +1,19 @@
-﻿using SchematicToVoxCore.Extensions;
-using SchematicToVoxCore.Schematics;
-using SchematicToVoxCore.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using FileToVox.Schematics;
+using FileToVox.Utils;
+using SchematicToVoxCore.Extensions;
 
-namespace SchematicToVoxCore.Converter
+namespace FileToVox.Converter
 {
     public static class PNGToSchematic
     {
         private static bool _excavate;
-        private static int _height;
+        private static int _maxHeight;
         private static bool _color;
         private static bool _top;
         private static Color[,] _mainColors;
@@ -23,7 +23,7 @@ namespace SchematicToVoxCore.Converter
         public static Schematic WriteSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
         {
             _excavate = excavate;
-            _height = height;
+            _maxHeight = height;
             _color = color;
             _top = top;
             return WriteSchematicFromImage(path, colorPath);
@@ -59,7 +59,7 @@ namespace SchematicToVoxCore.Converter
             {
                 Width = (short)bitmap.Width,
                 Length = (short)bitmap.Height,
-                Heigth = (short)_height,
+                Heigth = (short)_maxHeight,
                 Blocks = new HashSet<Block>()
             };
             SchematicReader.LengthSchematic = schematic.Length;
@@ -83,20 +83,19 @@ namespace SchematicToVoxCore.Converter
                     Color finalColor = (colorPath != null) ? _fileColors[y, x] : (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
-                        if (_height != 1)
+                        if (_maxHeight != 1)
                         {
-                            int height = GetHeight(colorGray);
-
                             if (_excavate)
                             {
                                 GenerateFromMinNeighbor(ref schematic, finalColor, x, y);
                             }
                             else
                             {
+                                int height = GetHeight(colorGray);
                                 if (_top)
                                 {
-                                    Block block = new Block((short)x, (short)(height - 1), (short)y, finalColor.ColorToUInt());
-                                    AddBlock(ref schematic, block);
+                                    int finalHeight = (height - 1 < 0) ? 0 : height - 1;
+                                    AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, finalColor.ColorToUInt()));
                                 }
                                 else
                                 {
@@ -173,8 +172,7 @@ namespace SchematicToVoxCore.Converter
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                Block block = new Block((short)x, (short)z, (short)y, color.ColorToUInt());
-                AddBlock(ref schematic, block);
+                AddBlock(ref schematic, new Block((short)x, (short)z, (short)y, color.ColorToUInt()));
             }
         }
 
@@ -187,7 +185,7 @@ namespace SchematicToVoxCore.Converter
         {
             int intensity = color.R + color.G + color.B;
             float position = intensity / (float)765;
-            return (int)(position * _height);
+            return (int)(position * _maxHeight);
         }
 
         private static void GenerateFromMinNeighbor(ref Schematic schematic, Color color, int x, int y)
@@ -218,15 +216,14 @@ namespace SchematicToVoxCore.Converter
                 }
                 else
                 {
-                    Block block = new Block((short)x, (short)(height - 1), (short)y, color.ColorToUInt());
-                    AddBlock(ref schematic, block);
+                    int finalHeight = (height - 1 < 0) ? 0 : height - 1;
+                    AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, color.ColorToUInt()));
                 }
 
             }
             else
             {
                 AddMultipleBlocks(ref schematic, 0, height, x, y, color);
-
             }
         }
     }

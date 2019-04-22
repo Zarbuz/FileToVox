@@ -1,13 +1,13 @@
-﻿using fNbt;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using fNbt;
+using SchematicToVoxCore.Extensions;
 
-namespace SchematicToVoxCore.Schematics
+namespace FileToVox.Schematics
 {
     public static class SchematicReader
     {
@@ -125,7 +125,7 @@ namespace SchematicToVoxCore.Schematics
                         if (blockId != 0)
                         {
                             Block block = new Block((short)x, (short)y, (short)z,
-                                Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
+                                SchematicToVoxCore.Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {

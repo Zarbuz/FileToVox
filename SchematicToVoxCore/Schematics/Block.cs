@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace SchematicToVoxCore.Schematics
+namespace FileToVox.Schematics
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Block : IEquatable<Block>

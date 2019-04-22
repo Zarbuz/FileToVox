@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SchematicToVoxCore.Vox.Chunks
+namespace FileToVox.Vox.Chunks
 {
     public class MaterialChunk
     {

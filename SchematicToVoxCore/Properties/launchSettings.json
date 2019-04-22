@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i Terrain.qb --o terrain"
+      "commandLineArgs": "--i ../heightmap.png --o ../heightmap --hm 10 --e"
     }
   }
 }

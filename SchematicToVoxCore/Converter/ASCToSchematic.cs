@@ -1,13 +1,12 @@
-﻿using SchematicToVoxCore.Schematics;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+using FileToVox.Schematics;
 using SchematicToVoxCore.Extensions;
 
-namespace SchematicToVoxCore.Converter
+namespace FileToVox.Converter
 {
     public static class ASCToSchematic
     {

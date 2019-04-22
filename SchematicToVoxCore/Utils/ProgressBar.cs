@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading;
 
-namespace SchematicToVoxCore.Utils
+namespace FileToVox.Utils
 {
     public class ProgressBar : IDisposable, IProgress<double>
     {

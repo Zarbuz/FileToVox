@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SchematicToVoxCore.Schematics.Tools
+namespace FileToVox.Schematics.Tools
 {
     public struct Vector3 : IEquatable<Vector3>
     {

@@ -1,4 +1,4 @@
-﻿namespace SchematicToVoxCore.Schematics
+﻿namespace FileToVox.Schematics
 {
     public class RawSchematic
     {

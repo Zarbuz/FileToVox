@@ -3,10 +3,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using SchematicToVoxCore.Schematics.Tools;
-using SchematicToVoxCore.Vox.Chunks;
+using FileToVox.Vox.Chunks;
 
-namespace SchematicToVoxCore.Vox
+namespace FileToVox.Vox
 {
     public class VoxReader : VoxParser
     {

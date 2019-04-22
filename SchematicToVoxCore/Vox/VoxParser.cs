@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SchematicToVoxCore.Vox
+namespace FileToVox.Vox
 {
     public abstract class VoxParser
     {

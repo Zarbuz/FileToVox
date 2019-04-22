@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using SchematicToVoxCore.Schematics.Tools;
+using FileToVox.Schematics.Tools;
 
-namespace SchematicToVoxCore.Vox.Chunks
+namespace FileToVox.Vox.Chunks
 {
     public class TransformNodeChunk : NodeChunk
     { // nTRN: Transform Node Chunk

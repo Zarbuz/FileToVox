@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace SchematicToVoxCore.Vox
+namespace FileToVox.Vox
 {
     public class VoxelData
     {

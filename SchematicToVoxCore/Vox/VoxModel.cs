@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using SchematicToVoxCore.Schematics.Tools;
-using SchematicToVoxCore.Vox.Chunks;
+using FileToVox.Schematics.Tools;
+using FileToVox.Vox.Chunks;
 
-namespace SchematicToVoxCore.Vox
+namespace FileToVox.Vox
 {
     public class VoxModel
     {

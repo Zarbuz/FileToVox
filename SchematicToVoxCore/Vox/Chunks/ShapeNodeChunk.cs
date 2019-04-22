@@ -1,4 +1,4 @@
-﻿namespace SchematicToVoxCore.Vox.Chunks
+﻿namespace FileToVox.Vox.Chunks
 {
     public class ShapeModel
     {

@@ -1,14 +1,12 @@
-﻿using NDesk.Options;
-using SchematicToVoxCore.Converter;
-using SchematicToVoxCore.Schematics;
-using SchematicToVoxCore.Vox;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FileToVox.Converter;
+using FileToVox.Schematics;
+using FileToVox.Vox;
+using NDesk.Options;
 
-namespace SchematicToVoxCore
+namespace FileToVox
 {
     class Program
     {
