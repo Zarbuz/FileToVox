@@ -16,9 +16,11 @@ namespace FileToVox.Converter
         private static int _maxHeight;
         private static bool _color;
         private static bool _top;
+        private static bool _direction;
         private static Color[,] _mainColors;
         private static Color[,] _grayColors;
         private static Color[,] _fileColors;
+
 
         public static Schematic WriteSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
         {
@@ -33,11 +35,14 @@ namespace FileToVox.Converter
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
+            bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
+            _direction = bitmap.Width > bitmap.Height;
 
             if (colorPath != null)
             {
                 FileInfo infoColor = new FileInfo(colorPath);
                 Bitmap bitmapColor = new Bitmap(infoColor.FullName);
+                bitmapColor.RotateFlip(RotateFlipType.Rotate180FlipY);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
@@ -45,10 +50,10 @@ namespace FileToVox.Converter
                 _fileColors = GetColors(bitmapColor);
             }
 
-            Bitmap grayScale = MakeGrayscale3(bitmap);
+            Bitmap bitmapBlack = MakeGrayscale3(bitmap);
 
             _mainColors = GetColors(bitmap);
-            _grayColors = GetColors(grayScale);
+            _grayColors = GetColors(bitmapBlack);
 
             if (bitmap.Width > 2016 || bitmap.Height > 2016)
             {
@@ -76,11 +81,17 @@ namespace FileToVox.Converter
                 int size = schematic.Width * schematic.Length;
                 for (int i = 0; i < size; i++)
                 {
-                    int x = i % schematic.Width;
-                    int y = i / schematic.Width;
-                    Color color = _mainColors[y, x];
-                    Color colorGray = _grayColors[y, x];
-                    Color finalColor = (colorPath != null) ? _fileColors[y, x] : (_color) ? color : colorGray;
+                    int x = i / schematic.Width;
+                    int y = i % schematic.Width;
+                    //if (_direction)
+                    //{
+                    //    x = i / schematic.Width;
+                    //    y = i % schematic.Width;
+                    //}
+                    
+                    Color color = _mainColors[x, y];
+                    Color colorGray = _grayColors[x, y];
+                    Color finalColor = (colorPath != null) ? _fileColors[x, y] : (_color) ? color : colorGray;
                     if (color.A != 0)
                     {
                         if (_maxHeight != 1)
@@ -198,11 +209,10 @@ namespace FileToVox.Converter
 
         private static void GenerateFromMinNeighbor(ref Schematic schematic, Color color, int x, int y)
         {
-            int height = GetHeight(color);
-
+            int height = GetHeight(_grayColors[x, y]);
             try
             {
-                if (x - 1 > 0 && x + 1 < schematic.Width && y - 1 > 0 && y + 1 < schematic.Length)
+                if (x - 1 >= 0 && x + 1 < _grayColors.GetLength(0) && y - 1 >= 0 && y + 1 < _grayColors.GetLength(1))
                 {
                     var colorLeft = _grayColors[x - 1, y];
                     var colorTop = _grayColors[x, y - 1];
@@ -215,9 +225,9 @@ namespace FileToVox.Converter
                     int heightBottom = GetHeight(colorBottom);
 
                     var list = new List<int>
-                    {
-                        heightLeft, heightTop, heightRight, heightBottom
-                    };
+                        {
+                            heightLeft, heightTop, heightRight, heightBottom
+                        };
 
                     int min = list.Min();
                     if (min < height)
@@ -228,16 +238,15 @@ namespace FileToVox.Converter
                     {
                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
                         AddBlock(ref schematic,
-                            new Block((short) x, (short) finalHeight, (short) y, color.ColorToUInt()));
+                            new Block((short)x, (short)finalHeight, (short)y, color.ColorToUInt()));
                     }
-
                 }
                 else
                 {
                     AddMultipleBlocks(ref schematic, 0, height, x, y, color);
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 Console.WriteLine($"[ERROR] x: {x}, y: {y}, schematic width: {schematic.Width}, schematic length: {schematic.Length}");
             }
