@@ -157,7 +157,8 @@ namespace FileToVox.Converter
 
         private static Color[,] GetColors(Bitmap bitmap)
         {
-            Color[,] colors = new Color[bitmap.Height, bitmap.Width];
+            int max = bitmap.Height > bitmap.Width ? bitmap.Height : bitmap.Width;
+            Color[,] colors = new Color[max, max];
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
@@ -178,7 +179,14 @@ namespace FileToVox.Converter
 
         private static void AddBlock(ref Schematic schematic, Block block)
         {
-            schematic.Blocks.Add(block);
+            try
+            {
+                schematic.Blocks.Add(block);
+            }
+            catch (OutOfMemoryException)
+            {
+                Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {block.ToString()}");
+            }
         }
 
         private static int GetHeight(Color color)
@@ -192,38 +200,46 @@ namespace FileToVox.Converter
         {
             int height = GetHeight(color);
 
-            if (x - 1 > 0 && x + 1 < schematic.Width && y - 1 > 0 && y + 1 < schematic.Length)
+            try
             {
-                var colorLeft = _grayColors[x - 1, y];
-                var colorTop = _grayColors[x, y - 1];
-                var colorRight = _grayColors[x + 1, y];
-                var colorBottom = _grayColors[x, y + 1];
-
-                int heightLeft = GetHeight(colorLeft);
-                int heightTop = GetHeight(colorTop);
-                int heightRight = GetHeight(colorRight);
-                int heightBottom = GetHeight(colorBottom);
-
-                var list = new List<int>
+                if (x - 1 > 0 && x + 1 < schematic.Width && y - 1 > 0 && y + 1 < schematic.Length)
                 {
-                    heightLeft, heightTop, heightRight, heightBottom
-                };
+                    var colorLeft = _grayColors[x - 1, y];
+                    var colorTop = _grayColors[x, y - 1];
+                    var colorRight = _grayColors[x + 1, y];
+                    var colorBottom = _grayColors[x, y + 1];
 
-                int min = list.Min();
-                if (min < height)
-                {
-                    AddMultipleBlocks(ref schematic, list.Min(), height, x, y, color);
+                    int heightLeft = GetHeight(colorLeft);
+                    int heightTop = GetHeight(colorTop);
+                    int heightRight = GetHeight(colorRight);
+                    int heightBottom = GetHeight(colorBottom);
+
+                    var list = new List<int>
+                    {
+                        heightLeft, heightTop, heightRight, heightBottom
+                    };
+
+                    int min = list.Min();
+                    if (min < height)
+                    {
+                        AddMultipleBlocks(ref schematic, list.Min(), height, x, y, color);
+                    }
+                    else
+                    {
+                        int finalHeight = (height - 1 < 0) ? 0 : height - 1;
+                        AddBlock(ref schematic,
+                            new Block((short) x, (short) finalHeight, (short) y, color.ColorToUInt()));
+                    }
+
                 }
                 else
                 {
-                    int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                    AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, color.ColorToUInt()));
+                    AddMultipleBlocks(ref schematic, 0, height, x, y, color);
                 }
-
             }
-            else
+            catch (IndexOutOfRangeException e)
             {
-                AddMultipleBlocks(ref schematic, 0, height, x, y, color);
+                Console.WriteLine($"[ERROR] x: {x}, y: {y}, schematic width: {schematic.Width}, schematic length: {schematic.Length}");
             }
         }
     }

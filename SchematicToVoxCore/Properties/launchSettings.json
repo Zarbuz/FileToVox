@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../heightmap.png --o ../heightmap --hm 10 --e"
+      "commandLineArgs": "--i ../JF.png --o ../JF --hm 1000 --e"
     }
   }
 }
