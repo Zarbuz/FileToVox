@@ -16,10 +16,6 @@ namespace FileToVox.Converter
         private static int _maxHeight;
         private static bool _color;
         private static bool _top;
-        private static bool _direction;
-        private static Color[,] _mainColors;
-        private static Color[,] _grayColors;
-        private static Color[,] _fileColors;
 
 
         public static Schematic WriteSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
@@ -35,25 +31,19 @@ namespace FileToVox.Converter
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
-            bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
-            _direction = bitmap.Width > bitmap.Height;
+            Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
 
             if (colorPath != null)
             {
                 FileInfo infoColor = new FileInfo(colorPath);
-                Bitmap bitmapColor = new Bitmap(infoColor.FullName);
-                bitmapColor.RotateFlip(RotateFlipType.Rotate180FlipY);
+                bitmapColor = new Bitmap(infoColor.FullName);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
-                _fileColors = GetColors(bitmapColor);
             }
 
             Bitmap bitmapBlack = MakeGrayscale3(bitmap);
-
-            _mainColors = GetColors(bitmap);
-            _grayColors = GetColors(bitmapBlack);
 
             if (bitmap.Width > 2016 || bitmap.Height > 2016)
             {
@@ -79,54 +69,47 @@ namespace FileToVox.Converter
                 Console.WriteLine("[INFO] Picture Length: " + schematic.Length);
 
                 int size = schematic.Width * schematic.Length;
-                for (int i = 0; i < size; i++)
+                int i = 0;
+                for (int x = 0; x < schematic.Width; x++)
                 {
-                    int x = i / schematic.Width;
-                    int y = i % schematic.Width;
-                    //if (_direction)
-                    //{
-                    //    x = i / schematic.Width;
-                    //    y = i % schematic.Width;
-                    //}
-                    
-                    Color color = _mainColors[x, y];
-                    Color colorGray = _grayColors[x, y];
-                    Color finalColor = (colorPath != null) ? _fileColors[x, y] : (_color) ? color : colorGray;
-                    if (color.A != 0)
+                    for (int y = 0; y < schematic.Length; y++)
                     {
-                        if (_maxHeight != 1)
+                        Color color = bitmap.GetPixel(x, y);
+                        Color colorGray = bitmapBlack.GetPixel(x, y);
+                        Color finalColor = (colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : colorGray;
+                        if (color.A != 0)
                         {
-                            if (_excavate)
+                            if (_maxHeight != 1)
                             {
-                                GenerateFromMinNeighbor(ref schematic, finalColor, x, y);
-                            }
-                            else
-                            {
-                                int height = GetHeight(colorGray);
-                                if (_top)
+                                if (_excavate)
                                 {
-                                    int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                                    AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, finalColor.ColorToUInt()));
+                                    GenerateFromMinNeighbor(ref schematic, bitmapBlack, finalColor, x, y);
                                 }
                                 else
                                 {
-                                    AddMultipleBlocks(ref schematic, 0, height, x, y, finalColor);
+                                    int height = GetHeight(colorGray);
+                                    if (_top)
+                                    {
+                                        int finalHeight = (height - 1 < 0) ? 0 : height - 1;
+                                        AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, finalColor.ColorToUInt()));
+                                    }
+                                    else
+                                    {
+                                        AddMultipleBlocks(ref schematic, 0, height, x, y, finalColor);
+                                    }
                                 }
                             }
+                            else
+                            {
+                                Block block = new Block((short)x, (short)1, (short)y, color.ColorToUInt());
+                                AddBlock(ref schematic, block);
+                            }
                         }
-                        else
-                        {
-                            Block block = new Block((short)x, (short)1, (short)y, color.ColorToUInt());
-                            AddBlock(ref schematic, block);
-                        }
+                        progressbar.Report((i++ / (float)size));
                     }
-                    progressbar.Report((i / (float)size));
                 }
             }
 
-            _mainColors = null;
-            _fileColors = null;
-            _grayColors = null;
             Console.WriteLine("[LOG] Done.");
             return schematic;
         }
@@ -166,20 +149,6 @@ namespace FileToVox.Converter
             return newBitmap;
         }
 
-        private static Color[,] GetColors(Bitmap bitmap)
-        {
-            int max = bitmap.Height > bitmap.Width ? bitmap.Height : bitmap.Width;
-            Color[,] colors = new Color[max, max];
-            for (int y = 0; y < bitmap.Height; y++)
-            {
-                for (int x = 0; x < bitmap.Width; x++)
-                {
-                    colors[y, x] = bitmap.GetPixel(x, y);
-                }
-            }
-            return colors;
-        }
-
         private static void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
         {
             for (int z = minZ; z < maxZ; z++)
@@ -202,22 +171,22 @@ namespace FileToVox.Converter
 
         private static int GetHeight(Color color)
         {
-            int intensity = color.R + color.G + color.B;
+            int intensity = (int)(color.R + color.G + color.B);
             float position = intensity / (float)765;
             return (int)(position * _maxHeight);
         }
 
-        private static void GenerateFromMinNeighbor(ref Schematic schematic, Color color, int x, int y)
+        private static void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, Color color, int x, int y)
         {
-            int height = GetHeight(_grayColors[x, y]);
+            int height = GetHeight(blackBitmap.GetPixel(x, y));
             try
             {
-                if (x - 1 >= 0 && x + 1 < _grayColors.GetLength(0) && y - 1 >= 0 && y + 1 < _grayColors.GetLength(1))
+                if (x - 1 >= 0 && x + 1 < blackBitmap.Width && y - 1 >= 0 && y + 1 < blackBitmap.Height)
                 {
-                    var colorLeft = _grayColors[x - 1, y];
-                    var colorTop = _grayColors[x, y - 1];
-                    var colorRight = _grayColors[x + 1, y];
-                    var colorBottom = _grayColors[x, y + 1];
+                    var colorLeft = blackBitmap.GetPixel(x - 1, y);
+                    var colorTop = blackBitmap.GetPixel(x, y - 1);
+                    var colorRight = blackBitmap.GetPixel(x + 1, y);
+                    var colorBottom = blackBitmap.GetPixel(x, y + 1);
 
                     int heightLeft = GetHeight(colorLeft);
                     int heightTop = GetHeight(colorTop);
