@@ -109,7 +109,11 @@ namespace FileToVox.Schematics
             ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
 
             int minY = Math.Max(_ignoreMinY, 0);
-            int maxY = Math.Min(_ignoreMaxY, rawSchematic.Heigth);
+            int maxY = 0;
+            if (rawSchematic.Heigth <= _ignoreMaxY)
+                maxY = Math.Min(_ignoreMaxY, rawSchematic.Heigth);
+            else
+                maxY = rawSchematic.Heigth;
 
             Parallel.For(minY, (maxY * _scale), y =>
             {
@@ -125,7 +129,7 @@ namespace FileToVox.Schematics
                         if (blockId != 0)
                         {
                             Block block = new Block((short)x, (short)y, (short)z,
-                                SchematicToVoxCore.Extensions.Extensions.GetBlockColor(rawSchematic.Blocks[index],
+                                Extensions.GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {
