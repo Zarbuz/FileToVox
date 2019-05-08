@@ -9,6 +9,7 @@ Current files support:
 - .png
 - .asc (Esri ASCII raster format)
 - .binvox
+- .obj
 - .qb (Qubicle)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
@@ -44,7 +45,9 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
 --s,        -scale=VALUE              increase the scale of each block (only for schematic file)
 --hm        -heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
 --c,        -color                    enable color when generating heightmap (only for PNG file)
---cm,       -color-from-file          load color from another file
+--cm,       -color-from-file=VALUE    load color from another file
+--gs        -grid-size=VALUE          set the grid size (only for OBJ file)
+--slow=VALUE                          use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)
  ```
  
  # Installation 
