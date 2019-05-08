@@ -50,7 +50,7 @@ namespace FileToVox
                 {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
                 {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
                 {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
-                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result", (float v) => _slow = v }
+                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v }
             };
 
             try
@@ -156,7 +156,7 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
-            
+
 
 
             Console.WriteLine("[INFO] Way: " + _direction);
