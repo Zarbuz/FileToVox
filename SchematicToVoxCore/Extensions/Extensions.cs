@@ -493,13 +493,6 @@ namespace SchematicToVoxCore.Extensions
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
 
-        public static Color GetBlockColor(int blockID, int data)
-        {
-            if (_colors.TryGetValue(new Tuple<int, int>(blockID, data), out Color color))
-            {
-                return color;
-            }
-            return _colors[new Tuple<int, int>(blockID, 0)];
-        }
+        
     }
 }

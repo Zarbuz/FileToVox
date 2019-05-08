@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace FileToVox.Schematics
         private static int _scale;
 
         private static bool _excavate;
+        private static readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
 
         public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
         {
@@ -29,7 +31,47 @@ namespace FileToVox.Schematics
             _scale = scale;
             _excavate = excavate;
 
+            LoadBlocs();
+
             return LoadSchematic(file);
+        }
+
+        private static void LoadBlocs()
+        {
+            try
+            {
+                string line;
+                int counter = 0;
+                // Read the file and display it line by line.  
+                StreamReader file = new StreamReader(@"schematics/config.txt");
+                Console.WriteLine("[LOG] Started to read config.txt for loading blocs colors");
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line[0] == '#')
+                        continue;
+
+                    string[] values = line.Split(' '); //6 values expected
+                    if (values.Length < 6)
+                        throw new Exception("Line is not well formated: " + line);
+
+                    int id = Convert.ToInt32(values[0]);
+                    int metadata = Convert.ToInt32(values[1]);
+                    int a = Convert.ToInt32(values[2]);
+                    int r = Convert.ToInt32(values[3]);
+                    int g = Convert.ToInt32(values[4]);
+                    int b = Convert.ToInt32(values[5]);
+
+                    _colors.Add(new Tuple<int, int>(id, metadata), Color.FromArgb(a, r, g, b));
+                    counter++;
+                }
+                Console.WriteLine("[INFO] Loaded blocs: " + counter);
+                Console.WriteLine("[LOG] Done.");
+                file.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[ERROR] LoadBlocs failed: " + e);
+            }
         }
 
         private static Schematic LoadSchematic(NbtFile nbtFile)
@@ -129,7 +171,7 @@ namespace FileToVox.Schematics
                         if (blockId != 0)
                         {
                             Block block = new Block((short)x, (short)y, (short)z,
-                                Extensions.GetBlockColor(rawSchematic.Blocks[index],
+                                GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
                             {
@@ -139,6 +181,7 @@ namespace FileToVox.Schematics
                     }
                 }
             });
+            Console.WriteLine($"[LOG] Done.");
             return blocks.ToHashSet();
         }
 
@@ -162,6 +205,14 @@ namespace FileToVox.Schematics
             return false;
         }
 
+        private static Color GetBlockColor(int blockID, int data)
+        {
+            if (_colors.TryGetValue(new Tuple<int, int>(blockID, data), out Color color))
+            {
+                return color;
+            }
+            return _colors[new Tuple<int, int>(blockID, 0)];
+        }
 
     }
 }
