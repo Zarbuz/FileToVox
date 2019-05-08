@@ -55,13 +55,13 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
  Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
 Then extract the content of zip file in the folder of your choice.
 
-# Examples
-
-`FileToVox.exe --i heightmap.png --o heightmap --hm 100`
-
 ## config.txt
 
 You can edit the colors of the palette used when generating from schematic file in `schematics/config.txt`
+
+# Examples
+
+`FileToVox.exe --i heightmap.png --o heightmap --hm 100`
 
 ## Input file
 ![](img/heightmap.png)
