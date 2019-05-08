@@ -19,14 +19,9 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 
 - You need to open a console (like cmd or Powershell in Windows)
 - Go to the emplacement of the binary
-- Lanch the command
-
-## Windows
-`FileToVox.exe --i [INPUT] --o [OUTPUT]`
+- Lanch the command : `FileToVox.exe --i [INPUT] --o [OUTPUT]`
 
 ## MacOS or Linux
-
-`FileToVox --i [INPUT] --o [OUTPUT]`
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
 
