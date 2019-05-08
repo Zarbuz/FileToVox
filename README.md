@@ -59,6 +59,10 @@ Then extract the content of zip file in the folder of your choice.
 
 `FileToVox.exe --i heightmap.png --o heightmap --hm 100`
 
+## config.txt
+
+You can edit the colors of the palette used when generating from schematic file in `schematics/config.txt`
+
 ## Input file
 ![](img/heightmap.png)
 
