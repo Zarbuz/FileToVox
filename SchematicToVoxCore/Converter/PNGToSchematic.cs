@@ -10,32 +10,37 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public static class PNGToSchematic
+    public class PNGToSchematic : BaseToSchematic
     {
-        private static bool _excavate;
-        private static int _maxHeight;
-        private static bool _color;
-        private static bool _top;
+        private bool _excavate;
+        private int _maxHeight;
+        private bool _color;
+        private bool _top;
+        private string _colorPath;
 
-
-        public static Schematic WriteSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
+        public PNGToSchematic(string colorPath, int height, bool excavate, bool color, bool top)
         {
             _excavate = excavate;
             _maxHeight = height;
             _color = color;
             _top = top;
-            return WriteSchematicFromImage(path, colorPath);
+            _colorPath = colorPath;
         }
 
-        private static Schematic WriteSchematicFromImage(string path, string colorPath)
+        public override Schematic WriteSchematic(string path)
+        {
+            return WriteSchematicFromImage(path);
+        }
+
+        private Schematic WriteSchematicFromImage(string path)
         {
             FileInfo info = new FileInfo(path);
             Bitmap bitmap = new Bitmap(info.FullName);
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
 
-            if (colorPath != null)
+            if (_colorPath != null)
             {
-                FileInfo infoColor = new FileInfo(colorPath);
+                FileInfo infoColor = new FileInfo(_colorPath);
                 bitmapColor = new Bitmap(infoColor.FullName);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
@@ -76,7 +81,7 @@ namespace FileToVox.Converter
                     {
                         Color color = bitmap.GetPixel(x, y);
                         Color colorGray = bitmapBlack.GetPixel(x, y);
-                        Color finalColor = (colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : colorGray;
+                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : colorGray;
                         if (color.A != 0)
                         {
                             if (_maxHeight != 1)
@@ -114,7 +119,7 @@ namespace FileToVox.Converter
             return schematic;
         }
 
-        private static Bitmap MakeGrayscale3(Bitmap original)
+        private Bitmap MakeGrayscale3(Bitmap original)
         {
             //create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
@@ -149,7 +154,7 @@ namespace FileToVox.Converter
             return newBitmap;
         }
 
-        private static void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
+        private void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
         {
             for (int z = minZ; z < maxZ; z++)
             {
@@ -157,7 +162,7 @@ namespace FileToVox.Converter
             }
         }
 
-        private static void AddBlock(ref Schematic schematic, Block block)
+        private void AddBlock(ref Schematic schematic, Block block)
         {
             try
             {
@@ -169,14 +174,14 @@ namespace FileToVox.Converter
             }
         }
 
-        private static int GetHeight(Color color)
+        private int GetHeight(Color color)
         {
             int intensity = (int)(color.R + color.G + color.B);
             float position = intensity / (float)765;
             return (int)(position * _maxHeight);
         }
 
-        private static void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, Color color, int x, int y)
+        private void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, Color color, int x, int y)
         {
             int height = GetHeight(blackBitmap.GetPixel(x, y));
             try

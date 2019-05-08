@@ -8,14 +8,14 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public static class ASCToSchematic
+    public class ASCToSchematic : BaseToSchematic
     {
-        public static Schematic WriteSchematic(string path)
+        public override Schematic WriteSchematic(string path)
         {
             return WriteSchematicFromASC(path);
         }
 
-        private static Schematic WriteSchematicFromASC(string path)
+        private Schematic WriteSchematicFromASC(string path)
         {
             int nCols = 0;
             int nRows = 0;
@@ -87,7 +87,7 @@ namespace FileToVox.Converter
             return schematic;
         }
 
-        private static void ProcessLine(string[] data, int row, ref float[,] points)
+        private void ProcessLine(string[] data, int row, ref float[,] points)
         {
             for (int i = 0; i < data.Length; i++)
             {

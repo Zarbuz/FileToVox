@@ -10,24 +10,24 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public static class BinvoxToSchematic
+    public class BinvoxToSchematic : BaseToSchematic
     {
-        private static bool _headerRead;
-        private static bool _voxelsRead;
-        private static Vector3 _dimensions;
-        private static Vector3 _translate;
-        private static double _scale;
-        private static byte[] _voxels;
+        private bool _headerRead;
+        private bool _voxelsRead;
+        private Vector3 _dimensions;
+        private Vector3 _translate;
+        private double _scale;
+        private byte[] _voxels;
 
-        public static Schematic WriteSchematic(string inputFile)
+        public override Schematic WriteSchematic(string path)
         {
             _voxels = null;
             _headerRead = false;
             _voxelsRead = false;
-            return WriteSchematicFromBinvox(inputFile);
+            return WriteSchematicFromBinvox(path);
         }
 
-        private static Schematic WriteSchematicFromBinvox(string path)
+        private Schematic WriteSchematicFromBinvox(string path)
         {
             using (LineReader lineReader = new LineReader(File.Open(path, FileMode.Open), Encoding.UTF8))
             {
@@ -71,7 +71,7 @@ namespace FileToVox.Converter
 
 
 
-        private static void ReadHeader(LineReader lineReader)
+        private void ReadHeader(LineReader lineReader)
         {
             if (!_headerRead)
             {
@@ -104,7 +104,7 @@ namespace FileToVox.Converter
             }
         }
 
-        private static void ReadVoxels(LineReader lineReader)
+        private void ReadVoxels(LineReader lineReader)
         {
             if (!_voxelsRead)
             {

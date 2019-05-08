@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="fNbt" Version="0.6.4" />
+    <PackageReference Include="geometry3Sharp" Version="1.0.324" />
     <PackageReference Include="NDesk.Options.Core" Version="1.2.4" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>

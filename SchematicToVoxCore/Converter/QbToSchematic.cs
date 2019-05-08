@@ -10,18 +10,18 @@ using FileToVox.Utils;
 
 namespace FileToVox.Converter
 {
-    public static class QbToSchematic
+    public class QbToSchematic : BaseToSchematic
     {
         private const int Codeflag = 2;
         private const int Nextsliceflag = 6;
 
-        public static Schematic WriteSchematic(string path)
+        public override Schematic WriteSchematic(string path)
         {
             List<VoxelDTO> voxels = LoadVoxels(path);
             return Convert(voxels);
         }
 
-        private static List<VoxelDTO> LoadVoxels(string path)
+        private List<VoxelDTO> LoadVoxels(string path)
         {
             List<VoxelDTO> voxels = new List<VoxelDTO>();
             using (FileStream fs = File.OpenRead(path))
@@ -142,7 +142,7 @@ namespace FileToVox.Converter
             }
         }
 
-        private static Schematic Convert(List<VoxelDTO> voxels)
+        private Schematic Convert(List<VoxelDTO> voxels)
         {
             Schematic schematic = new Schematic();
             int minX = voxels.Min(x => x.X);

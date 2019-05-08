@@ -20,11 +20,14 @@ namespace FileToVox
         private static bool _color;
         private static bool _top;
 
+        private static float _slow = 0.0f;
+
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
         private static int _scale = 1;
         private static int _direction = 0;
         private static int _heightmap = 1;
+        private static int _gridSize = 126;
 
         public static void Main(string[] args)
         {
@@ -37,7 +40,7 @@ namespace FileToVox
                 {"w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => _direction = v},
                 {"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
                 {"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
-                { 
+                {
                     "e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
                     v => _excavate = v != null
                 },
@@ -45,7 +48,9 @@ namespace FileToVox
                 {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
                 {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
                 {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
-                {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v }
+                {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
+                {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
+                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result", (float v) => _slow = v }
             };
 
             try
@@ -137,6 +142,12 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
             if (_ignoreMaxY != 256)
                 Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
+            if (_scale > 1)
+                Console.WriteLine("[INFO] Specified increase size: " + _scale);
+            if (_gridSize != 126)
+                Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
+            if (_slow != 0)
+                Console.WriteLine("[INFO] Specified winding_number: " + _slow);
             if (_excavate)
                 Console.WriteLine("[INFO] Enabled option: excavate");
             if (_color)
@@ -145,10 +156,10 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
-            if (_scale > 1)
-                Console.WriteLine("[INFO] Specified increase size: " + _scale);
-            Console.WriteLine("[INFO] Way: " + _direction);
+            
 
+
+            Console.WriteLine("[INFO] Way: " + _direction);
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
 
@@ -174,12 +185,17 @@ namespace FileToVox
                 case ".qb":
                     ProcessQbFile();
                     break;
+                case ".obj":
+                    ProcessObjFile();
+                    break;
                 default:
                     Console.WriteLine("[ERROR] Unknown file extension !");
                     Console.ReadKey();
                     return;
             }
         }
+
+
 
         private static void ProcessSchematicFile()
         {
@@ -200,7 +216,8 @@ namespace FileToVox
         {
             try
             {
-                Schematic schematic = BinvoxToSchematic.WriteSchematic(_inputFile);
+                BinvoxToSchematic converter = new BinvoxToSchematic();
+                Schematic schematic = converter.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
             }
@@ -215,7 +232,8 @@ namespace FileToVox
         {
             try
             {
-                Schematic schematic = QbToSchematic.WriteSchematic(_inputFile);
+                QbToSchematic converter = new QbToSchematic();
+                Schematic schematic = converter.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
             }
@@ -230,7 +248,8 @@ namespace FileToVox
         {
             try
             {
-                Schematic schematic = PNGToSchematic.WriteSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
+                PNGToSchematic converter = new PNGToSchematic(_inputColorFile, _heightmap, _excavate, _color, _top);
+                Schematic schematic = converter.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
             }
@@ -245,7 +264,24 @@ namespace FileToVox
         {
             try
             {
-                Schematic schematic = ASCToSchematic.WriteSchematic(_inputFile);
+                ASCToSchematic converter = new ASCToSchematic();
+                Schematic schematic = converter.WriteSchematic(_inputFile);
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
+        }
+
+        private static void ProcessObjFile()
+        {
+            try
+            {
+                ObjToSchematic converter = new ObjToSchematic(_gridSize, _excavate, _slow);
+                Schematic schematic = converter.WriteSchematic(_inputFile);
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
             }
