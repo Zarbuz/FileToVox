@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../bugatti.obj --o ../bugatti --gs 400 --way=1 --slow=0.5"
+      "commandLineArgs": "--ca 500 550 300 5000 24/36"
     }
   }
 }

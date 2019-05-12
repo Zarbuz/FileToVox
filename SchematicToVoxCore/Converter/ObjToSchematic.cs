@@ -15,16 +15,16 @@ namespace FileToVox.Converter
         private bool _excavate;
         private float _winding_number;
 
-        public ObjToSchematic(int gridSize, bool excavate, float winding_number)
+        public ObjToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
         {
             _gridSize = gridSize;
             _excavate = excavate;
             _winding_number = winding_number;
         }
 
-        public override Schematic WriteSchematic(string path)
+        public override Schematic WriteSchematic()
         {
-            DMesh3 mesh = StandardMeshReader.ReadMesh(path);
+            DMesh3 mesh = StandardMeshReader.ReadMesh(_path);
             AxisAlignedBox3d bounds = mesh.CachedBounds;
 
             DMeshAABBTree3 spatial = new DMeshAABBTree3(mesh, autoBuild: true);
@@ -47,9 +47,9 @@ namespace FileToVox.Converter
                 Length = (short)bmp.Dimensions.z
             };
 
-            SchematicReader.WidthSchematic = schematic.Width;
-            SchematicReader.HeightSchematic = schematic.Heigth;
-            SchematicReader.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.LengthSchematic = schematic.Length;
 
             if (_winding_number != 0)
             {

@@ -10,12 +10,16 @@ namespace FileToVox.Converter
 {
     public class ASCToSchematic : BaseToSchematic
     {
-        public override Schematic WriteSchematic(string path)
+        public ASCToSchematic(string path) : base(path)
         {
-            return WriteSchematicFromASC(path);
+
+        }
+        public override Schematic WriteSchematic()
+        {
+            return WriteSchematicFromASC();
         }
 
-        private Schematic WriteSchematicFromASC(string path)
+        private Schematic WriteSchematicFromASC()
         {
             int nCols = 0;
             int nRows = 0;
@@ -25,7 +29,7 @@ namespace FileToVox.Converter
             int nodata = -9999;
             float[,] points = new float[0,0]; //rows, cols
 
-            using (StreamReader file = new StreamReader(path))
+            using (StreamReader file = new StreamReader(_path))
             {
                 string line;
                 int row = 0;
@@ -68,9 +72,9 @@ namespace FileToVox.Converter
                 Heigth = (short) points.Cast<float>().Max()
             };
 
-            SchematicReader.WidthSchematic = schematic.Width;
-            SchematicReader.HeightSchematic = schematic.Heigth;
-            SchematicReader.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.LengthSchematic = schematic.Length;
 
             for (int i = 0; i < points.GetLength(0); i++)
             {

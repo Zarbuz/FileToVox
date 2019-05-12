@@ -15,16 +15,21 @@ namespace FileToVox.Converter
         private const int Codeflag = 2;
         private const int Nextsliceflag = 6;
 
-        public override Schematic WriteSchematic(string path)
+        public QbToSchematic(string path) : base(path)
         {
-            List<VoxelDTO> voxels = LoadVoxels(path);
+
+        }
+
+        public override Schematic WriteSchematic()
+        {
+            List<VoxelDTO> voxels = LoadVoxels();
             return Convert(voxels);
         }
 
-        private List<VoxelDTO> LoadVoxels(string path)
+        private List<VoxelDTO> LoadVoxels()
         {
             List<VoxelDTO> voxels = new List<VoxelDTO>();
-            using (FileStream fs = File.OpenRead(path))
+            using (FileStream fs = File.OpenRead(_path))
             {
                 BinaryReader reader = new BinaryReader(fs);
                 uint version = reader.ReadUInt32();
@@ -156,9 +161,9 @@ namespace FileToVox.Converter
             schematic.Length = (short)length;
             schematic.Blocks = new HashSet<Block>();
 
-            SchematicReader.LengthSchematic = schematic.Length;
-            SchematicReader.HeightSchematic = schematic.Heigth;
-            SchematicReader.WidthSchematic = schematic.Width;
+            LoadedSchematic.LengthSchematic = schematic.Length;
+            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.WidthSchematic = schematic.Width;
 
             Console.WriteLine("[LOG] Started to write schematic from qb...");
             Console.WriteLine("[INFO] Qb Width: " + schematic.Width);

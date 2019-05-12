@@ -18,7 +18,8 @@ namespace FileToVox.Converter
         private bool _top;
         private string _colorPath;
 
-        public PNGToSchematic(string colorPath, int height, bool excavate, bool color, bool top)
+        public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
+            : base(path)
         {
             _excavate = excavate;
             _maxHeight = height;
@@ -27,14 +28,14 @@ namespace FileToVox.Converter
             _colorPath = colorPath;
         }
 
-        public override Schematic WriteSchematic(string path)
+        public override Schematic WriteSchematic()
         {
-            return WriteSchematicFromImage(path);
+            return WriteSchematicFromImage();
         }
 
-        private Schematic WriteSchematicFromImage(string path)
+        private Schematic WriteSchematicFromImage()
         {
-            FileInfo info = new FileInfo(path);
+            FileInfo info = new FileInfo(_path);
             Bitmap bitmap = new Bitmap(info.FullName);
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
 
@@ -62,9 +63,10 @@ namespace FileToVox.Converter
                 Heigth = (short)_maxHeight,
                 Blocks = new HashSet<Block>()
             };
-            SchematicReader.LengthSchematic = schematic.Length;
-            SchematicReader.WidthSchematic = schematic.Width;
-            SchematicReader.HeightSchematic = schematic.Heigth;
+
+            LoadedSchematic.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            LoadedSchematic.HeightSchematic = schematic.Heigth;
 
 
             using (ProgressBar progressbar = new ProgressBar())

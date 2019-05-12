@@ -3,40 +3,38 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using FileToVox.Schematics;
 using fNbt;
 using SchematicToVoxCore.Extensions;
 
-namespace FileToVox.Schematics
+namespace FileToVox.Converter
 {
-    public static class SchematicReader
+    public class SchematicToSchematic : BaseToSchematic
     {
-        public static short WidthSchematic;
-        public static short LengthSchematic;
-        public static short HeightSchematic;
+        private int _ignoreMinY;
+        private int _ignoreMaxY;
+        private int _scale;
 
-        private static int _ignoreMinY;
-        private static int _ignoreMaxY;
-        private static int _scale;
+        private bool _excavate;
+        private readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
 
-        private static bool _excavate;
-        private static readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
-
-        public static Schematic LoadSchematic(string path, int min, int max, bool excavate, int scale)
+        public SchematicToSchematic(string path, int min, int max, bool excavate, int scale) : base(path)
         {
-            NbtFile file = new NbtFile(path);
             _ignoreMinY = min;
             _ignoreMaxY = max;
             _scale = scale;
             _excavate = excavate;
+            LoadBlocks();
+        }
 
-            LoadBlocs();
-
+        public override Schematic WriteSchematic()
+        {
+            NbtFile file = new NbtFile(_path);
             return LoadSchematic(file);
         }
 
-        private static void LoadBlocs()
+        private void LoadBlocks()
         {
             try
             {
@@ -44,7 +42,7 @@ namespace FileToVox.Schematics
                 int counter = 0;
                 // Read the file and display it line by line.  
                 StreamReader file = new StreamReader(@"schematics/config.txt");
-                Console.WriteLine("[LOG] Started to read config.txt for loading blocs colors");
+                Console.WriteLine("[LOG] Started to read config.txt for loading blocks colors");
                 while ((line = file.ReadLine()) != null)
                 {
                     if (line[0] == '#')
@@ -64,17 +62,17 @@ namespace FileToVox.Schematics
                     _colors.Add(new Tuple<int, int>(id, metadata), Color.FromArgb(a, r, g, b));
                     counter++;
                 }
-                Console.WriteLine("[INFO] Loaded blocs: " + counter);
+                Console.WriteLine("[INFO] Loaded blocks: " + counter);
                 Console.WriteLine("[LOG] Done.");
                 file.Close();
             }
             catch (Exception e)
             {
-                Console.WriteLine("[ERROR] LoadBlocs failed: " + e);
+                Console.WriteLine("[ERROR] LoadBlocks failed: " + e);
             }
         }
 
-        private static Schematic LoadSchematic(NbtFile nbtFile)
+        private Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
             HashSet<Block> blocks = GetBlocks(raw);
@@ -87,7 +85,7 @@ namespace FileToVox.Schematics
             return schematic;
         }
 
-        private static RawSchematic LoadRaw(NbtFile nbtFile)
+        private RawSchematic LoadRaw(NbtFile nbtFile)
         {
             RawSchematic raw = new RawSchematic();
             var rootTag = nbtFile.RootTag;
@@ -98,11 +96,11 @@ namespace FileToVox.Schematics
                 {
                     case "Width": //Short
                         raw.Width = tag.ShortValue;
-                        WidthSchematic = raw.Width;
+                        LoadedSchematic.WidthSchematic = raw.Width;
                         break;
                     case "Height": //Short
                         raw.Heigth = tag.ShortValue;
-                        HeightSchematic = raw.Heigth;
+                        LoadedSchematic.HeightSchematic = raw.Heigth;
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
@@ -129,7 +127,7 @@ namespace FileToVox.Schematics
             return raw;
         }
 
-        private static HashSet<Block> GetBlocks(RawSchematic rawSchematic)
+        private HashSet<Block> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
             {
@@ -141,11 +139,10 @@ namespace FileToVox.Schematics
             Console.WriteLine($"[INFO] Raw schematic Length: {rawSchematic.Length}");
             Console.WriteLine($"[INFO] Raw schematic Height: {rawSchematic.Heigth}");
             Console.WriteLine($"[INFO] Raw schematic total blocks: {rawSchematic.Data.Length}");
-            Console.WriteLine($"[INFO] Memory: {rawSchematic.Data.Length * Marshal.SizeOf(typeof(Block))} bytes");
 
-            WidthSchematic = (short)(rawSchematic.Width * _scale);
-            LengthSchematic = (short)(rawSchematic.Length * _scale);
-            HeightSchematic = (short)(rawSchematic.Heigth * _scale);
+            LoadedSchematic.WidthSchematic = (short)(rawSchematic.Width * _scale);
+            LoadedSchematic.LengthSchematic = (short)(rawSchematic.Length * _scale);
+            LoadedSchematic.HeightSchematic = (short)(rawSchematic.Heigth * _scale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
@@ -185,7 +182,7 @@ namespace FileToVox.Schematics
             return blocks.ToHashSet();
         }
 
-        private static bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
+        private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
         {
             if (block.X - 1 >= 0 && block.X + 1 < rawSchematic.Width && block.Y - 1 >= minY && block.Y + 1 < maxY && block.Z - 1 >= 0 && block.Z < rawSchematic.Length)
             {
@@ -205,7 +202,7 @@ namespace FileToVox.Schematics
             return false;
         }
 
-        private static Color GetBlockColor(int blockID, int data)
+        private Color GetBlockColor(int blockID, int data)
         {
             if (_colors.TryGetValue(new Tuple<int, int>(blockID, data), out Color color))
             {
@@ -214,5 +211,6 @@ namespace FileToVox.Schematics
             return _colors[new Tuple<int, int>(blockID, 0)];
         }
 
+        
     }
 }

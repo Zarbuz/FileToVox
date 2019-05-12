@@ -7,6 +7,13 @@ namespace FileToVox.Converter
 {
     public abstract class BaseToSchematic
     {
-        public abstract Schematic WriteSchematic(string path);
+        protected string _path;
+
+        public BaseToSchematic(string path)
+        {
+            _path = path;
+        }
+
+        public abstract Schematic WriteSchematic();
     }
 }

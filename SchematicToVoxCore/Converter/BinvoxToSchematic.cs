@@ -19,17 +19,21 @@ namespace FileToVox.Converter
         private double _scale;
         private byte[] _voxels;
 
-        public override Schematic WriteSchematic(string path)
+        public BinvoxToSchematic(string path) : base(path)
+        {
+        }
+
+        public override Schematic WriteSchematic()
         {
             _voxels = null;
             _headerRead = false;
             _voxelsRead = false;
-            return WriteSchematicFromBinvox(path);
+            return WriteSchematicFromBinvox();
         }
 
-        private Schematic WriteSchematicFromBinvox(string path)
+        private Schematic WriteSchematicFromBinvox()
         {
-            using (LineReader lineReader = new LineReader(File.Open(path, FileMode.Open), Encoding.UTF8))
+            using (LineReader lineReader = new LineReader(File.Open(_path, FileMode.Open), Encoding.UTF8))
             {
                 ReadHeader(lineReader);
                 ReadVoxels(lineReader);
@@ -41,9 +45,9 @@ namespace FileToVox.Converter
                     Blocks = new HashSet<Block>()
                 };
 
-                SchematicReader.HeightSchematic = schematic.Heigth;
-                SchematicReader.LengthSchematic = schematic.Length;
-                SchematicReader.WidthSchematic = schematic.Width;
+                LoadedSchematic.HeightSchematic = schematic.Heigth;
+                LoadedSchematic.LengthSchematic = schematic.Length;
+                LoadedSchematic.WidthSchematic = schematic.Width;
 
                 int xmult = (int)(_dimensions.Z * _dimensions.Y);
                 int zmult = (int) (_dimensions.Z);

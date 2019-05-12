@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using FileToVox.CA;
 using FileToVox.Converter;
 using FileToVox.Schematics;
 using FileToVox.Vox;
@@ -13,6 +14,7 @@ namespace FileToVox
         private static string _inputFile;
         private static string _outputFile;
         private static string _inputColorFile;
+        private static string _caRule;
 
         private static bool _show_help;
         private static bool _verbose;
@@ -50,7 +52,8 @@ namespace FileToVox
                 {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
                 {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
                 {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
-                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v }
+                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
+                {"ca=", "create a cellular automata rule [WIDTH] [LENGTH] [HEIGHT] [LIFETIME] [RULE]", v => _caRule = v }
             };
 
             try
@@ -59,7 +62,11 @@ namespace FileToVox
                 CheckHelp(options);
                 CheckArguments();
                 DisplayArguments();
-                ProcessFile();
+
+                if (_inputFile != null)
+                    ProcessFile();
+                else if (_caRule != null)
+                    ProcessCA();
                 CheckVerbose();
                 Console.WriteLine("[LOG] Done.");
                 if (_verbose)
@@ -112,9 +119,39 @@ namespace FileToVox
             }
         }
 
+        private static void ProcessCA()
+        {
+            string[] values = _caRule.Split(' ');
+            if (values.Length != 5)
+                Console.WriteLine("[ERROR] Missing arguments for --ca option");
+
+            try
+            {
+                int width = Convert.ToInt32(values[0]);
+                int length = Convert.ToInt32(values[1]);
+                int height = Convert.ToInt32(values[2]);
+                int lifetime = Convert.ToInt32(values[3]);
+                string[] conditions = values[4].Split('/');
+                int a = Convert.ToInt32(conditions[0]);
+                int b = Convert.ToInt32(conditions[1]);
+                int[,,] field = new int[width, length, height];
+                RuleSet ruleSet = new RuleGeneric(field, width, length, height, a, b);
+                RuleSetToSchematic converter = new RuleSetToSchematic("", ruleSet, lifetime);
+                Schematic schematic = converter.WriteSchematic();
+                VoxWriter writer = new VoxWriter();
+                writer.WriteModel(_outputFile, schematic, _direction);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+            }
+        }
+
         private static void CheckArguments()
         {
-            if (_inputFile == null)
+            if (_inputFile == null && _caRule == null)
                 throw new ArgumentNullException("[ERROR] Missing required option: --i");
             if (_outputFile == null)
                 throw new ArgumentNullException("[ERROR] Missing required option: --o");
@@ -167,129 +204,47 @@ namespace FileToVox
         {
             if (!File.Exists(_inputFile))
                 throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
-
-            switch (Path.GetExtension(_inputFile))
-            {
-                case ".schematic":
-                    ProcessSchematicFile();
-                    break;
-                case ".png":
-                    ProcessImageFile();
-                    break;
-                case ".asc":
-                    ProcessAscFile();
-                    break;
-                case ".binvox":
-                    ProcessBinvoxFile();
-                    break;
-                case ".qb":
-                    ProcessQbFile();
-                    break;
-                case ".obj":
-                    ProcessObjFile();
-                    break;
-                default:
-                    Console.WriteLine("[ERROR] Unknown file extension !");
-                    Console.ReadKey();
-                    return;
-            }
-        }
-
-
-
-        private static void ProcessSchematicFile()
-        {
             try
             {
-                Schematic schematic = SchematicReader.LoadSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                BaseToSchematic converter;
+
+                switch (Path.GetExtension(_inputFile))
+                {
+                    case ".schematic":
+                        converter = new SchematicToSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                        break;
+                    case ".png":
+                        converter = new PNGToSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
+                        break;
+                    case ".asc":
+                        converter = new ASCToSchematic(_inputColorFile);
+                        break;
+                    case ".binvox":
+                        converter = new BinvoxToSchematic(_inputFile);
+                        break;
+                    case ".qb":
+                        converter = new QbToSchematic(_inputColorFile);
+                        break;
+                    case ".obj":
+                        converter = new ObjToSchematic(_inputFile, _gridSize, _excavate, _slow);
+                        break;
+                    default:
+                        Console.WriteLine("[ERROR] Unknown file extension !");
+                        Console.ReadKey();
+                        return;
+                }
+
+                Schematic schematic = converter.WriteSchematic();
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 Console.ReadLine();
             }
-        }
 
-        private static void ProcessBinvoxFile()
-        {
-            try
-            {
-                BinvoxToSchematic converter = new BinvoxToSchematic();
-                Schematic schematic = converter.WriteSchematic(_inputFile);
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
-        }
-
-        private static void ProcessQbFile()
-        {
-            try
-            {
-                QbToSchematic converter = new QbToSchematic();
-                Schematic schematic = converter.WriteSchematic(_inputFile);
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
-        }
-
-        private static void ProcessImageFile()
-        {
-            try
-            {
-                PNGToSchematic converter = new PNGToSchematic(_inputColorFile, _heightmap, _excavate, _color, _top);
-                Schematic schematic = converter.WriteSchematic(_inputFile);
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
-        }
-
-        private static void ProcessAscFile()
-        {
-            try
-            {
-                ASCToSchematic converter = new ASCToSchematic();
-                Schematic schematic = converter.WriteSchematic(_inputFile);
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
-        }
-
-        private static void ProcessObjFile()
-        {
-            try
-            {
-                ObjToSchematic converter = new ObjToSchematic(_gridSize, _excavate, _slow);
-                Schematic schematic = converter.WriteSchematic(_inputFile);
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
         }
 
         private static void ShowHelp(OptionSet p)
