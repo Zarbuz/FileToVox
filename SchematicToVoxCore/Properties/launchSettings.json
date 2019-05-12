@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--ca 500 550 300 5000 24/36"
+      "commandLineArgs": "--o ../ca_1 --ca 126-126-126-20-9/3"
     }
   }
 }

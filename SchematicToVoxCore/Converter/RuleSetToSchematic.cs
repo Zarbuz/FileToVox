@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using FileToVox.CA;
 using FileToVox.Schematics;
+using FileToVox.Utils;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
@@ -17,14 +18,25 @@ namespace FileToVox.Converter
         {
             _ruleSet = ruleSet;
             _lifeTime = lifeTime;
+
+            Console.WriteLine("[INFO] Schematic Width: " + _ruleSet.GetWidth());
+            Console.WriteLine("[INFO] Schematic Height: " + _ruleSet.GetHeight());
+            Console.WriteLine("[INFO] Schematic Length: " + _ruleSet.GetLength());
+            Console.WriteLine("[INFO] Lifetime: " + lifeTime);
         }
 
         public override Schematic WriteSchematic()
         {
-            for  (int i = 0; i < _lifeTime; i++)
+            Console.WriteLine("[LOG] Started to launch ticks");
+            using (ProgressBar progress = new ProgressBar())
             {
-                _ruleSet.Tick();
+                for (int i = 0; i < _lifeTime; i++)
+                {
+                    _ruleSet.Tick();
+                    progress.Report(i / (float)_lifeTime);
+                }
             }
+            Console.WriteLine("[LOG] Done.");
 
             Schematic schematic = new Schematic()
             {
@@ -33,6 +45,8 @@ namespace FileToVox.Converter
                 Length = (short)_ruleSet.GetLength(),
                 Blocks = new HashSet<Block>()
             };
+
+            
 
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             LoadedSchematic.LengthSchematic = schematic.Length;

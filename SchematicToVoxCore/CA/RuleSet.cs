@@ -63,7 +63,7 @@ namespace FileToVox.CA
             if (x - 1 >= 0 && y + 1 < _maxY && z - 1 >= 0 && _field[x - 1, y + 1, z - 1] == 1)
                 neighbors++;
 
-            if (x - 1 >= 0 && y - 1 < _maxY && z + 1 < _maxZ && _field[x - 1, y - 1, z + 1] == 1)
+            if (x - 1 >= 0 && y - 1 >= 0 && z + 1 < _maxZ && _field[x - 1, y - 1, z + 1] == 1)
                 neighbors++;
 
             return neighbors;

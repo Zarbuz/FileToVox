@@ -38,6 +38,8 @@ namespace FileToVox.CA
         protected override int[,,] TickAlgorithm()
         {
             int[,,] field2 = new int[_maxX, _maxY, _maxZ];
+            List<int> birthDigits = ToDigitArray(_b);
+            List<int> liveDigits = ToDigitArray(_a);
 
             // A/B
             // The first number(s) is what is required for a cell to continue.
@@ -51,7 +53,6 @@ namespace FileToVox.CA
                     {
                         bool processed = false;
                         int neighbors = GetNumberOfNeighbors(x, y, z);
-                        List<int> birthDigits = ToDigitArray(_b);
                         foreach (int digit in birthDigits)
                         {
                             if (neighbors == digit)
@@ -68,7 +69,6 @@ namespace FileToVox.CA
                             continue;
                         }
 
-                        List<int> liveDigits = ToDigitArray(_a);
                         foreach (int digit in liveDigits)
                         {
                             if (neighbors == digit)

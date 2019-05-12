@@ -121,7 +121,7 @@ namespace FileToVox
 
         private static void ProcessCA()
         {
-            string[] values = _caRule.Split(' ');
+            string[] values = _caRule.Split('-');
             if (values.Length != 5)
                 Console.WriteLine("[ERROR] Missing arguments for --ca option");
 
@@ -131,15 +131,43 @@ namespace FileToVox
                 int length = Convert.ToInt32(values[1]);
                 int height = Convert.ToInt32(values[2]);
                 int lifetime = Convert.ToInt32(values[3]);
+
+
                 string[] conditions = values[4].Split('/');
                 int a = Convert.ToInt32(conditions[0]);
                 int b = Convert.ToInt32(conditions[1]);
                 int[,,] field = new int[width, length, height];
+
+
+                // Random initial positions
+                Random r = new Random((int)DateTime.Now.Ticks);
+                for (int y = 0; y < height; y++)
+                {
+                    for (int z = 0; z < length; z++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            field[x, y, z] = r.Next(0, 1 + 1);
+                        }
+                    }
+                }
+
+                //for (int y = 0; y < height; y++)
+                //{
+                //    for (int z = 0; z < length; z++)
+                //    {
+                //        for (int x = 0; x < width; x++)
+                //        {
+                //            field[x, y, z] = 1;
+                //        }
+                //    }
+                //}
+
                 RuleSet ruleSet = new RuleGeneric(field, width, length, height, a, b);
                 RuleSetToSchematic converter = new RuleSetToSchematic("", ruleSet, lifetime);
                 Schematic schematic = converter.WriteSchematic();
                 VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile, schematic, _direction);
+                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
 
             }
             catch (Exception e)
