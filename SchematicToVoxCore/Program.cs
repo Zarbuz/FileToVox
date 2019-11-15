@@ -14,7 +14,6 @@ namespace FileToVox
         private static string _inputFile;
         private static string _outputFile;
         private static string _inputColorFile;
-        private static string _caRule;
 
         private static bool _show_help;
         private static bool _verbose;
@@ -22,7 +21,7 @@ namespace FileToVox
         private static bool _color;
         private static bool _top;
 
-        private static float _slow = 0.0f;
+        private static float _slow;
 
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
@@ -46,14 +45,13 @@ namespace FileToVox
                     "e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
                     v => _excavate = v != null
                 },
-                {"s|scale=", "increase the scale of each block (only schematic file)", (int v) => _scale = v},
+                {"s|scale=", "set the scale (for schematic or PLY)", (int v) => _scale = v},
                 {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
                 {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
                 {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
                 {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
                 {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
                 {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
-                {"ca=", "create a cellular automata rule [WIDTH] [LENGTH] [HEIGHT] [LIFETIME] [RULE]", v => _caRule = v },
             };
 
             try
@@ -65,8 +63,6 @@ namespace FileToVox
 
                 if (_inputFile != null)
                     ProcessFile();
-                else if (_caRule != null)
-                    ProcessCA();
                 CheckVerbose();
                 Console.WriteLine("[LOG] Done.");
                 if (_verbose)
@@ -119,67 +115,9 @@ namespace FileToVox
             }
         }
 
-        private static void ProcessCA()
-        {
-            string[] values = _caRule.Split('-');
-            if (values.Length != 5)
-                Console.WriteLine("[ERROR] Missing arguments for --ca option");
-
-            try
-            {
-                int width = Convert.ToInt32(values[0]);
-                int length = Convert.ToInt32(values[1]);
-                int height = Convert.ToInt32(values[2]);
-                int lifetime = Convert.ToInt32(values[3]);
-
-
-                string[] conditions = values[4].Split('/');
-                int a = Convert.ToInt32(conditions[0]);
-                int b = Convert.ToInt32(conditions[1]);
-                int[,,] field = new int[width, length, height];
-
-
-                // Random initial positions
-                Random r = new Random((int)DateTime.Now.Ticks);
-                for (int y = 0; y < height; y++)
-                {
-                    for (int z = 0; z < length; z++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            field[x, y, z] = r.Next(0, 1 + 1);
-                        }
-                    }
-                }
-
-                //for (int y = 0; y < height; y++)
-                //{
-                //    for (int z = 0; z < length; z++)
-                //    {
-                //        for (int x = 0; x < width; x++)
-                //        {
-                //            field[x, y, z] = 1;
-                //        }
-                //    }
-                //}
-
-                RuleSet ruleSet = new RuleGeneric(field, width, length, height, a, b);
-                RuleSetToSchematic converter = new RuleSetToSchematic("", ruleSet, lifetime);
-                Schematic schematic = converter.WriteSchematic();
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
-        }
-
         private static void CheckArguments()
         {
-            if ((_inputFile == null && _caRule == null))
+            if (_inputFile == null)
                 throw new ArgumentNullException("[ERROR] Missing required option: --i");
             if (_outputFile == null)
                 throw new ArgumentNullException("[ERROR] Missing required option: --o");
@@ -255,7 +193,7 @@ namespace FileToVox
                         converter = new ObjToSchematic(_inputFile, _gridSize, _excavate, _slow);
                         break;
                     case ".ply":
-                        converter = new PLYToSchematic(Path.GetFullPath(_inputFile));
+                        converter = new PLYToSchematic(Path.GetFullPath(_inputFile), _scale);
                         break;
                     default:
                         Console.WriteLine("[ERROR] Unknown file extension !");

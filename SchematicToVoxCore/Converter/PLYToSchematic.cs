@@ -3,16 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using MoreLinq;
+using nQuant;
+using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
     public class PLYToSchematic : BaseToSchematic
     {
-        private List<Vector3> _vertices;
-        private List<Color> _colors;
+        private readonly List<Block> _blocks = new List<Block>();
 
         #region Internal data structure
 
@@ -263,22 +267,172 @@ namespace FileToVox.Converter
         }
         #endregion
 
-        public PLYToSchematic(string path) : base(path)
+        public PLYToSchematic(string path, int _scale) : base(path)
         {
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             DataHeader header = ReadDataHeader(new StreamReader(stream));
             DataBody body = ReadDataBody(header, new BinaryReader(stream));
 
-            _vertices = body.vertices;
-            _colors = body.colors;
+            List<Vector3> bodyVertices = body.vertices;
+            List<Color> bodyColors = body.colors;
+
+            Vector3 minX = bodyVertices.MinBy(t => t.X);
+            Vector3 minY = bodyVertices.MinBy(t => t.Y);
+            Vector3 minZ = bodyVertices.MinBy(t => t.Z);
+
+            float min = Math.Abs(Math.Min(minX.X, Math.Min(minY.Y, minZ.Z)));
+            for (int i = 0; i < bodyVertices.Count; i++)
+            {
+                bodyVertices[i] += new Vector3(min, min, min);
+                bodyVertices[i] = new Vector3((float)Math.Truncate(bodyVertices[i].X * _scale), (float)Math.Truncate(bodyVertices[i].Y * _scale), (float)Math.Truncate(bodyVertices[i].Z * _scale));
+            }
+
+            HashSet<Vector3> set = new HashSet<Vector3>();
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+
+            using (ProgressBar progressbar = new ProgressBar())
+            {
+                for (int i = 0; i < bodyVertices.Count; i++)
+                {
+                    if (!set.Contains(bodyVertices[i]))
+                    {
+                        set.Add(bodyVertices[i]);
+                        vertices.Add(bodyVertices[i]);
+                        colors.Add(bodyColors[i]);
+                    }
+                    progressbar.Report(i / (float)bodyVertices.Count);
+                }
+            }
+
+            minX = vertices.MinBy(t => t.X);
+            minY = vertices.MinBy(t => t.Y);
+            minZ = vertices.MinBy(t => t.Z);
+
+            min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
+                if (max - min < 2016 && max - min >= 0)
+                {
+                    vertices[i] -= new Vector3(min, min, min);
+                    _blocks.Add(new Block((short)vertices[i].X, (short)vertices[i].Y, (short)vertices[i].Z, colors[i].ColorToUInt()));
+                }
+            }
 
         }
 
         public override Schematic WriteSchematic()
         {
-            return null;
+            Schematic schematic = new Schematic()
+            {
+                Length = _blocks.MaxBy(t => t.Z).Z,
+                Width = _blocks.MaxBy(t => t.X).X,
+                Heigth = _blocks.MaxBy(t => t.Y).Y,
+                Blocks = new HashSet<Block>()
+            };
+
+            LoadedSchematic.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            ApplyQuantization();
+
+            foreach (Block t in _blocks)
+            {
+                schematic.Blocks.Add(t);
+            }
+
+            return schematic;
         }
 
-        
+        private Bitmap CreateBitmapFromColors()
+        {
+            int width = _blocks.Count;
+
+            Bitmap bitmap = new Bitmap(width, 1);
+
+            for (int i = 0; i < _blocks.Count; i++)
+            {
+                Block block = _blocks[i];
+                Color color = block.Color.UIntToColor();
+                int x = i % width;
+                int y = i / width;
+                bitmap.SetPixel(x, y, color);
+            }
+
+            return bitmap;
+        }
+
+        private Bitmap Quantization(Bitmap bitmap)
+        {
+            Dictionary<Color, int> histo = new Dictionary<Color, int>();
+            for (int x = 0; x < bitmap.Size.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Size.Height; y++)
+                {
+                    Color c = bitmap.GetPixel(x, y);
+                    if (histo.ContainsKey(c))
+                        histo[c] = histo[c] + 1;
+                    else
+                        histo.Add(c, 1);
+                }
+            }
+
+            IOrderedEnumerable<KeyValuePair<Color, int>> result1 = histo.OrderByDescending(a => a.Value);
+            int number = 255;
+            List<Color> mostUsedColor = result1.Select(x => x.Key).Take(number).ToList();
+
+            double temp;
+            Dictionary<Color, Double> dist = new Dictionary<Color, double>();
+            Dictionary<Color, Color> mapping = new Dictionary<Color, Color>();
+            foreach (var p in result1)
+            {
+                dist.Clear();
+                foreach (Color pp in mostUsedColor)
+                {
+                    temp = Math.Abs(p.Key.R - pp.R) +
+                           Math.Abs(p.Key.R - pp.R) +
+                           Math.Abs(p.Key.R - pp.R);
+                    dist.Add(pp, temp);
+                }
+                KeyValuePair<Color, double> min = dist.OrderBy(k => k.Value).FirstOrDefault();
+                mapping.Add(p.Key, min.Key);
+            }
+            Bitmap copy = new Bitmap(bitmap);
+
+            for (int x = 0; x < copy.Size.Width; x++)
+            {
+                for (int y = 0; y < copy.Size.Height; y++)
+                {
+                    Color c = copy.GetPixel(x, y); // **2**
+                    copy.SetPixel(x, y, mapping[c]);
+                }
+            }
+
+            return copy;
+        }
+
+        private void ApplyQuantization()
+        {
+            var quantizer = new WuQuantizer();
+            using (Bitmap bitmap = CreateBitmapFromColors())
+            {
+                using (Image quantized = quantizer.QuantizeImage(bitmap))
+                {
+                    Bitmap reducedBitmap = new Bitmap(quantized);
+                    int width = reducedBitmap.Size.Width;
+                    for (int i = 0; i < _blocks.Count; i++)
+                    {
+                        int x = i % width;
+                        int y = i / width;
+                        _blocks[i] = new Block(_blocks[i].X, _blocks[i].Y, _blocks[i].Z, reducedBitmap.GetPixel(x, y).ColorToUInt());
+                    }
+                }
+            }
+            //Bitmap bitmap = CreateBitmapFromColors();
+            //Bitmap reducedBitmap = Quantization(bitmap);
+
+        }
     }
+
 }
