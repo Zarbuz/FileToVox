@@ -12,11 +12,11 @@ namespace FileToVox.Converter
 {
     public class SchematicToSchematic : BaseToSchematic
     {
-        private int _ignoreMinY;
-        private int _ignoreMaxY;
-        private int _scale;
+        private readonly int _ignoreMinY;
+        private readonly int _ignoreMaxY;
+        private readonly int _scale;
 
-        private bool _excavate;
+        private readonly bool _excavate;
         private readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
 
         public SchematicToSchematic(string path, int min, int max, bool excavate, int scale) : base(path)

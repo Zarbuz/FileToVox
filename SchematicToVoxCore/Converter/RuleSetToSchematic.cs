@@ -11,8 +11,8 @@ namespace FileToVox.Converter
 {
     public class RuleSetToSchematic : BaseToSchematic
     {
-        private RuleSet _ruleSet;
-        private int _lifeTime;
+        private readonly RuleSet _ruleSet;
+        private readonly int _lifeTime;
 
         public RuleSetToSchematic(string path, RuleSet ruleSet, int lifeTime) : base(path)
         {

@@ -11,9 +11,9 @@ namespace FileToVox.Converter
 {
     public class ObjToSchematic : BaseToSchematic
     {
-        private int _gridSize;
-        private bool _excavate;
-        private float _winding_number;
+        private readonly int _gridSize;
+        private readonly bool _excavate;
+        private readonly float _winding_number;
 
         public ObjToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
         {

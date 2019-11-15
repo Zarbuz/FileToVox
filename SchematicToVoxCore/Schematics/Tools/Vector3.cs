@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FileToVox.Schematics.Tools
 {
@@ -55,6 +56,19 @@ namespace FileToVox.Schematics.Tools
         public static bool operator !=(Vector3 left, Vector3 right)
         {
             return !(left == right);
+        }
+    }
+
+    public class Vector3EqualityComparer : IEqualityComparer<Vector3>
+    {
+        public bool Equals(Vector3 x, Vector3 y)
+        {
+            return x == y;
+        }
+
+        public int GetHashCode(Vector3 obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

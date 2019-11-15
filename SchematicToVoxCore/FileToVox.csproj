@@ -19,6 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Tools\**" />
+    <EmbeddedResource Remove="Tools\**" />
+    <None Remove="Tools\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="fNbt" Version="0.6.4" />
     <PackageReference Include="geometry3Sharp" Version="1.0.324" />
     <PackageReference Include="NDesk.Options.Core" Version="1.2.4" />

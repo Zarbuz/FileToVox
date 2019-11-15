@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--o ../ca_1 --ca 126-126-126-20-9/3"
+      "commandLineArgs": "--i ../tree_orange_big21.ply --o ../tree_orange_big21"
     }
   }
 }

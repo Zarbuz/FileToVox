@@ -53,7 +53,7 @@ namespace FileToVox
                 {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
                 {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
                 {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
-                {"ca=", "create a cellular automata rule [WIDTH] [LENGTH] [HEIGHT] [LIFETIME] [RULE]", v => _caRule = v }
+                {"ca=", "create a cellular automata rule [WIDTH] [LENGTH] [HEIGHT] [LIFETIME] [RULE]", v => _caRule = v },
             };
 
             try
@@ -179,7 +179,7 @@ namespace FileToVox
 
         private static void CheckArguments()
         {
-            if (_inputFile == null && _caRule == null)
+            if ((_inputFile == null && _caRule == null))
                 throw new ArgumentNullException("[ERROR] Missing required option: --i");
             if (_outputFile == null)
                 throw new ArgumentNullException("[ERROR] Missing required option: --o");
@@ -200,7 +200,7 @@ namespace FileToVox
             if (_inputFile != null)
                 Console.WriteLine("[INFO] Specified input file: " + _inputFile);
             if (_outputFile != null)
-                Console.WriteLine("[INFO] Specifid output file: " + _outputFile);
+                Console.WriteLine("[INFO] Specified output file: " + _outputFile);
             if (_inputColorFile != null)
                 Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
             if (_ignoreMinY != -1)
@@ -221,8 +221,6 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
-
-
 
             Console.WriteLine("[INFO] Way: " + _direction);
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
@@ -255,6 +253,9 @@ namespace FileToVox
                         break;
                     case ".obj":
                         converter = new ObjToSchematic(_inputFile, _gridSize, _excavate, _slow);
+                        break;
+                    case ".ply":
+                        converter = new PLYToSchematic(Path.GetFullPath(_inputFile));
                         break;
                     default:
                         Console.WriteLine("[ERROR] Unknown file extension !");
