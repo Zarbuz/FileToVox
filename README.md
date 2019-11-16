@@ -59,7 +59,9 @@ You can edit the colors of the palette used when generating from schematic file 
 # Examples
 
 `FileToVox.exe --i heightmap.png --o heightmap --hm 100`
+
 `FileToVox.exe --i heightmap.png --o heightmap --hm 100 --e --cm colors.png`
+
 `FileToVox.exe --i cloud.ply --o cloud --scale 20`
 
 ## Notes
