@@ -129,8 +129,6 @@ namespace FileToVox
                 throw new ArgumentException("[ERROR] --scale argument must be positive");
             if (_heightmap < 1)
                 throw new ArgumentException("[ERROR] --heightmap argument must be positive");
-            if (_color && _heightmap == 1)
-                throw new ArgumentException("[ERROR] --color argument must be used with --heightmap");
         }
 
         private static void DisplayArguments()
@@ -166,37 +164,37 @@ namespace FileToVox
 
         private static void ProcessFile()
         {
-            if (!File.Exists(_inputFile))
+            string path = Path.GetFullPath(_inputFile);
+            if (!File.Exists(path))
                 throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
             try
             {
                 AbstractToSchematic converter;
-
                 switch (Path.GetExtension(_inputFile))
                 {
                     case ".schematic":
-                        converter = new SchematicToSchematic(_inputFile, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                        converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
                         break;
                     case ".png":
-                        converter = new PNGToSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
+                        converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
                         break;
                     case ".asc":
-                        converter = new ASCToSchematic(_inputFile);
+                        converter = new ASCToSchematic(path);
                         break;
                     case ".binvox":
-                        converter = new BinvoxToSchematic(_inputFile);
+                        converter = new BinvoxToSchematic(path);
                         break;
                     case ".qb":
-                        converter = new QBToSchematic(_inputFile);
+                        converter = new QBToSchematic(path);
                         break;
                     case ".obj":
-                        converter = new OBJToSchematic(_inputFile, _gridSize, _excavate, _slow);
+                        converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
                         break;
                     case ".ply":
-                        converter = new PLYToSchematic(_inputFile, _scale);
+                        converter = new PLYToSchematic(path, _scale);
                         break;
                     case ".xyz":
-                        converter = new XYZToSchematic(_inputFile, _scale);
+                        converter = new XYZToSchematic(path, _scale);
                         break;
                     default:
                         Console.WriteLine("[ERROR] Unknown file extension !");

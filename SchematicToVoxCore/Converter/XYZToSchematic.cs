@@ -95,7 +95,7 @@ namespace FileToVox.Converter
                 if (max - min < 2016 && max - min >= 0)
                 {
                     vertices[i] -= new Vector3(min, min, min);
-                    _blocks.Add(new Block((short)vertices[i].X, (short)vertices[i].Y, (short)vertices[i].Z, colors[i].ColorToUInt()));
+                    _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
                 }
             }
 
@@ -110,9 +110,9 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic()
             {
-                Length = (short)(_blocks.MaxBy(t => t.Z).Z - minZ.Z),
-                Width = (short)(_blocks.MaxBy(t => t.X).X - minX.X),
-                Heigth = (short)(_blocks.MaxBy(t => t.Y).Y - minY.Y),
+                Length = (ushort)(_blocks.MaxBy(t => t.Z).Z - minZ.Z),
+                Width = (ushort)(_blocks.MaxBy(t => t.X).X - minX.X),
+                Heigth = (ushort)(_blocks.MaxBy(t => t.Y).Y - minY.Y),
                 Blocks = new HashSet<Block>()
             };
 

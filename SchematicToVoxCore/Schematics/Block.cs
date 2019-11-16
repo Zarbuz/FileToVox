@@ -6,12 +6,12 @@ namespace FileToVox.Schematics
     [StructLayout(LayoutKind.Sequential)]
     public struct Block : IEquatable<Block>
     {
-        public readonly short X;
-        public readonly short Y;
-        public readonly short Z;
+        public readonly ushort X;
+        public readonly ushort Y;
+        public readonly ushort Z;
         public readonly uint Color;
 
-        public Block(short x, short y, short z, uint color)
+        public Block(ushort x, ushort y, ushort z, uint color)
         {
             X = x;
             Y = y;

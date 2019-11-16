@@ -5,7 +5,7 @@ using FileToVox.Schematics;
 
 namespace SchematicToVoxCore.Extensions
 {
-    public static class Extensions
+    public static class FctExtensions
     {
         public static int GetColorIntensity(this Color color)
         {
@@ -39,7 +39,7 @@ namespace SchematicToVoxCore.Extensions
         {
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = new Block((short)(list[i].X - vector.X), (short)(list[i].Y - vector.Y), (short)(list[i].Z - vector.Z), list[i].Color);
+                list[i] = new Block((ushort)(list[i].X - vector.X), (ushort)(list[i].Y - vector.Y), (ushort)(list[i].Z - vector.Z), list[i].Color);
             }
 
             return list;

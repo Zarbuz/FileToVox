@@ -311,10 +311,10 @@ namespace FileToVox.Converter
             for (int i = 0; i < vertices.Count; i++)
             {
                 float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
-                if (max - min < 2016 && max - min >= 0)
+                if (/*max - min < 8000 && */max - min >= 0)
                 {
                     vertices[i] -= new Vector3(min, min, min);
-                    _blocks.Add(new Block((short)vertices[i].X, (short)vertices[i].Y, (short)vertices[i].Z, colors[i].ColorToUInt()));
+                    _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
                 }
             }
 
@@ -322,15 +322,19 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
-            Block minX = _blocks.MinBy(t => t.X);
-            Block minY = _blocks.MinBy(t => t.Y);
-            Block minZ = _blocks.MinBy(t => t.Z);
+            float minX = _blocks.MinBy(t => t.X).X;
+            float minY = _blocks.MinBy(t => t.Y).Y;
+            float minZ = _blocks.MinBy(t => t.Z).Z;
+
+            float maxX = _blocks.MaxBy(t => t.X).X;
+            float maxY = _blocks.MaxBy(t => t.Y).Y;
+            float maxZ = _blocks.MaxBy(t => t.Z).Z;
 
             Schematic schematic = new Schematic()
             {
-                Length = (short)(_blocks.MaxBy(t => t.Z).Z - minZ.Z),
-                Width = (short)(_blocks.MaxBy(t => t.X).X - minX.X),
-                Heigth = (short)(_blocks.MaxBy(t => t.Y).Y - minY.Y),
+                Length = (ushort)(Math.Abs(maxZ - minZ)),
+                Width = (ushort)(Math.Abs(maxX - minX)),
+                Heigth = (ushort)(Math.Abs(maxY - minY)),
                 Blocks = new HashSet<Block>()
             };
 
@@ -338,7 +342,7 @@ namespace FileToVox.Converter
             LoadedSchematic.WidthSchematic = schematic.Width;
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
-            list.ApplyOffset(new Vector3(minX.X, minY.Y, minZ.Z));
+            list.ApplyOffset(new Vector3(minX, minY, minZ));
 
             foreach (Block t in list)
             {
