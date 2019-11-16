@@ -104,15 +104,19 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
-            Block minX = _blocks.MinBy(t => t.X);
-            Block minY = _blocks.MinBy(t => t.Y);
-            Block minZ = _blocks.MinBy(t => t.Z);
+            float minX = _blocks.MinBy(t => t.X).X;
+            float minY = _blocks.MinBy(t => t.Y).Y;
+            float minZ = _blocks.MinBy(t => t.Z).Z;
+
+            float maxX = _blocks.MaxBy(t => t.X).X;
+            float maxY = _blocks.MaxBy(t => t.Y).Y;
+            float maxZ = _blocks.MaxBy(t => t.Z).Z;
 
             Schematic schematic = new Schematic()
             {
-                Length = (ushort)(_blocks.MaxBy(t => t.Z).Z - minZ.Z),
-                Width = (ushort)(_blocks.MaxBy(t => t.X).X - minX.X),
-                Heigth = (ushort)(_blocks.MaxBy(t => t.Y).Y - minY.Y),
+                Length = (ushort)(Math.Abs(maxZ - minZ)),
+                Width = (ushort)(Math.Abs(maxX - minX)),
+                Heigth = (ushort)(Math.Abs(maxY - minY)),
                 Blocks = new HashSet<Block>()
             };
 
@@ -120,7 +124,7 @@ namespace FileToVox.Converter
             LoadedSchematic.WidthSchematic = schematic.Width;
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
-            list.ApplyOffset(new Vector3(minX.X, minY.Y, minZ.Z));
+            list.ApplyOffset(new Vector3(minX, minY, minZ));
             foreach (Block t in list)
             {
                 schematic.Blocks.Add(t);

@@ -7,6 +7,7 @@ using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using FileToVox.Extensions;
 
@@ -58,6 +59,7 @@ namespace FileToVox.Converter
         {
             public List<DataProperty> properties = new List<DataProperty>();
             public int vertexCount = -1;
+            public bool binary = true;
         }
 
         class DataBody
@@ -98,10 +100,7 @@ namespace FileToVox.Converter
             // Data format: check if it's binary/little endian.
             line = reader.ReadLine();
             readCount += line.Length + 1;
-            if (line != "format binary_little_endian 1.0")
-                throw new ArgumentException(
-                    "Invalid data format ('" + line + "'). " +
-                    "Should be binary/little endian.");
+            data.binary = line == "format binary_little_endian 1.0";
 
             // Read header contents.
             for (bool skip = false; ;)
@@ -220,7 +219,7 @@ namespace FileToVox.Converter
             return data;
         }
 
-        private static DataBody ReadDataBody(DataHeader header, BinaryReader reader)
+        private static DataBody ReadDataBodyBinary(DataHeader header, BinaryReader reader)
         {
             DataBody data = new DataBody(header.vertexCount);
 
@@ -263,13 +262,45 @@ namespace FileToVox.Converter
 
             return data;
         }
+
+        private static DataBody ReadDataBodyAscii(DataHeader header, StreamReader reader)
+        {
+            DataBody data = new DataBody(header.vertexCount);
+
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] strings = line.Split(' ');
+                if (strings.Length > 6)
+                {
+                    try
+                    {
+                        float x = float.Parse(strings[0], CultureInfo.InvariantCulture);
+                        float y = float.Parse(strings[1], CultureInfo.InvariantCulture);
+                        float z = float.Parse(strings[2], CultureInfo.InvariantCulture);
+                        byte r = byte.Parse(strings[6], CultureInfo.InvariantCulture);
+                        byte g = byte.Parse(strings[7], CultureInfo.InvariantCulture);
+                        byte b = byte.Parse(strings[8], CultureInfo.InvariantCulture);
+
+                        data.AddPoint(x, y, z, r, g, b);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("[ERROR] Line not well formated : " + line + " " + e.Message);
+                    }
+                }
+            }
+
+            return data;
+        }
         #endregion
 
         public PLYToSchematic(string path, int scale) : base(path)
         {
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             DataHeader header = ReadDataHeader(new StreamReader(stream));
-            DataBody body = ReadDataBody(header, new BinaryReader(stream));
+            DataBody body;
+            body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(stream)) : ReadDataBodyAscii(header, new StreamReader(stream));
 
             List<Vector3> bodyVertices = body.vertices;
             List<Color> bodyColors = body.colors;
@@ -352,7 +383,7 @@ namespace FileToVox.Converter
             return schematic;
         }
 
-        
+
     }
 
 }
