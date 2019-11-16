@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using nQuant;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
@@ -35,18 +36,25 @@ namespace FileToVox.Converter
 
         private Schematic WriteSchematicFromImage()
         {
-            FileInfo info = new FileInfo(_path);
-            Bitmap bitmap = new Bitmap(info.FullName);
+            Bitmap bitmap = new Bitmap(new FileInfo(_path).FullName);
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
+            WuQuantizer quantizer = new WuQuantizer();
 
             if (_colorPath != null)
             {
-                FileInfo infoColor = new FileInfo(_colorPath);
-                bitmapColor = new Bitmap(infoColor.FullName);
+                bitmapColor = new Bitmap(new FileInfo(_colorPath).FullName);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
+
+                Image image = quantizer.QuantizeImage(bitmapColor);
+                bitmapColor = new Bitmap(image);
+            }
+            else if (_color)
+            {
+                Image image = quantizer.QuantizeImage(bitmap);
+                bitmap = new Bitmap(image);
             }
 
             Bitmap bitmapBlack = MakeGrayscale3(bitmap);

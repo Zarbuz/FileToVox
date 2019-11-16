@@ -1,16 +1,13 @@
 ﻿using FileToVox.Schematics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using MoreLinq;
 using nQuant;
 using SchematicToVoxCore.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace FileToVox.Converter
 {
@@ -326,9 +323,9 @@ namespace FileToVox.Converter
         {
             Schematic schematic = new Schematic()
             {
-                Length = _blocks.MaxBy(t => t.Z).Z,
-                Width = _blocks.MaxBy(t => t.X).X,
-                Heigth = _blocks.MaxBy(t => t.Y).Y,
+                Length = (short) (_blocks.MaxBy(t => t.Z).Z - _blocks.MinBy(t => t.Z).Z),
+                Width = (short) (_blocks.MaxBy(t => t.X).X - _blocks.MinBy(t => t.X).X),
+                Heigth = (short) (_blocks.MaxBy(t => t.Y).Y - _blocks.MinBy(t => t.Y).Y),
                 Blocks = new HashSet<Block>()
             };
 
@@ -363,58 +360,9 @@ namespace FileToVox.Converter
             return bitmap;
         }
 
-        private Bitmap Quantization(Bitmap bitmap)
-        {
-            Dictionary<Color, int> histo = new Dictionary<Color, int>();
-            for (int x = 0; x < bitmap.Size.Width; x++)
-            {
-                for (int y = 0; y < bitmap.Size.Height; y++)
-                {
-                    Color c = bitmap.GetPixel(x, y);
-                    if (histo.ContainsKey(c))
-                        histo[c] = histo[c] + 1;
-                    else
-                        histo.Add(c, 1);
-                }
-            }
-
-            IOrderedEnumerable<KeyValuePair<Color, int>> result1 = histo.OrderByDescending(a => a.Value);
-            int number = 255;
-            List<Color> mostUsedColor = result1.Select(x => x.Key).Take(number).ToList();
-
-            double temp;
-            Dictionary<Color, Double> dist = new Dictionary<Color, double>();
-            Dictionary<Color, Color> mapping = new Dictionary<Color, Color>();
-            foreach (var p in result1)
-            {
-                dist.Clear();
-                foreach (Color pp in mostUsedColor)
-                {
-                    temp = Math.Abs(p.Key.R - pp.R) +
-                           Math.Abs(p.Key.R - pp.R) +
-                           Math.Abs(p.Key.R - pp.R);
-                    dist.Add(pp, temp);
-                }
-                KeyValuePair<Color, double> min = dist.OrderBy(k => k.Value).FirstOrDefault();
-                mapping.Add(p.Key, min.Key);
-            }
-            Bitmap copy = new Bitmap(bitmap);
-
-            for (int x = 0; x < copy.Size.Width; x++)
-            {
-                for (int y = 0; y < copy.Size.Height; y++)
-                {
-                    Color c = copy.GetPixel(x, y); // **2**
-                    copy.SetPixel(x, y, mapping[c]);
-                }
-            }
-
-            return copy;
-        }
-
         private void ApplyQuantization()
         {
-            var quantizer = new WuQuantizer();
+            WuQuantizer quantizer = new WuQuantizer();
             using (Bitmap bitmap = CreateBitmapFromColors())
             {
                 using (Image quantized = quantizer.QuantizeImage(bitmap))
@@ -429,9 +377,6 @@ namespace FileToVox.Converter
                     }
                 }
             }
-            //Bitmap bitmap = CreateBitmapFromColors();
-            //Bitmap reducedBitmap = Quantization(bitmap);
-
         }
     }
 
