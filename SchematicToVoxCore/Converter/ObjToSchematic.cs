@@ -9,7 +9,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class ObjToSchematic : BaseToSchematic
+    public class ObjToSchematic : AbstractToSchematic
     {
         private readonly int _gridSize;
         private readonly bool _excavate;

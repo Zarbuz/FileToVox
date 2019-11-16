@@ -8,7 +8,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class ASCToSchematic : BaseToSchematic
+    public class ASCToSchematic : AbstractToSchematic
     {
         public ASCToSchematic(string path) : base(path)
         {

@@ -11,7 +11,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class PNGToSchematic : BaseToSchematic
+    public class PNGToSchematic : AbstractToSchematic
     {
         private bool _excavate;
         private int _maxHeight;

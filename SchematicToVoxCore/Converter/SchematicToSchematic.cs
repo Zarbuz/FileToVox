@@ -10,7 +10,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class SchematicToSchematic : BaseToSchematic
+    public class SchematicToSchematic : AbstractToSchematic
     {
         private readonly int _ignoreMinY;
         private readonly int _ignoreMaxY;

@@ -170,7 +170,7 @@ namespace FileToVox
                 throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
             try
             {
-                BaseToSchematic converter;
+                AbstractToSchematic converter;
 
                 switch (Path.GetExtension(_inputFile))
                 {

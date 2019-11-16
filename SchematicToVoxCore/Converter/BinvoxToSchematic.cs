@@ -10,7 +10,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class BinvoxToSchematic : BaseToSchematic
+    public class BinvoxToSchematic : AbstractToSchematic
     {
         private bool _headerRead;
         private bool _voxelsRead;
