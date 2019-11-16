@@ -26,7 +26,7 @@ namespace FileToVox
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
         private static int _scale = 1;
-        private static int _direction = 0;
+        private static int _direction;
         private static int _heightmap = 1;
         private static int _gridSize = 126;
 

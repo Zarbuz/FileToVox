@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using FileToVox.Extensions;
 
 namespace FileToVox.Converter
 {
@@ -321,20 +322,25 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
+            Block minX = _blocks.MinBy(t => t.X);
+            Block minY = _blocks.MinBy(t => t.Y);
+            Block minZ = _blocks.MinBy(t => t.Z);
+
             Schematic schematic = new Schematic()
             {
-                Length = (short) (_blocks.MaxBy(t => t.Z).Z - _blocks.MinBy(t => t.Z).Z),
-                Width = (short) (_blocks.MaxBy(t => t.X).X - _blocks.MinBy(t => t.X).X),
-                Heigth = (short) (_blocks.MaxBy(t => t.Y).Y - _blocks.MinBy(t => t.Y).Y),
+                Length = (short)(_blocks.MaxBy(t => t.Z).Z - minZ.Z),
+                Width = (short)(_blocks.MaxBy(t => t.X).X - minX.X),
+                Heigth = (short)(_blocks.MaxBy(t => t.Y).Y - minY.Y),
                 Blocks = new HashSet<Block>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
             LoadedSchematic.HeightSchematic = schematic.Heigth;
-            ApplyQuantization();
+            List<Block> list = Quantization.ApplyQuantization(_blocks);
+            list.ApplyOffset(new Vector3(minX.X, minY.Y, minZ.Z));
 
-            foreach (Block t in _blocks)
+            foreach (Block t in list)
             {
                 schematic.Blocks.Add(t);
             }
@@ -342,42 +348,7 @@ namespace FileToVox.Converter
             return schematic;
         }
 
-        private Bitmap CreateBitmapFromColors()
-        {
-            int width = _blocks.Count;
-
-            Bitmap bitmap = new Bitmap(width, 1);
-
-            for (int i = 0; i < _blocks.Count; i++)
-            {
-                Block block = _blocks[i];
-                Color color = block.Color.UIntToColor();
-                int x = i % width;
-                int y = i / width;
-                bitmap.SetPixel(x, y, color);
-            }
-
-            return bitmap;
-        }
-
-        private void ApplyQuantization()
-        {
-            WuQuantizer quantizer = new WuQuantizer();
-            using (Bitmap bitmap = CreateBitmapFromColors())
-            {
-                using (Image quantized = quantizer.QuantizeImage(bitmap))
-                {
-                    Bitmap reducedBitmap = new Bitmap(quantized);
-                    int width = reducedBitmap.Size.Width;
-                    for (int i = 0; i < _blocks.Count; i++)
-                    {
-                        int x = i % width;
-                        int y = i / width;
-                        _blocks[i] = new Block(_blocks[i].X, _blocks[i].Y, _blocks[i].Z, reducedBitmap.GetPixel(x, y).ColorToUInt());
-                    }
-                }
-            }
-        }
+        
     }
 
 }
