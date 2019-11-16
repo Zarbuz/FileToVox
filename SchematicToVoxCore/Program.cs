@@ -45,7 +45,7 @@ namespace FileToVox
                     "e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
                     v => _excavate = v != null
                 },
-                {"s|scale=", "set the scale (for schematic or PLY)", (int v) => _scale = v},
+                {"s|scale=", "set the scale", (int v) => _scale = v},
                 {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
                 {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
                 {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
@@ -181,19 +181,22 @@ namespace FileToVox
                         converter = new PNGToSchematic(_inputFile, _inputColorFile, _heightmap, _excavate, _color, _top);
                         break;
                     case ".asc":
-                        converter = new ASCToSchematic(_inputColorFile);
+                        converter = new ASCToSchematic(_inputFile);
                         break;
                     case ".binvox":
                         converter = new BinvoxToSchematic(_inputFile);
                         break;
                     case ".qb":
-                        converter = new QbToSchematic(_inputColorFile);
+                        converter = new QBToSchematic(_inputFile);
                         break;
                     case ".obj":
-                        converter = new ObjToSchematic(_inputFile, _gridSize, _excavate, _slow);
+                        converter = new OBJToSchematic(_inputFile, _gridSize, _excavate, _slow);
                         break;
                     case ".ply":
-                        converter = new PLYToSchematic(Path.GetFullPath(_inputFile), _scale);
+                        converter = new PLYToSchematic(_inputFile, _scale);
+                        break;
+                    case ".xyz":
+                        converter = new XYZToSchematic(_inputFile, _scale);
                         break;
                     default:
                         Console.WriteLine("[ERROR] Unknown file extension !");
@@ -202,6 +205,9 @@ namespace FileToVox
                 }
 
                 Schematic schematic = converter.WriteSchematic();
+                Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
+                Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
+                Console.WriteLine($"[INFO] Vox Height: {schematic.Heigth}");
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic, _direction);
 

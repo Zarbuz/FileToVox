@@ -11,7 +11,7 @@ using System.IO;
 
 namespace FileToVox.Converter
 {
-    public class PLYToSchematic : BaseToSchematic
+    public class PLYToSchematic : AbstractToSchematic
     {
         private readonly List<Block> _blocks = new List<Block>();
 
@@ -264,7 +264,7 @@ namespace FileToVox.Converter
         }
         #endregion
 
-        public PLYToSchematic(string path, int _scale) : base(path)
+        public PLYToSchematic(string path, int scale) : base(path)
         {
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             DataHeader header = ReadDataHeader(new StreamReader(stream));
@@ -281,7 +281,7 @@ namespace FileToVox.Converter
             for (int i = 0; i < bodyVertices.Count; i++)
             {
                 bodyVertices[i] += new Vector3(min, min, min);
-                bodyVertices[i] = new Vector3((float)Math.Truncate(bodyVertices[i].X * _scale), (float)Math.Truncate(bodyVertices[i].Y * _scale), (float)Math.Truncate(bodyVertices[i].Z * _scale));
+                bodyVertices[i] = new Vector3((float)Math.Truncate(bodyVertices[i].X * scale), (float)Math.Truncate(bodyVertices[i].Y * scale), (float)Math.Truncate(bodyVertices[i].Z * scale));
             }
 
             HashSet<Vector3> set = new HashSet<Vector3>();

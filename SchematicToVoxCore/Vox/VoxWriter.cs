@@ -178,7 +178,7 @@ namespace FileToVox.Vox
             if (_totalBlockCount != _countBlocks)
             {
                 Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
-                Console.WriteLine("[ERROR] Try to export with this option: --way=1");
+                Console.WriteLine($"[ERROR] Try to export with this option: --way={(_direction == 1 ? 0 : 1)}");
             }
         }
 

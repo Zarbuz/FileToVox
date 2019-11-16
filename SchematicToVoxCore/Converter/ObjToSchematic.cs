@@ -9,13 +9,13 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class ObjToSchematic : AbstractToSchematic
+    public class OBJToSchematic : AbstractToSchematic
     {
         private readonly int _gridSize;
         private readonly bool _excavate;
         private readonly float _winding_number;
 
-        public ObjToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
+        public OBJToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
         {
             _gridSize = gridSize;
             _excavate = excavate;
@@ -35,9 +35,6 @@ namespace FileToVox.Converter
             sdf.Compute();
 
             Bitmap3 bmp = new Bitmap3(sdf.Dimensions);
-            Console.WriteLine("[INFO] Schematic Width: " + bmp.Dimensions.x);
-            Console.WriteLine("[INFO] Schematic Height: " + bmp.Dimensions.y);
-            Console.WriteLine("[INFO] Schematic Length: " + bmp.Dimensions.z);
 
             Schematic schematic = new Schematic()
             {

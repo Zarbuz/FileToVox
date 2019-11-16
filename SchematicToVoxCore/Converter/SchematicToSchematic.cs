@@ -135,10 +135,6 @@ namespace FileToVox.Converter
             }
 
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
-            Console.WriteLine($"[INFO] Raw schematic Width: {rawSchematic.Width}");
-            Console.WriteLine($"[INFO] Raw schematic Length: {rawSchematic.Length}");
-            Console.WriteLine($"[INFO] Raw schematic Height: {rawSchematic.Heigth}");
-            Console.WriteLine($"[INFO] Raw schematic total blocks: {rawSchematic.Data.Length}");
 
             LoadedSchematic.WidthSchematic = (short)(rawSchematic.Width * _scale);
             LoadedSchematic.LengthSchematic = (short)(rawSchematic.Length * _scale);

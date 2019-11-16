@@ -10,12 +10,12 @@ using FileToVox.Utils;
 
 namespace FileToVox.Converter
 {
-    public class QbToSchematic : AbstractToSchematic
+    public class QBToSchematic : AbstractToSchematic
     {
         private const int CodeFlag = 2;
         private const int Nextsliceflag = 6;
 
-        public QbToSchematic(string path) : base(path)
+        public QBToSchematic(string path) : base(path)
         {
 
         }
