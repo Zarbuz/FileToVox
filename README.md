@@ -11,7 +11,7 @@ Current files support:
 - .binvox
 - .obj
 - .qb (Qubicle)
-- .ply
+- .ply (Binary and ASCII)
 - .xyz (X Y Z R G B)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
@@ -22,13 +22,12 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 - You need to open a console (like cmd or Powershell in Windows)
 - Go to the emplacement of the binary
 - Launch the command : `FileToVox.exe --i [INPUT] --o [OUTPUT]`
+- [INPUT] refer to a input filepath (mandatory)
+- [OUTPUT] refer to the destination path (mandatory)
 
 ## MacOS or Linux
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
-
-[INPUT] refer to a input filepath (mandatory)
-[OUTPUT] refer to the destination path (mandatory)
 
 ## Options
 
@@ -47,9 +46,9 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
 --slow=VALUE                          use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)
  ```
  
- # Installation 
+# Installation 
  
- Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
+Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
 Then extract the content of zip file in the folder of your choice.
 
 ## config.txt
