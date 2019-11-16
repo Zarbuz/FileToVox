@@ -6,8 +6,8 @@ namespace FileToVox.Schematics
 {
     public static class LoadedSchematic
     {
-        public static short WidthSchematic;
-        public static short LengthSchematic;
-        public static short HeightSchematic;
+        public static ushort WidthSchematic;
+        public static ushort LengthSchematic;
+        public static ushort HeightSchematic;
     }
 }

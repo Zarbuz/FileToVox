@@ -10,7 +10,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class BinvoxToSchematic : BaseToSchematic
+    public class BinvoxToSchematic : AbstractToSchematic
     {
         private bool _headerRead;
         private bool _voxelsRead;
@@ -39,9 +39,9 @@ namespace FileToVox.Converter
                 ReadVoxels(lineReader);
                 Schematic schematic = new Schematic()
                 {
-                    Width = (short)_dimensions.Z,
-                    Heigth = (short)_dimensions.Y,
-                    Length = (short)_dimensions.X,
+                    Width = (ushort)_dimensions.Z,
+                    Heigth = (ushort)_dimensions.Y,
+                    Length = (ushort)_dimensions.X,
                     Blocks = new HashSet<Block>()
                 };
 
@@ -62,7 +62,7 @@ namespace FileToVox.Converter
                             int index = X * xmult + Z * zmult + Y;
                             if (_voxels[index] == 1)
                             {
-                                schematic.Blocks.Add(new Block((short) X, (short) Y, (short) Z,
+                                schematic.Blocks.Add(new Block((ushort) X, (ushort) Y, (ushort) Z,
                                     Color.Wheat.ColorToUInt()));
                             }
                         }

@@ -11,6 +11,8 @@ Current files support:
 - .binvox
 - .obj
 - .qb (Qubicle)
+- .ply
+- .xyz (X Y Z R G B)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
@@ -37,7 +39,7 @@ If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `
 --iminy,    -ignore-min-y=VALUE       ignore blocks below the specified layer (only for schematic file)
 --imaxy,    -ignore-max-y=VALUE       ignore blocks above the specified layer (only for schematic file)
 --e,        -excavate                 delete all blocks which doesn't have at lease one face connected with air
---s,        -scale=VALUE              increase the scale of each block (only for schematic file)
+--s,        -scale=VALUE              set the scale
 --hm        -heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
 --c,        -color                    enable color when generating heightmap (only for PNG file)
 --cm,       -color-from-file=VALUE    load color from another file

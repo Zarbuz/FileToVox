@@ -10,13 +10,13 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class SchematicToSchematic : BaseToSchematic
+    public class SchematicToSchematic : AbstractToSchematic
     {
-        private int _ignoreMinY;
-        private int _ignoreMaxY;
-        private int _scale;
+        private readonly int _ignoreMinY;
+        private readonly int _ignoreMaxY;
+        private readonly int _scale;
 
-        private bool _excavate;
+        private readonly bool _excavate;
         private readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
 
         public SchematicToSchematic(string path, int min, int max, bool excavate, int scale) : base(path)
@@ -77,11 +77,11 @@ namespace FileToVox.Converter
             RawSchematic raw = LoadRaw(nbtFile);
             HashSet<Block> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
-            Schematic schematic = new Schematic(name, raw.Width, raw.Heigth, raw.Length, blocks);
+            Schematic schematic = new Schematic(name, (ushort) raw.Width, (ushort) raw.Heigth, (ushort) raw.Length, blocks);
 
-            schematic.Width *= (short)_scale;
-            schematic.Heigth *= (short)_scale;
-            schematic.Length *= (short)_scale;
+            schematic.Width *= (ushort)_scale;
+            schematic.Heigth *= (ushort)_scale;
+            schematic.Length *= (ushort)_scale;
             return schematic;
         }
 
@@ -96,11 +96,11 @@ namespace FileToVox.Converter
                 {
                     case "Width": //Short
                         raw.Width = tag.ShortValue;
-                        LoadedSchematic.WidthSchematic = raw.Width;
+                        LoadedSchematic.WidthSchematic = (ushort) raw.Width;
                         break;
                     case "Height": //Short
                         raw.Heigth = tag.ShortValue;
-                        LoadedSchematic.HeightSchematic = raw.Heigth;
+                        LoadedSchematic.HeightSchematic = (ushort) raw.Heigth;
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
@@ -135,14 +135,10 @@ namespace FileToVox.Converter
             }
 
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
-            Console.WriteLine($"[INFO] Raw schematic Width: {rawSchematic.Width}");
-            Console.WriteLine($"[INFO] Raw schematic Length: {rawSchematic.Length}");
-            Console.WriteLine($"[INFO] Raw schematic Height: {rawSchematic.Heigth}");
-            Console.WriteLine($"[INFO] Raw schematic total blocks: {rawSchematic.Data.Length}");
 
-            LoadedSchematic.WidthSchematic = (short)(rawSchematic.Width * _scale);
-            LoadedSchematic.LengthSchematic = (short)(rawSchematic.Length * _scale);
-            LoadedSchematic.HeightSchematic = (short)(rawSchematic.Heigth * _scale);
+            LoadedSchematic.WidthSchematic = (ushort)(rawSchematic.Width * _scale);
+            LoadedSchematic.LengthSchematic = (ushort)(rawSchematic.Length * _scale);
+            LoadedSchematic.HeightSchematic = (ushort)(rawSchematic.Heigth * _scale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
@@ -167,7 +163,7 @@ namespace FileToVox.Converter
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block((short)x, (short)y, (short)z,
+                            Block block = new Block((ushort)x, (ushort)y, (ushort)z,
                                 GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))

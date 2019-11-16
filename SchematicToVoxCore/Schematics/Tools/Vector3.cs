@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FileToVox.Schematics.Tools
 {
@@ -16,13 +17,26 @@ namespace FileToVox.Schematics.Tools
         // Creates a new vector with given x, y components and sets /z/ to zero.
         public Vector3(float x, float y) { this.X = x; this.Y = y; Z = 0F; }
 
-        static readonly Vector3 zeroVector = new Vector3(0F, 0F, 0F);
-        public static Vector3 zero { get { return zeroVector; } }
-
+        public static Vector3 zero { get; } = new Vector3(0F, 0F, 0F);
+        public static readonly Vector3 positiveInfinityVector = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+        public static readonly Vector3 negativeInfinityVector = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+        public float magnitude => (float)Math.Sqrt(X * X + Y * Y + Z * Z);
         public static float SqrMagnitude(Vector3 vector) { return vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z; }
+
 
         // Subtracts one vector from another.
         public static Vector3 operator -(Vector3 a, Vector3 b) { return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z); }
+        // Adds two vectors.
+        public static Vector3 operator +(Vector3 a, Vector3 b) { return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z); }
+        // Subtracts one vector from another.
+        // Negates a vector.
+        public static Vector3 operator -(Vector3 a) { return new Vector3(-a.X, -a.X, -a.Z); }
+        // Multiplies a vector by a number.
+        public static Vector3 operator *(Vector3 a, float d) { return new Vector3(a.X * d, a.Y * d, a.Z * d); }
+        // Multiplies a vector by a number.
+        public static Vector3 operator *(float d, Vector3 a) { return new Vector3(a.X * d, a.Y * d, a.Z * d); }
+        // Divides a vector by a number.
+        public static Vector3 operator /(Vector3 a, float d) { return new Vector3(a.X / d, a.Y / d, a.Z / d); }
 
         public override string ToString()
         {
@@ -57,4 +71,5 @@ namespace FileToVox.Schematics.Tools
             return !(left == right);
         }
     }
+
 }

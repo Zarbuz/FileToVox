@@ -9,13 +9,13 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class ObjToSchematic : BaseToSchematic
+    public class OBJToSchematic : AbstractToSchematic
     {
-        private int _gridSize;
-        private bool _excavate;
-        private float _winding_number;
+        private readonly int _gridSize;
+        private readonly bool _excavate;
+        private readonly float _winding_number;
 
-        public ObjToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
+        public OBJToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
         {
             _gridSize = gridSize;
             _excavate = excavate;
@@ -35,16 +35,13 @@ namespace FileToVox.Converter
             sdf.Compute();
 
             Bitmap3 bmp = new Bitmap3(sdf.Dimensions);
-            Console.WriteLine("[INFO] Schematic Width: " + bmp.Dimensions.x);
-            Console.WriteLine("[INFO] Schematic Height: " + bmp.Dimensions.y);
-            Console.WriteLine("[INFO] Schematic Length: " + bmp.Dimensions.z);
 
             Schematic schematic = new Schematic()
             {
                 Blocks = new HashSet<Block>(),
-                Width = (short)bmp.Dimensions.x,
-                Heigth = (short)bmp.Dimensions.y,
-                Length = (short)bmp.Dimensions.z
+                Width = (ushort)bmp.Dimensions.x,
+                Heigth = (ushort)bmp.Dimensions.y,
+                Length = (ushort)bmp.Dimensions.z
             };
 
             LoadedSchematic.WidthSchematic = schematic.Width;
@@ -72,7 +69,7 @@ namespace FileToVox.Converter
                     foreach (Vector3i idx in bmp.Indices())
                     {
                         if (bmp.Get(idx))
-                            schematic.Blocks.Add(new Block((short)idx.x, (short)idx.y, (short)idx.z, Color.White.ColorToUInt()));
+                            schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                     }
                 }
             }
@@ -91,7 +88,7 @@ namespace FileToVox.Converter
 
                         if (!_excavate && isInside)
                         {
-                            schematic.Blocks.Add(new Block((short)idx.x, (short)idx.y, (short)idx.z, Color.White.ColorToUInt()));
+                            schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                         }
                         progressbar.Report((i / (float)count));
                     }
@@ -105,7 +102,7 @@ namespace FileToVox.Converter
                 foreach (Vector3i idx in bmp.Indices())
                 {
                     if (bmp.Get(idx) && IsBlockConnectedToAir(bmp, idx))
-                        schematic.Blocks.Add(new Block((short)idx.x, (short)idx.y, (short)idx.z, Color.White.ColorToUInt()));
+                        schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                 }
             }
 

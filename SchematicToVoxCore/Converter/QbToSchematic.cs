@@ -10,12 +10,12 @@ using FileToVox.Utils;
 
 namespace FileToVox.Converter
 {
-    public class QbToSchematic : BaseToSchematic
+    public class QBToSchematic : AbstractToSchematic
     {
-        private const int Codeflag = 2;
+        private const int CodeFlag = 2;
         private const int Nextsliceflag = 6;
 
-        public QbToSchematic(string path) : base(path)
+        public QBToSchematic(string path) : base(path)
         {
 
         }
@@ -95,7 +95,7 @@ namespace FileToVox.Converter
                                 {
                                     break;
                                 }
-                                else if (data == Codeflag)
+                                else if (data == CodeFlag)
                                 {
                                     uint count = reader.ReadUInt32();
                                     data = reader.ReadUInt32();
@@ -156,9 +156,9 @@ namespace FileToVox.Converter
             int width = Math.Abs(voxels.Min(x => x.X) - voxels.Max(x => x.X)) + 1;
             int length = Math.Abs(voxels.Min(x => x.Z) - voxels.Max(x => x.Z)) + 1;
             int height = Math.Abs(voxels.Min(x => x.Y) - voxels.Max(x => x.Y)) + 1;
-            schematic.Width = (short)width;
-            schematic.Heigth = (short)height;
-            schematic.Length = (short)length;
+            schematic.Width = (ushort)width;
+            schematic.Heigth = (ushort)height;
+            schematic.Length = (ushort)length;
             schematic.Blocks = new HashSet<Block>();
 
             LoadedSchematic.LengthSchematic = schematic.Length;
@@ -174,11 +174,11 @@ namespace FileToVox.Converter
                 for (var index = 0; index < voxels.Count; index++)
                 {
                     VoxelDTO voxel = voxels[index];
-                    short x = (short) (minX < 0 ? voxel.X + Math.Abs(minX) : voxel.X);
-                    short y = (short) (minY < 0 ? voxel.Y + Math.Abs(minY) : voxel.Y);
-                    short z = (short) (minZ < 0 ? voxel.Z + Math.Abs(minZ) : voxel.Z);
+                    ushort x = (ushort) (minX < 0 ? voxel.X + Math.Abs(minX) : voxel.X);
+                    ushort y = (ushort) (minY < 0 ? voxel.Y + Math.Abs(minY) : voxel.Y);
+                    ushort z = (ushort) (minZ < 0 ? voxel.Z + Math.Abs(minZ) : voxel.Z);
                     schematic.Blocks.Add(new Block(x, y, z,
-                        Extensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, voxel.A)));
+                        FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, voxel.A)));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }

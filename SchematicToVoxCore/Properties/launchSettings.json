@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--o ../ca_1 --ca 126-126-126-20-9/3"
+      "commandLineArgs": "--i ../AngelSeated01a_PC.ply --o ../AngelSeated01a_PC --scale=20 --way=1 --v"
     }
   }
 }

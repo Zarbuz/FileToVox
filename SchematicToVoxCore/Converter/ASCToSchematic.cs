@@ -8,7 +8,7 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class ASCToSchematic : BaseToSchematic
+    public class ASCToSchematic : AbstractToSchematic
     {
         public ASCToSchematic(string path) : base(path)
         {
@@ -67,9 +67,9 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic()
             {
-                Length = (short) nRows,
-                Width = (short) nCols,
-                Heigth = (short) points.Cast<float>().Max()
+                Length = (ushort) nRows,
+                Width = (ushort) nCols,
+                Heigth = (ushort) points.Cast<float>().Max()
             };
 
             LoadedSchematic.WidthSchematic = schematic.Width;
@@ -82,7 +82,7 @@ namespace FileToVox.Converter
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.Blocks.Add(new Block((short) i, (short) points[i, j], (short) j,
+                        schematic.Blocks.Add(new Block((ushort) i, (ushort) points[i, j], (ushort) j,
                             Color.White.ColorToUInt()));
                     }
                 }

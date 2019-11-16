@@ -6,11 +6,12 @@ using System.IO;
 using System.Linq;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using nQuant;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class PNGToSchematic : BaseToSchematic
+    public class PNGToSchematic : AbstractToSchematic
     {
         private bool _excavate;
         private int _maxHeight;
@@ -35,18 +36,30 @@ namespace FileToVox.Converter
 
         private Schematic WriteSchematicFromImage()
         {
-            FileInfo info = new FileInfo(_path);
-            Bitmap bitmap = new Bitmap(info.FullName);
+            Bitmap bitmap = new Bitmap(new FileInfo(_path).FullName);
+            Bitmap clone = new Bitmap(bitmap.Width ,bitmap.Height, PixelFormat.Format32bppArgb);
+            using (Graphics gr = Graphics.FromImage(clone))
+            {
+                gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+            }
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
+            WuQuantizer quantizer = new WuQuantizer();
 
             if (_colorPath != null)
             {
-                FileInfo infoColor = new FileInfo(_colorPath);
-                bitmapColor = new Bitmap(infoColor.FullName);
+                bitmapColor = new Bitmap(new FileInfo(_colorPath).FullName);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
+
+                Image image = quantizer.QuantizeImage(bitmapColor);
+                bitmapColor = new Bitmap(image);
+            }
+            else if (_color)
+            {
+                Image image = quantizer.QuantizeImage(clone);
+                bitmap = new Bitmap(image);
             }
 
             Bitmap bitmapBlack = MakeGrayscale3(bitmap);
@@ -58,9 +71,9 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic
             {
-                Width = (short)bitmap.Width,
-                Length = (short)bitmap.Height,
-                Heigth = (short)_maxHeight,
+                Width = (ushort)bitmap.Width,
+                Length = (ushort)bitmap.Height,
+                Heigth = (ushort)_maxHeight,
                 Blocks = new HashSet<Block>()
             };
 
@@ -98,7 +111,7 @@ namespace FileToVox.Converter
                                     if (_top)
                                     {
                                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                                        AddBlock(ref schematic, new Block((short)x, (short)finalHeight, (short)y, finalColor.ColorToUInt()));
+                                        AddBlock(ref schematic, new Block((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
                                     }
                                     else
                                     {
@@ -108,7 +121,7 @@ namespace FileToVox.Converter
                             }
                             else
                             {
-                                Block block = new Block((short)x, (short)1, (short)y, color.ColorToUInt());
+                                Block block = new Block((ushort)x, (ushort)1, (ushort)y, finalColor.ColorToUInt());
                                 AddBlock(ref schematic, block);
                             }
                         }
@@ -160,7 +173,7 @@ namespace FileToVox.Converter
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                AddBlock(ref schematic, new Block((short)x, (short)z, (short)y, color.ColorToUInt()));
+                AddBlock(ref schematic, new Block((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
             }
         }
 
@@ -214,7 +227,7 @@ namespace FileToVox.Converter
                     {
                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
                         AddBlock(ref schematic,
-                            new Block((short)x, (short)finalHeight, (short)y, color.ColorToUInt()));
+                            new Block((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
                     }
                 }
                 else
