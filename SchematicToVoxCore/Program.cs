@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FileToVox.CA;
 using FileToVox.Converter;
+using FileToVox.Converter.Image;
 using FileToVox.Schematics;
 using FileToVox.Vox;
 using NDesk.Options;
@@ -177,6 +178,9 @@ namespace FileToVox
                         break;
                     case ".png":
                         converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                        break;
+                    case ".tiff":
+                        converter = new TIFFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
                         break;
                     case ".asc":
                         converter = new ASCToSchematic(path);
