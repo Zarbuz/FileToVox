@@ -179,8 +179,8 @@ namespace FileToVox
                     case ".png":
                         converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
                         break;
-                    case ".tiff":
-                        converter = new TIFFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                    case ".tif":
+                        converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
                         break;
                     case ".asc":
                         converter = new ASCToSchematic(path);

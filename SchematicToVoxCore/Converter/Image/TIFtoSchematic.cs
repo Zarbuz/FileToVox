@@ -12,9 +12,9 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.Image
 {
-    public class TIFFtoSchematic : ImageToSchematic
+    public class TIFtoSchematic : ImageToSchematic
     {
-        public TIFFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top) : base(path, colorPath, height, excavate, color, top)
+        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top) : base(path, colorPath, height, excavate, color, top)
         {
         }
 
@@ -26,11 +26,6 @@ namespace FileToVox.Converter.Image
         private Schematic WriteSchematicFromImage()
         {
             Bitmap bitmap = ConvertTifToBitmap(_path);
-            Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-            using (Graphics gr = Graphics.FromImage(clone))
-            {
-                gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
-            }
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
             WuQuantizer quantizer = new WuQuantizer();
 
@@ -42,18 +37,12 @@ namespace FileToVox.Converter.Image
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
 
-                clone = new Bitmap(bitmapColor.Width, bitmapColor.Height, PixelFormat.Format32bppArgb);
-                using (Graphics gr = Graphics.FromImage(clone))
-                {
-                    gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
-                }
-
-                System.Drawing.Image image = quantizer.QuantizeImage(clone);
+                System.Drawing.Image image = quantizer.QuantizeImage(bitmapColor);
                 bitmapColor = new Bitmap(image);
             }
             else if (_color)
             {
-                System.Drawing.Image image = quantizer.QuantizeImage(clone);
+                System.Drawing.Image image = quantizer.QuantizeImage(bitmap);
                 bitmap = new Bitmap(image);
             }
 
@@ -145,29 +134,30 @@ namespace FileToVox.Converter.Image
                     throw new Exception("Could not read image");
                 }
 
-                using (Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
+                Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+                Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+                BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                byte[] bytes = new byte[bmpData.Stride * bmpData.Height];
+
+                for (int y = 0; y < bmp.Height; y++)
                 {
-                    Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-                    BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-                    byte[] bytes = new byte[bmpData.Stride * bmpData.Height];
+                    int rasterOffset = y * bmp.Width;
+                    int bitsOffset = (bmp.Height - y - 1) * bmpData.Stride;
 
-                    for (int y = 0; y < bmp.Height; y++)
+                    for (int x = 0; x < bmp.Width; x++)
                     {
-                        int rasterOffset = y * bmp.Width;
-                        int bitsOffset = (bmp.Height - y - 1) * bmpData.Stride;
-
-                        for (int x = 0; x < bmp.Width; x++)
-                        {
-                            int rgba = raster[rasterOffset++];
-                            bytes[bitsOffset++] = (byte)((rgba >> 16) & 0xff);
-                            bytes[bitsOffset++] = (byte)((rgba >> 8) & 0xff);
-                            bytes[bitsOffset++] = (byte)(rgba & 0xff);
-                            bytes[bitsOffset++] = (byte)((rgba >> 24) & 0xff);
-                        }
+                        int rgba = raster[rasterOffset++];
+                        bytes[bitsOffset++] = (byte)((rgba >> 16) & 0xff);
+                        bytes[bitsOffset++] = (byte)((rgba >> 8) & 0xff);
+                        bytes[bitsOffset++] = (byte)(rgba & 0xff);
+                        bytes[bitsOffset++] = (byte)((rgba >> 24) & 0xff);
                     }
-
-                    return bmp;
                 }
+
+                System.Runtime.InteropServices.Marshal.Copy(bytes, 0, bmpData.Scan0, bytes.Length);
+                bmp.UnlockBits(bmpData);
+
+                return bmp;
             }
         }
     }

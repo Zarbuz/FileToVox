@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../AngelSeated01a_PC.ply --o ../AngelSeated01a_PC --scale=20 --way=1 --v"
+      "commandLineArgs": "--i ../Mars_MGS_MOLA_DEM_mosaic_global_463m.tif --o ../Mars --hm 100 --e"
     }
   }
 }
