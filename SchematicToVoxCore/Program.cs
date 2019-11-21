@@ -4,6 +4,7 @@ using System.IO;
 using FileToVox.CA;
 using FileToVox.Converter;
 using FileToVox.Converter.Image;
+using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
 using FileToVox.Vox;
 using NDesk.Options;
