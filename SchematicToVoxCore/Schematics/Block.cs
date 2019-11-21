@@ -19,6 +19,11 @@ namespace FileToVox.Schematics
             Color = color;
         }
 
+        public bool IsDefaultValue()
+        {
+            return X == Y && Y == Z && Z == 0;
+        }
+
         public override int GetHashCode()
         {
             //the index of the block at X,Y,Z is (Y×length + Z)×width + X

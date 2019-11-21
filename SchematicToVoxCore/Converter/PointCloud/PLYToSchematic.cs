@@ -1,22 +1,20 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using MoreLinq;
-using nQuant;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FileToVox.Extensions;
+using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using MoreLinq;
+using SchematicToVoxCore.Extensions;
 
-namespace FileToVox.Converter
+namespace FileToVox.Converter.PointCloud
 {
-    public class PLYToSchematic : AbstractToSchematic
+    public class PLYToSchematic : PointCloudToSchematic
     {
-        private readonly List<Block> _blocks = new List<Block>();
-
         #region Internal data structure
 
         enum DataProperty
@@ -226,38 +224,78 @@ namespace FileToVox.Converter
             float x = 0, y = 0, z = 0;
             byte r = 255, g = 255, b = 255, a = 255;
 
-            for (int i = 0; i < header.vertexCount; i++)
+            using (ProgressBar progressBar = new ProgressBar())
             {
-                foreach (DataProperty prop in header.properties)
+                for (int i = 0; i < header.vertexCount; i++)
                 {
-                    switch (prop)
+                    foreach (DataProperty prop in header.properties)
                     {
-                        case DataProperty.R8: r = reader.ReadByte(); break;
-                        case DataProperty.G8: g = reader.ReadByte(); break;
-                        case DataProperty.B8: b = reader.ReadByte(); break;
-                        case DataProperty.A8: a = reader.ReadByte(); break;
+                        switch (prop)
+                        {
+                            case DataProperty.R8:
+                                r = reader.ReadByte();
+                                break;
+                            case DataProperty.G8:
+                                g = reader.ReadByte();
+                                break;
+                            case DataProperty.B8:
+                                b = reader.ReadByte();
+                                break;
+                            case DataProperty.A8:
+                                a = reader.ReadByte();
+                                break;
 
-                        case DataProperty.R16: r = (byte)(reader.ReadUInt16() >> 8); break;
-                        case DataProperty.G16: g = (byte)(reader.ReadUInt16() >> 8); break;
-                        case DataProperty.B16: b = (byte)(reader.ReadUInt16() >> 8); break;
-                        case DataProperty.A16: a = (byte)(reader.ReadUInt16() >> 8); break;
+                            case DataProperty.R16:
+                                r = (byte)(reader.ReadUInt16() >> 8);
+                                break;
+                            case DataProperty.G16:
+                                g = (byte)(reader.ReadUInt16() >> 8);
+                                break;
+                            case DataProperty.B16:
+                                b = (byte)(reader.ReadUInt16() >> 8);
+                                break;
+                            case DataProperty.A16:
+                                a = (byte)(reader.ReadUInt16() >> 8);
+                                break;
 
-                        case DataProperty.SingleX: x = reader.ReadSingle(); break;
-                        case DataProperty.SingleY: y = reader.ReadSingle(); break;
-                        case DataProperty.SingleZ: z = reader.ReadSingle(); break;
+                            case DataProperty.SingleX:
+                                x = reader.ReadSingle();
+                                break;
+                            case DataProperty.SingleY:
+                                y = reader.ReadSingle();
+                                break;
+                            case DataProperty.SingleZ:
+                                z = reader.ReadSingle();
+                                break;
 
-                        case DataProperty.DoubleX: x = (float)reader.ReadDouble(); break;
-                        case DataProperty.DoubleY: y = (float)reader.ReadDouble(); break;
-                        case DataProperty.DoubleZ: z = (float)reader.ReadDouble(); break;
+                            case DataProperty.DoubleX:
+                                x = (float)reader.ReadDouble();
+                                break;
+                            case DataProperty.DoubleY:
+                                y = (float)reader.ReadDouble();
+                                break;
+                            case DataProperty.DoubleZ:
+                                z = (float)reader.ReadDouble();
+                                break;
 
-                        case DataProperty.Data8: reader.ReadByte(); break;
-                        case DataProperty.Data16: reader.BaseStream.Position += 2; break;
-                        case DataProperty.Data32: reader.BaseStream.Position += 4; break;
-                        case DataProperty.Data64: reader.BaseStream.Position += 8; break;
+                            case DataProperty.Data8:
+                                reader.ReadByte();
+                                break;
+                            case DataProperty.Data16:
+                                reader.BaseStream.Position += 2;
+                                break;
+                            case DataProperty.Data32:
+                                reader.BaseStream.Position += 4;
+                                break;
+                            case DataProperty.Data64:
+                                reader.BaseStream.Position += 8;
+                                break;
+                        }
                     }
-                }
 
-                data.AddPoint(x, y, z, r, g, b);
+                    data.AddPoint(x, y, z, r, g, b);
+                    progressBar.Report(i / (float)header.vertexCount);
+                }
             }
 
             return data;
@@ -295,12 +333,14 @@ namespace FileToVox.Converter
         }
         #endregion
 
-        public PLYToSchematic(string path, int scale) : base(path)
+        public PLYToSchematic(string path, int scale) : base(path, scale)
         {
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             DataHeader header = ReadDataHeader(new StreamReader(stream));
             DataBody body;
+            Console.WriteLine("[LOG] Start reading PLY data ...");
             body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(stream)) : ReadDataBodyAscii(header, new StreamReader(stream));
+            Console.WriteLine("[LOG] Done.");
 
             List<Vector3> bodyVertices = body.vertices;
             List<Color> bodyColors = body.colors;
@@ -320,6 +360,7 @@ namespace FileToVox.Converter
             List<Vector3> vertices = new List<Vector3>();
             List<Color> colors = new List<Color>();
 
+            Console.WriteLine("[LOG] Started to voxelize data ...");
             using (ProgressBar progressbar = new ProgressBar())
             {
                 for (int i = 0; i < bodyVertices.Count; i++)
@@ -333,6 +374,7 @@ namespace FileToVox.Converter
                     progressbar.Report(i / (float)bodyVertices.Count);
                 }
             }
+            Console.WriteLine("[LOG] Done");
 
             minX = vertices.MinBy(t => t.X);
             minY = vertices.MinBy(t => t.Y);
@@ -374,6 +416,7 @@ namespace FileToVox.Converter
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
+            RemoveHoles(ref list, schematic);
 
             foreach (Block t in list)
             {
@@ -382,8 +425,6 @@ namespace FileToVox.Converter
 
             return schematic;
         }
-
-
     }
 
 }

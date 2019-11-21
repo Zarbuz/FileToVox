@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using FileToVox.Extensions;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using MoreLinq;
-using nQuant;
 using SchematicToVoxCore.Extensions;
 
-namespace FileToVox.Converter
+namespace FileToVox.Converter.PointCloud
 {
-    public class XYZToSchematic : AbstractToSchematic
+    public class XYZToSchematic : PointCloudToSchematic
     {
-        private readonly List<Block> _blocks = new List<Block>();
-
-        public XYZToSchematic(string path, int scale) : base(path)
+        public XYZToSchematic(string path, int scale) : base(path, scale)
         {
             StreamReader file = new StreamReader(path);
             string line;
@@ -125,6 +121,8 @@ namespace FileToVox.Converter
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
+            RemoveHoles(ref list, schematic);
+
             foreach (Block t in list)
             {
                 schematic.Blocks.Add(t);
