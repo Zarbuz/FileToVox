@@ -121,12 +121,9 @@ namespace FileToVox.Converter.PointCloud
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
-            RemoveHoles(ref list, schematic);
-
-            foreach (Block t in list)
-            {
-                schematic.Blocks.Add(t);
-            }
+            HashSet<Block> hashSet = list.ToHashSet();
+            RemoveHoles(ref hashSet, schematic);
+            schematic.Blocks = hashSet;
 
             return schematic;
         }

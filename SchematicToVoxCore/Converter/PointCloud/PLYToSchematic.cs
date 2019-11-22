@@ -338,7 +338,7 @@ namespace FileToVox.Converter.PointCloud
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             DataHeader header = ReadDataHeader(new StreamReader(stream));
             DataBody body;
-            Console.WriteLine("[LOG] Start reading PLY data ...");
+            Console.WriteLine("[LOG] Start reading PLY data...");
             body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(stream)) : ReadDataBodyAscii(header, new StreamReader(stream));
             Console.WriteLine("[LOG] Done.");
 
@@ -360,7 +360,7 @@ namespace FileToVox.Converter.PointCloud
             List<Vector3> vertices = new List<Vector3>();
             List<Color> colors = new List<Color>();
 
-            Console.WriteLine("[LOG] Started to voxelize data ...");
+            Console.WriteLine("[LOG] Start to voxelize data...");
             using (ProgressBar progressbar = new ProgressBar())
             {
                 for (int i = 0; i < bodyVertices.Count; i++)
@@ -416,12 +416,9 @@ namespace FileToVox.Converter.PointCloud
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
-            RemoveHoles(ref list, schematic);
-
-            foreach (Block t in list)
-            {
-                schematic.Blocks.Add(t);
-            }
+            HashSet<Block> hashSet = list.ToHashSet();
+            RemoveHoles(ref hashSet, schematic);
+            schematic.Blocks = hashSet;
 
             return schematic;
         }

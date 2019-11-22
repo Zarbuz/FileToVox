@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../Mars_MGS_MOLA_DEM_mosaic_global_463m.tif --o ../Mars --hm 100 --e"
+      "commandLineArgs": "--i ../Louvres.ply --o ../Louvres --scale=140 --way=1"
     }
   }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using FileToVox.Schematics;
+using System.Collections.Generic;
+using FileToVox.Utils;
 
 namespace FileToVox.Converter.PointCloud
 {
@@ -16,35 +15,40 @@ namespace FileToVox.Converter.PointCloud
             _scale = scale;
         }
 
-        protected void RemoveHoles(ref List<Block> list, Schematic schematic)
+        protected void RemoveHoles(ref HashSet<Block> hashSet, Schematic schematic)
         {
-            for (ushort y = 0; y < schematic.Heigth; y++)
+            Console.WriteLine("[LOG] Start to fill holes ...");
+            using (ProgressBar progressBar = new ProgressBar())
             {
-                for (ushort z = 0; z < schematic.Length; z++)
+                for (ushort y = 0; y < schematic.Heigth; y++)
                 {
-                    for (ushort x = 0; x < schematic.Width; x++)
+                    for (ushort z = 0; z < schematic.Length; z++)
                     {
-                        Block block = list.FirstOrDefault(t => t.X == x && t.Y == y && t.Z == z);
-                        if (block.IsDefaultValue())
+                        for (ushort x = 0; x < schematic.Width; x++)
                         {
-                            if (x > 0 && x < schematic.Width && z > 0 && z < schematic.Length)
+                            hashSet.TryGetValue(new Block(x, y, z, 0), out Block block);
+                            if (block.IsDefaultValue())
                             {
-                                Block left = list.FirstOrDefault(t => t.X == x - 1 && t.Y == y && t.Z == z);
-                                Block right = list.FirstOrDefault(t => t.X == x + 1 && t.Y == y && t.Z == z);
-                                Block top = list.FirstOrDefault(t => t.X == x && t.Y == y && t.Z == z - 1);
-                                Block bottom = list.FirstOrDefault(t => t.X == x && t.Y == y && t.Z == z + 1);
-
-                                if (!left.IsDefaultValue() && !right.IsDefaultValue() && !top.IsDefaultValue() &&
-                                    !bottom.IsDefaultValue())
+                                if (x > 0 && x < schematic.Width && z > 0 && z < schematic.Length)
                                 {
-                                    list.Add(new Block(x, y, z, left.Color));
+                                    hashSet.TryGetValue(new Block((ushort) (x - 1), y, z, 0), out Block left);
+                                    hashSet.TryGetValue(new Block((ushort) (x + 1), y, z, 0), out Block right);
+                                    hashSet.TryGetValue(new Block(x, y, (ushort) (z - 1), 0), out Block top);
+                                    hashSet.TryGetValue(new Block(x, y, (ushort) (z + 1), 0), out Block bottom);
+
+                                    if (!left.IsDefaultValue() && !right.IsDefaultValue() && !top.IsDefaultValue() &&
+                                        !bottom.IsDefaultValue())
+                                    {
+                                        hashSet.Add(new Block(x, y, z, left.Color));
+                                    }
                                 }
                             }
                         }
                     }
+                    progressBar.Report(y / (float)schematic.Heigth);
                 }
             }
-
+            Console.WriteLine("[LOG] Done.");
         }
     }
 }
