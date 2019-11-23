@@ -201,6 +201,9 @@ namespace FileToVox
                     case ".xyz":
                         converter = new XYZToSchematic(path, _scale);
                         break;
+                    case ".csv":
+                        converter = new CSVToSchematic(path, _scale);
+                        break;
                     default:
                         Console.WriteLine("[ERROR] Unknown file extension !");
                         Console.ReadKey();

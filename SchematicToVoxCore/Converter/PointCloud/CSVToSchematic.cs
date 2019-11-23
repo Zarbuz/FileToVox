@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using FileToVox.Schematics;
 using System.Globalization;
 using System.IO;
 using FileToVox.Extensions;
-using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using MoreLinq;
@@ -12,42 +12,38 @@ using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.PointCloud
 {
-    public class XYZToSchematic : PointCloudToSchematic
+    public class CSVToSchematic : PointCloudToSchematic
     {
-        public XYZToSchematic(string path, int scale) : base(path, scale)
+        public CSVToSchematic(string path, int scale) : base(path, scale)
         {
-            StreamReader file = new StreamReader(path);
-            string line;
-
             List<Vector3> bodyVertices = new List<Vector3>();
             List<Color> bodyColors = new List<Color>();
-
-            while ((line = file.ReadLine()) != null)
+            using (var reader = new StreamReader(_path))
             {
-                string[] data = line.Split(' ');
-                if (data.Length < 6)
+                while (!reader.EndOfStream)
                 {
-                    Console.WriteLine("[ERROR] Line not well formated : " + line);
-                }
-                else
-                {
-                    try
+                    string line = reader.ReadLine();
+                    line = line.Replace(" ", "");
+                    string[] data = line.Split(',');
+                    if (data.Length > 14)
                     {
-                        float x = float.Parse(data[0], CultureInfo.InvariantCulture);
-                        float y = float.Parse(data[1], CultureInfo.InvariantCulture);
-                        float z = float.Parse(data[2], CultureInfo.InvariantCulture);
-                        int r = int.Parse(data[3], CultureInfo.InvariantCulture);
-                        int g = int.Parse(data[4], CultureInfo.InvariantCulture);
-                        int b = int.Parse(data[5], CultureInfo.InvariantCulture);
-
-                        bodyVertices.Add(new Vector3(x,y,z));
-                        bodyColors.Add(Color.FromArgb(r,g,b));
+                        try
+                        {
+                            float[] values = new float[data.Length];
+                            for (var i = 0; i < data.Length; i++)
+                            {
+                                string s = data[i];
+                                values[i] = float.Parse(s, CultureInfo.InvariantCulture);
+                            }
+                            bodyVertices.Add(new Vector3(values[2], values[3], values[4]));
+                            bodyColors.Add(Color.FromArgb((byte)Math.Round(values[6] * 255),
+                                (byte)Math.Round(values[7] * 255),
+                                (byte)Math.Round(values[8] * 255)));
+                        }
+                        catch (Exception e)
+                        {
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("[ERROR] Line not well formated : " + line + " " + e.Message);
-                    }
-
                 }
             }
 
@@ -94,8 +90,6 @@ namespace FileToVox.Converter.PointCloud
                     _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
                 }
             }
-
-
         }
 
         public override Schematic WriteSchematic()
@@ -122,12 +116,10 @@ namespace FileToVox.Converter.PointCloud
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
             HashSet<Block> hashSet = list.ToHashSet();
-            RemoveHoles(ref hashSet, schematic);
+            //RemoveHoles(ref hashSet, schematic);
             schematic.Blocks = hashSet;
 
             return schematic;
         }
-
-        
     }
 }
