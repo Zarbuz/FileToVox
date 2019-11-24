@@ -417,7 +417,7 @@ namespace FileToVox.Converter.PointCloud
             List<Block> list = Quantization.ApplyQuantization(_blocks);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
             HashSet<Block> hashSet = list.ToHashSet();
-            RemoveHoles(ref hashSet, schematic);
+            //RemoveHoles(ref hashSet, schematic);
             schematic.Blocks = hashSet;
 
             return schematic;

@@ -35,10 +35,12 @@ namespace FileToVox.Converter.PointCloud
                                 string s = data[i];
                                 values[i] = float.Parse(s, CultureInfo.InvariantCulture);
                             }
-                            bodyVertices.Add(new Vector3(values[2], values[3], values[4]));
-                            bodyColors.Add(Color.FromArgb((byte)Math.Round(values[6] * 255),
-                                (byte)Math.Round(values[7] * 255),
-                                (byte)Math.Round(values[8] * 255)));
+
+                            Vector3 vertice = new Vector3(values[11], values[12], values[13]);
+                            bodyVertices.Add(vertice);
+                            bodyColors.Add(Color.FromArgb((byte)Math.Round(values[7] * 255),
+                                (byte)Math.Round(values[8] * 255),
+                                (byte)Math.Round(values[9] * 255)));
                         }
                         catch (Exception e)
                         {

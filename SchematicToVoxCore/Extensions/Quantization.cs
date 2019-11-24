@@ -13,19 +13,29 @@ namespace FileToVox.Extensions
         public static List<Block> ApplyQuantization(List<Block> blocks)
         {
             WuQuantizer quantizer = new WuQuantizer();
-            using (Bitmap bitmap = CreateBitmapFromColors(blocks))
+            try
             {
-                using (Image quantized = quantizer.QuantizeImage(bitmap))
+                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
                 {
-                    Bitmap reducedBitmap = new Bitmap(quantized);
-                    int width = reducedBitmap.Size.Width;
-                    for (int i = 0; i < blocks.Count; i++)
+                    using (Image quantized = quantizer.QuantizeImage(bitmap))
                     {
-                        int x = i % width;
-                        int y = i / width;
-                        blocks[i] = new Block(blocks[i].X, blocks[i].Y, blocks[i].Z, reducedBitmap.GetPixel(x, y).ColorToUInt());
+                        Bitmap reducedBitmap = (Bitmap) quantized;
+                        //Console.WriteLine(quantized.PixelFormat);
+                        //Bitmap reducedBitmap = new Bitmap(quantized);
+                        int width = reducedBitmap.Size.Width;
+                        for (int i = 0; i < blocks.Count; i++)
+                        {
+                            int x = i % width;
+                            int y = i / width;
+                            blocks[i] = new Block(blocks[i].X, blocks[i].Y, blocks[i].Z,
+                                reducedBitmap.GetPixel(x, y).ColorToUInt());
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
             return blocks;
