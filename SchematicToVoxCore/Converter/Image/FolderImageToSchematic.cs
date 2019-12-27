@@ -22,13 +22,7 @@ namespace FileToVox.Converter.Image
 
             Schematic schematic = new Schematic();
             schematic.Heigth = (ushort) height;
-            schematic.Length = (ushort) height;
-            schematic.Width = (ushort) height;
             schematic.Blocks = new HashSet<Block>();
-
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
 
             using (ProgressBar progressbar = new ProgressBar())
             {
@@ -42,8 +36,19 @@ namespace FileToVox.Converter.Image
                         for (int y = 0; y < bitmap.Height; y++)
                         {
                             Color color = bitmap.GetPixel(x, y);
-                            if (color.A != 0)
+                            if (color.A != 0 && (color.R != 0 && color.G != 0 && color.B != 0))
                             {
+                                //first initialization
+                                if (schematic.Width == 0 || schematic.Length == 0)
+                                {
+                                    schematic.Width = (ushort) bitmap.Width;
+                                    schematic.Length = (ushort) bitmap.Height;
+
+                                    LoadedSchematic.LengthSchematic = schematic.Length;
+                                    LoadedSchematic.WidthSchematic = schematic.Width;
+                                    LoadedSchematic.HeightSchematic = schematic.Heigth;
+                                }
+
                                 schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
                             }
                         }
