@@ -167,47 +167,65 @@ namespace FileToVox
         private static void ProcessFile()
         {
             string path = Path.GetFullPath(_inputFile);
-            if (!File.Exists(path))
-                throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
+            bool isFolder = false;
+            if (!Directory.Exists(path))
+            {
+                if (!File.Exists(path))
+                {
+                    throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
+                }
+            }
+            else
+            {
+                isFolder = true;
+            }
             try
             {
                 AbstractToSchematic converter;
-                switch (Path.GetExtension(_inputFile))
+                if (isFolder)
                 {
-                    case ".schematic":
-                        converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
-                        break;
-                    case ".png":
-                        converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
-                        break;
-                    case ".tif":
-                        converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
-                        break;
-                    case ".asc":
-                        converter = new ASCToSchematic(path);
-                        break;
-                    case ".binvox":
-                        converter = new BinvoxToSchematic(path);
-                        break;
-                    case ".qb":
-                        converter = new QBToSchematic(path);
-                        break;
-                    case ".obj":
-                        converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
-                        break;
-                    case ".ply":
-                        converter = new PLYToSchematic(path, _scale);
-                        break;
-                    case ".xyz":
-                        converter = new XYZToSchematic(path, _scale);
-                        break;
-                    case ".csv":
-                        converter = new CSVToSchematic(path, _scale);
-                        break;
-                    default:
-                        Console.WriteLine("[ERROR] Unknown file extension !");
-                        Console.ReadKey();
-                        return;
+                    converter = new FolderImageToSchematic(path);
+                }
+                else
+                {
+                    switch (Path.GetExtension(_inputFile))
+                    {
+                        case ".schematic":
+                            converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+                            break;
+                        case ".png":
+                            converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                            break;
+                        case ".tif":
+                            converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                            break;
+                        case ".asc":
+                            converter = new ASCToSchematic(path);
+                            break;
+                        case ".binvox":
+                            converter = new BinvoxToSchematic(path);
+                            break;
+                        case ".qb":
+                            converter = new QBToSchematic(path);
+                            break;
+                        case ".obj":
+                            converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
+                            break;
+                        case ".ply":
+                            converter = new PLYToSchematic(path, _scale);
+                            break;
+                        case ".xyz":
+                            converter = new XYZToSchematic(path, _scale);
+                            break;
+                        case ".csv":
+                            converter = new CSVToSchematic(path, _scale);
+                            break;
+                        default:
+                            Console.WriteLine("[ERROR] Unknown file extension !");
+                            Console.ReadKey();
+                            return;
+                    }
+
                 }
 
                 Schematic schematic = converter.WriteSchematic();
