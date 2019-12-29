@@ -1,18 +1,19 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using FileToVox.Utils;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
-using FileToVox.Schematics;
-using FileToVox.Utils;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.Image
 {
     public class FolderImageToSchematic : AbstractToSchematic
     {
-        public FolderImageToSchematic(string path) : base(path)
+        private bool _excavate;
+        public FolderImageToSchematic(string path, bool excavate) : base(path)
         {
+            _excavate = excavate;
         }
 
         public override Schematic WriteSchematic()
@@ -49,7 +50,14 @@ namespace FileToVox.Converter.Image
                                     LoadedSchematic.HeightSchematic = schematic.Heigth;
                                 }
 
-                                schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
+                                if (_excavate)
+                                {
+                                    CheckNeighbor(ref schematic, bitmap, color, i, x, y);
+                                }
+                                else
+                                {
+                                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
+                                }
                             }
                         }
                     }
@@ -59,6 +67,22 @@ namespace FileToVox.Converter.Image
             }
             Console.WriteLine("[LOG] Done.");
             return schematic;
+        }
+
+        private void CheckNeighbor(ref Schematic schematic, Bitmap bitmap, Color color, int i, int x, int y)
+        {
+            if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
+            {
+                Color left = bitmap.GetPixel(x - 1, y);
+                Color top = bitmap.GetPixel(x, y - 1);
+                Color right = bitmap.GetPixel(x + 1, y);
+                Color bottom = bitmap.GetPixel(x, y + 1);
+
+                if (color != left || color != top || right != color || color != bottom)
+                {
+                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
+                }
+            }
         }
     }
 }

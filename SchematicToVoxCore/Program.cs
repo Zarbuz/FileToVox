@@ -184,7 +184,7 @@ namespace FileToVox
                 AbstractToSchematic converter;
                 if (isFolder)
                 {
-                    converter = new FolderImageToSchematic(path);
+                    converter = new FolderImageToSchematic(path, _excavate);
                 }
                 else
                 {
