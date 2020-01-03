@@ -26,7 +26,9 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 ## MacOS or Linux
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
+
 If you have this error : 'brew command not found'.
+
 Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 
 ## Options
