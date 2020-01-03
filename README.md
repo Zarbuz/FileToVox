@@ -19,7 +19,7 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 
 - You need to open a console (like cmd or Powershell in Windows)
 - Go to the emplacement of the binary
-- Launch the command : `FileToVox.exe --i [INPUT] --o [OUTPUT]`
+- Launch the command : `./FileToVox.exe --i [INPUT] --o [OUTPUT]`
 - [INPUT] refer to a input filepath (mandatory)
 - [OUTPUT] refer to the destination path (mandatory)
 
@@ -56,9 +56,9 @@ You can edit the colors of the palette used when generating from schematic file 
 # Examples
 
 ```
-FileToVox.exe --i heightmap.png --o heightmap --hm 100
-FileToVox.exe --i heightmap.png --o heightmap --hm 100 --e --cm colors.png
-FileToVox.exe --i cloud.ply --o cloud --scale 20
+./FileToVox.exe --i heightmap.png --o heightmap --hm 100
+./FileToVox.exe --i heightmap.png --o heightmap --hm 100 --e --cm colors.png
+./FileToVox.exe --i cloud.ply --o cloud --scale 20
 ```
 
 ## Notes
