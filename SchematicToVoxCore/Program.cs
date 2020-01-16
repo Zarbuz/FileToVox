@@ -152,6 +152,8 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
             if (_ignoreMaxY != 256)
                 Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
+            if (_colorLimit != 256)
+                Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
             if (_scale > 1)
                 Console.WriteLine("[INFO] Specified increase size: " + _scale);
             if (_gridSize != 126)
