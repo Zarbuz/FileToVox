@@ -46,6 +46,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --cm,       -color-from-file=VALUE    load color from another file
 --gs        -grid-size=VALUE          set the grid size (only for OBJ file)
 --slow=VALUE                          use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
+--cl        -color-limit=VALUE        set a number of color limit (used for quanzation, option for PLY, XYZ, PNG, TIF)
  ```
  
 # Installation 
