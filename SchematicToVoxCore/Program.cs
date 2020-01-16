@@ -222,7 +222,7 @@ namespace FileToVox
                             converter = new PLYToSchematic(path, _scale, _colorLimit);
                             break;
                         case ".xyz":
-                            converter = new XYZToSchematic(path, _scale);
+                            converter = new XYZToSchematic(path, _scale, _colorLimit);
                             break;
                         case ".csv":
                             converter = new CSVToSchematic(path, _scale, _colorLimit);

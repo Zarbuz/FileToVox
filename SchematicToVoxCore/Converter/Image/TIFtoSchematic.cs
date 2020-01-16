@@ -14,7 +14,7 @@ namespace FileToVox.Converter.Image
 {
     public class TIFtoSchematic : ImageToSchematic
     {
-        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path, colorPath, height, excavate, color, top)
+        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path, colorPath, height, excavate, color, top, colorLimit)
         {
         }
 
