@@ -76,6 +76,13 @@ For PNG files, you can't load pictures bigger than 2016x2016 px
 ## Ouput file
 ![](img/output.jpg)
 
-## Render
+## Renders
 ![](img/render.png)
+
+
+![](img/EKGGrQaX0AAxg56.jfif)
+
+![](img/EM3eWX2WoAABN5C.jfif)
+
+![](img/EM9l60HW4AAa2ik.jfif)
 
