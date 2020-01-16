@@ -14,14 +14,16 @@ namespace FileToVox.Converter.Image
         protected readonly bool _color;
         protected readonly bool _top;
         protected readonly string _colorPath;
+        protected readonly int _colorLimit;
 
-        protected ImageToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top) : base(path)
+        protected ImageToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path)
         {
             _colorPath = colorPath;
             _maxHeight = height;
             _excavate = excavate;
             _color = color;
             _top = top;
+            _colorLimit = colorLimit;
         }
 
         protected void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)

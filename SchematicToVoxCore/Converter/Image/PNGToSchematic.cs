@@ -14,8 +14,8 @@ namespace FileToVox.Converter.Image
 {
     public class PNGToSchematic : ImageToSchematic
     {
-        public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top)
-            : base(path, colorPath, height, excavate, color, top)
+        public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit)
+            : base(path, colorPath, height, excavate, color, top, colorLimit)
         {
         }
 
@@ -33,7 +33,7 @@ namespace FileToVox.Converter.Image
                 gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
             }
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
-            WuQuantizer quantizer = new WuQuantizer();
+            Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
 
             if (_colorPath != null)
             {
@@ -49,12 +49,12 @@ namespace FileToVox.Converter.Image
                     gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
                 }
 
-                System.Drawing.Image image = quantizer.QuantizeImage(clone);
+                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
                 bitmapColor = new Bitmap(image);
             }
             else if (_color)
             {
-                System.Drawing.Image image = quantizer.QuantizeImage(clone);
+                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
                 bitmap = new Bitmap(image);
             }
 
