@@ -3,13 +3,14 @@
 FileToVox is a console program which allow you to convert a file into a vox file (Magicavoxel).
 
 Current files support: 
-- .schematic
-- .png
 - .asc (Esri ASCII raster format)
 - .binvox
 - .obj
-- .qb (Qubicle)
 - .ply (Binary and ASCII)
+- .png
+- .schematic
+- .tif
+- .qb (Qubicle)
 - .xyz (X Y Z R G B)
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
