@@ -13,6 +13,8 @@ Current files support:
 - .qb (Qubicle)
 - .xyz (X Y Z R G B)
 
+FileToVox can import a folder of images (.PNG) where each image is a layer. (Useful for import fractals from Mandelbulb3D) 
+
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
 
