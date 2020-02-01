@@ -20,7 +20,6 @@ namespace FileToVox.Vox
         private int _height;
         private int _countSize;
         private int _totalBlockCount;
-        private int _direction;
 
         private int _countBlocks;
         private int _childrenChunkSize;
@@ -29,11 +28,10 @@ namespace FileToVox.Vox
         private BlockGlobal[] _firstBlockInEachRegion;
         private List<Color> _usedColors;
 
-        public bool WriteModel(string absolutePath, Schematic schematic, int direction)
+        public bool WriteModel(string absolutePath, Schematic schematic)
         {
             _width = _length = _height = _countSize = _totalBlockCount = 0;
             _schematic = schematic;
-            _direction = direction;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -114,16 +112,7 @@ namespace FileToVox.Vox
         private void GetFirstBlockForEachRegion()
         {
             _firstBlockInEachRegion = new BlockGlobal[_countSize];
-            int min = 0;
-            if (_direction == 0)
-            {
-                min = (_width < _length) ? _width : _length;
-            }
-            else
-            {
-                min = (_width > _length) ? _width : _length;
-            }
-
+            int min = Math.Min(_width, Math.Min(_height, _length));
             for (int i = 0; i < _countSize; i++)
             {
                 int x = (i / (min * _height) * 126);
@@ -178,7 +167,6 @@ namespace FileToVox.Vox
             if (_totalBlockCount != _countBlocks)
             {
                 Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
-                Console.WriteLine($"[ERROR] Try to export with this option: --way={(_direction == 1 ? 0 : 1)}");
             }
         }
 

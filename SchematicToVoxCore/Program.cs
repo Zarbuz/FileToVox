@@ -28,7 +28,6 @@ namespace FileToVox
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
         private static int _scale = 1;
-        private static int _direction;
         private static int _heightmap = 1;
         private static int _gridSize = 126;
 
@@ -40,7 +39,6 @@ namespace FileToVox
                 {"o|output=", "output file", v => _outputFile = v},
                 {"h|help", "show this message and exit", v => _show_help = v != null},
                 {"v|verbose", "enable the verbose mode", v => _verbose = v != null},
-                {"w|way=", "the way of schematic (0 or 1), default value is 0", (int v) => _direction = v},
                 {"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
                 {"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
                 {
@@ -160,7 +158,6 @@ namespace FileToVox
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
 
-            Console.WriteLine("[INFO] Way: " + _direction);
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
 
@@ -233,7 +230,7 @@ namespace FileToVox
                 Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
                 Console.WriteLine($"[INFO] Vox Height: {schematic.Heigth}");
                 VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic, _direction);
+                writer.WriteModel(_outputFile + ".vox", schematic);
 
             }
             catch (Exception e)
