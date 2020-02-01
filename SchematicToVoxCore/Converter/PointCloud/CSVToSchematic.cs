@@ -14,7 +14,7 @@ namespace FileToVox.Converter.PointCloud
 {
     public class CSVToSchematic : PointCloudToSchematic
     {
-        public CSVToSchematic(string path, int scale) : base(path, scale)
+        public CSVToSchematic(string path, int scale, int colorLimit) : base(path, scale, colorLimit)
         {
             List<Vector3> bodyVertices = new List<Vector3>();
             List<Color> bodyColors = new List<Color>();
@@ -115,7 +115,7 @@ namespace FileToVox.Converter.PointCloud
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
             LoadedSchematic.HeightSchematic = schematic.Heigth;
-            List<Block> list = Quantization.ApplyQuantization(_blocks);
+            List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
             HashSet<Block> hashSet = list.ToHashSet();
             //RemoveHoles(ref hashSet, schematic);

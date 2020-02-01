@@ -14,7 +14,7 @@ namespace FileToVox.Converter.PointCloud
 {
     public class XYZToSchematic : PointCloudToSchematic
     {
-        public XYZToSchematic(string path, int scale) : base(path, scale)
+        public XYZToSchematic(string path, int scale, int colorLimit) : base(path, scale, colorLimit)
         {
             StreamReader file = new StreamReader(path);
             string line;
@@ -119,7 +119,7 @@ namespace FileToVox.Converter.PointCloud
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
             LoadedSchematic.HeightSchematic = schematic.Heigth;
-            List<Block> list = Quantization.ApplyQuantization(_blocks);
+            List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
             HashSet<Block> hashSet = list.ToHashSet();
             //RemoveHoles(ref hashSet, schematic);

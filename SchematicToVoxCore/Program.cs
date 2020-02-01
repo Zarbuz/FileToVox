@@ -30,6 +30,7 @@ namespace FileToVox
         private static int _scale = 1;
         private static int _heightmap = 1;
         private static int _gridSize = 126;
+        private static int _colorLimit = 256;
 
         public static void Main(string[] args)
         {
@@ -52,6 +53,7 @@ namespace FileToVox
                 {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
                 {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
                 {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
+                {"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v }
             };
 
             try
@@ -129,6 +131,11 @@ namespace FileToVox
                 throw new ArgumentException("[ERROR] --scale argument must be positive");
             if (_heightmap < 1)
                 throw new ArgumentException("[ERROR] --heightmap argument must be positive");
+            if (_colorLimit < 0)
+                throw new ArgumentException("[ERROR] --color-limit argument must be positive");
+            if (_colorLimit > 256)
+                throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
+
         }
 
         private static void DisplayArguments()
@@ -143,6 +150,8 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
             if (_ignoreMaxY != 256)
                 Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
+            if (_colorLimit != 256)
+                Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
             if (_scale > 1)
                 Console.WriteLine("[INFO] Specified increase size: " + _scale);
             if (_gridSize != 126)
@@ -191,10 +200,10 @@ namespace FileToVox
                             converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
                             break;
                         case ".png":
-                            converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                            converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
                             break;
                         case ".tif":
-                            converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top);
+                            converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
                             break;
                         case ".asc":
                             converter = new ASCToSchematic(path);
@@ -209,13 +218,13 @@ namespace FileToVox
                             converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
                             break;
                         case ".ply":
-                            converter = new PLYToSchematic(path, _scale);
+                            converter = new PLYToSchematic(path, _scale, _colorLimit);
                             break;
                         case ".xyz":
-                            converter = new XYZToSchematic(path, _scale);
+                            converter = new XYZToSchematic(path, _scale, _colorLimit);
                             break;
                         case ".csv":
-                            converter = new CSVToSchematic(path, _scale);
+                            converter = new CSVToSchematic(path, _scale, _colorLimit);
                             break;
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");

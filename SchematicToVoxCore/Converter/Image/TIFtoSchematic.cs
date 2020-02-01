@@ -14,7 +14,7 @@ namespace FileToVox.Converter.Image
 {
     public class TIFtoSchematic : ImageToSchematic
     {
-        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top) : base(path, colorPath, height, excavate, color, top)
+        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path, colorPath, height, excavate, color, top, colorLimit)
         {
         }
 
@@ -27,7 +27,7 @@ namespace FileToVox.Converter.Image
         {
             Bitmap bitmap = ConvertTifToBitmap(_path);
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
-            WuQuantizer quantizer = new WuQuantizer();
+            Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
 
             if (_colorPath != null)
             {
@@ -37,12 +37,12 @@ namespace FileToVox.Converter.Image
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
 
-                System.Drawing.Image image = quantizer.QuantizeImage(bitmapColor);
+                System.Drawing.Image image = quantizer.QuantizeImage(bitmapColor, 10, 70, _colorLimit);
                 bitmapColor = new Bitmap(image);
             }
             else if (_color)
             {
-                System.Drawing.Image image = quantizer.QuantizeImage(bitmap);
+                System.Drawing.Image image = quantizer.QuantizeImage(bitmap, 10, 70, _colorLimit);
                 bitmap = new Bitmap(image);
             }
 

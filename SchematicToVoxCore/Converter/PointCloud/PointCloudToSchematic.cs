@@ -11,10 +11,11 @@ namespace FileToVox.Converter.PointCloud
     {
         protected readonly List<Block> _blocks = new List<Block>();
         protected readonly int _scale;
-
-        protected PointCloudToSchematic(string path, int scale) : base(path)
+        protected readonly int _colorLimit;
+        protected PointCloudToSchematic(string path, int scale, int colorLimit) : base(path)
         {
             _scale = scale;
+            _colorLimit = colorLimit;
         }
 
         protected void RemoveHoles(ref HashSet<Block> hashSet, Schematic schematic)

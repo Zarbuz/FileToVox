@@ -183,7 +183,7 @@ namespace FileToVox.Vox
             writer.Write(0); //ReadDICT size for attributes (none)
             writer.Write(1); //Child ID
             writer.Write(-1); //Reserved ID
-            writer.Write(-1); //Layer ID
+            writer.Write(0); //Layer ID
             writer.Write(1); //Read Array Size
             writer.Write(0); //ReadDICT size
         }

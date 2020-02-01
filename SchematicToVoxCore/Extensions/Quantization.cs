@@ -10,14 +10,14 @@ namespace FileToVox.Extensions
 {
     public static class Quantization
     {
-        public static List<Block> ApplyQuantization(List<Block> blocks)
+        public static List<Block> ApplyQuantization(List<Block> blocks, int colorLimit)
         {
-            WuQuantizer quantizer = new WuQuantizer();
+            Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
             try
             {
                 using (Bitmap bitmap = CreateBitmapFromColors(blocks))
                 {
-                    using (Image quantized = quantizer.QuantizeImage(bitmap))
+                    using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
                     {
                         Bitmap reducedBitmap = (Bitmap) quantized;
                         //Console.WriteLine(quantized.PixelFormat);
