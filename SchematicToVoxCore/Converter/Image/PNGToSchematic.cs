@@ -7,6 +7,7 @@ using System.Linq;
 using FileToVox.Extensions;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using Motvin.Collections;
 using nQuant;
 using SchematicToVoxCore.Extensions;
 
@@ -70,7 +71,7 @@ namespace FileToVox.Converter.Image
                 Width = (ushort)bitmap.Width,
                 Length = (ushort)bitmap.Height,
                 Heigth = (ushort)_maxHeight,
-                Blocks = new HashSet<Block>()
+                Blocks = new FastHashSet<Block>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;

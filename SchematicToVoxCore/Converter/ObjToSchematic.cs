@@ -5,6 +5,7 @@ using System.Linq;
 using FileToVox.Schematics;
 using FileToVox.Utils;
 using g3;
+using Motvin.Collections;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
@@ -38,7 +39,7 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic()
             {
-                Blocks = new HashSet<Block>(),
+                Blocks = new FastHashSet<Block>(),
                 Width = (ushort)bmp.Dimensions.x,
                 Heigth = (ushort)bmp.Dimensions.y,
                 Length = (ushort)bmp.Dimensions.z

@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../bonzai.csv --o ../bonzai --scale=10 --way=1"
+      "commandLineArgs": "--i ../Louvres.ply --o Louvres --scale=40"
     }
   }
 }
