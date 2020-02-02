@@ -1,4 +1,5 @@
-﻿using FileToVox.Schematics.Tools;
+﻿using System;
+using FileToVox.Schematics.Tools;
 using System.Collections.Generic;
 using System.Drawing;
 using FileToVox.Schematics;
@@ -47,6 +48,39 @@ namespace SchematicToVoxCore.Extensions
             }
 
             return list;
+        }
+
+        public static uint[,,] To3DArray(this FastHashSet<Block> source, Schematic schematic)
+        {
+            uint[,,] blocks = new uint[schematic.Width + 1, schematic.Heigth + 1, schematic.Length + 1];
+
+            foreach (Block block in source)
+            {
+                blocks[block.X, block.Y, block.Z] = block.Color;
+            }
+
+            return blocks;
+        }
+
+        public static FastHashSet<Block> ToHashSetFrom3DArray(this uint[,,] source)
+        {
+            FastHashSet<Block> blocks = new FastHashSet<Block>();
+
+            for (int y = 0; y < source.GetLength(1); y++)
+            {
+                for (int z = 0; z < source.GetLength(2); z++)
+                {
+                    for (int x = 0; x < source.GetLength(0); x++)
+                    {
+                        if (source[x, y, z] != 0)
+                        {
+                            blocks.Add(new Block((ushort)x, (ushort)y, (ushort)z, source[x, y, z]));
+                        }
+                    }
+                }
+            }
+
+            return blocks;
         }
     }
 }
