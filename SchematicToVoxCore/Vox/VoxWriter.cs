@@ -50,9 +50,9 @@ namespace FileToVox.Vox
         /// <returns></returns>
         private int CountChildrenSize()
         {
-            _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126));
-            _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126));
-            _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126));
+            _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126)) + 1;
+            _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126)) + 1;
+            _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126)) + 1;
 
             _countSize = _width * _length * _height;
             _totalBlockCount = _schematic.Blocks.Count;
@@ -97,7 +97,7 @@ namespace FileToVox.Vox
 
             Parallel.ForEach(_schematic.Blocks, block =>
             {
-                if (block.X >= min.X && block.Y >= min.Y && block.Z >= min.Z && block.X <= max.X && block.Y <= max.Y && block.Z <= max.Z)
+                if (block.X >= min.X && block.Y >= min.Y && block.Z >= min.Z && block.X < max.X && block.Y < max.Y && block.Z < max.Z)
                 {
                     concurrent.Add(block);
                 }
