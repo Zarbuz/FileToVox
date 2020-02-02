@@ -97,7 +97,7 @@ namespace FileToVox.Vox
 
             Parallel.ForEach(_schematic.Blocks, block =>
             {
-                if (block.X >= min.X && block.Y >= min.Y && block.Z >= min.Z && block.X < max.X && block.Y < max.Y && block.Z < max.Z)
+                if (block.X >= min.X && block.Y >= min.Y && block.Z >= min.Z && block.X <= max.X && block.Y <= max.Y && block.Z <= max.Z)
                 {
                     concurrent.Add(block);
                 }
