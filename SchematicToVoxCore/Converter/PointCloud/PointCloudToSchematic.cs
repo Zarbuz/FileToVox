@@ -23,26 +23,30 @@ namespace FileToVox.Converter.PointCloud
         protected FastHashSet<Block> FillHoles(uint[,,] blocks, Schematic schematic)
         {
             Console.WriteLine("[LOG] Started to fill holes...");
-            int max = schematic.Width * schematic.Heigth * schematic.Length;
+            int max = schematic.Width * schematic.Heigth * schematic.Length * 2;
             int index = 0;
             using (ProgressBar progressBar = new ProgressBar())
             {
-                for (ushort y = 0; y < schematic.Heigth; y++)
+                for (int i = 0; i < 2; i++)
                 {
-                    for (ushort z = 0; z < schematic.Length; z++)
+                    for (ushort y = 0; y < schematic.Heigth; y++)
                     {
-                        for (ushort x = 0; x < schematic.Width; x++)
+                        for (ushort z = 0; z < schematic.Length; z++)
                         {
-                            if (blocks[x, y, z] == 0 && x > 0 && x < schematic.Width && y > 0 && y < schematic.Heigth && z > 0 && z < schematic.Length)
+                            for (ushort x = 0; x < schematic.Width; x++)
                             {
-                                blocks = Check1X1X1Hole(blocks, x, y, z);
-                                blocks = Check1X2X1Hole(blocks, x, y, z);
-                                blocks = Check2X1X1Hole(blocks, x, y, z);
-                                blocks = Check1X1X2Hole(blocks, x, y, z);
-                            }
+                                if (blocks[x, y, z] == 0 && x > 0 && x < schematic.Width && y > 0 &&
+                                    y < schematic.Heigth && z > 0 && z < schematic.Length)
+                                {
+                                    blocks = Check1X1X1Hole(blocks, x, y, z);
+                                    blocks = Check1X2X1Hole(blocks, x, y, z);
+                                    blocks = Check2X1X1Hole(blocks, x, y, z);
+                                    blocks = Check1X1X2Hole(blocks, x, y, z);
+                                }
 
-                            progressBar.Report(index / (float)max);
-                            index++;
+                                progressBar.Report(index / (float) max);
+                                index++;
+                            }
                         }
                     }
                 }
@@ -101,17 +105,28 @@ namespace FileToVox.Converter.PointCloud
             uint left = blocks[x - 1, y, z];
             uint right = blocks[x + 1, y, z];
 
-            uint top = blocks[x, y + 1, z];
-            uint bottom = blocks[x, y - 1, z];
+            uint top = blocks[x, y - 1, z];
+            uint bottom = blocks[x, y + 1, z];
 
-            uint diagonalLeft = blocks[x - 1, y + 1, z];
-            uint diagonalRight = blocks[x + 1, y + 1, z];
-           
-            if (top == 0 && bottom != 0 && right != 0 && left != 0 && diagonalRight != 0 && diagonalLeft != 0)
+            uint front = blocks[x, y, z - 1];
+            uint back = blocks[x, y, z + 1];
+
+            uint diagonalLeft = blocks[x - 1, y - 1, z];
+            uint diagonalRight = blocks[x + 1, y - 1, z];
+
+            uint diagonalLeft2 = blocks[x, y - 1, z + 1];
+            uint diagonalRight2 = blocks[x, y - 1, z - 1];
+
+
+            if (bottom == 0 && top != 0 && right != 0 && left != 0 && diagonalRight != 0 && diagonalLeft != 0)
             {
-                blocks[x, y, z] = bottom;
+                blocks[x, y, z] = top;
             }
 
+            if (bottom == 0 && top != 0 && front != 0 && back != 0 && diagonalRight2 != 0 && diagonalLeft2 != 0)
+            {
+                blocks[x, y, z] = top;
+            }
 
             return blocks;
         }
@@ -132,8 +147,8 @@ namespace FileToVox.Converter.PointCloud
             uint left = blocks[x - 1, y, z];
             uint right = blocks[x + 1, y, z];
 
-            uint top = blocks[x, y + 1, z];
-            uint bottom = blocks[x, y - 1, z];
+            uint top = blocks[x, y - 1, z];
+            uint bottom = blocks[x, y + 1, z];
 
             uint diagonalLeft = blocks[x, y + 1, z + 1];
             uint diagonalRight = blocks[x, y - 1, z + 1];
