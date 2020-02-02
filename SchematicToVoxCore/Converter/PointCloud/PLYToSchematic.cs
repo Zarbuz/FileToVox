@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using FileToVox.Extensions;
 using FileToVox.Schematics;
@@ -316,15 +317,15 @@ namespace FileToVox.Converter.PointCloud
                         float x = float.Parse(strings[0], CultureInfo.InvariantCulture);
                         float y = float.Parse(strings[1], CultureInfo.InvariantCulture);
                         float z = float.Parse(strings[2], CultureInfo.InvariantCulture);
-                        byte r = byte.Parse(strings[6], CultureInfo.InvariantCulture);
-                        byte g = byte.Parse(strings[7], CultureInfo.InvariantCulture);
-                        byte b = byte.Parse(strings[8], CultureInfo.InvariantCulture);
+                        byte r = byte.Parse(strings[3], CultureInfo.InvariantCulture);
+                        byte g = byte.Parse(strings[4], CultureInfo.InvariantCulture);
+                        byte b = byte.Parse(strings[5], CultureInfo.InvariantCulture);
 
                         data.AddPoint(x, y, z, r, g, b);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("[ERROR] Line not well formated : " + line + " " + e.Message);
+                        Console.WriteLine("[ERROR] Line not well formated (Only works with CloudCompare): " + line + " " + e.Message);
                     }
                 }
             }
@@ -335,11 +336,13 @@ namespace FileToVox.Converter.PointCloud
 
         public PLYToSchematic(string path, int scale, int colorLimit) : base(path, scale, colorLimit)
         {
-            FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            DataHeader header = ReadDataHeader(new StreamReader(stream));
-            DataBody body;
+            MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
+            MemoryMappedViewStream mms = mmf.CreateViewStream();
+
+            DataHeader header = ReadDataHeader(new StreamReader(mms));
             Console.WriteLine("[LOG] Start reading PLY data...");
-            body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(stream)) : ReadDataBodyAscii(header, new StreamReader(stream));
+            DataBody body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(mms)) : ReadDataBodyAscii(header, new StreamReader(mms));
+            mms.Close();
             Console.WriteLine("[LOG] Done.");
 
             List<Vector3> bodyVertices = body.vertices;
