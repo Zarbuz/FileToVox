@@ -11,7 +11,7 @@ namespace FileToVox.Converter.Image
 {
     public class FolderImageToSchematic : AbstractToSchematic
     {
-        private bool _excavate;
+        private readonly bool _excavate;
         public FolderImageToSchematic(string path, bool excavate) : base(path)
         {
             _excavate = excavate;
@@ -50,7 +50,6 @@ namespace FileToVox.Converter.Image
                                     LoadedSchematic.WidthSchematic = schematic.Width;
                                     LoadedSchematic.HeightSchematic = schematic.Heigth;
                                 }
-
                                 if (_excavate)
                                 {
                                     CheckNeighbor(ref schematic, bitmap, color, i, x, y);

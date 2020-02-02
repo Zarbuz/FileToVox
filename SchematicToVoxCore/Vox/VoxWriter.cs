@@ -112,13 +112,16 @@ namespace FileToVox.Vox
         private void GetFirstBlockForEachRegion()
         {
             _firstBlockInEachRegion = new BlockGlobal[_countSize];
-            int min = Math.Min(_width, Math.Min(_height, _length));
+
+            //x = Index % XSIZE;
+            //y = (Index / XSIZE) % YSIZE;
+            //z = Index / (XSIZE * YSIZE);
             for (int i = 0; i < _countSize; i++)
             {
-                int x = (i / (min * _height) * 126);
-                int y = (((i / min) % _height) * 126);
-                int z = ((i % min) * 126);
-                _firstBlockInEachRegion[i] = new BlockGlobal(x, y, z);
+                int x = i % _width;
+                int y = (i / _width) % _height;
+                int z = i / (_width * _height);
+                _firstBlockInEachRegion[i] = new BlockGlobal(x * 126, y * 126, z * 126);
             }
         }
 
@@ -345,6 +348,11 @@ namespace FileToVox.Vox
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public override string ToString()
+        {
+            return $"{X} {Y} {Z}";
         }
     }
 }
