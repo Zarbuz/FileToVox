@@ -10,6 +10,7 @@ using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using MoreLinq;
+using Motvin.Collections;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.PointCloud
@@ -411,7 +412,7 @@ namespace FileToVox.Converter.PointCloud
                 Length = (ushort)(Math.Abs(maxZ - minZ)),
                 Width = (ushort)(Math.Abs(maxX - minX)),
                 Heigth = (ushort)(Math.Abs(maxY - minY)),
-                Blocks = new HashSet<Block>()
+                Blocks = new FastHashSet<Block>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
@@ -419,8 +420,8 @@ namespace FileToVox.Converter.PointCloud
             LoadedSchematic.HeightSchematic = schematic.Heigth;
             List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
             list.ApplyOffset(new Vector3(minX, minY, minZ));
-            HashSet<Block> hashSet = list.ToHashSet();
-            //RemoveHoles(ref hashSet, schematic);
+            FastHashSet<Block> hashSet = list.ToHashSetFast();
+            hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
             schematic.Blocks = hashSet;
 
             return schematic;

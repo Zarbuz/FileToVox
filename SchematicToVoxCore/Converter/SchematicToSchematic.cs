@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using FileToVox.Schematics;
 using fNbt;
+using Motvin.Collections;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
@@ -75,9 +76,9 @@ namespace FileToVox.Converter
         private Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            HashSet<Block> blocks = GetBlocks(raw);
+            FastHashSet<Block> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
-            Schematic schematic = new Schematic(name, (ushort) raw.Width, (ushort) raw.Heigth, (ushort) raw.Length, blocks);
+            Schematic schematic = new Schematic(name, (ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
 
             schematic.Width *= (ushort)_scale;
             schematic.Heigth *= (ushort)_scale;
@@ -96,11 +97,11 @@ namespace FileToVox.Converter
                 {
                     case "Width": //Short
                         raw.Width = tag.ShortValue;
-                        LoadedSchematic.WidthSchematic = (ushort) raw.Width;
+                        LoadedSchematic.WidthSchematic = (ushort)raw.Width;
                         break;
                     case "Height": //Short
                         raw.Heigth = tag.ShortValue;
-                        LoadedSchematic.HeightSchematic = (ushort) raw.Heigth;
+                        LoadedSchematic.HeightSchematic = (ushort)raw.Heigth;
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
@@ -127,7 +128,7 @@ namespace FileToVox.Converter
             return raw;
         }
 
-        private HashSet<Block> GetBlocks(RawSchematic rawSchematic)
+        private FastHashSet<Block> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
             {
@@ -144,11 +145,7 @@ namespace FileToVox.Converter
             ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
 
             int minY = Math.Max(_ignoreMinY, 0);
-            int maxY = 0;
-            if (rawSchematic.Heigth <= _ignoreMaxY)
-                maxY = Math.Min(_ignoreMaxY, rawSchematic.Heigth);
-            else
-                maxY = rawSchematic.Heigth;
+            int maxY = rawSchematic.Heigth <= _ignoreMaxY ? Math.Min(_ignoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
 
             Parallel.For(minY, (maxY * _scale), y =>
             {
@@ -163,7 +160,7 @@ namespace FileToVox.Converter
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block((ushort)x, (ushort)y, (ushort)z,
+                            Block block = new Block((ushort) x, (ushort) y, (ushort) z,
                                 GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
                             if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
@@ -175,7 +172,7 @@ namespace FileToVox.Converter
                 }
             });
             Console.WriteLine($"[LOG] Done.");
-            return blocks.ToHashSet();
+            return blocks.ToHashSetFast();
         }
 
         private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
@@ -207,6 +204,6 @@ namespace FileToVox.Converter
             return _colors[new Tuple<int, int>(blockID, 0)];
         }
 
-        
+
     }
 }

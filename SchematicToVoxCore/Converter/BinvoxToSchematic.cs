@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
+using Motvin.Collections;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
@@ -42,7 +43,7 @@ namespace FileToVox.Converter
                     Width = (ushort)_dimensions.Z,
                     Heigth = (ushort)_dimensions.Y,
                     Length = (ushort)_dimensions.X,
-                    Blocks = new HashSet<Block>()
+                    Blocks = new FastHashSet<Block>()
                 };
 
                 LoadedSchematic.HeightSchematic = schematic.Heigth;

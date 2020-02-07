@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Numerics;
+using Motvin.Collections;
 
 namespace FileToVox.Converter.Image
 {
@@ -24,7 +24,7 @@ namespace FileToVox.Converter.Image
 
             Schematic schematic = new Schematic();
             schematic.Heigth = (ushort) height;
-            schematic.Blocks = new HashSet<Block>();
+            schematic.Blocks = new FastHashSet<Block>();
 
             using (ProgressBar progressbar = new ProgressBar())
             {

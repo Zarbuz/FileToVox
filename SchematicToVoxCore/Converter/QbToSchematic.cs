@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using Motvin.Collections;
 
 namespace FileToVox.Converter
 {
@@ -159,7 +160,7 @@ namespace FileToVox.Converter
             schematic.Width = (ushort)width;
             schematic.Heigth = (ushort)height;
             schematic.Length = (ushort)length;
-            schematic.Blocks = new HashSet<Block>();
+            schematic.Blocks = new FastHashSet<Block>();
 
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.HeightSchematic = schematic.Heigth;

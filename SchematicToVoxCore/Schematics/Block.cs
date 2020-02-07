@@ -40,5 +40,15 @@ namespace FileToVox.Schematics
             return $"X: {X}, Y: {Y}, Z: {Z}, Color: {Color.ToString()}";
         }
 
+        public static bool operator ==(Block c1, Block c2)
+        {
+            return c1.Equals(c2);
+        }
+
+        public static bool operator !=(Block c1, Block c2)
+        {
+            return !c1.Equals(c2);
+        }
+
     }
 }
