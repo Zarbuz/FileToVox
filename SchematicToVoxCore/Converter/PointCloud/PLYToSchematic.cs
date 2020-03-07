@@ -335,7 +335,7 @@ namespace FileToVox.Converter.PointCloud
         }
         #endregion
 
-        public PLYToSchematic(string path, int scale, int colorLimit) : base(path, scale, colorLimit)
+        public PLYToSchematic(string path, float scale, int colorLimit, bool flood) : base(path, scale, colorLimit, flood)
         {
             MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
             MemoryMappedViewStream mms = mmf.CreateViewStream();
@@ -397,35 +397,7 @@ namespace FileToVox.Converter.PointCloud
 
         }
 
-        public override Schematic WriteSchematic()
-        {
-            float minX = _blocks.MinBy(t => t.X).X;
-            float minY = _blocks.MinBy(t => t.Y).Y;
-            float minZ = _blocks.MinBy(t => t.Z).Z;
-
-            float maxX = _blocks.MaxBy(t => t.X).X;
-            float maxY = _blocks.MaxBy(t => t.Y).Y;
-            float maxZ = _blocks.MaxBy(t => t.Z).Z;
-
-            Schematic schematic = new Schematic()
-            {
-                Length = (ushort)(Math.Abs(maxZ - minZ)),
-                Width = (ushort)(Math.Abs(maxX - minX)),
-                Heigth = (ushort)(Math.Abs(maxY - minY)),
-                Blocks = new FastHashSet<Block>()
-            };
-
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
-            List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
-            list.ApplyOffset(new Vector3(minX, minY, minZ));
-            FastHashSet<Block> hashSet = list.ToHashSetFast();
-            hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
-            schematic.Blocks = hashSet;
-
-            return schematic;
-        }
+        
     }
 
 }

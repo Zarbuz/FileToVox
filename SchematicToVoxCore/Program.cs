@@ -22,38 +22,40 @@ namespace FileToVox
         private static bool _excavate;
         private static bool _color;
         private static bool _top;
+        private static bool _flood;
 
         private static float _slow;
 
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
-        private static int _scale = 1;
+        private static float _scale = 1;
         private static int _heightmap = 1;
         private static int _gridSize = 126;
         private static int _colorLimit = 256;
 
         public static void Main(string[] args)
         {
-            OptionSet options = new OptionSet()
-            {
-                {"i|input=", "input file", v => _inputFile = v},
-                {"o|output=", "output file", v => _outputFile = v},
-                {"h|help", "show this message and exit", v => _show_help = v != null},
-                {"v|verbose", "enable the verbose mode", v => _verbose = v != null},
-                {"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
-                {"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
-                {
-                    "e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
-                    v => _excavate = v != null
-                },
-                {"s|scale=", "set the scale", (int v) => _scale = v},
-                {"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
-                {"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
-                {"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
-                {"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
-                {"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
-                {"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
-                {"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v }
+			OptionSet options = new OptionSet()
+			{
+				{"i|input=", "input file", v => _inputFile = v},
+				{"o|output=", "output file", v => _outputFile = v},
+				{"h|help", "show this message and exit", v => _show_help = v != null},
+				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
+				{"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
+				{"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
+				{
+					"e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
+					v => _excavate = v != null
+				},
+				{"s|scale=", "set the scale", (float v) => _scale = v},
+				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
+				{"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
+				{"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
+				{"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
+				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
+				{"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
+				{"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v },
+				{"fl|flood", "fill all invisibles voxels", v => _flood = v != null },
             };
 
             try
@@ -152,7 +154,7 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
             if (_colorLimit != 256)
                 Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
-            if (_scale > 1)
+            if (_scale != 0)
                 Console.WriteLine("[INFO] Specified increase size: " + _scale);
             if (_gridSize != 126)
                 Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
@@ -166,6 +168,8 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
+			if (_flood)
+				Console.WriteLine("[INFO] Enabled option: flood");
 
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
@@ -218,13 +222,13 @@ namespace FileToVox
                             converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
                             break;
                         case ".ply":
-                            converter = new PLYToSchematic(path, _scale, _colorLimit);
+                            converter = new PLYToSchematic(path, _scale, _colorLimit, _flood);
                             break;
                         case ".xyz":
-                            converter = new XYZToSchematic(path, _scale, _colorLimit);
+                            converter = new XYZToSchematic(path, _scale, _colorLimit, _flood);
                             break;
                         case ".csv":
-                            converter = new CSVToSchematic(path, _scale, _colorLimit);
+                            converter = new CSVToSchematic(path, _scale, _colorLimit, _flood);
                             break;
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");
