@@ -2,7 +2,9 @@
 using System.Linq;
 using FileToVox.Schematics;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using FileToVox.Extensions;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
@@ -62,11 +64,13 @@ namespace FileToVox.Converter.PointCloud
 
         protected FastHashSet<Block> FillInvisiblesVoxels(uint[,,] blocks, Schematic schematic)
         {
-			Console.WriteLine("[LOG] Started to fill all invisibles voxels...");
             int max = schematic.Width * schematic.Heigth * schematic.Length;
             int index = 0;
+            uint white = Color.White.ColorToUInt();
 			using (ProgressBar progressBar = new ProgressBar())
 			{
+				Console.WriteLine("[LOG] Started to fill all invisibles voxels... [1/2]");
+
 				for (ushort y = 0; y < schematic.Heigth; y++)
 				{
 					for (ushort z = 0; z < schematic.Length; z++)
@@ -74,15 +78,15 @@ namespace FileToVox.Converter.PointCloud
 						bool fill = false;
 						for (ushort x = 0; x < schematic.Width; x++)
 						{
-							if (blocks[x, y, z] == 1 && !fill)
+							if (blocks[x, y, z] != 0 && !fill && HasHoleInLine(blocks, schematic.Width, (ushort) (x + 1), y, z))
 							{
 								fill = true;
 							}
 							else if (blocks[x, y, z] == 0 && fill)
 							{
-								blocks[x, y, z] = 1;
+								blocks[x, y, z] = white;
 							}
-							else if (blocks[x, y, z] == 1 && fill)
+							else if (blocks[x, y, z] != 0 && fill && !HasHoleInLine(blocks, schematic.Width, (ushort)(x+1), y, z))
 							{
 								fill = false;
 							}
@@ -92,10 +96,48 @@ namespace FileToVox.Converter.PointCloud
 						}
 					}
 				}
+
+				index = 0;
+
+				Console.WriteLine("[LOG] Started to fill all invisibles voxels... [2/2]");
+
+				for (int i = 0; i < 10; i++)
+				{
+					for (ushort y = 0; y < schematic.Heigth; y++)
+					{
+						for (ushort z = 0; z < schematic.Length; z++)
+						{
+							for (ushort x = 0; x < schematic.Width; x++)
+							{
+								if (blocks[x, y, z] == white && x - 1 >= 0 && x + 1 < schematic.Width && y - 1 >= 0 &&
+								    y + 1 < schematic.Heigth && z - 1 >= 0 && z < schematic.Length)
+								{
+									uint left = blocks[x - 1, y, z];
+									uint right = blocks[x + 1, y, z];
+									uint top = blocks[x, y + 1, z];
+									uint bottom = blocks[x, y - 1, z];
+									uint front = blocks[x, y, z - 1];
+									uint back = blocks[x, y, z + 1];
+
+									if (left == 0 || right == 0 || top == 0 || bottom == 0 || front == 0 || back == 0)
+									{
+										blocks[x, y, z] = 0;
+									}
+								}
+
+								progressBar.Report(index / (float) (max * 10));
+								index++;
+							}
+						}
+					}
+
+				}
 			}
 
 			return blocks.ToHashSetFrom3DArray();
 		}
+
+       
 
         public override Schematic WriteSchematic()
         {
@@ -128,8 +170,10 @@ namespace FileToVox.Converter.PointCloud
 
 	        return schematic;
         }
-		
-        /// <summary>
+
+        #region Private Static
+
+		/// <summary>
 		/// .X.
 		/// X0X
 		/// .X.
@@ -253,5 +297,19 @@ namespace FileToVox.Converter.PointCloud
 
             return blocks;
         }
-    }
+
+        private static bool HasHoleInLine(uint[,,] blocks, ushort width, ushort startX, ushort y, ushort z)
+        {
+	        for (int x = startX; x < width; x++)
+	        {
+		        if (blocks[x, y, z] != 0)
+			        return true;
+	        }
+
+	        return false;
+        }
+
+       
+        #endregion
+	}
 }
