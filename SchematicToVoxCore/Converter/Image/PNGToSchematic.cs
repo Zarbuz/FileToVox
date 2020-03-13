@@ -118,7 +118,7 @@ namespace FileToVox.Converter.Image
                             }
                             else
                             {
-                                Block block = new Block((ushort)x, (ushort)1, (ushort)y, finalColor.ColorToUInt());
+                                Block block = new Block((ushort)x, (ushort)1, (ushort)y, Color.White.ColorToUInt());
                                 AddBlock(ref schematic, block);
                             }
                         }
