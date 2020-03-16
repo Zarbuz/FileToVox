@@ -15,7 +15,7 @@ namespace FileToVox.Converter.PointCloud
 {
     public class XYZToSchematic : PointCloudToSchematic
     {
-        public XYZToSchematic(string path, float scale, int colorLimit, bool flood) : base(path, scale, colorLimit, flood)
+        public XYZToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
             StreamReader file = new StreamReader(path);
             string line;

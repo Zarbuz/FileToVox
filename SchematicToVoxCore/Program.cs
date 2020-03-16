@@ -23,6 +23,7 @@ namespace FileToVox
         private static bool _color;
         private static bool _top;
         private static bool _flood;
+        private static bool _holes;
 
         private static float _slow;
 
@@ -56,6 +57,7 @@ namespace FileToVox
 				{"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
 				{"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v },
 				{"fl|flood", "fill all invisibles voxels", v => _flood = v != null },
+				{"fh|fix-holes", "fix holes for point cloud", v => _holes = v != null }
             };
 
             try
@@ -170,6 +172,8 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: top");
 			if (_flood)
 				Console.WriteLine("[INFO] Enabled option: flood");
+			if (_holes)
+				Console.WriteLine("[INFO] Enabled option: fix-holes");
 
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
@@ -222,13 +226,13 @@ namespace FileToVox
                             converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
                             break;
                         case ".ply":
-                            converter = new PLYToSchematic(path, _scale, _colorLimit, _flood);
+                            converter = new PLYToSchematic(path, _scale, _colorLimit,_holes, _flood);
                             break;
                         case ".xyz":
-                            converter = new XYZToSchematic(path, _scale, _colorLimit, _flood);
+	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood);
                             break;
                         case ".csv":
-                            converter = new CSVToSchematic(path, _scale, _colorLimit, _flood);
+                            converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood);
                             break;
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");

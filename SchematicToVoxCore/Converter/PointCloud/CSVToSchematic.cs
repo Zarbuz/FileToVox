@@ -15,7 +15,7 @@ namespace FileToVox.Converter.PointCloud
 {
     public class CSVToSchematic : PointCloudToSchematic
     {
-        public CSVToSchematic(string path, float scale, int colorLimit, bool flood) : base(path, scale, colorLimit, flood)
+        public CSVToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
             List<Vector3> bodyVertices = new List<Vector3>();
             List<Color> bodyColors = new List<Color>();

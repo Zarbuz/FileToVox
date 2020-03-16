@@ -20,11 +20,13 @@ namespace FileToVox.Converter.PointCloud
         protected readonly float _scale;
         protected readonly bool _flood;
         protected readonly int _colorLimit;
-        protected PointCloudToSchematic(string path, float scale, int colorLimit, bool flood) : base(path)
+        protected readonly bool _holes;
+        protected PointCloudToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path)
         {
             _scale = scale;
             _colorLimit = colorLimit;
             _flood = flood;
+            _holes = holes;
         }
 
         protected FastHashSet<Block> FillHoles(uint[,,] blocks, Schematic schematic)
@@ -163,7 +165,8 @@ namespace FileToVox.Converter.PointCloud
 	        List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 	        list.ApplyOffset(new Vector3(minX, minY, minZ));
 	        FastHashSet<Block> hashSet = list.ToHashSetFast();
-	        hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
+			if (_holes)
+				hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
 	        if (_flood)
 		        hashSet = FillInvisiblesVoxels(hashSet.To3DArray(schematic), schematic);
 	        schematic.Blocks = hashSet;

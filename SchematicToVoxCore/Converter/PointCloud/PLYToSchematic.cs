@@ -335,7 +335,7 @@ namespace FileToVox.Converter.PointCloud
         }
         #endregion
 
-        public PLYToSchematic(string path, float scale, int colorLimit, bool flood) : base(path, scale, colorLimit, flood)
+        public PLYToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
             MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
             MemoryMappedViewStream mms = mmf.CreateViewStream();
