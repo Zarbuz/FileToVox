@@ -92,8 +92,7 @@ namespace FileToVox.Converter.Image
                     for (int y = 0; y < schematic.Length; y++)
                     {
                         Color color = bitmap.GetPixel(x, y);
-                        Color colorGray = bitmapBlack.GetPixel(x, y);
-                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : colorGray;
+                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : Color.White;
                         if (color.A != 0)
                         {
                             if (_maxHeight != 1)
@@ -104,7 +103,7 @@ namespace FileToVox.Converter.Image
                                 }
                                 else
                                 {
-                                    int height = GetHeight(colorGray);
+                                    int height = GetHeight(bitmapBlack.GetPixel(x, y));
                                     if (_top)
                                     {
                                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
