@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
@@ -19,6 +20,7 @@ namespace FileToVox.Vox
         private int _length;
         private int _height;
         private int _countSize;
+        private int _countRegionNonEmpty;
         private int _totalBlockCount;
 
         private int _countBlocks;
@@ -30,7 +32,7 @@ namespace FileToVox.Vox
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
-            _width = _length = _height = _countSize = _totalBlockCount = 0;
+            _width = _length = _height = _countSize = _totalBlockCount = _countRegionNonEmpty = 0;
             _schematic = schematic;
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
@@ -55,20 +57,21 @@ namespace FileToVox.Vox
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126)) + 1;
 
             _countSize = _width * _length * _height;
+            _countRegionNonEmpty = CountRegionNonEmpty();
             _totalBlockCount = _schematic.Blocks.Count;
 
             Console.WriteLine("[INFO] Total blocks: " + _totalBlockCount);
 
-            int chunkSize = 24 * _countSize; //24 = 12 bytes for header and 12 bytes of content
-            int chunkXYZI = (16 * _countSize) + _totalBlockCount * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
+            int chunkSize = 24 * _countRegionNonEmpty; //24 = 12 bytes for header and 12 bytes of content
+            int chunkXYZI = (16 * _countRegionNonEmpty) + _totalBlockCount * 4; //16 = 12 bytes for header and 4 for the voxel count + (number of voxels) * 4
             int chunknTRNMain = 40; //40 = 
-            int chunknGRP = 24 + _countSize * 4;
-            int chunknTRN = 60 * _countSize;
-            int chunknSHP = 32 * _countSize;
+            int chunknGRP = 24 + _countRegionNonEmpty * 4;
+            int chunknTRN = 60 * _countRegionNonEmpty;
+            int chunknSHP = 32 * _countRegionNonEmpty;
             int chunkRGBA = 1024 + 12;
 
             GetFirstBlockForEachRegion();
-            for (int i = 0; i < _countSize; i++)
+            for (int i = 0; i < _countRegionNonEmpty; i++)
             {
                 string pos = GetWorldPosString(i);
                 chunknTRN += Encoding.UTF8.GetByteCount(pos);
@@ -106,23 +109,63 @@ namespace FileToVox.Vox
             return concurrent.ToHashSet();
         }
 
+        private bool HasBlockInRegion(uint[,,] blocks, Vector3 min, Vector3 max)
+        {
+	        for (int y = (int) min.Y; y < max.Y; y++)
+	        {
+		        for (int z = (int) min.Z; z < max.Z; z++)
+		        {
+			        for (int x = (int) min.X; x < max.X; x++)
+			        {
+				        if (y < _schematic.Heigth && x < _schematic.Width && z < _schematic.Length && blocks[x, y, z] != 0)
+					        return true;
+			        }
+		        }
+	        }
+
+	        return false;
+        }
+
+		private int CountRegionNonEmpty()
+		{
+			int regionNonEmpty = 0;
+			uint[,,] blocks = _schematic.Blocks.To3DArray(_schematic);
+			for (int i = 0; i < _countSize; i++)
+			{
+				int x = i % _width;
+				int y = (i / _width) % _height;
+				int z = i / (_width * _height);
+				if (HasBlockInRegion(blocks, new Vector3(x * 126, y * 126, z * 126), new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
+					regionNonEmpty++;
+			}
+
+			return regionNonEmpty;
+		}
+
         /// <summary>
         /// Get world coordinates of the first block in each region
         /// </summary>
         private void GetFirstBlockForEachRegion()
         {
-            _firstBlockInEachRegion = new BlockGlobal[_countSize];
+            _firstBlockInEachRegion = new BlockGlobal[_countRegionNonEmpty];
+            uint[,,] blocks = _schematic.Blocks.To3DArray(_schematic);
 
-            //x = Index % XSIZE;
-            //y = (Index / XSIZE) % YSIZE;
-            //z = Index / (XSIZE * YSIZE);
-            for (int i = 0; i < _countSize; i++)
+			//x = Index % XSIZE;
+			//y = (Index / XSIZE) % YSIZE;
+			//z = Index / (XSIZE * YSIZE);
+			int indexRegion = 0;
+			for (int i = 0; i < _countSize; i++)
             {
                 int x = i % _width;
                 int y = (i / _width) % _height;
                 int z = i / (_width * _height);
-                _firstBlockInEachRegion[i] = new BlockGlobal(x * 126, y * 126, z * 126);
-            }
+                if (HasBlockInRegion(blocks, new Vector3(x * 126, y * 126, z * 126),
+	                new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
+                {
+					_firstBlockInEachRegion[indexRegion] = new BlockGlobal(x * 126, y * 126, z * 126);
+					indexRegion++;
+                }
+			}
         }
 
         /// <summary>
@@ -150,7 +193,7 @@ namespace FileToVox.Vox
             using (var progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write chunks ...");
-                for (int i = 0; i < _countSize; i++)
+                for (int i = 0; i < _countRegionNonEmpty; i++)
                 {
                     WriteSizeChunk(writer);
                     WriteXyziChunk(writer, i);
@@ -161,7 +204,7 @@ namespace FileToVox.Vox
             }
             WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
-            for (int i = 0; i < _countSize; i++)
+            for (int i = 0; i < _countRegionNonEmpty; i++)
             {
                 WriteTransformChunk(writer, i);
                 WriteShapeChunk(writer, i);
@@ -293,12 +336,12 @@ namespace FileToVox.Vox
         private void WriteGroupChunk(BinaryWriter writer)
         {
             writer.Write(Encoding.UTF8.GetBytes(nGRP));
-            writer.Write(16 + (4 * (_countSize - 1))); //nGRP chunk size
+            writer.Write(16 + (4 * (_countRegionNonEmpty - 1))); //nGRP chunk size
             writer.Write(0); //Child nGRP chunk size
             writer.Write(1); //ID of nGRP
             writer.Write(0); //Read DICT size for attributes (none)
-            writer.Write(_countSize);
-            for (int i = 0; i < _countSize; i++)
+            writer.Write(_countRegionNonEmpty);
+            for (int i = 0; i < _countRegionNonEmpty; i++)
             {
                 writer.Write((2 * i) + 2); //id for childrens (start at 2, increment by 2)
             }
