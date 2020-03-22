@@ -20,11 +20,11 @@ namespace FileToVox.Converter
         private readonly bool _excavate;
         private readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
 
-        public SchematicToSchematic(string path, int min, int max, bool excavate, int scale) : base(path)
+        public SchematicToSchematic(string path, int min, int max, bool excavate, float scale) : base(path)
         {
             _ignoreMinY = min;
             _ignoreMaxY = max;
-            _scale = scale;
+            _scale = (int)scale;
             _excavate = excavate;
             LoadBlocks();
         }

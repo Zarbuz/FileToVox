@@ -15,7 +15,7 @@ namespace FileToVox.Converter.PointCloud
 {
     public class CSVToSchematic : PointCloudToSchematic
     {
-        public CSVToSchematic(string path, int scale, int colorLimit) : base(path, scale, colorLimit)
+        public CSVToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
             List<Vector3> bodyVertices = new List<Vector3>();
             List<Color> bodyColors = new List<Color>();
@@ -93,36 +93,6 @@ namespace FileToVox.Converter.PointCloud
                     _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
                 }
             }
-        }
-
-        public override Schematic WriteSchematic()
-        {
-            float minX = _blocks.MinBy(t => t.X).X;
-            float minY = _blocks.MinBy(t => t.Y).Y;
-            float minZ = _blocks.MinBy(t => t.Z).Z;
-
-            float maxX = _blocks.MaxBy(t => t.X).X;
-            float maxY = _blocks.MaxBy(t => t.Y).Y;
-            float maxZ = _blocks.MaxBy(t => t.Z).Z;
-
-            Schematic schematic = new Schematic()
-            {
-                Length = (ushort)(Math.Abs(maxZ - minZ)),
-                Width = (ushort)(Math.Abs(maxX - minX)),
-                Heigth = (ushort)(Math.Abs(maxY - minY)),
-                Blocks = new FastHashSet<Block>()
-            };
-
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
-            List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
-            list.ApplyOffset(new Vector3(minX, minY, minZ));
-            FastHashSet<Block> hashSet = list.ToHashSetFast();
-            //RemoveHoles(ref hashSet, schematic);
-            schematic.Blocks = hashSet;
-
-            return schematic;
         }
     }
 }
