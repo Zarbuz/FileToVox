@@ -21,7 +21,7 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 # How use it ? 
 
 - You need to open a console (like cmd or Powershell in Windows)
-- Go to the emplacement of the binary
+- Go to the emplacement of FileToVox.exe
 - Launch the command : `./FileToVox.exe --i [INPUT] --o [OUTPUT]`
 - [INPUT] refer to a input filepath (mandatory)
 - [OUTPUT] refer to the destination path (mandatory)
