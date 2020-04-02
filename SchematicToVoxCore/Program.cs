@@ -44,10 +44,7 @@ namespace FileToVox
 				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
 				{"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
 				{"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
-				{
-					"e|excavate", "delete all blocks which doesn't have at lease one face connected with air (only schematic file)",
-					v => _excavate = v != null
-				},
+				{"e|excavate", "delete all blocks which doesn't have at lease one face connected with air",  v => _excavate = v != null },
 				{"s|scale=", "set the scale", (float v) => _scale = v},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
 				{"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
@@ -56,8 +53,8 @@ namespace FileToVox
 				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
 				{"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
 				{"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v },
-				{"fl|flood", "fill all invisibles voxels", v => _flood = v != null },
-				{"fh|fix-holes", "fix holes for point cloud", v => _holes = v != null }
+				{"fl|flood", "fill all invisibles voxels (option for PLY, XYZ, CSV)", v => _flood = v != null },
+				{"fh|fix-holes", "fix holes (option for PLY, XYZ, CSV)", v => _holes = v != null }
             };
 
             try
@@ -246,6 +243,12 @@ namespace FileToVox
                 Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
                 Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
                 Console.WriteLine($"[INFO] Vox Height: {schematic.Heigth}");
+
+                if (schematic.Width > 2016 || schematic.Length > 2016 || schematic.Heigth > 2016)
+                {
+					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2016^3");
+					return;
+                }
                 VoxWriter writer = new VoxWriter();
                 writer.WriteModel(_outputFile + ".vox", schematic);
 

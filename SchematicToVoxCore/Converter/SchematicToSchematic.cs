@@ -76,7 +76,7 @@ namespace FileToVox.Converter
         private Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            FastHashSet<Block> blocks = GetBlocks(raw);
+            HashSet<Block> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic(name, (ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
 
@@ -128,7 +128,7 @@ namespace FileToVox.Converter
             return raw;
         }
 
-        private FastHashSet<Block> GetBlocks(RawSchematic rawSchematic)
+        private HashSet<Block> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
             {
@@ -172,7 +172,7 @@ namespace FileToVox.Converter
                 }
             });
             Console.WriteLine($"[LOG] Done.");
-            return blocks.ToHashSetFast();
+            return blocks.ToHashSet();
         }
 
         private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)

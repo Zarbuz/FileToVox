@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i ../Louvres.ply --o Louvres --scale=40"
+      "commandLineArgs": "--i RockWall.xyz --e --o RockWall --s 20"
     }
   }
 }

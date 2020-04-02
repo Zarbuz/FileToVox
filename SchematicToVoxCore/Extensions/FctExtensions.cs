@@ -50,7 +50,7 @@ namespace SchematicToVoxCore.Extensions
             return list;
         }
 
-        public static uint[,,] To3DArray(this FastHashSet<Block> source, Schematic schematic)
+        public static uint[,,] To3DArray(this HashSet<Block> source, Schematic schematic)
         {
             uint[,,] blocks = new uint[schematic.Width + 1, schematic.Heigth + 1, schematic.Length + 1];
 
@@ -62,9 +62,9 @@ namespace SchematicToVoxCore.Extensions
             return blocks;
         }
 
-        public static FastHashSet<Block> ToHashSetFrom3DArray(this uint[,,] source)
+        public static HashSet<Block> ToHashSetFrom3DArray(this uint[,,] source)
         {
-            FastHashSet<Block> blocks = new FastHashSet<Block>();
+            HashSet<Block> blocks = new HashSet<Block>();
 
             for (int y = 0; y < source.GetLength(1); y++)
             {

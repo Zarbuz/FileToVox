@@ -43,7 +43,7 @@ namespace FileToVox.Converter
                     Width = (ushort)_dimensions.Z,
                     Heigth = (ushort)_dimensions.Y,
                     Length = (ushort)_dimensions.X,
-                    Blocks = new FastHashSet<Block>()
+                    Blocks = new HashSet<Block>()
                 };
 
                 LoadedSchematic.HeightSchematic = schematic.Heigth;

@@ -39,7 +39,7 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic()
             {
-                Blocks = new FastHashSet<Block>(),
+                Blocks = new HashSet<Block>(),
                 Width = (ushort)bmp.Dimensions.x,
                 Heigth = (ushort)bmp.Dimensions.y,
                 Length = (ushort)bmp.Dimensions.z

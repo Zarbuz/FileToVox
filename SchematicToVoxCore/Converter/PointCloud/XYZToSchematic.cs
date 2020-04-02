@@ -67,7 +67,8 @@ namespace FileToVox.Converter.PointCloud
             List<Vector3> vertices = new List<Vector3>();
             List<Color> colors = new List<Color>();
 
-            using (ProgressBar progressbar = new ProgressBar())
+            Console.WriteLine("[LOG] Started to voxelize data...");
+			using (ProgressBar progressbar = new ProgressBar())
             {
                 for (int i = 0; i < bodyVertices.Count; i++)
                 {
@@ -80,8 +81,9 @@ namespace FileToVox.Converter.PointCloud
                     progressbar.Report(i / (float)bodyVertices.Count);
                 }
             }
+			Console.WriteLine("[LOG] Done.");
 
-            minX = vertices.MinBy(t => t.X);
+			minX = vertices.MinBy(t => t.X);
             minY = vertices.MinBy(t => t.Y);
             minZ = vertices.MinBy(t => t.Z);
 
@@ -89,14 +91,12 @@ namespace FileToVox.Converter.PointCloud
             for (int i = 0; i < vertices.Count; i++)
             {
                 float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
-                if (max - min < 2016 && max - min >= 0)
+                if (max - min >= 0)
                 {
                     vertices[i] -= new Vector3(min, min, min);
                     _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
                 }
             }
-
-
         }
     }
 }

@@ -364,7 +364,7 @@ namespace FileToVox.Converter.PointCloud
             List<Vector3> vertices = new List<Vector3>();
             List<Color> colors = new List<Color>();
 
-            Console.WriteLine("[LOG] Start to voxelize data...");
+            Console.WriteLine("[LOG] Started to voxelize data...");
             using (ProgressBar progressbar = new ProgressBar())
             {
                 for (int i = 0; i < bodyVertices.Count; i++)
@@ -378,7 +378,7 @@ namespace FileToVox.Converter.PointCloud
                     progressbar.Report(i / (float)bodyVertices.Count);
                 }
             }
-            Console.WriteLine("[LOG] Done");
+            Console.WriteLine("[LOG] Done.");
 
             minX = vertices.MinBy(t => t.X);
             minY = vertices.MinBy(t => t.Y);

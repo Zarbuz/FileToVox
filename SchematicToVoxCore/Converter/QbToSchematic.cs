@@ -160,7 +160,7 @@ namespace FileToVox.Converter
             schematic.Width = (ushort)width;
             schematic.Heigth = (ushort)height;
             schematic.Length = (ushort)length;
-            schematic.Blocks = new FastHashSet<Block>();
+            schematic.Blocks = new HashSet<Block>();
 
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.HeightSchematic = schematic.Heigth;

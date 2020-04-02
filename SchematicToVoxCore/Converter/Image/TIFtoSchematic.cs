@@ -59,7 +59,7 @@ namespace FileToVox.Converter.Image
                 Width = (ushort)bitmap.Width,
                 Length = (ushort)bitmap.Height,
                 Heigth = (ushort)_maxHeight,
-                Blocks = new FastHashSet<Block>()
+                Blocks = new HashSet<Block>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;

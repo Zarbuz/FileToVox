@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
+using Motvin.Collections;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Vox
@@ -27,13 +28,15 @@ namespace FileToVox.Vox
         private int _childrenChunkSize;
         private Schematic _schematic;
         private Rotation _rotation = Rotation._PZ_PX_P;
-        private BlockGlobal[] _firstBlockInEachRegion;
+        private List<BlockGlobal> _firstBlockInEachRegion;
         private List<Color> _usedColors;
+        private uint[,,] _blocks;
 
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
             _width = _length = _height = _countSize = _totalBlockCount = _countRegionNonEmpty = 0;
             _schematic = schematic;
+            _blocks = _schematic.Blocks.To3DArray(schematic);
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -57,7 +60,8 @@ namespace FileToVox.Vox
             _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126)) + 1;
 
             _countSize = _width * _length * _height;
-            _countRegionNonEmpty = CountRegionNonEmpty();
+            _firstBlockInEachRegion = GetFirstBlockForEachRegion();
+			_countRegionNonEmpty = _firstBlockInEachRegion.Count;
             _totalBlockCount = _schematic.Blocks.Count;
 
             Console.WriteLine("[INFO] Total blocks: " + _totalBlockCount);
@@ -70,7 +74,6 @@ namespace FileToVox.Vox
             int chunknSHP = 32 * _countRegionNonEmpty;
             int chunkRGBA = 1024 + 12;
 
-            GetFirstBlockForEachRegion();
             for (int i = 0; i < _countRegionNonEmpty; i++)
             {
                 string pos = GetWorldPosString(i);
@@ -109,7 +112,7 @@ namespace FileToVox.Vox
             return concurrent.ToHashSet();
         }
 
-        private bool HasBlockInRegion(uint[,,] blocks, Vector3 min, Vector3 max)
+        private bool HasBlockInRegion(Vector3 min, Vector3 max)
         {
 	        for (int y = (int) min.Y; y < max.Y; y++)
 	        {
@@ -117,55 +120,39 @@ namespace FileToVox.Vox
 		        {
 			        for (int x = (int) min.X; x < max.X; x++)
 			        {
-				        if (y < _schematic.Heigth && x < _schematic.Width && z < _schematic.Length && blocks[x, y, z] != 0)
+				        if (y < _schematic.Heigth && x < _schematic.Width && z < _schematic.Length && _blocks[x, y, z] != 0)
+				        {
 					        return true;
-			        }
+						}
+					}
 		        }
 	        }
 
 	        return false;
         }
 
-		private int CountRegionNonEmpty()
-		{
-			int regionNonEmpty = 0;
-			uint[,,] blocks = _schematic.Blocks.To3DArray(_schematic);
-			for (int i = 0; i < _countSize; i++)
-			{
-				int x = i % _width;
-				int y = (i / _width) % _height;
-				int z = i / (_width * _height);
-				if (HasBlockInRegion(blocks, new Vector3(x * 126, y * 126, z * 126), new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
-					regionNonEmpty++;
-			}
-
-			return regionNonEmpty;
-		}
-
         /// <summary>
         /// Get world coordinates of the first block in each region
         /// </summary>
-        private void GetFirstBlockForEachRegion()
+        private List<BlockGlobal> GetFirstBlockForEachRegion()
         {
-            _firstBlockInEachRegion = new BlockGlobal[_countRegionNonEmpty];
-            uint[,,] blocks = _schematic.Blocks.To3DArray(_schematic);
+            List<BlockGlobal> list = new List<BlockGlobal>();
 
 			//x = Index % XSIZE;
 			//y = (Index / XSIZE) % YSIZE;
 			//z = Index / (XSIZE * YSIZE);
-			int indexRegion = 0;
 			for (int i = 0; i < _countSize; i++)
             {
                 int x = i % _width;
                 int y = (i / _width) % _height;
                 int z = i / (_width * _height);
-                if (HasBlockInRegion(blocks, new Vector3(x * 126, y * 126, z * 126),
-	                new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
+                if (HasBlockInRegion(new Vector3(x * 126, y * 126, z * 126), new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
                 {
-					_firstBlockInEachRegion[indexRegion] = new BlockGlobal(x * 126, y * 126, z * 126);
-					indexRegion++;
+	                list.Add(new BlockGlobal(x * 126, y * 126, z * 126));
                 }
 			}
+
+			return list;
         }
 
         /// <summary>
@@ -202,7 +189,13 @@ namespace FileToVox.Vox
                 }
                 Console.WriteLine("[LOG] Done.");
             }
-            WriteMainTranformNode(writer);
+
+			foreach (Block block in _schematic.Blocks)
+			{
+				Console.WriteLine(block);
+			}
+
+			WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
             for (int i = 0; i < _countRegionNonEmpty; i++)
             {

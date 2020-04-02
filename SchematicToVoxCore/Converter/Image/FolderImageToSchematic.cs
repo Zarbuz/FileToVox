@@ -24,7 +24,7 @@ namespace FileToVox.Converter.Image
 
             Schematic schematic = new Schematic();
             schematic.Heigth = (ushort) height;
-            schematic.Blocks = new FastHashSet<Block>();
+            schematic.Blocks = new HashSet<Block>();
 
             using (ProgressBar progressbar = new ProgressBar())
             {
