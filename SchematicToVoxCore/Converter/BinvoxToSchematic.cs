@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using SchematicToVoxCore.Extensions;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using Motvin.Collections;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class BinvoxToSchematic : AbstractToSchematic
+	public class BinvoxToSchematic : AbstractToSchematic
     {
         private bool _headerRead;
         private bool _voxelsRead;

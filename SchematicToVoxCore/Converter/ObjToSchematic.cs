@@ -1,16 +1,14 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using FileToVox.Utils;
+using g3;
+using SchematicToVoxCore.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using FileToVox.Schematics;
-using FileToVox.Utils;
-using g3;
-using Motvin.Collections;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class OBJToSchematic : AbstractToSchematic
+	public class OBJToSchematic : AbstractToSchematic
     {
         private readonly int _gridSize;
         private readonly bool _excavate;

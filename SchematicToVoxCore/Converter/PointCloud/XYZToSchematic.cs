@@ -1,19 +1,17 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using MoreLinq;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using FileToVox.Extensions;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using MoreLinq;
-using Motvin.Collections;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.PointCloud
 {
-    public class XYZToSchematic : PointCloudToSchematic
+	public class XYZToSchematic : PointCloudToSchematic
     {
         public XYZToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {

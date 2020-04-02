@@ -1,21 +1,19 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using Motvin.Collections;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Vox
 {
-    public class VoxWriter : VoxParser
+	public class VoxWriter : VoxParser
     {
         private int _width;
         private int _length;

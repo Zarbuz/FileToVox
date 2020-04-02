@@ -1,17 +1,16 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using fNbt;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
-using FileToVox.Schematics;
-using fNbt;
-using Motvin.Collections;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter
 {
-    public class SchematicToSchematic : AbstractToSchematic
+	public class SchematicToSchematic : AbstractToSchematic
     {
         private readonly int _ignoreMinY;
         private readonly int _ignoreMaxY;

@@ -1,13 +1,11 @@
-﻿using System;
+﻿using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using System.Collections.Generic;
 using System.Drawing;
-using FileToVox.Schematics;
-using Motvin.Collections;
 
 namespace SchematicToVoxCore.Extensions
 {
-    public static class FctExtensions
+	public static class FctExtensions
     {
         public static int GetColorIntensity(this Color color)
         {
@@ -36,9 +34,6 @@ namespace SchematicToVoxCore.Extensions
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
-
-        public static FastHashSet<T> ToHashSetFast<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
-            => new FastHashSet<T>(source, comparer);
 
         public static List<Block> ApplyOffset(this List<Block> list, Vector3 vector)
         {

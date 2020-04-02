@@ -1,17 +1,16 @@
-﻿using SchematicToVoxCore.Extensions;
+﻿using FileToVox.Schematics;
+using FileToVox.Utils;
+using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FileToVox.Schematics;
-using FileToVox.Utils;
-using Motvin.Collections;
 
 namespace FileToVox.Converter
 {
-    public class QBToSchematic : AbstractToSchematic
+	public class QBToSchematic : AbstractToSchematic
     {
         private const int CodeFlag = 2;
         private const int Nextsliceflag = 6;

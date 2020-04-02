@@ -5,11 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Motvin.Collections;
 
 namespace FileToVox.Converter.Image
 {
-    public class FolderImageToSchematic : AbstractToSchematic
+	public class FolderImageToSchematic : AbstractToSchematic
     {
         private readonly bool _excavate;
         public FolderImageToSchematic(string path, bool excavate) : base(path)

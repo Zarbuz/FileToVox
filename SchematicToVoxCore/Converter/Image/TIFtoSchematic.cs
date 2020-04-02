@@ -1,19 +1,16 @@
-﻿using FileToVox.Schematics;
+﻿using BitMiracle.LibTiff.Classic;
+using FileToVox.Extensions;
+using FileToVox.Schematics;
+using FileToVox.Utils;
+using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using BitMiracle.LibTiff.Classic;
-using FileToVox.Extensions;
-using FileToVox.Utils;
-using Motvin.Collections;
-using nQuant;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.Image
 {
-    public class TIFtoSchematic : ImageToSchematic
+	public class TIFtoSchematic : ImageToSchematic
     {
         public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path, colorPath, height, excavate, color, top, colorLimit)
         {

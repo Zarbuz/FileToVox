@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Motvin.Collections;
 
 namespace FileToVox.Schematics
 {
-    public class Schematic
+	public class Schematic
     {
         public ushort Width { get; set; }
         public ushort Heigth { get; set; }
