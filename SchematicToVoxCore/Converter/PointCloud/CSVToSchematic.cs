@@ -1,8 +1,4 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using MoreLinq;
-using SchematicToVoxCore.Extensions;
+﻿using FileToVox.Schematics.Tools;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

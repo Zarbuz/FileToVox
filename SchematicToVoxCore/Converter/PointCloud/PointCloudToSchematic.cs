@@ -28,7 +28,9 @@ namespace FileToVox.Converter.PointCloud
             _holes = holes;
         }
 
-        protected void VoxelizeData(BodyDataDTO data)
+        protected abstract BodyDataDTO ReadContentFile();
+
+		protected void VoxelizeData(BodyDataDTO data)
         {
 			Vector3 minX = data.BodyVertices.MinBy(t => t.X);
 			Vector3 minY = data.BodyVertices.MinBy(t => t.Y);
