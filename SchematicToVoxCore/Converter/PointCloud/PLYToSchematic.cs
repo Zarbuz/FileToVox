@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
+using System.Threading.Tasks;
 using FileToVox.Extensions;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
@@ -332,9 +334,14 @@ namespace FileToVox.Converter.PointCloud
 
             return data;
         }
-        #endregion
+		#endregion
 
-        public PLYToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
+		protected override BodyDataDTO ReadContentFile()
+		{
+			throw new NotImplementedException();
+		}
+
+		public PLYToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
             MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
             MemoryMappedViewStream mms = mmf.CreateViewStream();
@@ -345,58 +352,12 @@ namespace FileToVox.Converter.PointCloud
             mms.Close();
             Console.WriteLine("[LOG] Done.");
 
-            List<Vector3> bodyVertices = body.vertices;
-            List<Color> bodyColors = body.colors;
-
-            Vector3 minX = bodyVertices.MinBy(t => t.X);
-            Vector3 minY = bodyVertices.MinBy(t => t.Y);
-            Vector3 minZ = bodyVertices.MinBy(t => t.Z);
-
-            float min = Math.Abs(Math.Min(minX.X, Math.Min(minY.Y, minZ.Z)));
-            for (int i = 0; i < bodyVertices.Count; i++)
+            VoxelizeData(new BodyDataDTO()
             {
-                bodyVertices[i] += new Vector3(min, min, min);
-                bodyVertices[i] = new Vector3((float)Math.Truncate(bodyVertices[i].X * scale), (float)Math.Truncate(bodyVertices[i].Y * scale), (float)Math.Truncate(bodyVertices[i].Z * scale));
-            }
-
-            HashSet<Vector3> set = new HashSet<Vector3>();
-            List<Vector3> vertices = new List<Vector3>();
-            List<Color> colors = new List<Color>();
-
-            Console.WriteLine("[LOG] Started to voxelize data...");
-            using (ProgressBar progressbar = new ProgressBar())
-            {
-                for (int i = 0; i < bodyVertices.Count; i++)
-                {
-                    if (!set.Contains(bodyVertices[i]))
-                    {
-                        set.Add(bodyVertices[i]);
-                        vertices.Add(bodyVertices[i]);
-                        colors.Add(bodyColors[i]);
-                    }
-                    progressbar.Report(i / (float)bodyVertices.Count);
-                }
-            }
-            Console.WriteLine("[LOG] Done.");
-
-            minX = vertices.MinBy(t => t.X);
-            minY = vertices.MinBy(t => t.Y);
-            minZ = vertices.MinBy(t => t.Z);
-
-            min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
-                if (/*max - min < 8000 && */max - min >= 0)
-                {
-                    vertices[i] -= new Vector3(min, min, min);
-                    _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
-                }
-            }
-
+				BodyVertices = body.vertices,
+				BodyColors = body.colors
+            });
         }
-
-        
     }
 
 }

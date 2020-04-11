@@ -1,8 +1,4 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using MoreLinq;
-using SchematicToVoxCore.Extensions;
+﻿using FileToVox.Schematics.Tools;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,86 +11,51 @@ namespace FileToVox.Converter.PointCloud
     {
         public XYZToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
         {
-            StreamReader file = new StreamReader(path);
-            string line;
+			BodyDataDTO data = ReadContentFile();
+			VoxelizeData(data);
+        }
 
-            List<Vector3> bodyVertices = new List<Vector3>();
-            List<Color> bodyColors = new List<Color>();
+        protected sealed override BodyDataDTO ReadContentFile()
+        {
+			BodyDataDTO dataFile = new BodyDataDTO();
+			StreamReader file = new StreamReader(_path);
+			string line;
 
-            while ((line = file.ReadLine()) != null)
-            {
-                string[] data = line.Split(' ');
-                if (data.Length < 6)
-                {
-                    Console.WriteLine("[ERROR] Line not well formated : " + line);
-                }
-                else
-                {
-                    try
-                    {
-                        float x = float.Parse(data[0], CultureInfo.InvariantCulture);
-                        float y = float.Parse(data[1], CultureInfo.InvariantCulture);
-                        float z = float.Parse(data[2], CultureInfo.InvariantCulture);
-                        int r = int.Parse(data[3], CultureInfo.InvariantCulture);
-                        int g = int.Parse(data[4], CultureInfo.InvariantCulture);
-                        int b = int.Parse(data[5], CultureInfo.InvariantCulture);
+			List<Vector3> bodyVertices = new List<Vector3>();
+			List<Color> bodyColors = new List<Color>();
 
-                        bodyVertices.Add(new Vector3(x,y,z));
-                        bodyColors.Add(Color.FromArgb(r,g,b));
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("[ERROR] Line not well formated : " + line + " " + e.Message);
-                    }
+			while ((line = file.ReadLine()) != null)
+			{
+				string[] data = line.Split(' ');
+				if (data.Length < 6)
+				{
+					Console.WriteLine("[ERROR] Line not well formated : " + line);
+				}
+				else
+				{
+					try
+					{
+						float x = float.Parse(data[0], CultureInfo.InvariantCulture);
+						float y = float.Parse(data[1], CultureInfo.InvariantCulture);
+						float z = float.Parse(data[2], CultureInfo.InvariantCulture);
+						int r = int.Parse(data[3], CultureInfo.InvariantCulture);
+						int g = int.Parse(data[4], CultureInfo.InvariantCulture);
+						int b = int.Parse(data[5], CultureInfo.InvariantCulture);
 
-                }
-            }
+						bodyVertices.Add(new Vector3(x, y, z));
+						bodyColors.Add(Color.FromArgb(r, g, b));
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine("[ERROR] Line not well formated : " + line + " " + e.Message);
+					}
 
-            Vector3 minX = bodyVertices.MinBy(t => t.X);
-            Vector3 minY = bodyVertices.MinBy(t => t.Y);
-            Vector3 minZ = bodyVertices.MinBy(t => t.Z);
+				}
+			}
 
-            float min = Math.Abs(Math.Min(minX.X, Math.Min(minY.Y, minZ.Z)));
-            for (int i = 0; i < bodyVertices.Count; i++)
-            {
-                bodyVertices[i] += new Vector3(min, min, min);
-                bodyVertices[i] = new Vector3((float)Math.Truncate(bodyVertices[i].X * scale), (float)Math.Truncate(bodyVertices[i].Y * scale), (float)Math.Truncate(bodyVertices[i].Z * scale));
-            }
-
-            HashSet<Vector3> set = new HashSet<Vector3>();
-            List<Vector3> vertices = new List<Vector3>();
-            List<Color> colors = new List<Color>();
-
-            Console.WriteLine("[LOG] Started to voxelize data...");
-			using (ProgressBar progressbar = new ProgressBar())
-            {
-                for (int i = 0; i < bodyVertices.Count; i++)
-                {
-                    if (!set.Contains(bodyVertices[i]))
-                    {
-                        set.Add(bodyVertices[i]);
-                        vertices.Add(bodyVertices[i]);
-                        colors.Add(bodyColors[i]);
-                    }
-                    progressbar.Report(i / (float)bodyVertices.Count);
-                }
-            }
-			Console.WriteLine("[LOG] Done.");
-
-			minX = vertices.MinBy(t => t.X);
-            minY = vertices.MinBy(t => t.Y);
-            minZ = vertices.MinBy(t => t.Z);
-
-            min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
-                if (max - min >= 0)
-                {
-                    vertices[i] -= new Vector3(min, min, min);
-                    _blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
-                }
-            }
+			dataFile.BodyVertices = bodyVertices;
+			dataFile.BodyColors = bodyColors;
+			return dataFile;
         }
     }
 }
