@@ -34,6 +34,10 @@ namespace FileToVox
         private static int _gridSize = 126;
         private static int _colorLimit = 256;
 
+        private const int MAX_WORLD_WIDTH = 2000;
+        private const int MAX_WORLD_HEIGHT = 1000;
+        private const int MAX_WORLD_LENGTH = 2000;
+
         public static void Main(string[] args)
         {
 			OptionSet options = new OptionSet()
@@ -231,7 +235,6 @@ namespace FileToVox
                         case ".xyz":
 	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood);
                             break;
-                        
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");
                             Console.ReadKey();
@@ -245,9 +248,9 @@ namespace FileToVox
                 Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
                 Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
 
-                if (schematic.Width > 2016 || schematic.Length > 2016 || schematic.Height > 2016)
+                if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
                 {
-					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2016^3");
+					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2000^3");
 					return;
                 }
                 VoxWriter writer = new VoxWriter();
