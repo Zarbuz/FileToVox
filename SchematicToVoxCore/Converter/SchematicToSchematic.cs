@@ -77,10 +77,10 @@ namespace FileToVox.Converter
             RawSchematic raw = LoadRaw(nbtFile);
             HashSet<Block> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
-            Schematic schematic = new Schematic(name, (ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
+            Schematic schematic = new Schematic((ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
 
             schematic.Width *= (ushort)_scale;
-            schematic.Heigth *= (ushort)_scale;
+            schematic.Height *= (ushort)_scale;
             schematic.Length *= (ushort)_scale;
             return schematic;
         }

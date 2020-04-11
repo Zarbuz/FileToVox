@@ -55,7 +55,7 @@ namespace FileToVox.Vox
         {
             _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126)) + 1;
             _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126)) + 1;
-            _height = (int)Math.Ceiling(((decimal)_schematic.Heigth / 126)) + 1;
+            _height = (int)Math.Ceiling(((decimal)_schematic.Height / 126)) + 1;
 
             _countSize = _width * _length * _height;
             _firstBlockInEachRegion = GetFirstBlockForEachRegion();
@@ -118,7 +118,7 @@ namespace FileToVox.Vox
 		        {
 			        for (int x = (int) min.X; x < max.X; x++)
 			        {
-				        if (y < _schematic.Heigth && x < _schematic.Width && z < _schematic.Length && _blocks[x, y, z] != 0)
+				        if (y < _schematic.Height && x < _schematic.Width && z < _schematic.Length && _blocks[x, y, z] != 0)
 				        {
 					        return true;
 						}

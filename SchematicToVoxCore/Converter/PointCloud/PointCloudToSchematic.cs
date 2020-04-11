@@ -87,20 +87,20 @@ namespace FileToVox.Converter.PointCloud
         protected HashSet<Block> FillHoles(uint[,,] blocks, Schematic schematic)
         {
             Console.WriteLine("[LOG] Started to fill holes...");
-            int max = schematic.Width * schematic.Heigth * schematic.Length * 2;
+            int max = schematic.Width * schematic.Height * schematic.Length * 2;
             int index = 0;
             using (ProgressBar progressBar = new ProgressBar())
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    for (ushort y = 0; y < schematic.Heigth; y++)
+                    for (ushort y = 0; y < schematic.Height; y++)
                     {
                         for (ushort z = 0; z < schematic.Length; z++)
                         {
                             for (ushort x = 0; x < schematic.Width; x++)
                             {
                                 if (blocks[x, y, z] == 0 && x > 0 && x < schematic.Width && y > 0 &&
-                                    y < schematic.Heigth && z > 0 && z < schematic.Length)
+                                    y < schematic.Height && z > 0 && z < schematic.Length)
                                 {
                                     blocks = Check1X1X1Hole(blocks, x, y, z);
                                     blocks = Check1X2X1Hole(blocks, x, y, z);
@@ -121,14 +121,14 @@ namespace FileToVox.Converter.PointCloud
 
         protected HashSet<Block> FillInvisiblesVoxels(uint[,,] blocks, Schematic schematic)
         {
-            int max = schematic.Width * schematic.Heigth * schematic.Length;
+            int max = schematic.Width * schematic.Height * schematic.Length;
             int index = 0;
             uint white = Color.White.ColorToUInt();
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				Console.WriteLine("[LOG] Started to fill all invisibles voxels... [1/2]");
 
-				for (ushort y = 0; y < schematic.Heigth; y++)
+				for (ushort y = 0; y < schematic.Height; y++)
 				{
 					for (ushort z = 0; z < schematic.Length; z++)
 					{
@@ -160,14 +160,14 @@ namespace FileToVox.Converter.PointCloud
 
 				for (int i = 0; i < 10; i++)
 				{
-					for (ushort y = 0; y < schematic.Heigth; y++)
+					for (ushort y = 0; y < schematic.Height; y++)
 					{
 						for (ushort z = 0; z < schematic.Length; z++)
 						{
 							for (ushort x = 0; x < schematic.Width; x++)
 							{
 								if (blocks[x, y, z] == white && x - 1 >= 0 && x + 1 < schematic.Width && y - 1 >= 0 &&
-								    y + 1 < schematic.Heigth && z - 1 >= 0 && z < schematic.Length)
+								    y + 1 < schematic.Height && z - 1 >= 0 && z < schematic.Length)
 								{
 									uint left = blocks[x - 1, y, z];
 									uint right = blocks[x + 1, y, z];
@@ -208,13 +208,13 @@ namespace FileToVox.Converter.PointCloud
 	        {
 		        Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
 		        Width = (ushort)(Math.Abs(maxX - minX) + 1),
-		        Heigth = (ushort)(Math.Abs(maxY - minY) + 1),
+		        Height = (ushort)(Math.Abs(maxY - minY) + 1),
 		        Blocks = new HashSet<Block>()
 	        };
 
 	        LoadedSchematic.LengthSchematic = schematic.Length;
 	        LoadedSchematic.WidthSchematic = schematic.Width;
-	        LoadedSchematic.HeightSchematic = schematic.Heigth;
+	        LoadedSchematic.HeightSchematic = schematic.Height;
 	        List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 	        list.ApplyOffset(new Vector3(minX, minY, minZ));
 	        HashSet<Block> hashSet = list.ToHashSet();
@@ -256,7 +256,7 @@ namespace FileToVox.Converter.PointCloud
                 blocks[x, y, z] = left;
             }
 
-            if (top != 0 && bottom != 0)
+            if (top != 0 && bottom != 0 && left != 0 && right != 0)
             {
                 blocks[x, y, z] = top;
             }

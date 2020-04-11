@@ -39,12 +39,12 @@ namespace FileToVox.Converter
             {
                 Blocks = new HashSet<Block>(),
                 Width = (ushort)bmp.Dimensions.x,
-                Heigth = (ushort)bmp.Dimensions.y,
+                Height = (ushort)bmp.Dimensions.y,
                 Length = (ushort)bmp.Dimensions.z
             };
 
             LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.LengthSchematic = schematic.Length;
 
             if (_winding_number != 0)

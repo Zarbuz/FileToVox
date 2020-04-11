@@ -69,11 +69,11 @@ namespace FileToVox.Converter
             {
                 Length = (ushort) nRows,
                 Width = (ushort) nCols,
-                Heigth = (ushort) points.Cast<float>().Max()
+                Height = (ushort) points.Cast<float>().Max()
             };
 
             LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.LengthSchematic = schematic.Length;
 
             for (int i = 0; i < points.GetLength(0); i++)

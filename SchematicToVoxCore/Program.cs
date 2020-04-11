@@ -17,7 +17,7 @@ namespace FileToVox
         private static string _outputFile;
         private static string _inputColorFile;
 
-        private static bool _show_help;
+        private static bool _showHelp;
         private static bool _verbose;
         private static bool _excavate;
         private static bool _color;
@@ -30,7 +30,7 @@ namespace FileToVox
         private static int _ignoreMinY = -1;
         private static int _ignoreMaxY = 256;
         private static float _scale = 1;
-        private static int _heightmap = 1;
+        private static int _heightMap = 1;
         private static int _gridSize = 126;
         private static int _colorLimit = 256;
 
@@ -47,8 +47,8 @@ namespace FileToVox
 				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
 				{"fh|fix-holes", "fix holes", v => _holes = v != null },
 				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
-				{"h|help", "help informations", v => _show_help = v != null},
-				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
+				{"h|help", "help informations", v => _showHelp = v != null},
+				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightMap = v},
 				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => _ignoreMinY = v},
 				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => _ignoreMaxY = v},
 				{"sc|scale=", "set the scale", (float v) => _scale = v},
@@ -111,7 +111,7 @@ namespace FileToVox
 
         private static void CheckHelp(OptionSet options)
         {
-            if (_show_help)
+            if (_showHelp)
             {
                 ShowHelp(options);
                 Environment.Exit(0);
@@ -130,7 +130,7 @@ namespace FileToVox
                 throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
             if (_scale <= 0)
                 throw new ArgumentException("[ERROR] --scale argument must be positive");
-            if (_heightmap < 1)
+            if (_heightMap < 1)
                 throw new ArgumentException("[ERROR] --heightmap argument must be positive");
             if (_colorLimit < 0)
                 throw new ArgumentException("[ERROR] --color-limit argument must be positive");
@@ -163,8 +163,8 @@ namespace FileToVox
                 Console.WriteLine("[INFO] Enabled option: excavate");
             if (_color)
                 Console.WriteLine("[INFO] Enabled option: color");
-            if (_heightmap != 1)
-                Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightmap + ")");
+            if (_heightMap != 1)
+                Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightMap + ")");
             if (_top)
                 Console.WriteLine("[INFO] Enabled option: top");
 			if (_flood)
@@ -217,7 +217,7 @@ namespace FileToVox
 		                    converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood);
 		                    break;
 	                    case ".png":
-		                    converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
+		                    converter = new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
 		                    break;
 						case ".qb":
 		                    converter = new QBToSchematic(path);
@@ -226,7 +226,7 @@ namespace FileToVox
                             converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
                             break;
                         case ".tif":
-                            converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
+                            converter = new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
                             break;
                         case ".xyz":
 	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood);
@@ -243,9 +243,9 @@ namespace FileToVox
                 Schematic schematic = converter.WriteSchematic();
                 Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
                 Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
-                Console.WriteLine($"[INFO] Vox Height: {schematic.Heigth}");
+                Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
 
-                if (schematic.Width > 2016 || schematic.Length > 2016 || schematic.Heigth > 2016)
+                if (schematic.Width > 2016 || schematic.Length > 2016 || schematic.Height > 2016)
                 {
 					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2016^3");
 					return;

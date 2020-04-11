@@ -40,12 +40,12 @@ namespace FileToVox.Converter
                 Schematic schematic = new Schematic()
                 {
                     Width = (ushort)_dimensions.Z,
-                    Heigth = (ushort)_dimensions.Y,
+                    Height = (ushort)_dimensions.Y,
                     Length = (ushort)_dimensions.X,
                     Blocks = new HashSet<Block>()
                 };
 
-                LoadedSchematic.HeightSchematic = schematic.Heigth;
+                LoadedSchematic.HeightSchematic = schematic.Height;
                 LoadedSchematic.LengthSchematic = schematic.Length;
                 LoadedSchematic.WidthSchematic = schematic.Width;
 
@@ -53,7 +53,7 @@ namespace FileToVox.Converter
                 int zmult = (int) (_dimensions.Z);
 
 
-                for (int Y = 0; Y < schematic.Heigth; Y++)
+                for (int Y = 0; Y < schematic.Height; Y++)
                 {
                     for (int Z = 0; Z < schematic.Length; Z++)
                     {

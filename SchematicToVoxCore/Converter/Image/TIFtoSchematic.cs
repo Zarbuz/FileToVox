@@ -55,13 +55,13 @@ namespace FileToVox.Converter.Image
             {
                 Width = (ushort)bitmap.Width,
                 Length = (ushort)bitmap.Height,
-                Heigth = (ushort)_maxHeight,
+                Height = (ushort)_maxHeight,
                 Blocks = new HashSet<Block>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.HeightSchematic = schematic.Height;
 
 
             using (ProgressBar progressbar = new ProgressBar())

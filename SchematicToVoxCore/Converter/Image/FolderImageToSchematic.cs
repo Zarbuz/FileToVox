@@ -22,7 +22,7 @@ namespace FileToVox.Converter.Image
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
             Schematic schematic = new Schematic();
-            schematic.Heigth = (ushort) height;
+            schematic.Height = (ushort) height;
             schematic.Blocks = new HashSet<Block>();
 
             using (ProgressBar progressbar = new ProgressBar())
@@ -47,7 +47,7 @@ namespace FileToVox.Converter.Image
 
                                     LoadedSchematic.LengthSchematic = schematic.Length;
                                     LoadedSchematic.WidthSchematic = schematic.Width;
-                                    LoadedSchematic.HeightSchematic = schematic.Heigth;
+                                    LoadedSchematic.HeightSchematic = schematic.Height;
                                 }
                                 if (_excavate)
                                 {

@@ -47,7 +47,7 @@ namespace SchematicToVoxCore.Extensions
 
         public static uint[,,] To3DArray(this HashSet<Block> source, Schematic schematic)
         {
-            uint[,,] blocks = new uint[schematic.Width + 1, schematic.Heigth + 1, schematic.Length + 1];
+            uint[,,] blocks = new uint[schematic.Width + 1, schematic.Height + 1, schematic.Length + 1];
 
             foreach (Block block in source)
             {
