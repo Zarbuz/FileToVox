@@ -5,6 +5,7 @@ FileToVox is a console program which allow you to convert a file into a vox file
 Current files support: 
 - .asc (Esri ASCII raster format)
 - .binvox
+- .csv
 - .obj
 - .ply (Binary and ASCII)
 - .png
@@ -34,26 +35,48 @@ If you have this error : 'brew command not found'.
 
 Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 
-## Options
+## Commands list
 
 ```
---h,        -help                     show this message and exit
+--i        --input=VALUE              input mandatory file
+--o        --output=VALUE             output mandatory file
+--c        --color                    enable color when generating heightmap
+--cl       --color-limit=VALUE        set the maximal number of colors for the palette
+--cm       --color-from-file=VALUE    load color from another file
+--e        --excavate                 delete all voxels which doesn't have at least one face connected with air
+--fl       --flood                    fill all invisibles voxels (option for PLY, XYZ, CSV)
+--fh       --fix-holes                fix holes (option for PLY, XYZ, CSV)
+--gs       --grid-size=VALUE          set the grid size (only for OBJ file)
+--h        --help                     help informations
+--hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
+--iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer (only for schematic file)
+--imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer (only for schematic file)
+--sc       --scale=VALUE              set the scale
+--sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
+--t,        --top                     create voxels only at the top of the heightmap
 --v,        -verbose                  enable the verbose mode
---w,        -way=VALUE                the way of schematic (0 or 1), default value is 0
---iminy,    -ignore-min-y=VALUE       ignore blocks below the specified layer (only for schematic file)
---imaxy,    -ignore-max-y=VALUE       ignore blocks above the specified layer (only for schematic file)
---e,        -excavate                 delete all blocks which doesn't have at lease one face connected with air
---s,        -scale=VALUE              set the scale
---hm        -heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
---c,        -color                    enable color when generating heightmap (only for PNG file)
---cm,       -color-from-file=VALUE    load color from another file
---gs        -grid-size=VALUE          set the grid size (only for OBJ file)
---slow=VALUE                          use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
---cl        -color-limit=VALUE        set a number of color limit (used for quanzation, option for PLY, XYZ, PNG, TIF, CSV)
---fl        -flood                    fill all invisibles voxels (option for PLY, XYZ, CSV)
---fh        -fix-holes                fix holes (option for PLY, XYZ, CSV)
  ```
- 
+
+## Command compatibility 
+
+| Command | .asc | .binvox | .csv | .obj | .ply | .png | .schematic | .tif | .qb | .xyz |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
+| `--color`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
+| `--color-limit`     | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| `--color-from-file` | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
+| `--excavate`        | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
+| `--flood`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| `--fix-holes`       | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| `--grid-size`       | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `--ignore-min-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `--ignore-max-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `--top`             | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
+
+
+
 # Installation 
  
 Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
