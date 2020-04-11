@@ -1,19 +1,17 @@
-﻿using System;
-using System.Linq;
+﻿using FileToVox.Extensions;
 using FileToVox.Schematics;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using FileToVox.Extensions;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using MoreLinq;
 using SchematicToVoxCore.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace FileToVox.Converter.PointCloud
 {
-    public abstract class PointCloudToSchematic : AbstractToSchematic
+	public abstract class PointCloudToSchematic : AbstractToSchematic
     {
         protected readonly List<Block> _blocks = new List<Block>();
         protected readonly float _scale;

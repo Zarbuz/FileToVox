@@ -9,7 +9,7 @@ namespace FileToVox.Converter
     {
         protected string _path;
 
-        public AbstractToSchematic(string path)
+        protected AbstractToSchematic(string path)
         {
             _path = path;
         }

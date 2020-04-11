@@ -38,24 +38,24 @@ namespace FileToVox
         {
 			OptionSet options = new OptionSet()
 			{
-				{"i|input=", "input file", v => _inputFile = v},
-				{"o|output=", "output file", v => _outputFile = v},
-				{"h|help", "show this message and exit", v => _show_help = v != null},
-				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
-				{"iminy|ignore-min-y=", "ignore blocks below the specified layer (only schematic file)", (int v) => _ignoreMinY = v},
-				{"imaxy|ignore-max-y=", "ignore blocks above the specified layer (only schematic file)", (int v) => _ignoreMaxY = v},
-				{"e|excavate", "delete all blocks which doesn't have at lease one face connected with air",  v => _excavate = v != null },
-				{"s|scale=", "set the scale", (float v) => _scale = v},
-				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
-				{"c|color", "enable color when generating heightmap (only for PNG file)", v => _color = v != null},
-				{"t|top", "create voxels only for top (only for PNG file)", v => _top = v != null},
+				{"i|input=", "input mandatory file", v => _inputFile = v},
+				{"o|output=", "output mandatory file", v => _outputFile = v},
+				{"c|color", "enable color when generating heightmap", v => _color = v != null},
 				{"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
+				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => _colorLimit =v },
+				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => _excavate = v != null },
+				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
+				{"fh|fix-holes", "fix holes", v => _holes = v != null },
 				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
-				{"slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommanded)", (float v) => _slow = v },
-				{"cl|color-limit=", "set a limit of color count during quantization", (int v) => _colorLimit =v },
-				{"fl|flood", "fill all invisibles voxels (option for PLY, XYZ, CSV)", v => _flood = v != null },
-				{"fh|fix-holes", "fix holes (option for PLY, XYZ, CSV)", v => _holes = v != null }
-            };
+				{"h|help", "help informations", v => _show_help = v != null},
+				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightmap = v},
+				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => _ignoreMinY = v},
+				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => _ignoreMaxY = v},
+				{"sc|scale=", "set the scale", (float v) => _scale = v},
+				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => _slow = v },
+				{"t|top", "create voxels only at the top of the heightmap (only for PNG file)", v => _top = v != null},
+				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
+			};
 
             try
             {
@@ -201,36 +201,37 @@ namespace FileToVox
                 {
                     switch (Path.GetExtension(_inputFile))
                     {
-                        case ".schematic":
+	                    case ".asc":
+		                    converter = new ASCToSchematic(path);
+		                    break;
+	                    case ".binvox":
+		                    converter = new BinvoxToSchematic(path);
+		                    break;
+	                    case ".csv":
+		                    converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood);
+		                    break;
+	                    case ".obj":
+		                    converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
+		                    break;
+	                    case ".ply":
+		                    converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood);
+		                    break;
+	                    case ".png":
+		                    converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
+		                    break;
+						case ".qb":
+		                    converter = new QBToSchematic(path);
+		                    break;
+						case ".schematic":
                             converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
-                            break;
-                        case ".png":
-                            converter = new PNGToSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
                             break;
                         case ".tif":
                             converter = new TIFtoSchematic(path, _inputColorFile, _heightmap, _excavate, _color, _top, _colorLimit);
                             break;
-                        case ".asc":
-                            converter = new ASCToSchematic(path);
-                            break;
-                        case ".binvox":
-                            converter = new BinvoxToSchematic(path);
-                            break;
-                        case ".qb":
-                            converter = new QBToSchematic(path);
-                            break;
-                        case ".obj":
-                            converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
-                            break;
-                        case ".ply":
-                            converter = new PLYToSchematic(path, _scale, _colorLimit,_holes, _flood);
-                            break;
                         case ".xyz":
 	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood);
                             break;
-                        case ".csv":
-                            converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood);
-                            break;
+                        
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");
                             Console.ReadKey();
