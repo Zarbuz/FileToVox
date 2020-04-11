@@ -157,18 +157,18 @@ namespace FileToVox.Converter
             int length = Math.Abs(voxels.Min(x => x.Z) - voxels.Max(x => x.Z)) + 1;
             int height = Math.Abs(voxels.Min(x => x.Y) - voxels.Max(x => x.Y)) + 1;
             schematic.Width = (ushort)width;
-            schematic.Heigth = (ushort)height;
+            schematic.Height = (ushort)height;
             schematic.Length = (ushort)length;
             schematic.Blocks = new HashSet<Block>();
 
             LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.HeightSchematic = schematic.Heigth;
+            LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.WidthSchematic = schematic.Width;
 
             Console.WriteLine("[LOG] Started to write schematic from qb...");
             Console.WriteLine("[INFO] Qb Width: " + schematic.Width);
             Console.WriteLine("[INFO] Qb Length: " + schematic.Length);
-            Console.WriteLine("[INFO] Qb Height: " + schematic.Heigth);
+            Console.WriteLine("[INFO] Qb Height: " + schematic.Height);
             using (ProgressBar progressbar = new ProgressBar())
             {
                 for (var index = 0; index < voxels.Count; index++)
