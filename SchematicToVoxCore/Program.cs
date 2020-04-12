@@ -24,6 +24,7 @@ namespace FileToVox
         private static bool _top;
         private static bool _flood;
         private static bool _holes;
+        private static bool _lonely;
 
         private static float _slow;
 
@@ -49,6 +50,7 @@ namespace FileToVox
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => _colorLimit =v },
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => _excavate = v != null },
 				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
+				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => _lonely = v != null },
 				{"fh|fix-holes", "fix holes", v => _holes = v != null },
 				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
 				{"h|help", "help informations", v => _showHelp = v != null},
@@ -175,6 +177,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: flood");
 			if (_holes)
 				Console.WriteLine("[INFO] Enabled option: fix-holes");
+			if (_lonely)
+				Console.WriteLine("[INFO] Enabled option: fix-lonely");
 
             Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
         }
@@ -212,13 +216,13 @@ namespace FileToVox
 		                    converter = new BinvoxToSchematic(path);
 		                    break;
 	                    case ".csv":
-		                    converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood);
+		                    converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
 		                    break;
 	                    case ".obj":
 		                    converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
 		                    break;
 	                    case ".ply":
-		                    converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood);
+		                    converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
 		                    break;
 	                    case ".png":
 		                    converter = new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
@@ -233,7 +237,7 @@ namespace FileToVox
                             converter = new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
                             break;
                         case ".xyz":
-	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood);
+	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
                             break;
                         default:
                             Console.WriteLine("[ERROR] Unknown file extension !");

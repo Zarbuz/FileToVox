@@ -141,17 +141,25 @@ namespace FileToVox.Vox
 			//x = Index % XSIZE;
 			//y = (Index / XSIZE) % YSIZE;
 			//z = Index / (XSIZE * YSIZE);
-			for (int i = 0; i < _countSize; i++)
-            {
-                int x = i % _width;
-                int y = (i / _width) % _height;
-                int z = i / (_width * _height);
-                if (HasBlockInRegion(new Vector3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE), new Vector3(x * CHUNK_SIZE + CHUNK_SIZE, y * CHUNK_SIZE + CHUNK_SIZE, z * CHUNK_SIZE + CHUNK_SIZE)))
-                {
-	                list.Add(new BlockGlobal(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE));
-                }
+			Console.WriteLine("[LOG] Started to compute the first block for each region");
+			using (ProgressBar progressBar = new ProgressBar())
+			{
+				for (int i = 0; i < _countSize; i++)
+				{
+					int x = i % _width;
+					int y = (i / _width) % _height;
+					int z = i / (_width * _height);
+					if (HasBlockInRegion(new Vector3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE),
+						new Vector3(x * CHUNK_SIZE + CHUNK_SIZE, y * CHUNK_SIZE + CHUNK_SIZE, z * CHUNK_SIZE + CHUNK_SIZE)))
+					{
+						list.Add(new BlockGlobal(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE));
+					}
+
+					progressBar.Report(i / (float)_countSize);
+				}
 			}
 
+			Console.WriteLine("[LOG] Done.");
 			return list;
         }
 
@@ -177,7 +185,7 @@ namespace FileToVox.Vox
         private void WriteChunks(BinaryWriter writer)
         {
             WritePaletteChunk(writer);
-            using (var progressbar = new ProgressBar())
+            using (ProgressBar progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write chunks ...");
                 for (int i = 0; i < _countRegionNonEmpty; i++)
