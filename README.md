@@ -99,7 +99,7 @@ You can edit the colors of the palette used when generating from schematic file 
 
 ## Notes
 
-For PNG files, you can't load pictures bigger than 2016x2016 px
+For PNG files, you can't load pictures bigger than 2000x2000 px
 
 ## Input file
 ![](img/heightmap.png)
