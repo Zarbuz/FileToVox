@@ -44,13 +44,14 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --cl       --color-limit=VALUE        set the maximal number of colors for the palette
 --cm       --color-from-file=VALUE    load color from another file
 --e        --excavate                 delete all voxels which doesn't have at least one face connected with air
---fl       --flood                    fill all invisibles voxels (option for PLY, XYZ, CSV)
---fh       --fix-holes                fix holes (option for PLY, XYZ, CSV)
---gs       --grid-size=VALUE          set the grid size (only for OBJ file)
+--fl       --flood                    fill all invisibles voxels
+--flo      --fix-lonely               delete all voxels where all connected voxels are air
+--fh       --fix-holes                fix holes
+--gs       --grid-size=VALUE          set the grid size
 --h        --help                     help informations
---hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height (only for PNG file)
---iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer (only for schematic file)
---imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer (only for schematic file)
+--hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height
+--iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer
+--imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer
 --sc       --scale=VALUE              set the scale
 --sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
 --t,        --top                     create voxels only at the top of the heightmap
@@ -66,6 +67,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--color-from-file` | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | `--excavate`        | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
 | `--flood`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| `--fix-lonely`      | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | `--fix-holes`       | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | `--grid-size`       | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
