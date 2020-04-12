@@ -83,7 +83,7 @@ namespace FileToVox.Converter
                         Vector3i idx = list[i];
                         float f = sdf[idx.x, idx.y, idx.z];
                         bool isInside = f < 0;
-                        bmp.Set(idx, (f < 0) ? true : false);
+                        bmp.Set(idx, (f < 0));
 
                         if (!_excavate && isInside)
                         {

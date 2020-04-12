@@ -34,9 +34,9 @@ namespace FileToVox
         private static int _gridSize = 126;
         private static int _colorLimit = 256;
 
-        private const int MAX_WORLD_WIDTH = 2000;
-        private const int MAX_WORLD_HEIGHT = 1000;
-        private const int MAX_WORLD_LENGTH = 2000;
+        private const int MAX_WORLD_WIDTH = 2001;
+        private const int MAX_WORLD_HEIGHT = 1001;
+        private const int MAX_WORLD_LENGTH = 2001;
 
         public static void Main(string[] args)
         {

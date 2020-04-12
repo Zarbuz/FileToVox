@@ -30,6 +30,8 @@ namespace FileToVox.Vox
         private List<Color> _usedColors;
         private uint[,,] _blocks;
 
+        private const int CHUNK_SIZE = 125;
+
         public bool WriteModel(string absolutePath, Schematic schematic)
         {
             _width = _length = _height = _countSize = _totalBlockCount = _countRegionNonEmpty = 0;
@@ -53,9 +55,9 @@ namespace FileToVox.Vox
         /// <returns></returns>
         private int CountChildrenSize()
         {
-            _width = (int)Math.Ceiling(((decimal)_schematic.Width / 126)) + 1;
-            _length = (int)Math.Ceiling(((decimal)_schematic.Length / 126)) + 1;
-            _height = (int)Math.Ceiling(((decimal)_schematic.Height / 126)) + 1;
+            _width = (int)Math.Ceiling(((decimal)_schematic.Width / CHUNK_SIZE)) + 1;
+            _length = (int)Math.Ceiling(((decimal)_schematic.Length / CHUNK_SIZE)) + 1;
+            _height = (int)Math.Ceiling(((decimal)_schematic.Height / CHUNK_SIZE)) + 1;
 
             _countSize = _width * _length * _height;
             _firstBlockInEachRegion = GetFirstBlockForEachRegion();
@@ -144,9 +146,9 @@ namespace FileToVox.Vox
                 int x = i % _width;
                 int y = (i / _width) % _height;
                 int z = i / (_width * _height);
-                if (HasBlockInRegion(new Vector3(x * 126, y * 126, z * 126), new Vector3(x * 126 + 126, y * 126 + 126, z * 126 + 126)))
+                if (HasBlockInRegion(new Vector3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE), new Vector3(x * CHUNK_SIZE + CHUNK_SIZE, y * CHUNK_SIZE + CHUNK_SIZE, z * CHUNK_SIZE + CHUNK_SIZE)))
                 {
-	                list.Add(new BlockGlobal(x * 126, y * 126, z * 126));
+	                list.Add(new BlockGlobal(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE));
                 }
 			}
 
@@ -160,9 +162,9 @@ namespace FileToVox.Vox
         /// <returns></returns>
         private string GetWorldPosString(int index)
         {
-            int worldPosX = _firstBlockInEachRegion[index].X - (_length / 2) * 126;
-            int worldPosZ = _firstBlockInEachRegion[index].Z - (_width / 2) * 126;
-            int worldPosY = _firstBlockInEachRegion[index].Y + 126;
+            int worldPosX = _firstBlockInEachRegion[index].X - 938;
+            int worldPosZ = _firstBlockInEachRegion[index].Z - 938;
+            int worldPosY = _firstBlockInEachRegion[index].Y + CHUNK_SIZE;
 
             string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
             return pos;
@@ -187,11 +189,6 @@ namespace FileToVox.Vox
                 }
                 Console.WriteLine("[LOG] Done.");
             }
-
-			foreach (Block block in _schematic.Blocks)
-			{
-				Console.WriteLine(block);
-			}
 
 			WriteMainTranformNode(writer);
             WriteGroupChunk(writer);
@@ -235,9 +232,9 @@ namespace FileToVox.Vox
             writer.Write(12); //Chunk Size (constant)
             writer.Write(0); //Child Chunk Size (constant)
 
-            writer.Write(126); //Width
-            writer.Write(126); //Height
-            writer.Write(126); //Depth
+            writer.Write(CHUNK_SIZE); //Width
+            writer.Write(CHUNK_SIZE); //Height
+            writer.Write(CHUNK_SIZE); //Depth
         }
 
         /// <summary>
@@ -253,7 +250,7 @@ namespace FileToVox.Vox
             if (_schematic.Blocks.Count > 0)
             {
                 BlockGlobal firstBlock = _firstBlockInEachRegion[index];
-                blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + 126, firstBlock.Y + 126, firstBlock.Z + 126));
+                blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + CHUNK_SIZE, firstBlock.Y + CHUNK_SIZE, firstBlock.Z + CHUNK_SIZE));
             }
             writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
             writer.Write(0); //Child chunk size (constant)
@@ -262,9 +259,9 @@ namespace FileToVox.Vox
 
             foreach (Block block in blocks)
             {
-                writer.Write((byte)(block.X % 126));
-                writer.Write((byte)(block.Y % 126));
-                writer.Write((byte)(block.Z % 126));
+                writer.Write((byte)(block.X % CHUNK_SIZE));
+                writer.Write((byte)(block.Y % CHUNK_SIZE));
+                writer.Write((byte)(block.Z % CHUNK_SIZE));
                 int i = _usedColors.IndexOf(block.Color.UIntToColor()) + 1;
                 writer.Write((i != 0) ? (byte)i : (byte)1);
                 _schematic.Blocks.Remove(block);

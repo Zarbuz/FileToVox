@@ -46,16 +46,16 @@ namespace FileToVox.Converter.Image
 
             Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
 
-            if (bitmap.Width > 2016 || bitmap.Height > 2016)
+            if (bitmap.Width > 2000 || bitmap.Height > 2000)
             {
-                throw new Exception("Image is too big (max size 2016x2016 px)");
+                throw new Exception("Image is too big (max size 2000x2000 px)");
             }
 
             Schematic schematic = new Schematic
             {
-                Width = (ushort)bitmap.Width,
-                Length = (ushort)bitmap.Height,
-                Height = (ushort)_maxHeight,
+                Width = (ushort)(bitmap.Width + 1),
+                Length = (ushort)(bitmap.Height + 1),
+                Height = (ushort)(_maxHeight + 1),
                 Blocks = new HashSet<Block>()
             };
 
@@ -67,14 +67,14 @@ namespace FileToVox.Converter.Image
             using (ProgressBar progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write schematic from picture...");
-                Console.WriteLine("[INFO] Picture Width: " + schematic.Width);
-                Console.WriteLine("[INFO] Picture Length: " + schematic.Length);
+                Console.WriteLine("[INFO] Image Width: " + bitmap.Width);
+                Console.WriteLine("[INFO] Image Height: " + bitmap.Height);
 
-                int size = schematic.Width * schematic.Length;
+                int size = bitmap.Width * bitmap.Height;
                 int i = 0;
-                for (int x = 0; x < schematic.Width; x++)
+                for (int x = 0; x < bitmap.Width; x++)
                 {
-                    for (int y = 0; y < schematic.Length; y++)
+                    for (int y = 0; y < bitmap.Height; y++)
                     {
                         Color color = bitmap.GetPixel(x, y);
                         Color colorGray = bitmapBlack.GetPixel(x, y);
