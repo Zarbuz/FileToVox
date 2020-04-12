@@ -9,7 +9,7 @@ namespace FileToVox.Converter.PointCloud
 {
 	public class XYZToSchematic : PointCloudToSchematic
     {
-        public XYZToSchematic(string path, float scale, int colorLimit, bool holes, bool flood) : base(path, scale, colorLimit, holes, flood)
+        public XYZToSchematic(string path, float scale, int colorLimit, bool holes, bool flood, bool lonely) : base(path, scale, colorLimit, holes, flood, lonely)
         {
 			BodyDataDTO data = ReadContentFile();
 			VoxelizeData(data);
