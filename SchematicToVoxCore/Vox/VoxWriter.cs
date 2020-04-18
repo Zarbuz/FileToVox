@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileToVox.Vox.Chunks;
 
 namespace FileToVox.Vox
 {
@@ -73,6 +74,7 @@ namespace FileToVox.Vox
             int chunknTRN = 60 * _countRegionNonEmpty;
             int chunknSHP = 32 * _countRegionNonEmpty;
             int chunkRGBA = 1024 + 12;
+            int chunkMATL = 256 * 206;
 
             for (int i = 0; i < _countRegionNonEmpty; i++)
             {
@@ -87,6 +89,7 @@ namespace FileToVox.Vox
             _childrenChunkSize += chunknTRN; //nTRN CHUNK
             _childrenChunkSize += chunknSHP;
             _childrenChunkSize += chunkRGBA;
+            _childrenChunkSize += chunkMATL;
 
             return _childrenChunkSize;
         }
@@ -185,6 +188,11 @@ namespace FileToVox.Vox
         private void WriteChunks(BinaryWriter writer)
         {
             WritePaletteChunk(writer);
+            for (int i = 0; i < 256; i++)
+            {
+	            WriteMaterialChunk(writer, i + 1);
+            }
+
             using (ProgressBar progressbar = new ProgressBar())
             {
                 Console.WriteLine("[LOG] Started to write chunks ...");
@@ -374,7 +382,78 @@ namespace FileToVox.Vox
                 writer.Write((byte)0);
             }
         }
-    }
+
+		/// <summary>
+		/// Write the MATL chunk
+		/// </summary>
+		/// <param name="writer"></param>
+        private int WriteMaterialChunk(BinaryWriter writer, int index)
+		{
+			int byteWritten = 0;
+	        writer.Write(Encoding.UTF8.GetBytes(MATL));
+			KeyValue[] materialProperties = new KeyValue[12];
+			materialProperties[0].Key = "_type";
+			materialProperties[0].Value = "_diffuse";
+
+			materialProperties[1].Key = "_weight";
+			materialProperties[1].Value = "1";
+
+			materialProperties[2].Key = "_rough";
+			materialProperties[2].Value = "0.1";
+
+			materialProperties[3].Key = "_spec";
+			materialProperties[3].Value = "0.5";
+
+			materialProperties[4].Key = "_spec_p";
+			materialProperties[4].Value = "0.5";
+
+			materialProperties[5].Key = "_ior";
+			materialProperties[5].Value = "0.3";
+
+			materialProperties[6].Key = "_att";
+			materialProperties[6].Value = "0";
+
+			materialProperties[7].Key = "_g0";
+			materialProperties[7].Value = "-0.5";
+
+			materialProperties[8].Key = "_g1";
+			materialProperties[8].Value = "0.8";
+
+			materialProperties[9].Key = "_gw";
+			materialProperties[9].Value = "0.7";
+
+			materialProperties[10].Key = "_flux";
+			materialProperties[10].Value = "0";
+
+			materialProperties[11].Key = "_ldr";
+			materialProperties[11].Value = "0";
+
+			writer.Write(GetMaterialPropertiesSize(materialProperties) + 8);
+	        writer.Write(0); //Child Chunk Size (constant)
+
+	        writer.Write(index); //Id
+	        writer.Write(materialProperties.Length); //ReadDICT size
+
+	        byteWritten += Encoding.UTF8.GetByteCount(MATL) + 16;
+
+	        foreach (KeyValue keyValue in materialProperties)
+	        {
+		        writer.Write(Encoding.UTF8.GetByteCount(keyValue.Key));
+		        writer.Write(Encoding.UTF8.GetBytes(keyValue.Key));
+		        writer.Write(Encoding.UTF8.GetByteCount(keyValue.Value));
+		        writer.Write(Encoding.UTF8.GetBytes(keyValue.Value));
+
+		        byteWritten += 8 + Encoding.UTF8.GetByteCount(keyValue.Key) + Encoding.UTF8.GetByteCount(keyValue.Value);
+	        }
+
+	        return byteWritten;
+		}
+
+		private int GetMaterialPropertiesSize(KeyValue[] properties)
+		{
+			return properties.Sum(keyValue => 8 + Encoding.UTF8.GetByteCount(keyValue.Key) + Encoding.UTF8.GetByteCount(keyValue.Value));
+		}
+	}
 
     struct BlockGlobal
     {
