@@ -10,13 +10,15 @@ namespace FileToVox.Schematics
         public readonly ushort Y;
         public readonly ushort Z;
         public readonly uint Color;
+        public readonly int PalettePosition;
 
-        public Block(ushort x, ushort y, ushort z, uint color)
+        public Block(ushort x, ushort y, ushort z, uint color, int palettePosition = -1)
         {
             X = x;
             Y = y;
             Z = z;
             Color = color;
+            PalettePosition = palettePosition;
         }
 
         public bool IsDefaultValue()

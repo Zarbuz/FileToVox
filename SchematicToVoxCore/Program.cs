@@ -11,36 +11,37 @@ using NDesk.Options;
 
 namespace FileToVox
 {
-    class Program
-    {
-        private static string _inputFile;
-        private static string _outputFile;
-        private static string _inputColorFile;
+	class Program
+	{
+		private static string _inputFile;
+		private static string _outputFile;
+		private static string _inputColorFile;
+		private static string _inputPaletteFile;
 
-        private static bool _showHelp;
-        private static bool _verbose;
-        private static bool _excavate;
-        private static bool _color;
-        private static bool _top;
-        private static bool _flood;
-        private static bool _holes;
-        private static bool _lonely;
+		private static bool _showHelp;
+		private static bool _verbose;
+		private static bool _excavate;
+		private static bool _color;
+		private static bool _top;
+		private static bool _flood;
+		private static bool _holes;
+		private static bool _lonely;
 
-        private static float _slow;
+		private static float _slow;
 
-        private static int _ignoreMinY = -1;
-        private static int _ignoreMaxY = 256;
-        private static float _scale = 1;
-        private static int _heightMap = 1;
-        private static int _gridSize = 126;
-        private static int _colorLimit = 256;
+		private static int _ignoreMinY = -1;
+		private static int _ignoreMaxY = 256;
+		private static float _scale = 1;
+		private static int _heightMap = 1;
+		private static int _gridSize = 126;
+		private static int _colorLimit = 256;
 
-        private const int MAX_WORLD_WIDTH = 2001;
-        private const int MAX_WORLD_HEIGHT = 1001;
-        private const int MAX_WORLD_LENGTH = 2001;
+		private const int MAX_WORLD_WIDTH = 2001;
+		private const int MAX_WORLD_HEIGHT = 2001;
+		private const int MAX_WORLD_LENGTH = 2001;
 
-        public static void Main(string[] args)
-        {
+		public static void Main(string[] args)
+		{
 			OptionSet options = new OptionSet()
 			{
 				{"i|input=", "input mandatory file", v => _inputFile = v},
@@ -52,127 +53,130 @@ namespace FileToVox
 				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
 				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => _lonely = v != null },
 				{"fh|fix-holes", "fix holes", v => _holes = v != null },
-				{"gs|grid-size=", "set the grid size (only for OBJ file)", (int v) => _gridSize = v },
+				{"gs|grid-size=", "set the grid size", (int v) => _gridSize = v },
 				{"h|help", "help informations", v => _showHelp = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightMap = v},
 				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => _ignoreMinY = v},
 				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => _ignoreMaxY = v},
+				{"p|palette=", "set the palette", v => _inputPaletteFile = v },
 				{"sc|scale=", "set the scale", (float v) => _scale = v},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => _slow = v },
-				{"t|top", "create voxels only at the top of the heightmap (only for PNG file)", v => _top = v != null},
+				{"t|top", "create voxels only at the top of the heightmap", v => _top = v != null},
 				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
 			};
 
-            try
-            {
-                List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
-                CheckHelp(options);
-                CheckArguments();
-                DisplayArguments();
+			try
+			{
+				List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
+				CheckHelp(options);
+				CheckArguments();
+				DisplayArguments();
 
-                if (_inputFile != null)
-                    ProcessFile();
-                CheckVerbose();
-                Console.WriteLine("[LOG] Done.");
-                if (_verbose)
-                {
-                    Console.ReadKey();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Write("FileToVox: ");
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Try `FileToVox --help` for more informations.");
-                Console.ReadLine();
-            }
-        }
+				if (_inputFile != null)
+					ProcessFile();
+				CheckVerbose();
+				Console.WriteLine("[LOG] Done.");
+				if (_verbose)
+				{
+					Console.ReadKey();
+				}
+			}
+			catch (Exception e)
+			{
+				Console.Write("FileToVox: ");
+				Console.WriteLine(e.Message);
+				Console.WriteLine("Try `FileToVox --help` for more informations.");
+				Console.ReadLine();
+			}
+		}
 
-        private static string[] CheckArgumentsFile()
-        {
-            if (!File.Exists("settings.ini"))
-            {
-                File.Create("settings.ini");
-            }
+		private static string[] CheckArgumentsFile()
+		{
+			if (!File.Exists("settings.ini"))
+			{
+				File.Create("settings.ini");
+			}
 
-            Console.WriteLine("[INFO] Reading arguments from settings.ini");
-            string[] args = new string[0];
-            using (StreamReader file = new StreamReader("settings.ini"))
-            {
-                string line;
-                while ((line = file.ReadLine()) != null)
-                {
-                    if (line.Contains("#"))
-                    {
-                        continue;
-                    }
+			Console.WriteLine("[INFO] Reading arguments from settings.ini");
+			string[] args = new string[0];
+			using (StreamReader file = new StreamReader("settings.ini"))
+			{
+				string line;
+				while ((line = file.ReadLine()) != null)
+				{
+					if (line.Contains("#"))
+					{
+						continue;
+					}
 
-                    Console.WriteLine($"[INFO] {line}");
-                    args = line.Split(" ");
-                }
-            }
+					Console.WriteLine($"[INFO] {line}");
+					args = line.Split(" ");
+				}
+			}
 
-            return args;
-        }
+			return args;
+		}
 
-        private static void CheckHelp(OptionSet options)
-        {
-            if (_showHelp)
-            {
-                ShowHelp(options);
-                Environment.Exit(0);
-            }
-        }
+		private static void CheckHelp(OptionSet options)
+		{
+			if (_showHelp)
+			{
+				ShowHelp(options);
+				Environment.Exit(0);
+			}
+		}
 
-        private static void CheckArguments()
-        {
-            if (_inputFile == null)
-                throw new ArgumentNullException("[ERROR] Missing required option: --i");
-            if (_outputFile == null)
-                throw new ArgumentNullException("[ERROR] Missing required option: --o");
-            if (_ignoreMinY < -1)
-                throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
-            if (_ignoreMaxY > 256)
-                throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
-            if (_scale <= 0)
-                throw new ArgumentException("[ERROR] --scale argument must be positive");
-            if (_heightMap < 1)
-                throw new ArgumentException("[ERROR] --heightmap argument must be positive");
-            if (_colorLimit < 0)
-                throw new ArgumentException("[ERROR] --color-limit argument must be positive");
-            if (_colorLimit > 256)
-                throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
+		private static void CheckArguments()
+		{
+			if (_inputFile == null)
+				throw new ArgumentNullException("[ERROR] Missing required option: --i");
+			if (_outputFile == null)
+				throw new ArgumentNullException("[ERROR] Missing required option: --o");
+			if (_ignoreMinY < -1)
+				throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
+			if (_ignoreMaxY > 256)
+				throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
+			if (_scale <= 0)
+				throw new ArgumentException("[ERROR] --scale argument must be positive");
+			if (_heightMap < 1)
+				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
+			if (_colorLimit < 0)
+				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
+			if (_colorLimit > 256)
+				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
 
-        }
+		}
 
-        private static void DisplayArguments()
-        {
-            if (_inputFile != null)
-                Console.WriteLine("[INFO] Specified input file: " + _inputFile);
-            if (_outputFile != null)
-                Console.WriteLine("[INFO] Specified output file: " + _outputFile);
-            if (_inputColorFile != null)
-                Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
-            if (_ignoreMinY != -1)
-                Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
-            if (_ignoreMaxY != 256)
-                Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
-            if (_colorLimit != 256)
-                Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
-            if (_scale != 0)
-                Console.WriteLine("[INFO] Specified increase size: " + _scale);
-            if (_gridSize != 126)
-                Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
-            if (_slow != 0)
-                Console.WriteLine("[INFO] Specified winding_number: " + _slow);
-            if (_excavate)
-                Console.WriteLine("[INFO] Enabled option: excavate");
-            if (_color)
-                Console.WriteLine("[INFO] Enabled option: color");
-            if (_heightMap != 1)
-                Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightMap + ")");
-            if (_top)
-                Console.WriteLine("[INFO] Enabled option: top");
+		private static void DisplayArguments()
+		{
+			if (_inputFile != null)
+				Console.WriteLine("[INFO] Specified input file: " + _inputFile);
+			if (_outputFile != null)
+				Console.WriteLine("[INFO] Specified output file: " + _outputFile);
+			if (_inputColorFile != null)
+				Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
+			if (_inputPaletteFile != null)
+				Console.WriteLine("[INFO] Specified palette file: " + _inputPaletteFile);
+			if (_ignoreMinY != -1)
+				Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
+			if (_ignoreMaxY != 256)
+				Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
+			if (_colorLimit != 256)
+				Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
+			if (_scale != 0)
+				Console.WriteLine("[INFO] Specified increase size: " + _scale);
+			if (_gridSize != 126)
+				Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
+			if (_slow != 0)
+				Console.WriteLine("[INFO] Specified winding_number: " + _slow);
+			if (_excavate)
+				Console.WriteLine("[INFO] Enabled option: excavate");
+			if (_color)
+				Console.WriteLine("[INFO] Enabled option: color");
+			if (_heightMap != 1)
+				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightMap + ")");
+			if (_top)
+				Console.WriteLine("[INFO] Enabled option: top");
 			if (_flood)
 				Console.WriteLine("[INFO] Enabled option: flood");
 			if (_holes)
@@ -180,109 +184,120 @@ namespace FileToVox
 			if (_lonely)
 				Console.WriteLine("[INFO] Enabled option: fix-lonely");
 
-            Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
-        }
+			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
+		}
 
-        private static void ProcessFile()
-        {
-            string path = Path.GetFullPath(_inputFile);
-            bool isFolder = false;
-            if (!Directory.Exists(path))
-            {
-                if (!File.Exists(path))
-                {
-                    throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
-                }
-            }
-            else
-            {
-                isFolder = true;
-            }
-            try
-            {
-                AbstractToSchematic converter;
-                if (isFolder)
-                {
-                    converter = new FolderImageToSchematic(path, _excavate);
-                }
-                else
-                {
-                    switch (Path.GetExtension(_inputFile))
-                    {
-	                    case ".asc":
-		                    converter = new ASCToSchematic(path);
-		                    break;
-	                    case ".binvox":
-		                    converter = new BinvoxToSchematic(path);
-		                    break;
-	                    case ".csv":
-		                    converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-		                    break;
-	                    case ".obj":
-		                    converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
-		                    break;
-	                    case ".ply":
-		                    converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-		                    break;
-	                    case ".png":
-		                    converter = new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
-		                    break;
+		private static void ProcessFile()
+		{
+			string path = Path.GetFullPath(_inputFile);
+			bool isFolder = false;
+			if (!Directory.Exists(path))
+			{
+				if (!File.Exists(path))
+				{
+					throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
+				}
+			}
+			else
+			{
+				isFolder = true;
+			}
+			try
+			{
+				AbstractToSchematic converter;
+				if (isFolder)
+				{
+					converter = new FolderImageToSchematic(path, _excavate);
+				}
+				else
+				{
+					switch (Path.GetExtension(_inputFile))
+					{
+						case ".asc":
+							converter = new ASCToSchematic(path);
+							break;
+						case ".binvox":
+							converter = new BinvoxToSchematic(path);
+							break;
+						case ".csv":
+							converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+							break;
+						case ".obj":
+							converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
+							break;
+						case ".ply":
+							converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+							break;
+						case ".png":
+							converter = new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+							break;
 						case ".qb":
-		                    converter = new QBToSchematic(path);
-		                    break;
+							converter = new QBToSchematic(path);
+							break;
 						case ".schematic":
-                            converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
-                            break;
-                        case ".tif":
-                            converter = new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
-                            break;
-                        case ".xyz":
-	                        converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-                            break;
-                        default:
-                            Console.WriteLine("[ERROR] Unknown file extension !");
-                            Console.ReadKey();
-                            return;
-                    }
+							converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+							break;
+						case ".tif":
+							converter = new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+							break;
+						case ".xyz":
+							converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+							break;
+						default:
+							Console.WriteLine("[ERROR] Unknown file extension !");
+							Console.ReadKey();
+							return;
+					}
 
-                }
+				}
 
-                Schematic schematic = converter.WriteSchematic();
-                Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
-                Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
-                Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
+				Schematic schematic = converter.WriteSchematic();
+				Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
+				Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
+				Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
 
-                if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
-                {
+				if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
+				{
 					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2000^3");
 					return;
-                }
-                VoxWriter writer = new VoxWriter();
-                writer.WriteModel(_outputFile + ".vox", schematic);
+				}
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Console.ReadLine();
-            }
+				VoxWriter writer = new VoxWriter();
 
-        }
+				if (_inputPaletteFile != null)
+				{
+					PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(_inputPaletteFile, _colorLimit);
+					schematic = converterPalette.ConvertSchematic(schematic);
+					writer.WriteModel(_outputFile + ".vox", converterPalette.GetPalette(), schematic);
+				}
+				else
+				{
+					writer.WriteModel(_outputFile + ".vox", null, schematic);
+				}
 
-        private static void ShowHelp(OptionSet p)
-        {
-            Console.WriteLine("Usage: FileToVox --i INPUT --o OUTPUT");
-            Console.WriteLine("Options: ");
-            p.WriteOptionDescriptions(Console.Out);
-        }
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				Console.ReadLine();
+			}
 
-        private static void CheckVerbose()
-        {
-            if (_verbose)
-            {
-                VoxReader reader = new VoxReader();
-                reader.LoadModel(_outputFile + ".vox");
-            }
-        }
-    }
+		}
+
+		private static void ShowHelp(OptionSet p)
+		{
+			Console.WriteLine("Usage: FileToVox --i INPUT --o OUTPUT");
+			Console.WriteLine("Options: ");
+			p.WriteOptionDescriptions(Console.Out);
+		}
+
+		private static void CheckVerbose()
+		{
+			if (_verbose)
+			{
+				VoxReader reader = new VoxReader();
+				reader.LoadModel(_outputFile + ".vox");
+			}
+		}
+	}
 }

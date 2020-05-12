@@ -29,15 +29,17 @@ namespace FileToVox.Vox
         private Rotation _rotation = Rotation._PZ_PX_P;
         private List<BlockGlobal> _firstBlockInEachRegion;
         private List<Color> _usedColors;
+        private List<Color> _palette;
         private uint[,,] _blocks;
 
         private const int CHUNK_SIZE = 125;
 
-        public bool WriteModel(string absolutePath, Schematic schematic)
+        public bool WriteModel(string absolutePath, List<Color> palette, Schematic schematic)
         {
             _width = _length = _height = _countSize = _totalBlockCount = _countRegionNonEmpty = 0;
             _schematic = schematic;
-            _blocks = _schematic.Blocks.To3DArray(schematic);
+            _palette = palette;
+	        _blocks = _schematic.Blocks.To3DArray(schematic);
             using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
             {
                 writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -123,7 +125,7 @@ namespace FileToVox.Vox
 		        {
 			        for (int x = (int) min.X; x < max.X; x++)
 			        {
-				        if (y < _schematic.Height && x < _schematic.Width && z < _schematic.Length && _blocks[x, y, z] != 0)
+				        if (y < _schematic.Height && x < _schematic.Width && z < _schematic.Length && (_blocks[x, y, z] != 0))
 				        {
 					        return true;
 						}
@@ -152,8 +154,7 @@ namespace FileToVox.Vox
 					int x = i % _width;
 					int y = (i / _width) % _height;
 					int z = i / (_width * _height);
-					if (HasBlockInRegion(new Vector3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE),
-						new Vector3(x * CHUNK_SIZE + CHUNK_SIZE, y * CHUNK_SIZE + CHUNK_SIZE, z * CHUNK_SIZE + CHUNK_SIZE)))
+					if (HasBlockInRegion(new Vector3(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE), new Vector3(x * CHUNK_SIZE + CHUNK_SIZE, y * CHUNK_SIZE + CHUNK_SIZE, z * CHUNK_SIZE + CHUNK_SIZE)))
 					{
 						list.Add(new BlockGlobal(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE));
 					}
@@ -278,8 +279,16 @@ namespace FileToVox.Vox
                 writer.Write((byte)(block.X % CHUNK_SIZE));
                 writer.Write((byte)(block.Y % CHUNK_SIZE));
                 writer.Write((byte)(block.Z % CHUNK_SIZE));
-                int i = _usedColors.IndexOf(block.Color.UIntToColor()) + 1;
-                writer.Write((i != 0) ? (byte)i : (byte)1);
+                if (block.PalettePosition != -1)
+                {
+	                writer.Write((byte)block.PalettePosition);
+                }
+                else
+                {
+	                int i = _usedColors.IndexOf(block.Color.UIntToColor()) + 1;
+	                writer.Write((i != 0) ? (byte)i : (byte)1);
+                }
+               
                 _schematic.Blocks.Remove(block);
             }
         }
@@ -361,17 +370,31 @@ namespace FileToVox.Vox
             writer.Write(1024);
             writer.Write(0);
             _usedColors = new List<Color>(256);
-            foreach (Block block in _schematic.Blocks)
+            if (_palette != null)
             {
-                Color color = block.Color.UIntToColor();
-                if (_usedColors.Count < 256 && !_usedColors.Contains(color))
-                {
-                    _usedColors.Add(color);
-                    writer.Write(color.R);
-                    writer.Write(color.G);
-                    writer.Write(color.B);
-                    writer.Write(color.A);
+	            _usedColors = _palette;
+	            foreach (Color color in _usedColors)
+	            {
+		            writer.Write(color.R);
+		            writer.Write(color.G);
+		            writer.Write(color.B);
+		            writer.Write(color.A);
                 }
+            }
+            else
+            {
+	            foreach (Block block in _schematic.Blocks)
+	            {
+		            Color color = block.Color.UIntToColor();
+		            if (_usedColors.Count < 256 && !_usedColors.Contains(color))
+		            {
+			            _usedColors.Add(color);
+			            writer.Write(color.R);
+			            writer.Write(color.G);
+			            writer.Write(color.B);
+			            writer.Write(color.A);
+		            }
+	            }
             }
 
             for (int i = (256 - _usedColors.Count); i >= 1; i--)
