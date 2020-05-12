@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace FileToVox.Schematics
 {
@@ -26,7 +28,19 @@ namespace FileToVox.Schematics
         {
             Blocks = blocks;
         }
-       
-        
+
+        public List<uint> Colors
+        {
+	        get
+	        {
+                List<uint> colors = new List<uint>();
+                foreach (Block block in Blocks.Where(block => !colors.Contains(block.Color)))
+                {
+	                colors.Add(block.Color);
+                }
+
+                return colors;
+	        }
+        }
     }
 }

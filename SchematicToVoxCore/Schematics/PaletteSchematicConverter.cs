@@ -35,12 +35,24 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[LOG] Started to convert all colors of blocks to match the palette");
 			Schematic newSchematic = new Schematic(schematic.Width, schematic.Height, schematic.Length, new HashSet<Block>());
-			foreach (Block block in schematic.Blocks)
+			List<uint> colors = schematic.Colors;
+			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
+			foreach (uint color in colors)
 			{
-				Color color = block.Color.UIntToColor();
-				int index = ColorComparison.CompareColorAll(_colors, color);
-				newSchematic.Blocks.Add(new Block(block.X, block.Y, block.Z, _colors[index].ColorToUInt(), index));
+				int index = ColorComparison.CompareColorAll(_colors, color.UIntToColor());
+				paletteDictionary[color] = index;
 			}
+
+			using (ProgressBar progressbar = new ProgressBar())
+			{
+				int i = 0;
+				foreach (Block block in schematic.Blocks)
+				{
+					newSchematic.Blocks.Add(new Block(block.X, block.Y, block.Z, _colors[paletteDictionary[block.Color]].ColorToUInt(), paletteDictionary[block.Color]));
+					progressbar.Report(i++ / (float)schematic.Blocks.Count);
+				}
+			}
+
 			Console.WriteLine("[LOG] Done.");
 			return newSchematic;
 		}
