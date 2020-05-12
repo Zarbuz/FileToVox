@@ -18,7 +18,7 @@ namespace FileToVox.Schematics
 			{
 				for (int y = 0; y < bitmap.Height; y++)
 				{
-					if (!_colors.Contains(bitmap.GetPixel(x, y)) && _colors.Count < colorLimit)
+					if (_colors.Count < colorLimit)
 					{
 						_colors.Add(bitmap.GetPixel(x, y));
 					}
@@ -39,7 +39,7 @@ namespace FileToVox.Schematics
 			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
 			foreach (uint color in colors)
 			{
-				int index = ColorComparison.CompareColorAll(_colors, color.UIntToColor());
+				int index = ColorComparison.CompareColorRGB(_colors, color.UIntToColor());
 				paletteDictionary[color] = index;
 			}
 

@@ -281,7 +281,7 @@ namespace FileToVox.Vox
                 writer.Write((byte)(block.Z % CHUNK_SIZE));
                 if (block.PalettePosition != -1)
                 {
-	                writer.Write((byte)block.PalettePosition);
+	                writer.Write((byte)(block.PalettePosition + 1));
                 }
                 else
                 {
