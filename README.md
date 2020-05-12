@@ -52,6 +52,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height
 --iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer
 --imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer
+--p        --palette=VALUE            set the palette
 --sc       --scale=VALUE              set the scale
 --sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
 --t,        --top                     create voxels only at the top of the heightmap
@@ -73,6 +74,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | `--ignore-min-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | `--ignore-max-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `--palette`         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `--top`             | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
