@@ -45,26 +45,23 @@ namespace FileToVox.Converter.PointCloud
 				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * _scale), (float)Math.Truncate(data.BodyVertices[i].Y * _scale), (float)Math.Truncate(data.BodyVertices[i].Z * _scale));
 			}
 
-			ConcurrentDictionary<Vector3, byte> set = new ConcurrentDictionary<Vector3, byte>();
-			ConcurrentBag<Vector3> vertices = new ConcurrentBag<Vector3>();
-			ConcurrentBag<Color> colors = new ConcurrentBag<Color>();
+			HashSet<Vector3> set = new HashSet<Vector3>();
+			List<Vector3> vertices = new List<Vector3>();
+			List<Color> colors = new List<Color>();
 
 			Console.WriteLine("[LOG] Started to voxelize data...");
-
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				int index = 0;
-				Parallel.For(0, data.BodyVertices.Count, i =>
+				for (int i = 0; i < data.BodyVertices.Count; i++)
 				{
-					if (!set.ContainsKey(data.BodyVertices[i]))
+					if (!set.Contains(data.BodyVertices[i]))
 					{
-						set.TryAdd(data.BodyVertices[i], 0);
+						set.Add(data.BodyVertices[i]);
 						vertices.Add(data.BodyVertices[i]);
 						colors.Add(data.BodyColors[i]);
 					}
-					progressbar.Report(index / (float)data.BodyVertices.Count);
-					index++;
-				});
+					progressbar.Report(i / (float)data.BodyVertices.Count);
+				}
 			}
 			Console.WriteLine("[LOG] Done.");
 
@@ -73,15 +70,13 @@ namespace FileToVox.Converter.PointCloud
 			minZ = vertices.MinBy(t => t.Z);
 
 			min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
-			List<Vector3> verticesList = vertices.ToList();
-			List<Color> colorList = colors.ToList();
 			for (int i = 0; i < vertices.Count; i++)
 			{
-				float max = Math.Max(verticesList[i].X, Math.Max(verticesList[i].Y, verticesList[i].Z));
+				float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
 				if (/*max - min < 8000 && */max - min >= 0)
 				{
-					verticesList[i] -= new Vector3(min, min, min);
-					_blocks.Add(new Block((ushort)verticesList[i].X, (ushort)verticesList[i].Y, (ushort)verticesList[i].Z, colorList[i].ColorToUInt()));
+					vertices[i] -= new Vector3(min, min, min);
+					_blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
 				}
 			}
 		}
