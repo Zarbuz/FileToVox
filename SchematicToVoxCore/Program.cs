@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FileToVox.CA;
 using FileToVox.Converter;
 using FileToVox.Converter.Image;
@@ -13,8 +14,8 @@ namespace FileToVox
 {
 	class Program
 	{
-		private static string _inputFile;
-		private static string _outputFile;
+		private static string _inputPath;
+		private static string _outputPath;
 		private static string _inputColorFile;
 		private static string _inputPaletteFile;
 
@@ -26,6 +27,7 @@ namespace FileToVox
 		private static bool _flood;
 		private static bool _holes;
 		private static bool _lonely;
+		private static bool _slice;
 
 		private static float _slow;
 
@@ -44,8 +46,8 @@ namespace FileToVox
 		{
 			OptionSet options = new OptionSet()
 			{
-				{"i|input=", "input mandatory file", v => _inputFile = v},
-				{"o|output=", "output mandatory file", v => _outputFile = v},
+				{"i|input=", "input path", v => _inputPath = v},
+				{"o|output=", "output path", v => _outputPath = v},
 				{"c|color", "enable color when generating heightmap", v => _color = v != null},
 				{"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => _colorLimit =v },
@@ -60,6 +62,7 @@ namespace FileToVox
 				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => _ignoreMaxY = v},
 				{"p|palette=", "set the palette", v => _inputPaletteFile = v },
 				{"sc|scale=", "set the scale", (float v) => _scale = v},
+				{"si|slice", "indicate that each picture is a slice", v => _slice = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => _slow = v },
 				{"t|top", "create voxels only at the top of the heightmap", v => _top = v != null},
 				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
@@ -72,7 +75,7 @@ namespace FileToVox
 				CheckArguments();
 				DisplayArguments();
 
-				if (_inputFile != null)
+				if (_inputPath != null)
 					ProcessFile();
 				CheckVerbose();
 				Console.WriteLine("[LOG] Done.");
@@ -128,9 +131,9 @@ namespace FileToVox
 
 		private static void CheckArguments()
 		{
-			if (_inputFile == null)
+			if (_inputPath == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --i");
-			if (_outputFile == null)
+			if (_outputPath == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --o");
 			if (_ignoreMinY < -1)
 				throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
@@ -149,10 +152,10 @@ namespace FileToVox
 
 		private static void DisplayArguments()
 		{
-			if (_inputFile != null)
-				Console.WriteLine("[INFO] Specified input file: " + _inputFile);
-			if (_outputFile != null)
-				Console.WriteLine("[INFO] Specified output file: " + _outputFile);
+			if (_inputPath != null)
+				Console.WriteLine("[INFO] Specified input path: " + _inputPath);
+			if (_outputPath != null)
+				Console.WriteLine("[INFO] Specified output path: " + _outputPath);
 			if (_inputColorFile != null)
 				Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
 			if (_inputPaletteFile != null)
@@ -183,19 +186,21 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: fix-holes");
 			if (_lonely)
 				Console.WriteLine("[INFO] Enabled option: fix-lonely");
+			if (_slice)
+				Console.WriteLine("[INFO] Enabled option: slice");
 
-			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputFile));
+			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputPath));
 		}
 
 		private static void ProcessFile()
 		{
-			string path = Path.GetFullPath(_inputFile);
+			string path = Path.GetFullPath(_inputPath);
 			bool isFolder = false;
 			if (!Directory.Exists(path))
 			{
 				if (!File.Exists(path))
 				{
-					throw new FileNotFoundException("[ERROR] Input file not found", _inputFile);
+					throw new FileNotFoundException("[ERROR] Input file not found", _inputPath);
 				}
 			}
 			else
@@ -207,74 +212,43 @@ namespace FileToVox
 				AbstractToSchematic converter;
 				if (isFolder)
 				{
-					converter = new FolderImageToSchematic(path, _excavate);
-				}
-				else
-				{
-					switch (Path.GetExtension(_inputFile))
+					if (_slice)
 					{
-						case ".asc":
-							converter = new ASCToSchematic(path);
-							break;
-						case ".binvox":
-							converter = new BinvoxToSchematic(path);
-							break;
-						case ".csv":
-							converter = new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-							break;
-						case ".obj":
-							converter = new OBJToSchematic(path, _gridSize, _excavate, _slow);
-							break;
-						case ".ply":
-							converter = new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-							break;
-						case ".png":
-							converter = new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
-							break;
-						case ".qb":
-							converter = new QBToSchematic(path);
-							break;
-						case ".schematic":
-							converter = new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
-							break;
-						case ".tif":
-							converter = new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
-							break;
-						case ".xyz":
-							converter = new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
-							break;
-						default:
-							Console.WriteLine("[ERROR] Unknown file extension !");
-							Console.ReadKey();
-							return;
+						converter = new FolderImageToSchematic(path, _excavate);
+						SchematicToVox(converter, _outputPath);
 					}
-
-				}
-
-				Schematic schematic = converter.WriteSchematic();
-				Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
-				Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
-				Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
-
-				if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
-				{
-					Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2000^3");
-					return;
-				}
-
-				VoxWriter writer = new VoxWriter();
-
-				if (_inputPaletteFile != null)
-				{
-					PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(_inputPaletteFile, _colorLimit);
-					schematic = converterPalette.ConvertSchematic(schematic);
-					writer.WriteModel(_outputFile + ".vox", converterPalette.GetPalette(), schematic);
+					else
+					{
+						string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(t => Path.GetExtension(t).ToLower() != ".vox").ToArray();
+						Console.WriteLine("[INFO] Processing folder " + files.Length + " files");
+						for (int i = 0; i < files.Length; i++)
+						{
+							string file = files[i];
+							Console.WriteLine("[INFO] Processing file: " + file);
+							converter = GetConverter(file);
+							if (converter != null)
+							{
+								SchematicToVox(converter, Path.Combine(_outputPath, Path.GetFileNameWithoutExtension(file)));
+							}
+							else
+							{
+								Console.WriteLine("[ERROR] Unsupported file extension !");
+							}
+						}
+					}
 				}
 				else
 				{
-					writer.WriteModel(_outputFile + ".vox", null, schematic);
+					converter = GetConverter(path);
+					if (converter != null)
+					{
+						SchematicToVox(converter, _outputPath);
+					}
+					else
+					{
+						Console.WriteLine("[ERROR] Unsupported file extension !");
+					}
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -282,6 +256,62 @@ namespace FileToVox
 				Console.ReadLine();
 			}
 
+		}
+
+		private static AbstractToSchematic GetConverter(string path)
+		{
+			switch (Path.GetExtension(path))
+			{
+				case ".asc":
+					return new ASCToSchematic(path);
+				case ".binvox":
+					return new BinvoxToSchematic(path);
+				case ".csv":
+					return new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+				case ".obj":
+					return new OBJToSchematic(path, _gridSize, _excavate, _slow);
+				case ".ply":
+					return new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+				case ".png":
+					return new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+				case ".qb":
+					return new QBToSchematic(path);
+				case ".schematic":
+					return new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+				case ".tif":
+					return new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+				case ".xyz":
+					return new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+				default:
+					return null;
+			}
+		}
+
+		private static void SchematicToVox(AbstractToSchematic converter, string outputPath)
+		{
+			Schematic schematic = converter.WriteSchematic();
+			Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
+			Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
+			Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
+
+			if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
+			{
+				Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2000^3");
+				return;
+			}
+
+			VoxWriter writer = new VoxWriter();
+
+			if (_inputPaletteFile != null)
+			{
+				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(_inputPaletteFile, _colorLimit);
+				schematic = converterPalette.ConvertSchematic(schematic);
+				writer.WriteModel(outputPath + ".vox", converterPalette.GetPalette(), schematic);
+			}
+			else
+			{
+				writer.WriteModel(outputPath + ".vox", null, schematic);
+			}
 		}
 
 		private static void ShowHelp(OptionSet p)
@@ -296,7 +326,7 @@ namespace FileToVox
 			if (_verbose)
 			{
 				VoxReader reader = new VoxReader();
-				reader.LoadModel(_outputFile + ".vox");
+				reader.LoadModel(_outputPath + ".vox");
 			}
 		}
 	}

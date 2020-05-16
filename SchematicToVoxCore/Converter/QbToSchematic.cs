@@ -73,9 +73,9 @@ namespace FileToVox.Converter
                                             (int) (zAxisOrientation == 1 ? (z + posZ) : (x + posX)),
                                             (int) y + posY,
                                             (int) (zAxisOrientation == 1 ? (x + posX) : (z + posZ)),
-                                            colorFormat == 0 ? data.R : data.B,
-                                            data.G,
                                             colorFormat == 0 ? data.B : data.R,
+                                            data.G,
+                                            colorFormat == 0 ? data.R : data.B,
                                             data.A));
                                     }
                                 }
@@ -112,9 +112,9 @@ namespace FileToVox.Converter
                                                 (int)(zAxisOrientation == 1 ? (z + posZ) : (x + posX)),
                                                 (int)y,
                                                 (int)(zAxisOrientation == 1 ? (x + posX) : (z + posZ)),
-                                                colorFormat == 0 ? color.R : color.B,
-                                                color.G,
                                                 colorFormat == 0 ? color.B : color.R,
+                                                color.G,
+                                                colorFormat == 0 ? color.R : color.B,
                                                 color.A));
                                         }
                                     }
@@ -131,9 +131,9 @@ namespace FileToVox.Converter
                                             (int)(zAxisOrientation == 1 ? (z + posZ) : (x + posX)),
                                             (int)y,
                                             (int)(zAxisOrientation == 1 ? (x + posX) : (z + posZ)),
-                                            colorFormat == 0 ? color.R : color.B,
-                                            color.G,
                                             colorFormat == 0 ? color.B : color.R,
+                                            color.G,
+                                            colorFormat == 0 ? color.R : color.B,
                                             color.A));
                                     }
                                 }
@@ -177,8 +177,7 @@ namespace FileToVox.Converter
                     ushort x = (ushort) (minX < 0 ? voxel.X + Math.Abs(minX) : voxel.X);
                     ushort y = (ushort) (minY < 0 ? voxel.Y + Math.Abs(minY) : voxel.Y);
                     ushort z = (ushort) (minZ < 0 ? voxel.Z + Math.Abs(minZ) : voxel.Z);
-                    schematic.Blocks.Add(new Block(x, y, z,
-                        FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, voxel.A)));
+                    schematic.Blocks.Add(new Block(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }
