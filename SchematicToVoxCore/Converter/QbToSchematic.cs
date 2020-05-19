@@ -149,17 +149,21 @@ namespace FileToVox.Converter
 
         private Schematic Convert(List<VoxelDTO> voxels)
         {
-            Schematic schematic = new Schematic();
             int minX = voxels.Min(x => x.X);
             int minY = voxels.Min(x => x.Y);
             int minZ = voxels.Min(x => x.Z);
-            int width = Math.Abs(voxels.Min(x => x.X) - voxels.Max(x => x.X)) + 1;
-            int length = Math.Abs(voxels.Min(x => x.Z) - voxels.Max(x => x.Z)) + 1;
-            int height = Math.Abs(voxels.Min(x => x.Y) - voxels.Max(x => x.Y)) + 1;
-            schematic.Width = (ushort)width;
-            schematic.Height = (ushort)height;
-            schematic.Length = (ushort)length;
-            schematic.Blocks = new HashSet<Block>();
+
+            int maxX = voxels.Max(x => x.X);
+            int maxY = voxels.Max(x => x.Y);
+            int maxZ = voxels.Max(x => x.Z);
+
+            Schematic schematic = new Schematic
+            {
+	            Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
+	            Width = (ushort)(Math.Abs(maxX - minX) + 1),
+	            Height = (ushort)(Math.Abs(maxY - minY) + 1),
+                Blocks = new HashSet<Block>()
+            };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.HeightSchematic = schematic.Height;
@@ -174,9 +178,13 @@ namespace FileToVox.Converter
                 for (var index = 0; index < voxels.Count; index++)
                 {
                     VoxelDTO voxel = voxels[index];
-                    ushort x = (ushort) (minX < 0 ? voxel.X + Math.Abs(minX) : voxel.X);
-                    ushort y = (ushort) (minY < 0 ? voxel.Y + Math.Abs(minY) : voxel.Y);
-                    ushort z = (ushort) (minZ < 0 ? voxel.Z + Math.Abs(minZ) : voxel.Z);
+                    voxel.X -= minX;
+                    voxel.Y -= minY;
+                    voxel.Z -= minZ;
+                    ushort x = (ushort) voxel.X;
+                    ushort y = (ushort) voxel.Y;
+                    ushort z = (ushort) voxel.Z;
+                    
                     schematic.Blocks.Add(new Block(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
                     progressbar.Report((index / (float)voxels.Count));
                 }
