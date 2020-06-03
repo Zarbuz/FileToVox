@@ -47,13 +47,20 @@ namespace FileToVox.Converter.Image
                     gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
                 }
 
-                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
-                bitmapColor = new Bitmap(image);
+                if (_colorLimit != 256 || bitmapColor.CountColor() > 256)
+                {
+                    System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
+                    bitmapColor = new Bitmap(image);
+                }
+
             }
             else if (_color)
             {
-                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
-                bitmap = new Bitmap(image);
+	            if (_colorLimit != 256 || clone.CountColor() > 256)
+	            {
+		            System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
+		            bitmap = new Bitmap(image);
+                }
             }
 
             Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);

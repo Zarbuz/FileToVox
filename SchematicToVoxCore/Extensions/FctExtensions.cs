@@ -12,6 +12,24 @@ namespace SchematicToVoxCore.Extensions
             return color.R + color.G + color.B;
         }
 
+        public static int CountColor(this Bitmap bitmap)
+        {
+            List<Color> colors = new List<Color>();
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+	            for (int j = 0; j < bitmap.Height; j++)
+	            {
+		            Color color = bitmap.GetPixel(i, j);
+		            if (!colors.Contains(color))
+		            {
+                        colors.Add(color);
+		            }
+	            }
+            }
+
+            return colors.Count;
+        }
+
         public static uint ColorToUInt(this Color color)
         {
             return (uint)((color.A << 24) | (color.R << 16) |
