@@ -99,6 +99,11 @@ You can edit the colors of the palette used when generating from schematic file 
 ./FileToVox.exe --i cloud.ply --o cloud --scale 20
 ```
 
+## Video Tutorials
+
+- https://www.youtube.com/watch?v=sg3z2GaMJzM
+- https://www.youtube.com/watch?v=fSo1iV1DE2U
+
 ## Notes
 
 For PNG files, you can't load pictures bigger than 2000x2000 px
