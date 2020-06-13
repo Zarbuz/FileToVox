@@ -214,7 +214,7 @@ namespace FileToVox
 				{
 					if (_slice)
 					{
-						converter = new FolderImageToSchematic(path, _excavate);
+						converter = new FolderImageToSchematic(path, _excavate, _inputColorFile);
 						SchematicToVox(converter, _outputPath);
 					}
 					else

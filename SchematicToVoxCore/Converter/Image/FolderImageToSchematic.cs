@@ -11,19 +11,36 @@ namespace FileToVox.Converter.Image
 	public class FolderImageToSchematic : AbstractToSchematic
     {
         private readonly bool _excavate;
-        public FolderImageToSchematic(string path, bool excavate) : base(path)
+        private readonly string _inputColorFile;
+        public FolderImageToSchematic(string path, bool excavate, string inputColorFile) : base(path)
         {
             _excavate = excavate;
+            _inputColorFile = inputColorFile;
         }
 
         public override Schematic WriteSchematic()
         {
-            int height = Directory.GetFiles(_path).Length;
+            int height = Directory.GetFiles(_path, "*.png").Length;
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
             Schematic schematic = new Schematic();
             schematic.Height = (ushort) height;
+            schematic.Width = (ushort)height;
+            schematic.Length = (ushort)height;
             schematic.Blocks = new HashSet<Block>();
+
+            LoadedSchematic.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            LoadedSchematic.HeightSchematic = schematic.Height;
+            Bitmap bitmapColor = null;
+            if (_inputColorFile != null)
+            {
+	            bitmapColor = new Bitmap(_inputColorFile);
+	            if (bitmapColor.Width > 256 || bitmapColor.Height > 1)
+	            {
+		            throw new ArgumentException("[ERROR] The input color file must have a dimension of 256x1 px");
+	            }
+            }
 
             using (ProgressBar progressbar = new ProgressBar())
             {
@@ -37,25 +54,23 @@ namespace FileToVox.Converter.Image
                         for (int y = 0; y < bitmap.Height; y++)
                         {
                             Color color = bitmap.GetPixel(x, y);
-                            if (color.A != 0 && (color.R != 0 && color.G != 0 && color.B != 0))
+                            if (color != Color.Empty && color != Color.Transparent && color != Color.Black && (color.R != 0 && color.G != 0 && color.B != 0))
                             {
-                                //first initialization
-                                if (schematic.Width == 0 || schematic.Length == 0)
-                                {
-                                    schematic.Width = (ushort) bitmap.Width;
-                                    schematic.Length = (ushort) bitmap.Height;
+	                            if (_inputColorFile != null)
+	                            {
+		                            double distance = Math.Sqrt(Math.Pow((height / 2) - x, 2) + Math.Pow((height / 2) - y, 2));
+		                            float range = (float) Math.Abs(distance / (height / 2)); //
+		                            range = range > 1 ? 1 : range;
+		                            color = bitmapColor.GetPixel((int)(range * (bitmapColor.Width - 1)), 0);
+	                            }
 
-                                    LoadedSchematic.LengthSchematic = schematic.Length;
-                                    LoadedSchematic.WidthSchematic = schematic.Width;
-                                    LoadedSchematic.HeightSchematic = schematic.Height;
-                                }
                                 if (_excavate)
                                 {
                                     CheckNeighbor(ref schematic, bitmap, color, i, x, y);
                                 }
                                 else
                                 {
-                                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
+                                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                                 }
                             }
                         }
@@ -77,9 +92,14 @@ namespace FileToVox.Converter.Image
                 Color right = bitmap.GetPixel(x + 1, y);
                 Color bottom = bitmap.GetPixel(x, y + 1);
 
-                if (color != left || color != top || right != color || color != bottom)
+                bool leftColor = left != Color.Empty && left != Color.Transparent && left != Color.Black && (left.R != 0 && left.G != 0 && left.B != 0);
+                bool topColor = top != Color.Empty && top != Color.Transparent && top != Color.Black && (top.R != 0 && top.G != 0 && top.B != 0);
+                bool rightColor = right != Color.Empty && right != Color.Transparent && right != Color.Black && (right.R != 0 && right.G != 0 && right.B != 0);
+                bool bottomColor = bottom != Color.Empty && bottom != Color.Transparent && bottom != Color.Black && (bottom.R != 0 && bottom.G != 0 && bottom.B != 0);
+
+                if (!leftColor || !topColor || !rightColor || !bottomColor)
                 {
-                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, Color.AliceBlue.ColorToUInt()));
+	                schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                 }
             }
         }
