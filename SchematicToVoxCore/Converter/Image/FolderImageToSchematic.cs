@@ -49,11 +49,12 @@ namespace FileToVox.Converter.Image
                 {
                     string file = files[i];
                     Bitmap bitmap = new Bitmap(file);
-                    for (int x = 0; x < bitmap.Width; x++)
+                    DirectBitmap directBitmap = new DirectBitmap(bitmap);
+                    for (int x = 0; x < directBitmap.Width; x++)
                     {
-                        for (int y = 0; y < bitmap.Height; y++)
+                        for (int y = 0; y < directBitmap.Height; y++)
                         {
-                            Color color = bitmap.GetPixel(x, y);
+                            Color color = directBitmap.GetPixel(x, y);
                             if (color != Color.Empty && color != Color.Transparent && color != Color.Black && (color.R != 0 && color.G != 0 && color.B != 0))
                             {
 	                            if (_inputColorFile != null)
@@ -66,7 +67,7 @@ namespace FileToVox.Converter.Image
 
                                 if (_excavate)
                                 {
-                                    CheckNeighbor(ref schematic, bitmap, color, i, x, y);
+                                    CheckNeighbor(ref schematic, directBitmap, color, i, x, y);
                                 }
                                 else
                                 {
@@ -75,7 +76,7 @@ namespace FileToVox.Converter.Image
                             }
                         }
                     }
-
+                    directBitmap.Dispose();
                     progressbar.Report(i / (float)files.Length);
                 }
             }
@@ -83,7 +84,7 @@ namespace FileToVox.Converter.Image
             return schematic;
         }
 
-        private void CheckNeighbor(ref Schematic schematic, Bitmap bitmap, Color color, int i, int x, int y)
+        private void CheckNeighbor(ref Schematic schematic, DirectBitmap bitmap, Color color, int i, int x, int y)
         {
             if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
             {

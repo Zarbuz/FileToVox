@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileToVox.CA;
 using FileToVox.Converter;
 using FileToVox.Converter.Image;
 using FileToVox.Converter.PointCloud;
