@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using FileToVox.Extensions;
+using FileToVox.Utils;
 
 namespace FileToVox.Converter.Image
 {
@@ -65,12 +67,12 @@ namespace FileToVox.Converter.Image
             return (int)(position * _maxHeight);
         }
 
-        protected void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, Color color, int x, int y)
+        protected void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, int w, int h, Color color, int x, int y)
         {
             int height = GetHeight(blackBitmap.GetPixel(x, y));
             try
             {
-                if (x - 1 >= 0 && x + 1 < blackBitmap.Width && y - 1 >= 0 && y + 1 < blackBitmap.Height)
+                if (x - 1 >= 0 && x + 1 < w && y - 1 >= 0 && y + 1 < h)
                 {
                     Color colorLeft = blackBitmap.GetPixel(x - 1, y);
                     Color colorTop = blackBitmap.GetPixel(x, y - 1);
@@ -108,6 +110,80 @@ namespace FileToVox.Converter.Image
             {
                 Console.WriteLine($"[ERROR] x: {x}, y: {y}, schematic width: {schematic.Width}, schematic length: {schematic.Length}");
             }
+        }
+
+        protected Schematic WriteSchematicIntern(Bitmap bitmap, Bitmap bitmapColor)
+        {
+	        Schematic schematic = new Schematic
+	        {
+		        Width = (ushort)(bitmap.Width + 1),
+		        Length = (ushort)(bitmap.Height + 1),
+		        Height = (ushort)(_maxHeight + 1),
+		        Blocks = new HashSet<Block>()
+	        };
+
+	        LoadedSchematic.LengthSchematic = schematic.Length;
+	        LoadedSchematic.WidthSchematic = schematic.Width;
+	        LoadedSchematic.HeightSchematic = schematic.Height;
+
+	        Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
+
+	        if (bitmap.Width > 2000 || bitmap.Height > 2000)
+	        {
+		        throw new Exception("Image is too big (max size 2000x2000 px)");
+	        }
+
+            using (ProgressBar progressbar = new ProgressBar())
+            {
+                Console.WriteLine("[LOG] Started to write schematic from picture...");
+                Console.WriteLine("[INFO] Picture Width: " + bitmap.Width);
+                Console.WriteLine("[INFO] Picture Height: " + bitmap.Height);
+
+                int size = bitmap.Width * bitmap.Height;
+                int i = 0;
+                int w = bitmap.Width;
+                int h = bitmap.Height;
+                for (int x = 0; x < w; x++)
+                {
+                    for (int y = 0; y < h; y++)
+                    {
+                        Color color = bitmap.GetPixel(x, y);
+                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : Color.White;
+                        if (color.A != 0)
+                        {
+                            if (_maxHeight != 1)
+                            {
+                                if (_excavate)
+                                {
+                                    GenerateFromMinNeighbor(ref schematic, bitmapBlack, w, h, finalColor, x, y);
+                                }
+                                else
+                                {
+                                    int height = GetHeight(bitmapBlack.GetPixel(x, y));
+                                    if (_top)
+                                    {
+                                        int finalHeight = (height - 1 < 0) ? 0 : height - 1;
+                                        AddBlock(ref schematic, new Block((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
+                                    }
+                                    else
+                                    {
+                                        AddMultipleBlocks(ref schematic, 0, height, x, y, finalColor);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Block block = new Block((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
+                                AddBlock(ref schematic, block);
+                            }
+                        }
+                        progressbar.Report((i++ / (float)size));
+                    }
+                }
+            }
+
+            Console.WriteLine("[LOG] Done.");
+            return schematic;
         }
     }
 }

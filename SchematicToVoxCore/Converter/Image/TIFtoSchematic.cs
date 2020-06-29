@@ -24,6 +24,11 @@ namespace FileToVox.Converter.Image
         private Schematic WriteSchematicFromImage()
         {
             Bitmap bitmap = ConvertTifToBitmap(_path);
+            Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+            using (Graphics gr = Graphics.FromImage(clone))
+            {
+	            gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+            }
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
             Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
 
@@ -35,84 +40,28 @@ namespace FileToVox.Converter.Image
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
                 }
 
-                System.Drawing.Image image = quantizer.QuantizeImage(bitmapColor, 10, 70, _colorLimit);
-                bitmapColor = new Bitmap(image);
+                clone = new Bitmap(bitmapColor.Width, bitmapColor.Height, PixelFormat.Format32bppArgb);
+                using (Graphics gr = Graphics.FromImage(clone))
+                {
+	                gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
+                }
+
+                if (_colorLimit != 256 || bitmapColor.CountColor() > 256)
+                {
+	                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
+	                bitmapColor = new Bitmap(image);
+                }
             }
             else if (_color)
             {
-                System.Drawing.Image image = quantizer.QuantizeImage(bitmap, 10, 70, _colorLimit);
-                bitmap = new Bitmap(image);
+	            if (_colorLimit != 256 || clone.CountColor() > 256)
+	            {
+		            System.Drawing.Image image = quantizer.QuantizeImage(bitmap, 10, 70, _colorLimit);
+		            bitmap = new Bitmap(image);
+	            }
             }
 
-            Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
-
-            if (bitmap.Width > 2000 || bitmap.Height > 2000)
-            {
-                throw new Exception("Image is too big (max size 2000x2000 px)");
-            }
-
-            Schematic schematic = new Schematic
-            {
-                Width = (ushort)(bitmap.Width + 1),
-                Length = (ushort)(bitmap.Height + 1),
-                Height = (ushort)(_maxHeight + 1),
-                Blocks = new HashSet<Block>()
-            };
-
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Height;
-
-
-            using (ProgressBar progressbar = new ProgressBar())
-            {
-                Console.WriteLine("[LOG] Started to write schematic from picture...");
-                Console.WriteLine("[INFO] Image Width: " + bitmap.Width);
-                Console.WriteLine("[INFO] Image Height: " + bitmap.Height);
-
-                int size = bitmap.Width * bitmap.Height;
-                int i = 0;
-                for (int x = 0; x < bitmap.Width; x++)
-                {
-                    for (int y = 0; y < bitmap.Height; y++)
-                    {
-                        Color color = bitmap.GetPixel(x, y);
-                        Color colorGray = bitmapBlack.GetPixel(x, y);
-                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : colorGray;
-                        if (color.A != 0)
-                        {
-                            if (_maxHeight != 1)
-                            {
-                                if (_excavate)
-                                {
-                                    GenerateFromMinNeighbor(ref schematic, bitmapBlack, finalColor, x, y);
-                                }
-                                else
-                                {
-                                    int height = GetHeight(colorGray);
-                                    if (_top)
-                                    {
-                                        int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                                        AddBlock(ref schematic, new Block((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
-                                    }
-                                    else
-                                    {
-                                        AddMultipleBlocks(ref schematic, 0, height, x, y, finalColor);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Block block = new Block((ushort)x, (ushort)1, (ushort)y, finalColor.ColorToUInt());
-                                AddBlock(ref schematic, block);
-                            }
-                        }
-                        progressbar.Report((i++ / (float)size));
-                    }
-                }
-            }
-
-            Console.WriteLine("[LOG] Done.");
+            Schematic schematic = WriteSchematicIntern(bitmap, bitmapColor);
             return schematic;
         }
 
