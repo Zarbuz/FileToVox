@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace FileToVox.Converter.Image
 {
@@ -15,6 +16,17 @@ namespace FileToVox.Converter.Image
         protected readonly bool _top;
         protected readonly string _colorPath;
         protected readonly int _colorLimit;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct RGB
+        {
+	        // Structure of pixel for a 24 bpp bitmap
+	        [FieldOffset(0)] public byte blue;
+	        [FieldOffset(1)] public byte green;
+	        [FieldOffset(2)] public byte red;
+	        [FieldOffset(3)] public byte alpha;
+	        [FieldOffset(0)] public int argb;
+        }
 
         protected ImageToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path)
         {
