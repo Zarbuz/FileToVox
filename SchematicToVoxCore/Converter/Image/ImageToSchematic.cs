@@ -67,7 +67,7 @@ namespace FileToVox.Converter.Image
             return (int)(position * _maxHeight);
         }
 
-        protected void GenerateFromMinNeighbor(ref Schematic schematic, Bitmap blackBitmap, int w, int h, Color color, int x, int y)
+        protected void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y)
         {
             int height = GetHeight(blackBitmap.GetPixel(x, y));
             try
@@ -127,7 +127,9 @@ namespace FileToVox.Converter.Image
 	        LoadedSchematic.HeightSchematic = schematic.Height;
 
 	        Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
-
+            DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack);
+            DirectBitmap directBitmap = new DirectBitmap(bitmap);
+            DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor);
 	        if (bitmap.Width > 2000 || bitmap.Height > 2000)
 	        {
 		        throw new Exception("Image is too big (max size 2000x2000 px)");
@@ -147,19 +149,19 @@ namespace FileToVox.Converter.Image
                 {
                     for (int y = 0; y < h; y++)
                     {
-                        Color color = bitmap.GetPixel(x, y);
-                        Color finalColor = (_colorPath != null) ? bitmapColor.GetPixel(x, y) : (_color) ? color : Color.White;
+                        Color color = directBitmap.GetPixel(x, y);
+                        Color finalColor = (_colorPath != null) ? directBitmapColor.GetPixel(x, y) : (_color) ? color : Color.White;
                         if (color.A != 0)
                         {
                             if (_maxHeight != 1)
                             {
                                 if (_excavate)
                                 {
-                                    GenerateFromMinNeighbor(ref schematic, bitmapBlack, w, h, finalColor, x, y);
+                                    GenerateFromMinNeighbor(ref schematic, directBitmapBlack, w, h, finalColor, x, y);
                                 }
                                 else
                                 {
-                                    int height = GetHeight(bitmapBlack.GetPixel(x, y));
+                                    int height = GetHeight(directBitmapBlack.GetPixel(x, y));
                                     if (_top)
                                     {
                                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
