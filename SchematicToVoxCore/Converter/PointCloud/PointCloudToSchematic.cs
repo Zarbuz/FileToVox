@@ -90,11 +90,11 @@ namespace FileToVox.Converter.PointCloud
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					for (ushort y = 0; y <= schematic.Height; y++)
+					for (ushort y = 0; y < schematic.Height; y++)
 					{
-						for (ushort z = 0; z <= schematic.Length; z++)
+						for (ushort z = 0; z < schematic.Length; z++)
 						{
-							for (ushort x = 0; x <= schematic.Width; x++)
+							for (ushort x = 0; x < schematic.Width; x++)
 							{
 								if (blocks[x, y, z] == 0 && x > 0 && x <= schematic.Width && y > 0 && y <= schematic.Height && z > 0 && z <= schematic.Length)
 								{
@@ -125,12 +125,12 @@ namespace FileToVox.Converter.PointCloud
 			{
 				Console.WriteLine("[LOG] Started to fill all invisibles voxels... [1/2]");
 
-				for (ushort y = 0; y <= schematic.Height; y++)
+				for (ushort y = 0; y < schematic.Height; y++)
 				{
-					for (ushort z = 0; z <= schematic.Length; z++)
+					for (ushort z = 0; z < schematic.Length; z++)
 					{
 						bool fill = false;
-						for (ushort x = 0; x <= schematic.Width; x++)
+						for (ushort x = 0; x < schematic.Width; x++)
 						{
 							if (blocks[x, y, z] != 0 && !fill && HasHoleInLine(blocks, schematic.Width, (ushort)(x + 1), y, z))
 							{
@@ -157,11 +157,11 @@ namespace FileToVox.Converter.PointCloud
 
 				for (int i = 0; i < 10; i++)
 				{
-					for (ushort y = 0; y <= schematic.Height; y++)
+					for (ushort y = 0; y < schematic.Height; y++)
 					{
-						for (ushort z = 0; z <= schematic.Length; z++)
+						for (ushort z = 0; z < schematic.Length; z++)
 						{
-							for (ushort x = 0; x <= schematic.Width; x++)
+							for (ushort x = 0; x < schematic.Width; x++)
 							{
 								if (blocks[x, y, z] == white && x - 1 >= 0 && x + 1 < schematic.Width && y - 1 >= 0 && y + 1 <= schematic.Height && z - 1 >= 0 && z <= schematic.Length)
 								{
@@ -203,7 +203,7 @@ namespace FileToVox.Converter.PointCloud
 					{
 						for (ushort x = 0; x < schematic.Width; x++)
 						{
-							if (blocks[x, y, z] != 0 && x > 0 && x <= schematic.Width && y > 0 && y <= schematic.Height && z > 0 && z <= schematic.Length)
+							if (blocks[x, y, z] != 0 && x > 0 && x < schematic.Width && y > 0 && y < schematic.Height && z > 0 && z < schematic.Length)
 							{
 								if (blocks[x - 1, y, z] == 0 && blocks[x + 1, y, z] == 0 && blocks[x, y - 1, z] == 0 && blocks[x, y + 1, z] == 0 && blocks[x, y, z - 1] == 0 && blocks[x, y, z + 1] == 0)
 								{

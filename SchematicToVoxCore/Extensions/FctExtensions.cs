@@ -1,7 +1,12 @@
-﻿using FileToVox.Schematics;
+﻿using System;
+using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using FileToVox.Converter.Image;
+using FileToVox.Utils;
 
 namespace SchematicToVoxCore.Extensions
 {
@@ -14,20 +19,50 @@ namespace SchematicToVoxCore.Extensions
 
         public static int CountColor(this Bitmap bitmap)
         {
-            List<Color> colors = new List<Color>();
-            for (int i = 0; i < bitmap.Width; i++)
+            Console.WriteLine("[LOG] Check total different colors...");
+            //Make a clone of the bitmap to avoid lock bitmaps in the rest of the code
+            Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+            using (Graphics gr = Graphics.FromImage(clone))
             {
-	            for (int j = 0; j < bitmap.Height; j++)
+	            gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+            }
+
+            BitmapData data = clone.LockBits(new Rectangle(0, 0, clone.Width, clone.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+
+            Dictionary<int, int> counts = new Dictionary<int, int>();
+            unsafe
+            {
+	            ImageToSchematic.RGB* p = (ImageToSchematic.RGB*)data.Scan0;
+	            int last = p->argb;
+	            counts.Add(last, 1);
+	            int h = clone.Height;
+                int w = clone.Width;
+                int index = 0;
+	            using (ProgressBar progressBar = new ProgressBar())
 	            {
-		            Color color = bitmap.GetPixel(i, j);
-		            if (!colors.Contains(color))
+		            for (int y = 0; y < h; ++y)
 		            {
-                        colors.Add(color);
+			            for (int x = 0; x < w; ++x)
+			            {
+				            int c = p->argb;
+				            if (c == last) counts[last] += 1;
+				            else
+				            {
+					            if (!counts.ContainsKey(c))
+						            counts.Add(c, 1);
+					            else
+						            counts[c]++;
+					            last = c;
+				            }
+				            progressBar.Report(index++ / (float)(w * h));
+                            ++p;
+			            }
 		            }
 	            }
             }
-
-            return colors.Count;
+            
+            Console.WriteLine("[LOG] Done. (" + counts.Count + ")");
+            return counts.Count;
         }
 
         public static uint ColorToUInt(this Color color)
@@ -96,4 +131,6 @@ namespace SchematicToVoxCore.Extensions
             return blocks;
         }
     }
+
+	
 }

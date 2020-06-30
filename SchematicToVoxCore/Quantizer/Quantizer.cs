@@ -78,8 +78,12 @@ namespace FileToVox.Quantizer
                     numArray3[index] /= numArray5[index];
                     numArray4[index] /= numArray5[index];
                 }
-                Color color = Color.FromArgb(numArray1[index], numArray2[index], numArray3[index], numArray4[index]);
-                quantizedPalette.Colors.Add(color);
+
+                if (numArray1[index] >= 0 && numArray2[index] >= 0 && numArray3[index] >= 0 && numArray4[index] >= 0)
+                {
+                    Color color = Color.FromArgb(numArray1[index], numArray2[index], numArray3[index], numArray4[index]);
+                    quantizedPalette.Colors.Add(color);
+                }
             }
             quantizedPalette.Colors.Add(Color.FromArgb(0, 0, 0, 0));
             return quantizedPalette;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileToVox.CA;
 using FileToVox.Converter;
 using FileToVox.Converter.Image;
 using FileToVox.Converter.PointCloud;
@@ -214,7 +213,7 @@ namespace FileToVox
 				{
 					if (_slice)
 					{
-						converter = new FolderImageToSchematic(path, _excavate);
+						converter = new FolderImageToSchematic(path, _excavate, _inputColorFile);
 						SchematicToVox(converter, _outputPath);
 					}
 					else
