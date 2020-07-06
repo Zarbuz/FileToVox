@@ -13,6 +13,7 @@ Current files support:
 - .tif
 - .qb (Qubicle)
 - .xyz (X Y Z R G B)
+- folder (of .PNG)
 
 FileToVox can import a folder of images (.PNG) where each image is a layer. (Useful for import fractals from Mandelbulb3D) 
 
@@ -53,6 +54,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer
 --imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer
 --p        --palette=VALUE            set the palette
+--si       --slice                    flag the current input folder as slice
 --sc       --scale=VALUE              set the scale
 --sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
 --t,        --top                     create voxels only at the top of the heightmap
@@ -60,6 +62,8 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
  ```
 
 ## Command compatibility 
+
+### 1. General
 
 | Command | .asc | .binvox | .csv | .obj | .ply | .png | .qb | .schematic | .tif | .xyz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
@@ -79,6 +83,15 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `--top`             | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 
+### 2. Batching
+
+You can process multiple files at once. To do such operation, all your files must be in a folder: `./FileToVox.exe --i folder --o converted`
+
+Note : you can also add argument to the conversion but the argument will be applied to all files.
+
+### 3. Slice
+
+You can process a folder of pictures (all must be .PNG). This is usefull when you import export slices of fractal from program like Mandelbulb3D. To indicate to FileToVox that each picture in your folder is a slice, add the argument `--slice`. 
 
 
 # Installation 
