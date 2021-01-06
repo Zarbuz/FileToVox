@@ -36,6 +36,7 @@ namespace FileToVox
 		private static int _heightMap = 1;
 		private static int _gridSize = 126;
 		private static int _colorLimit = 256;
+		private static int _chunkSize = 125;
 
 		private const int MAX_WORLD_WIDTH = 2001;
 		private const int MAX_WORLD_HEIGHT = 2001;
@@ -50,6 +51,7 @@ namespace FileToVox
 				{"c|color", "enable color when generating heightmap", v => _color = v != null},
 				{"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => _colorLimit =v },
+				{"cs|chunk-size=", "set the chunk size", (int v) => _chunkSize = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => _excavate = v != null },
 				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
 				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => _lonely = v != null },
@@ -146,7 +148,8 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
 			if (_colorLimit > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
-
+			if (_chunkSize <= 10 || _chunkSize > 255)
+				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 256 and greater than 10");
 		}
 
 		private static void DisplayArguments()
@@ -169,6 +172,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified increase size: " + _scale);
 			if (_gridSize != 126)
 				Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
+			if (_chunkSize != 125)
+				Console.WriteLine("[INFO] Specified chunk size: " + _chunkSize);
 			if (_slow != 0)
 				Console.WriteLine("[INFO] Specified winding_number: " + _slow);
 			if (_excavate)
@@ -305,11 +310,11 @@ namespace FileToVox
 			{
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(_inputPaletteFile, _colorLimit);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				writer.WriteModel(outputPath + ".vox", converterPalette.GetPalette(), schematic);
+				writer.WriteModel(_chunkSize, outputPath + ".vox", converterPalette.GetPalette(), schematic);
 			}
 			else
 			{
-				writer.WriteModel(outputPath + ".vox", null, schematic);
+				writer.WriteModel(_chunkSize, outputPath + ".vox", null, schematic);
 			}
 		}
 

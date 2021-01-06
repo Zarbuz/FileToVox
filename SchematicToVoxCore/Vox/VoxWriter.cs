@@ -32,10 +32,11 @@ namespace FileToVox.Vox
 		private List<Color> _palette;
 		private uint[,,] _blocks;
 
-		private const int CHUNK_SIZE = 125;
+		private int CHUNK_SIZE = 125;
 
-		public bool WriteModel(string absolutePath, List<Color> palette, Schematic schematic)
+		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
 		{
+			CHUNK_SIZE = chunkSize;
 			_width = _length = _height = _countSize = _totalBlockCount = _countRegionNonEmpty = 0;
 			_schematic = schematic;
 			_palette = palette;
