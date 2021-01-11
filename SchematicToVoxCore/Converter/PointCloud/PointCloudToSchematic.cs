@@ -289,6 +289,11 @@ namespace FileToVox.Converter.PointCloud
 				blocks[x, y, z] = top;
 			}
 
+			if (front != 0 && back != 0 && top != 0 && bottom != 0)
+			{
+				blocks[x, y, z] = front;
+			}
+
 			return blocks;
 		}
 
