@@ -98,7 +98,8 @@ You can process a folder of pictures (all must be .PNG). This is usefull when yo
 # Installation 
  
 Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
-You also need to install the .NET Core Runtime Library : https://dotnet.microsoft.com/download/dotnet-core/current/runtime
+
+** You need to install the .NET Core Runtime Library : https://dotnet.microsoft.com/download/dotnet-core/current/runtime **
 Then extract the content of zip file in the folder of your choice.
 
 ## config.txt
