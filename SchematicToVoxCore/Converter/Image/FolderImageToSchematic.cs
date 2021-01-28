@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using FileToVox.Extensions;
 
 namespace FileToVox.Converter.Image
 {
@@ -12,26 +14,20 @@ namespace FileToVox.Converter.Image
     {
         private readonly bool _excavate;
         private readonly string _inputColorFile;
-        public FolderImageToSchematic(string path, bool excavate, string inputColorFile) : base(path)
+        private readonly int _colorLimit;
+        public FolderImageToSchematic(string path, bool excavate, string inputColorFile, int colorLimit) : base(path)
         {
             _excavate = excavate;
             _inputColorFile = inputColorFile;
+            _colorLimit = colorLimit;
         }
 
         public override Schematic WriteSchematic()
         {
-            int height = Directory.GetFiles(_path, "*.png").Length;
+            int height = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
-            Schematic schematic = new Schematic();
-            schematic.Height = (ushort) height;
-            schematic.Width = (ushort)height;
-            schematic.Length = (ushort)height;
-            schematic.Blocks = new HashSet<Block>();
-
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Height;
+            List<Block> blocks = new List<Block>();
             Bitmap bitmapColor = null;
             if (_inputColorFile != null)
             {
@@ -42,6 +38,8 @@ namespace FileToVox.Converter.Image
 	            }
             }
 
+            int maxWidth = 0;
+            int maxLength = 0;
             using (ProgressBar progressbar = new ProgressBar())
             {
                 string[] files = Directory.GetFiles(_path);
@@ -65,13 +63,15 @@ namespace FileToVox.Converter.Image
 		                            color = bitmapColor.GetPixel((int)(range * (bitmapColor.Width - 1)), 0);
 	                            }
 
+	                            maxWidth = maxWidth < directBitmap.Width ? directBitmap.Width : maxWidth;
+                                maxLength = maxLength < directBitmap.Height ? directBitmap.Height : maxLength;
                                 if (_excavate)
                                 {
-                                    CheckNeighbor(ref schematic, directBitmap, color, i, x, y);
+                                    CheckNeighbor(ref blocks, directBitmap, color, i, x, y);
                                 }
                                 else
                                 {
-                                    schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+                                    blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                                 }
                             }
                         }
@@ -80,11 +80,24 @@ namespace FileToVox.Converter.Image
                     progressbar.Report(i / (float)files.Length);
                 }
             }
+
+            Schematic schematic = new Schematic();
+            schematic.Height = (ushort)height;
+            schematic.Width = (ushort)maxWidth;
+            schematic.Length = (ushort)maxLength;
+
+            LoadedSchematic.HeightSchematic = schematic.Height;
+            LoadedSchematic.LengthSchematic = schematic.Length;
+            LoadedSchematic.WidthSchematic = schematic.Width;
+            List<Block> list = Quantization.ApplyQuantization(blocks, _colorLimit);
+
+            schematic.Blocks = list.ToHashSet();
+
             Console.WriteLine("[LOG] Done.");
             return schematic;
         }
 
-        private void CheckNeighbor(ref Schematic schematic, DirectBitmap bitmap, Color color, int i, int x, int y)
+        private void CheckNeighbor(ref List<Block> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
         {
             if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
             {
@@ -100,7 +113,7 @@ namespace FileToVox.Converter.Image
 
                 if (!leftColor || !topColor || !rightColor || !bottomColor)
                 {
-	                schematic.Blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+	                blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                 }
             }
         }

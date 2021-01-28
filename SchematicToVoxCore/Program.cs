@@ -148,7 +148,7 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
 			if (_colorLimit > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
-			if (_chunkSize <= 10 || _chunkSize > 255)
+			if (_chunkSize <= 10 || _chunkSize > 256)
 				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 256 and greater than 10");
 		}
 
@@ -218,7 +218,7 @@ namespace FileToVox
 				{
 					if (_slice)
 					{
-						converter = new FolderImageToSchematic(path, _excavate, _inputColorFile);
+						converter = new FolderImageToSchematic(path, _excavate, _inputColorFile, _colorLimit);
 						SchematicToVox(converter, _outputPath);
 					}
 					else
