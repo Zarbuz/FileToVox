@@ -36,7 +36,7 @@ namespace FileToVox
 		private static int _heightMap = 1;
 		private static int _gridSize = 126;
 		private static int _colorLimit = 256;
-		private static int _chunkSize = 125;
+		private static int _chunkSize = 128;
 
 		private const int MAX_WORLD_WIDTH = 2001;
 		private const int MAX_WORLD_HEIGHT = 2001;
@@ -148,8 +148,8 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
 			if (_colorLimit > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
-			if (_chunkSize <= 10 || _chunkSize > 256)
-				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 256 and greater than 10");
+			if (_chunkSize <= 10 || _chunkSize > 257)
+				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 257 and greater than 10");
 		}
 
 		private static void DisplayArguments()
