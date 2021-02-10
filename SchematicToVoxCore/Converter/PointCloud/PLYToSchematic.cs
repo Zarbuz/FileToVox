@@ -102,6 +102,9 @@ namespace FileToVox.Converter.PointCloud
             line = reader.ReadLine();
             readCount += line.Length + 1;
             data.binary = line == "format binary_little_endian 1.0";
+	    
+	    if (line == "format binary_big_endian 1.0")
+	        throw new ArgumentException("Big Endian PLY files are not supported");
 
             // Read header contents.
             for (bool skip = false; ;)
