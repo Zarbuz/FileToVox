@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
+using FileToVox.Generator.Terrain;
 
 namespace FileToVox.Converter.Json
 {
@@ -31,7 +32,7 @@ namespace FileToVox.Converter.Json
 			switch (generatorType)
 			{
 				case GeneratorType.Terrain:
-					return JsonConvert.DeserializeObject<Test>(jo.ToString(), SpecifiedSubclassConversion);
+					return JsonConvert.DeserializeObject<WorldTerrainData>(jo.ToString(), SpecifiedSubclassConversion);
 				case GeneratorType.City:
 					//TODO
 					break;

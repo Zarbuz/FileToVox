@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i RockWall.xyz --e --o RockWall --s 20"
+      "commandLineArgs": "--i JsonPresets/generator.json --o terrain"
     }
   }
 }

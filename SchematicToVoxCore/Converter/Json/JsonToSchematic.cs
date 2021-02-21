@@ -1,13 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using FileToVox.Generator;
+using FileToVox.Generator.Terrain;
+using FileToVox.Generator.Terrain.Data;
 using FileToVox.Schematics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System;
+using System.IO;
 
 namespace FileToVox.Converter.Json
 {
 	public class JsonToSchematic : AbstractToSchematic
 	{
+		private IGenerator _generator;
 		public JsonToSchematic(string path) : base(path)
 		{
 			JsonBaseImportData data = JsonConvert.DeserializeObject<JsonBaseImportData>(File.ReadAllText(path));
@@ -15,7 +18,7 @@ namespace FileToVox.Converter.Json
 			switch (data.GeneratorType)
 			{
 				case GeneratorType.Terrain:
-					Test test1 = data as Test;
+					_generator = new TerrainGenerator(data as WorldTerrainData);
 					break;
 				case GeneratorType.City:
 					break;
@@ -25,13 +28,8 @@ namespace FileToVox.Converter.Json
 
 		public override Schematic WriteSchematic()
 		{
-			throw new NotImplementedException();
+			return _generator.WriteSchematic();
 		}
 	}
 
-	public class Test : JsonBaseImportData
-	{
-		public bool Test1 { get; set; }
-		public int Test2 { get; set; }
-	}
 }

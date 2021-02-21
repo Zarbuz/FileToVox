@@ -49,10 +49,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Generator\" />
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties jsonpresets_4template_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
