@@ -5,11 +5,9 @@ using FileToVox.Utils;
 using MoreLinq;
 using SchematicToVoxCore.Extensions;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FileToVox.Converter.PointCloud
 {

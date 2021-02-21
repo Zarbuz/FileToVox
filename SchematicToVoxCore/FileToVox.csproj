@@ -29,6 +29,7 @@
     <PackageReference Include="fNbt" Version="0.6.4" />
     <PackageReference Include="geometry3Sharp" Version="1.0.324" />
     <PackageReference Include="NDesk.Options.Core" Version="1.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
     <PackageReference Include="nQuant" Version="1.0.3" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
@@ -40,9 +41,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="JsonPresets\generator.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Schematics\config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Generator\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties jsonpresets_4template_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

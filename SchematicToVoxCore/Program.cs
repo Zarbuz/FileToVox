@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using FileToVox.Converter;
 using FileToVox.Converter.Image;
+using FileToVox.Converter.Json;
 using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
 using FileToVox.Vox;
@@ -286,6 +287,8 @@ namespace FileToVox
 					return new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
 				case ".xyz":
 					return new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+				case ".json":
+					return new JsonToSchematic(path);
 				default:
 					return null;
 			}
