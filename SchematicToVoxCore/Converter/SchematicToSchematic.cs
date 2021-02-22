@@ -12,19 +12,19 @@ namespace FileToVox.Converter
 {
 	public class SchematicToSchematic : AbstractToSchematic
     {
-        private readonly int _ignoreMinY;
-        private readonly int _ignoreMaxY;
-        private readonly int _scale;
+        private readonly int mIgnoreMinY;
+        private readonly int mIgnoreMaxY;
+        private readonly int mScale;
 
-        private readonly bool _excavate;
-        private readonly Dictionary<Tuple<int, int>, Color> _colors = new Dictionary<Tuple<int, int>, Color>();
+        private readonly bool mExcavate;
+        private readonly Dictionary<Tuple<int, int>, Color> mColors = new Dictionary<Tuple<int, int>, Color>();
 
         public SchematicToSchematic(string path, int min, int max, bool excavate, float scale) : base(path)
         {
-            _ignoreMinY = min;
-            _ignoreMaxY = max;
-            _scale = (int)scale;
-            _excavate = excavate;
+            mIgnoreMinY = min;
+            mIgnoreMaxY = max;
+            mScale = (int)scale;
+            mExcavate = excavate;
             LoadBlocks();
         }
 
@@ -59,7 +59,7 @@ namespace FileToVox.Converter
                     int g = Convert.ToInt32(values[4]);
                     int b = Convert.ToInt32(values[5]);
 
-                    _colors.Add(new Tuple<int, int>(id, metadata), Color.FromArgb(a, r, g, b));
+                    mColors.Add(new Tuple<int, int>(id, metadata), Color.FromArgb(a, r, g, b));
                     counter++;
                 }
                 Console.WriteLine("[INFO] Loaded blocks: " + counter);
@@ -79,9 +79,9 @@ namespace FileToVox.Converter
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic((ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
 
-            schematic.Width *= (ushort)_scale;
-            schematic.Height *= (ushort)_scale;
-            schematic.Length *= (ushort)_scale;
+            schematic.Width *= (ushort)mScale;
+            schematic.Height *= (ushort)mScale;
+            schematic.Length *= (ushort)mScale;
             return schematic;
         }
 
@@ -136,25 +136,25 @@ namespace FileToVox.Converter
 
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
 
-            LoadedSchematic.WidthSchematic = (ushort)(rawSchematic.Width * _scale);
-            LoadedSchematic.LengthSchematic = (ushort)(rawSchematic.Length * _scale);
-            LoadedSchematic.HeightSchematic = (ushort)(rawSchematic.Heigth * _scale);
+            LoadedSchematic.WidthSchematic = (ushort)(rawSchematic.Width * mScale);
+            LoadedSchematic.LengthSchematic = (ushort)(rawSchematic.Length * mScale);
+            LoadedSchematic.HeightSchematic = (ushort)(rawSchematic.Heigth * mScale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
 
-            int minY = Math.Max(_ignoreMinY, 0);
-            int maxY = rawSchematic.Heigth <= _ignoreMaxY ? Math.Min(_ignoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
+            int minY = Math.Max(mIgnoreMinY, 0);
+            int maxY = rawSchematic.Heigth <= mIgnoreMaxY ? Math.Min(mIgnoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
 
-            Parallel.For(minY, (maxY * _scale), y =>
+            Parallel.For(minY, (maxY * mScale), y =>
             {
-                for (int z = 0; z < (rawSchematic.Length * _scale); z++)
+                for (int z = 0; z < (rawSchematic.Length * mScale); z++)
                 {
-                    for (int x = 0; x < (rawSchematic.Width * _scale); x++)
+                    for (int x = 0; x < (rawSchematic.Width * mScale); x++)
                     {
-                        int yProgress = (y / _scale);
-                        int zProgress = (z / _scale);
-                        int xProgress = (x / _scale);
+                        int yProgress = (y / mScale);
+                        int zProgress = (z / mScale);
+                        int xProgress = (x / mScale);
                         int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
@@ -162,7 +162,7 @@ namespace FileToVox.Converter
                             Block block = new Block((ushort) x, (ushort) y, (ushort) z,
                                 GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
-                            if ((_excavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !_excavate))
+                            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !mExcavate))
                             {
                                 blocks.Add(block);
                             }
@@ -196,11 +196,11 @@ namespace FileToVox.Converter
 
         private Color GetBlockColor(int blockID, int data)
         {
-            if (_colors.TryGetValue(new Tuple<int, int>(blockID, data), out Color color))
+            if (mColors.TryGetValue(new Tuple<int, int>(blockID, data), out Color color))
             {
                 return color;
             }
-            return _colors[new Tuple<int, int>(blockID, 0)];
+            return mColors[new Tuple<int, int>(blockID, 0)];
         }
 
 

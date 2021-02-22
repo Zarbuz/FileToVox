@@ -4,15 +4,15 @@ namespace FileToVox.Vox.Chunks
 {
     public class LayerChunk
     { // LAYR: Layer Chunk
-        public int id;
-        public KeyValue[] attributes;
-        public int unknown;
+        public int Id;
+        public KeyValue[] Attributes;
+        public int Unknown;
 
         public string Name
         {
             get
             {
-                var item = attributes.FirstOrDefault(i => i.Key == "_name");
+                var item = Attributes.FirstOrDefault(i => i.Key == "_name");
                 return item.Key != null ? item.Value : string.Empty;
             }
         }
@@ -20,7 +20,7 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var item = attributes.FirstOrDefault(i => i.Key == "_hidden");
+                var item = Attributes.FirstOrDefault(i => i.Key == "_hidden");
                 return item.Key != null ? item.Value != "0" : false;
             }
         }

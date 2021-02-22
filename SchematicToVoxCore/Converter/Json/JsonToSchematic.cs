@@ -10,7 +10,7 @@ namespace FileToVox.Converter.Json
 {
 	public class JsonToSchematic : AbstractToSchematic
 	{
-		private IGenerator _generator;
+		private readonly IGenerator mGenerator;
 		public JsonToSchematic(string path) : base(path)
 		{
 			JsonBaseImportData data = JsonConvert.DeserializeObject<JsonBaseImportData>(File.ReadAllText(path));
@@ -18,7 +18,7 @@ namespace FileToVox.Converter.Json
 			switch (data.GeneratorType)
 			{
 				case GeneratorType.Terrain:
-					_generator = new TerrainGenerator(data as WorldTerrainData);
+					mGenerator = new TerrainGenerator(data as WorldTerrainData);
 					break;
 				case GeneratorType.City:
 					break;
@@ -28,7 +28,7 @@ namespace FileToVox.Converter.Json
 
 		public override Schematic WriteSchematic()
 		{
-			return _generator.WriteSchematic();
+			return mGenerator.WriteSchematic();
 		}
 	}
 

@@ -1,16 +1,13 @@
-﻿using FileToVox.Extensions;
-using FileToVox.Schematics;
-using FileToVox.Utils;
+﻿using FileToVox.Schematics;
 using SchematicToVoxCore.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace FileToVox.Converter.Image
 {
-	public class PNGToSchematic : ImageToSchematic
+    public class PNGToSchematic : ImageToSchematic
     {
         public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit)
             : base(path, colorPath, height, excavate, color, top, colorLimit)
@@ -33,9 +30,9 @@ namespace FileToVox.Converter.Image
             Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
             Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
 
-            if (_colorPath != null)
+            if (ColorPath != null)
             {
-                bitmapColor = new Bitmap(new FileInfo(_colorPath).FullName);
+                bitmapColor = new Bitmap(new FileInfo(ColorPath).FullName);
                 if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
                 {
                     throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
@@ -47,18 +44,18 @@ namespace FileToVox.Converter.Image
                     gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
                 }
 
-                if (_colorLimit != 256 || bitmapColor.CountColor() > 256)
+                if (ColorLimit != 256 || bitmapColor.CountColor() > 256)
                 {
-                    System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
+                    System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, ColorLimit);
                     bitmapColor = new Bitmap(image);
                 }
 
             }
-            else if (_color)
+            else if (Color)
             {
-	            if (_colorLimit != 256 || clone.CountColor() > 256)
+	            if (ColorLimit != 256 || clone.CountColor() > 256)
 	            {
-		            System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, _colorLimit);
+		            System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, ColorLimit);
 		            bitmap = new Bitmap(image);
                 }
             }

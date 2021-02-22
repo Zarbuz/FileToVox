@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using FileToVox.Generator.Terrain.Data;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
-using FileToVox.Generator.Terrain;
-using FileToVox.Generator.Terrain.Data;
 
 namespace FileToVox.Converter.Json
 {

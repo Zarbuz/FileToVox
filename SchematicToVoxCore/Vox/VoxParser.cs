@@ -21,8 +21,8 @@ namespace FileToVox.Vox
 
         protected const int VERSION = 150;
 
-        protected int _childCount = 0;
-        protected int _chunkCount = 0;
+        protected int ChildCount = 0;
+        protected int ChunkCount = 0;
 
         /// <summary>
         /// Clear model data
@@ -30,16 +30,16 @@ namespace FileToVox.Vox
         /// <param name="model"></param>
         protected void ResetModel(VoxModel model)
         {
-            if (model.voxelFrames != null)
-                model.voxelFrames.Clear();
+            if (model.VoxelFrames != null)
+                model.VoxelFrames.Clear();
             else
-                model.voxelFrames = new List<VoxelData>();
-            model.materialChunks.Clear();
-            model.transformNodeChunks.Clear();
-            model.groupNodeChunks.Clear();
-            model.shapeNodeChunks.Clear();
-            model.layerChunks.Clear();
-            model.rendererSettingChunks.Clear();
+                model.VoxelFrames = new List<VoxelData>();
+            model.MaterialChunks.Clear();
+            model.TransformNodeChunks.Clear();
+            model.GroupNodeChunks.Clear();
+            model.ShapeNodeChunks.Clear();
+            model.LayerChunks.Clear();
+            model.RendererSettingChunks.Clear();
         }
 
 

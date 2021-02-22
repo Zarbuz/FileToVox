@@ -1,16 +1,15 @@
-﻿using System;
+﻿using FileToVox.Converter.Image;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using FileToVox.Converter.Image;
-using FileToVox.Utils;
 
 namespace SchematicToVoxCore.Extensions
 {
-	public static class FctExtensions
+    public static class FctExtensions
     {
         public static int GetColorIntensity(this Color color)
         {

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using FileToVox.Schematics;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using FileToVox.Schematics;
-using nQuant;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Extensions
 {

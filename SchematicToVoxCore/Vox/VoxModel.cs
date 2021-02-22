@@ -8,14 +8,14 @@ namespace FileToVox.Vox
 {
     public class VoxModel
     {
-        public Color[] palette;
-        public List<VoxelData> voxelFrames = new List<VoxelData>();
-        public List<MaterialChunk> materialChunks = new List<MaterialChunk>();
-        public List<TransformNodeChunk> transformNodeChunks = new List<TransformNodeChunk>();
-        public List<GroupNodeChunk> groupNodeChunks = new List<GroupNodeChunk>();
-        public List<ShapeNodeChunk> shapeNodeChunks = new List<ShapeNodeChunk>();
-        public List<LayerChunk> layerChunks = new List<LayerChunk>();
-        public List<RendererSettingChunk> rendererSettingChunks = new List<RendererSettingChunk>();
+        public Color[] Palette;
+        public List<VoxelData> VoxelFrames = new List<VoxelData>();
+        public List<MaterialChunk> MaterialChunks = new List<MaterialChunk>();
+        public List<TransformNodeChunk> TransformNodeChunks = new List<TransformNodeChunk>();
+        public List<GroupNodeChunk> GroupNodeChunks = new List<GroupNodeChunk>();
+        public List<ShapeNodeChunk> ShapeNodeChunks = new List<ShapeNodeChunk>();
+        public List<LayerChunk> LayerChunks = new List<LayerChunk>();
+        public List<RendererSettingChunk> RendererSettingChunks = new List<RendererSettingChunk>();
     }
 
     public enum MaterialType

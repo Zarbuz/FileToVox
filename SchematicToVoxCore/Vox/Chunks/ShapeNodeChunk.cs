@@ -2,13 +2,13 @@
 {
     public class ShapeModel
     {
-        public int modelId;
-        public KeyValue[] attributes; // reserved
+        public int ModelId;
+        public KeyValue[] Attributes; // reserved
     }
 
     public class ShapeNodeChunk : NodeChunk
     { // nSHP: Shape Node Chunk
-        public ShapeModel[] models;
+        public ShapeModel[] Models;
         public override NodeType Type => NodeType.Shape;
     }
 }

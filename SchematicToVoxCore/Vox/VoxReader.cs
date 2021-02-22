@@ -9,14 +9,14 @@ namespace FileToVox.Vox
 {
     public class VoxReader : VoxParser
     {
-        private int _voxelCountLastXYZIChunk = 0;
-        protected string _logOutputFile;
+        private int mVoxelCountLastXyziChunk = 0;
+        protected string LogOutputFile;
 
         public VoxModel LoadModel(string absolutePath)
         {
             VoxModel output = new VoxModel();
-            var name = Path.GetFileNameWithoutExtension(absolutePath);
-            _logOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
+            string? name = Path.GetFileNameWithoutExtension(absolutePath);
+            LogOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
@@ -31,24 +31,24 @@ namespace FileToVox.Vox
                     Console.WriteLine("Version number: " + version + " Was designed for version: " + VERSION);
                 }
                 ResetModel(output);
-                _childCount = 0;
-                _chunkCount = 0;
+                ChildCount = 0;
+                ChunkCount = 0;
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                     ReadChunk(reader, output);
             }
-            if (output.palette == null)
-                output.palette = LoadDefaultPalette();
+            if (output.Palette == null)
+                output.Palette = LoadDefaultPalette();
             return output;
         }
 
         private Color[] LoadDefaultPalette()
         {
-            var colorCount = default_palette.Length;
-            var result = new Color[256];
+            int colorCount = default_palette.Length;
+            Color[] result = new Color[256];
             byte r, g, b, a;
             for (int i = 0; i < colorCount; i++)
             {
-                var source = default_palette[i];
+                uint source = default_palette[i];
                 r = (byte)(source & 0xff);
                 g = (byte)((source >> 8) & 0xff);
                 b = (byte)((source >> 16) & 0xff);
@@ -75,12 +75,12 @@ namespace FileToVox.Vox
 
         private void ReadChunk(BinaryReader reader, VoxModel output)
         {
-            var chunkName = new string(reader.ReadChars(4));
-            var chunkSize = reader.ReadInt32();
-            var childChunkSize = reader.ReadInt32();
-            var chunk = reader.ReadBytes(chunkSize);
-            var children = reader.ReadBytes(childChunkSize);
-            _chunkCount++;
+            string chunkName = new string(reader.ReadChars(4));
+            int chunkSize = reader.ReadInt32();
+            int childChunkSize = reader.ReadInt32();
+            byte[] chunk = reader.ReadBytes(chunkSize);
+            byte[] children = reader.ReadBytes(childChunkSize);
+            ChunkCount++;
 
             using (var chunkReader = new BinaryReader(new MemoryStream(chunk)))
             {
@@ -92,16 +92,16 @@ namespace FileToVox.Vox
                         int w = chunkReader.ReadInt32();
                         int h = chunkReader.ReadInt32();
                         int d = chunkReader.ReadInt32();
-                        if (_childCount >= output.voxelFrames.Count)
-                            output.voxelFrames.Add(new VoxelData());
-                        output.voxelFrames[_childCount].Resize(w, d, h);
-                        _childCount++;
+                        if (ChildCount >= output.VoxelFrames.Count)
+                            output.VoxelFrames.Add(new VoxelData());
+                        output.VoxelFrames[ChildCount].Resize(w, d, h);
+                        ChildCount++;
                         break;
                     case XYZI:
-                        _voxelCountLastXYZIChunk = chunkReader.ReadInt32();
-                        var frame = output.voxelFrames[_childCount - 1];
+                        mVoxelCountLastXyziChunk = chunkReader.ReadInt32();
+                        var frame = output.VoxelFrames[ChildCount - 1];
                         byte x, y, z, color;
-                        for (int i = 0; i < _voxelCountLastXYZIChunk; i++)
+                        for (int i = 0; i < mVoxelCountLastXyziChunk; i++)
                         {
                             x = chunkReader.ReadByte();
                             y = chunkReader.ReadByte();
@@ -111,7 +111,7 @@ namespace FileToVox.Vox
                         }
                         break;
                     case RGBA:
-                        output.palette = LoadPalette(chunkReader);
+                        output.Palette = LoadPalette(chunkReader);
                         break;
                     case MATT:
                         break;
@@ -119,26 +119,26 @@ namespace FileToVox.Vox
                         int frameCount = chunkReader.ReadInt32();
                         for (int i = 0; i < frameCount; i++)
                         {
-                            output.voxelFrames.Add(new VoxelData());
+                            output.VoxelFrames.Add(new VoxelData());
                         }
                         break;
                     case nTRN:
-                        output.transformNodeChunks.Add(ReadTransformNodeChunk(chunkReader));
+                        output.TransformNodeChunks.Add(ReadTransformNodeChunk(chunkReader));
                         break;
                     case nGRP:
-                        output.groupNodeChunks.Add(ReadGroupNodeChunk(chunkReader));
+                        output.GroupNodeChunks.Add(ReadGroupNodeChunk(chunkReader));
                         break;
                     case nSHP:
-                        output.shapeNodeChunks.Add(ReadShapeNodeChunk(chunkReader));
+                        output.ShapeNodeChunks.Add(ReadShapeNodeChunk(chunkReader));
                         break;
                     case LAYR:
-                        output.layerChunks.Add(ReadLayerChunk(chunkReader));
+                        output.LayerChunks.Add(ReadLayerChunk(chunkReader));
                         break;
                     case MATL:
-                        output.materialChunks.Add(ReadMaterialChunk(chunkReader));
+                        output.MaterialChunks.Add(ReadMaterialChunk(chunkReader));
                         break;
                     case rOBJ:
-                        output.rendererSettingChunks.Add(ReaddRObjectChunk(chunkReader));
+                        output.RendererSettingChunks.Add(ReaddRObjectChunk(chunkReader));
                         break;
                     default:
                         Console.WriteLine($"Unknown chunk: \"{chunkName}\"");
@@ -163,53 +163,53 @@ namespace FileToVox.Vox
             if (!Directory.Exists("logs"))
                 Directory.CreateDirectory("logs");
 
-            string path = "logs/" + _logOutputFile;
+            string path = "logs/" + LogOutputFile;
             using (var writer = new StreamWriter(path, true))
             {
-                writer.WriteLine("CHUNK NAME: " + chunkName + " (" + _chunkCount + ")");
+                writer.WriteLine("CHUNK NAME: " + chunkName + " (" + ChunkCount + ")");
                 writer.WriteLine("CHUNK SIZE: " + chunkSize + " BYTES");
                 writer.WriteLine("CHILD CHUNK SIZE: " + childChunkSize);
                 switch (chunkName)
                 {
                     case SIZE:
-                        var frame = output.voxelFrames[_childCount - 1];
+                        var frame = output.VoxelFrames[ChildCount - 1];
                         writer.WriteLine("-> SIZE: " + frame.VoxelsWide + " " + frame.VoxelsTall + " " + frame.VoxelsDeep);
                         break;
                     case XYZI:
-                        writer.WriteLine("-> XYZI: " + _voxelCountLastXYZIChunk);
+                        writer.WriteLine("-> XYZI: " + mVoxelCountLastXyziChunk);
                         break;
                     case nTRN:
-                        var transform = output.transformNodeChunks.Last();
-                        writer.WriteLine("-> TRANSFORM NODE: " + transform.id);
-                        writer.WriteLine("--> CHILD ID: " + transform.childId);
-                        writer.WriteLine("--> RESERVED ID: " + transform.reservedId);
-                        writer.WriteLine("--> LAYER ID: " + transform.layerId);
-                        DisplayAttributes(transform.attributes, writer);
-                        DisplayFrameAttributes(transform.frameAttributes, writer);
+                        var transform = output.TransformNodeChunks.Last();
+                        writer.WriteLine("-> TRANSFORM NODE: " + transform.Id);
+                        writer.WriteLine("--> CHILD ID: " + transform.ChildId);
+                        writer.WriteLine("--> RESERVED ID: " + transform.ReservedId);
+                        writer.WriteLine("--> LAYER ID: " + transform.LayerId);
+                        DisplayAttributes(transform.Attributes, writer);
+                        DisplayFrameAttributes(transform.FrameAttributes, writer);
                         break;
                     case nGRP:
-                        var group = output.groupNodeChunks.Last();
-                        writer.WriteLine("-> GROUP NODE: " + group.id);
-                        group.childIds.ToList().ForEach(t => writer.WriteLine("--> CHILD ID: " + t));
-                        DisplayAttributes(group.attributes, writer);
+                        var group = output.GroupNodeChunks.Last();
+                        writer.WriteLine("-> GROUP NODE: " + group.Id);
+                        group.ChildIds.ToList().ForEach(t => writer.WriteLine("--> CHILD ID: " + t));
+                        DisplayAttributes(group.Attributes, writer);
                         break;
                     case nSHP:
-                        var shape = output.shapeNodeChunks.Last();
-                        writer.WriteLine("-> SHAPE NODE: " + shape.id);
-                        DisplayAttributes(shape.attributes, writer);
-                        DisplayModelAttributes(shape.models, writer);
+                        var shape = output.ShapeNodeChunks.Last();
+                        writer.WriteLine("-> SHAPE NODE: " + shape.Id);
+                        DisplayAttributes(shape.Attributes, writer);
+                        DisplayModelAttributes(shape.Models, writer);
                         break;
                     case LAYR:
-                        var layer = output.layerChunks.Last();
-                        writer.WriteLine("-> LAYER NODE: " + layer.id + " " +
+                        var layer = output.LayerChunks.Last();
+                        writer.WriteLine("-> LAYER NODE: " + layer.Id + " " +
                             layer.Name + " " +
                             layer.Hidden + " " +
-                            layer.unknown);
-                        DisplayAttributes(layer.attributes, writer);
+                            layer.Unknown);
+                        DisplayAttributes(layer.Attributes, writer);
                         break;
                     case MATL:
-                        var material = output.materialChunks.Last();
-                        writer.WriteLine("-> MATERIAL NODE: " + material.id.ToString("F1"));
+                        var material = output.MaterialChunks.Last();
+                        writer.WriteLine("-> MATERIAL NODE: " + material.Id.ToString("F1"));
                         writer.WriteLine("--> ALPHA: " + material.Alpha.ToString("F1"));
                         writer.WriteLine("--> EMISSION: " + material.Emission.ToString("F1"));
                         writer.WriteLine("--> FLUX: " + material.Flux.ToString("F1"));
@@ -218,7 +218,7 @@ namespace FileToVox.Vox
                         writer.WriteLine("--> SMOOTHNESS: " + material.Smoothness.ToString("F1"));
                         writer.WriteLine("--> SPEC: " + material.Spec.ToString("F1"));
                         writer.WriteLine("--> WEIGHT: " + material.Weight.ToString("F1"));
-                        DisplayAttributes(material.properties, writer);
+                        DisplayAttributes(material.Properties, writer);
                         break;
                 }
                 writer.WriteLine("");
@@ -242,8 +242,8 @@ namespace FileToVox.Vox
 
         private void DisplayModelAttributes(ShapeModel[] models, StreamWriter writer)
         {
-            models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.modelId));
-            models.ToList().ForEach(t => DisplayAttributes(t.attributes, writer));
+            models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.ModelId));
+            models.ToList().ForEach(t => DisplayAttributes(t.Attributes, writer));
         }
 
         private static string ReadSTRING(BinaryReader reader)
@@ -278,7 +278,7 @@ namespace FileToVox.Vox
         {
             return new RendererSettingChunk
             {
-                attributes = ReadDICT(chunkReader)
+                Attributes = ReadDICT(chunkReader)
             };
         }
 
@@ -286,8 +286,8 @@ namespace FileToVox.Vox
         {
             return new MaterialChunk
             {
-                id = chunkReader.ReadInt32(),
-                properties = ReadDICT(chunkReader)
+                Id = chunkReader.ReadInt32(),
+                Properties = ReadDICT(chunkReader)
             };
         }
 
@@ -295,9 +295,9 @@ namespace FileToVox.Vox
         {
             return new LayerChunk
             {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                unknown = chunkReader.ReadInt32()
+                Id = chunkReader.ReadInt32(),
+                Attributes = ReadDICT(chunkReader),
+                Unknown = chunkReader.ReadInt32()
             };
         }
 
@@ -305,12 +305,12 @@ namespace FileToVox.Vox
         {
             return new ShapeNodeChunk
             {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                models = ReadArray(chunkReader, r => new ShapeModel
+                Id = chunkReader.ReadInt32(),
+                Attributes = ReadDICT(chunkReader),
+                Models = ReadArray(chunkReader, r => new ShapeModel
                 {
-                    modelId = r.ReadInt32(),
-                    attributes = ReadDICT(r)
+                    ModelId = r.ReadInt32(),
+                    Attributes = ReadDICT(r)
                 })
             };
         }
@@ -319,9 +319,9 @@ namespace FileToVox.Vox
         {
             var groupNodeChunk = new GroupNodeChunk
             {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                childIds = ReadArray(chunkReader, r => r.ReadInt32())
+                Id = chunkReader.ReadInt32(),
+                Attributes = ReadDICT(chunkReader),
+                ChildIds = ReadArray(chunkReader, r => r.ReadInt32())
             };
             return groupNodeChunk;
         }
@@ -330,12 +330,12 @@ namespace FileToVox.Vox
         {
             var transformNodeChunk = new TransformNodeChunk()
             {
-                id = chunkReader.ReadInt32(),
-                attributes = ReadDICT(chunkReader),
-                childId = chunkReader.ReadInt32(),
-                reservedId = chunkReader.ReadInt32(),
-                layerId = chunkReader.ReadInt32(),
-                frameAttributes = ReadArray(chunkReader, r => new DICT(ReadDICT(r)))
+                Id = chunkReader.ReadInt32(),
+                Attributes = ReadDICT(chunkReader),
+                ChildId = chunkReader.ReadInt32(),
+                ReservedId = chunkReader.ReadInt32(),
+                LayerId = chunkReader.ReadInt32(),
+                FrameAttributes = ReadArray(chunkReader, r => new DICT(ReadDICT(r)))
             };
             return transformNodeChunk;
         }

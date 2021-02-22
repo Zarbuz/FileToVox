@@ -12,8 +12,8 @@ namespace FileToVox.Converter
 {
 	public class QBToSchematic : AbstractToSchematic
     {
-        private const int CodeFlag = 2;
-        private const int Nextsliceflag = 6;
+        private const int CODE_FLAG = 2;
+        private const int NEXT_SLICE_FLAG = 6;
 
         public QBToSchematic(string path) : base(path)
         {
@@ -91,11 +91,11 @@ namespace FileToVox.Converter
                             while (true)
                             {
                                 uint data = reader.ReadUInt32();
-                                if (data == Nextsliceflag)
+                                if (data == NEXT_SLICE_FLAG)
                                 {
                                     break;
                                 }
-                                else if (data == CodeFlag)
+                                else if (data == CODE_FLAG)
                                 {
                                     uint count = reader.ReadUInt32();
                                     data = reader.ReadUInt32();
