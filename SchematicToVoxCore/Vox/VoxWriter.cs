@@ -100,9 +100,9 @@ namespace FileToVox.Vox
 		/// <param name="min"></param>
 		/// <param name="max"></param>
 		/// <returns></returns>
-		private List<Block> GetBlocksInRegion(Vector3 min, Vector3 max)
+		private List<Voxel> GetBlocksInRegion(Vector3 min, Vector3 max)
 		{
-			List<Block> list = new List<Block>();
+			List<Voxel> list = new List<Voxel>();
 
 			for (int y = (int)min.Y; y < max.Y; y++)
 			{
@@ -112,8 +112,8 @@ namespace FileToVox.Vox
 					{
 						if (y < mSchematic.Height && x < mSchematic.Width && z < mSchematic.Length && mBlocks[x, y, z] != 0)
 						{
-							Block block = new Block((ushort)x, (ushort)y, (ushort)z, mBlocks[x, y, z]);
-							list.Add(block);
+							Voxel voxel = new Voxel((ushort)x, (ushort)y, (ushort)z, mBlocks[x, y, z]);
+							list.Add(voxel);
 						}
 					}
 				}
@@ -274,7 +274,7 @@ namespace FileToVox.Vox
 		private void WriteXyziChunk(BinaryWriter writer, int index)
 		{
 			writer.Write(Encoding.UTF8.GetBytes(XYZI));
-			IEnumerable<Block> blocks = null;
+			IEnumerable<Voxel> blocks = null;
 
 			if (mSchematic.Blocks.Count > 0)
 			{
@@ -288,7 +288,7 @@ namespace FileToVox.Vox
 			writer.Write(blocks.Count()); //Blocks count
 			mCountBlocks += blocks.Count();
 
-			foreach (Block block in blocks)
+			foreach (Voxel block in blocks)
 			{
 				writer.Write((byte)(block.X % mChunkSize));
 				writer.Write((byte)(block.Y % mChunkSize));
@@ -397,7 +397,7 @@ namespace FileToVox.Vox
 			}
 			else
 			{
-				foreach (Block block in mSchematic.Blocks)
+				foreach (Voxel block in mSchematic.Blocks)
 				{
 					Color color = block.Color.UIntToColor();
 					if (mUsedColors.Count < 256 && !mUsedColors.Contains(color))

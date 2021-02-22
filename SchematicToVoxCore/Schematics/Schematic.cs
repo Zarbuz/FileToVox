@@ -10,11 +10,11 @@ namespace FileToVox.Schematics
         public ushort Height { get; set; }
         public ushort Length { get; set; }
         /// <summary>Contains all usual blocks</summary>
-        public HashSet<Block> Blocks { get; set; }
+        public HashSet<Voxel> Blocks { get; set; }
 
         public Schematic()
         {
-            Blocks = new HashSet<Block>();
+            Blocks = new HashSet<Voxel>();
         }
 
         public Schematic(ushort width, ushort height, ushort length)
@@ -24,7 +24,7 @@ namespace FileToVox.Schematics
             Length = length;
         }
 
-        public Schematic(ushort width, ushort height, ushort length, HashSet<Block> blocks) : this(width, height, length)
+        public Schematic(ushort width, ushort height, ushort length, HashSet<Voxel> blocks) : this(width, height, length)
         {
             Blocks = blocks;
         }
@@ -34,7 +34,7 @@ namespace FileToVox.Schematics
 	        get
 	        {
                 List<uint> colors = new List<uint>();
-                foreach (Block block in Blocks.Where(block => !colors.Contains(block.Color)))
+                foreach (Voxel block in Blocks.Where(block => !colors.Contains(block.Color)))
                 {
 	                colors.Add(block.Color);
                 }

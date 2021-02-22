@@ -82,7 +82,7 @@ namespace FileToVox.Converter
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.Blocks.Add(new Block((ushort) i, (ushort) points[i, j], (ushort) j,
+                        schematic.Blocks.Add(new Voxel((ushort) i, (ushort) points[i, j], (ushort) j,
                             Color.White.ColorToUInt()));
                     }
                 }

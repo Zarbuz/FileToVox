@@ -87,21 +87,21 @@ namespace SchematicToVoxCore.Extensions
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
             => new HashSet<T>(source, comparer);
 
-        public static List<Block> ApplyOffset(this List<Block> list, Vector3 vector)
+        public static List<Voxel> ApplyOffset(this List<Voxel> list, Vector3 vector)
         {
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = new Block((ushort)(list[i].X - vector.X), (ushort)(list[i].Y - vector.Y), (ushort)(list[i].Z - vector.Z), list[i].Color);
+                list[i] = new Voxel((ushort)(list[i].X - vector.X), (ushort)(list[i].Y - vector.Y), (ushort)(list[i].Z - vector.Z), list[i].Color);
             }
 
             return list;
         }
 
-        public static uint[,,] To3DArray(this HashSet<Block> source, Schematic schematic)
+        public static uint[,,] To3DArray(this HashSet<Voxel> source, Schematic schematic)
         {
             uint[,,] blocks = new uint[schematic.Width + 1, schematic.Height + 1, schematic.Length + 1];
 
-            foreach (Block block in source)
+            foreach (Voxel block in source)
             {
                 blocks[block.X, block.Y, block.Z] = block.Color;
             }
@@ -109,9 +109,9 @@ namespace SchematicToVoxCore.Extensions
             return blocks;
         }
 
-        public static HashSet<Block> ToHashSetFrom3DArray(this uint[,,] source)
+        public static HashSet<Voxel> ToHashSetFrom3DArray(this uint[,,] source)
         {
-            HashSet<Block> blocks = new HashSet<Block>();
+            HashSet<Voxel> blocks = new HashSet<Voxel>();
 
             for (int y = 0; y < source.GetLength(1); y++)
             {
@@ -121,7 +121,7 @@ namespace SchematicToVoxCore.Extensions
                     {
                         if (source[x, y, z] != 0)
                         {
-                            blocks.Add(new Block((ushort)x, (ushort)y, (ushort)z, source[x, y, z]));
+                            blocks.Add(new Voxel((ushort)x, (ushort)y, (ushort)z, source[x, y, z]));
                         }
                     }
                 }

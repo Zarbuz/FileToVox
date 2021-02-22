@@ -27,7 +27,7 @@ namespace FileToVox.Converter.Image
             int height = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
-            List<Block> blocks = new List<Block>();
+            List<Voxel> blocks = new List<Voxel>();
             Bitmap bitmapColor = null;
             if (mInputColorFile != null)
             {
@@ -71,7 +71,7 @@ namespace FileToVox.Converter.Image
                                 }
                                 else
                                 {
-                                    blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+                                    blocks.Add(new Voxel((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                                 }
                             }
                         }
@@ -89,7 +89,7 @@ namespace FileToVox.Converter.Image
             LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
-            List<Block> list = Quantization.ApplyQuantization(blocks, mColorLimit);
+            List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
 
             schematic.Blocks = list.ToHashSet();
 
@@ -97,7 +97,7 @@ namespace FileToVox.Converter.Image
             return schematic;
         }
 
-        private void CheckNeighbor(ref List<Block> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
+        private void CheckNeighbor(ref List<Voxel> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
         {
             if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
             {
@@ -113,7 +113,7 @@ namespace FileToVox.Converter.Image
 
                 if (!leftColor || !topColor || !rightColor || !bottomColor)
                 {
-	                blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+	                blocks.Add(new Voxel((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace FileToVox.Converter
                     Width = (ushort)mDimensions.Z,
                     Height = (ushort)mDimensions.Y,
                     Length = (ushort)mDimensions.X,
-                    Blocks = new HashSet<Block>()
+                    Blocks = new HashSet<Voxel>()
                 };
 
                 LoadedSchematic.HeightSchematic = schematic.Height;
@@ -62,7 +62,7 @@ namespace FileToVox.Converter
                             int index = X * xmult + Z * zmult + Y;
                             if (mVoxels[index] == 1)
                             {
-                                schematic.Blocks.Add(new Block((ushort) X, (ushort) Y, (ushort) Z,
+                                schematic.Blocks.Add(new Voxel((ushort) X, (ushort) Y, (ushort) Z,
                                     Color.Wheat.ColorToUInt()));
                             }
                         }

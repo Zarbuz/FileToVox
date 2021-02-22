@@ -9,8 +9,8 @@
 
     public abstract class NodeChunk
     {
-        public int id;
-        public KeyValue[] attributes;
+        public int Id;
+        public KeyValue[] Attributes;
         public abstract NodeType Type { get; }
     }
 }

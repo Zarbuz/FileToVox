@@ -8,7 +8,7 @@ namespace FileToVox.Extensions
 {
     public static class Quantization
     {
-        public static List<Block> ApplyQuantization(List<Block> blocks, int colorLimit)
+        public static List<Voxel> ApplyQuantization(List<Voxel> blocks, int colorLimit)
         {
             Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
             try
@@ -25,7 +25,7 @@ namespace FileToVox.Extensions
                         {
                             int x = i % width;
                             int y = i / width;
-                            blocks[i] = new Block(blocks[i].X, blocks[i].Y, blocks[i].Z,
+                            blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z,
                                 reducedBitmap.GetPixel(x, y).ColorToUInt());
                         }
                     }
@@ -39,7 +39,7 @@ namespace FileToVox.Extensions
             return blocks;
         }
 
-        private static Bitmap CreateBitmapFromColors(List<Block> blocks)
+        private static Bitmap CreateBitmapFromColors(List<Voxel> blocks)
         {
             int width = blocks.Count;
 
@@ -47,8 +47,8 @@ namespace FileToVox.Extensions
 
             for (int i = 0; i < blocks.Count; i++)
             {
-                Block block = blocks[i];
-                Color color = block.Color.UIntToColor();
+                Voxel voxel = blocks[i];
+                Color color = voxel.Color.UIntToColor();
                 int x = i % width;
                 int y = i / width;
                 bitmap.SetPixel(x, y, color);

@@ -13,7 +13,7 @@ namespace FileToVox.Converter.PointCloud
 {
 	public abstract class PointCloudToSchematic : AbstractToSchematic
 	{
-		protected readonly List<Block> _blocks = new List<Block>();
+		protected readonly List<Voxel> _blocks = new List<Voxel>();
 		protected readonly float _scale;
 		protected readonly bool _flood;
 		protected readonly int _colorLimit;
@@ -74,12 +74,12 @@ namespace FileToVox.Converter.PointCloud
 				if (/*max - min < 8000 && */max - min >= 0)
 				{
 					vertices[i] -= new Vector3(min, min, min);
-					_blocks.Add(new Block((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
+					_blocks.Add(new Voxel((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
 				}
 			}
 		}
 
-		protected HashSet<Block> FillHoles(uint[,,] blocks, Schematic schematic)
+		protected HashSet<Voxel> FillHoles(uint[,,] blocks, Schematic schematic)
 		{
 			Console.WriteLine("[LOG] Started to fill holes...");
 			int max = schematic.Width * schematic.Height * schematic.Length * 2;
@@ -114,7 +114,7 @@ namespace FileToVox.Converter.PointCloud
 			return blocks.ToHashSetFrom3DArray();
 		}
 
-		protected HashSet<Block> FillInvisiblesVoxels(uint[,,] blocks, Schematic schematic)
+		protected HashSet<Voxel> FillInvisiblesVoxels(uint[,,] blocks, Schematic schematic)
 		{
 			int max = schematic.Width * schematic.Height * schematic.Length;
 			int index = 0;
@@ -188,7 +188,7 @@ namespace FileToVox.Converter.PointCloud
 			return blocks.ToHashSetFrom3DArray();
 		}
 
-		protected HashSet<Block> FixLonelyVoxels(uint[,,] blocks, Schematic schematic)
+		protected HashSet<Voxel> FixLonelyVoxels(uint[,,] blocks, Schematic schematic)
 		{
 			Console.WriteLine("[LOG] Started to delete lonely voxels...");
 			int max = schematic.Width * schematic.Height * schematic.Length * 2;
@@ -233,15 +233,15 @@ namespace FileToVox.Converter.PointCloud
 				Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
 				Width = (ushort)(Math.Abs(maxX - minX) + 1),
 				Height = (ushort)(Math.Abs(maxY - minY) + 1),
-				Blocks = new HashSet<Block>()
+				Blocks = new HashSet<Voxel>()
 			};
 
 			LoadedSchematic.LengthSchematic = schematic.Length;
 			LoadedSchematic.WidthSchematic = schematic.Width;
 			LoadedSchematic.HeightSchematic = schematic.Height;
-			List<Block> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
+			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 			list.ApplyOffset(new Vector3(minX, minY, minZ));
-			HashSet<Block> hashSet = list.ToHashSet();
+			HashSet<Voxel> hashSet = list.ToHashSet();
 			if (_holes)
 				hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
 			if (_flood)

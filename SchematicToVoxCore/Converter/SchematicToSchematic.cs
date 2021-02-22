@@ -75,7 +75,7 @@ namespace FileToVox.Converter
         private Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            HashSet<Block> blocks = GetBlocks(raw);
+            HashSet<Voxel> blocks = GetBlocks(raw);
             string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
             Schematic schematic = new Schematic((ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
 
@@ -127,7 +127,7 @@ namespace FileToVox.Converter
             return raw;
         }
 
-        private HashSet<Block> GetBlocks(RawSchematic rawSchematic)
+        private HashSet<Voxel> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
             {
@@ -141,7 +141,7 @@ namespace FileToVox.Converter
             LoadedSchematic.HeightSchematic = (ushort)(rawSchematic.Heigth * mScale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            ConcurrentBag<Block> blocks = new ConcurrentBag<Block>();
+            ConcurrentBag<Voxel> blocks = new ConcurrentBag<Voxel>();
 
             int minY = Math.Max(mIgnoreMinY, 0);
             int maxY = rawSchematic.Heigth <= mIgnoreMaxY ? Math.Min(mIgnoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
@@ -159,12 +159,12 @@ namespace FileToVox.Converter
                         int blockId = rawSchematic.Blocks[index];
                         if (blockId != 0)
                         {
-                            Block block = new Block((ushort) x, (ushort) y, (ushort) z,
+                            Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z,
                                 GetBlockColor(rawSchematic.Blocks[index],
                                     rawSchematic.Data[index]).ColorToUInt());
-                            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, block, minY, maxY) || !mExcavate))
+                            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, minY, maxY) || !mExcavate))
                             {
-                                blocks.Add(block);
+                                blocks.Add(voxel);
                             }
                         }
                     }
@@ -174,18 +174,18 @@ namespace FileToVox.Converter
             return blocks.ToHashSet();
         }
 
-        private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Block block, int minY, int maxY)
+        private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Voxel voxel, int minY, int maxY)
         {
-            if (block.X - 1 >= 0 && block.X + 1 < rawSchematic.Width && block.Y - 1 >= minY && block.Y + 1 < maxY && block.Z - 1 >= 0 && block.Z < rawSchematic.Length)
+            if (voxel.X - 1 >= 0 && voxel.X + 1 < rawSchematic.Width && voxel.Y - 1 >= minY && voxel.Y + 1 < maxY && voxel.Z - 1 >= 0 && voxel.Z < rawSchematic.Length)
             {
-                int indexLeftX = (block.Y * rawSchematic.Length + block.Z) * rawSchematic.Width + (block.X - 1);
-                int indexRightX = (block.Y * rawSchematic.Length + block.Z) * rawSchematic.Width + (block.X + 1);
+                int indexLeftX = (voxel.Y * rawSchematic.Length + voxel.Z) * rawSchematic.Width + (voxel.X - 1);
+                int indexRightX = (voxel.Y * rawSchematic.Length + voxel.Z) * rawSchematic.Width + (voxel.X + 1);
 
-                int indexTop = ((block.Y + 1) * rawSchematic.Length + block.Z) * rawSchematic.Width + block.X;
-                int indexBottom = ((block.Y - 1) * rawSchematic.Length + block.Z) * rawSchematic.Width + block.X;
+                int indexTop = ((voxel.Y + 1) * rawSchematic.Length + voxel.Z) * rawSchematic.Width + voxel.X;
+                int indexBottom = ((voxel.Y - 1) * rawSchematic.Length + voxel.Z) * rawSchematic.Width + voxel.X;
 
-                int indexAhead = (block.Y * rawSchematic.Length + block.Z + 1) * rawSchematic.Width + block.X;
-                int indexBehind = (block.Y * rawSchematic.Length + block.Z - 1) * rawSchematic.Width + block.X;
+                int indexAhead = (voxel.Y * rawSchematic.Length + voxel.Z + 1) * rawSchematic.Width + voxel.X;
+                int indexBehind = (voxel.Y * rawSchematic.Length + voxel.Z - 1) * rawSchematic.Width + voxel.X;
                 return (rawSchematic.Blocks[indexLeftX] == 0 || rawSchematic.Blocks[indexRightX] == 0
                     || rawSchematic.Blocks[indexTop] == 0 || rawSchematic.Blocks[indexBottom] == 0
                     || rawSchematic.Blocks[indexAhead] == 0 || rawSchematic.Blocks[indexBehind] == 0);

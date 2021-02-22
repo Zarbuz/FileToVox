@@ -44,19 +44,19 @@ namespace FileToVox.Converter.Image
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                AddBlock(ref schematic, new Block((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
+                AddBlock(ref schematic, new Voxel((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
             }
         }
 
-        protected void AddBlock(ref Schematic schematic, Block block)
+        protected void AddBlock(ref Schematic schematic, Voxel voxel)
         {
             try
             {
-                schematic.Blocks.Add(block);
+                schematic.Blocks.Add(voxel);
             }
             catch (OutOfMemoryException)
             {
-                Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {block.ToString()}");
+                Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {voxel.ToString()}");
             }
         }
 
@@ -98,7 +98,7 @@ namespace FileToVox.Converter.Image
                     {
                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
                         AddBlock(ref schematic,
-                            new Block((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
+                            new Voxel((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
                     }
                 }
                 else
@@ -119,7 +119,7 @@ namespace FileToVox.Converter.Image
 		        Width = (ushort)(bitmap.Width + 1),
 		        Length = (ushort)(bitmap.Height + 1),
 		        Height = (ushort)(MaxHeight + 1),
-		        Blocks = new HashSet<Block>()
+		        Blocks = new HashSet<Voxel>()
 	        };
 
 	        LoadedSchematic.LengthSchematic = schematic.Length;
@@ -165,7 +165,7 @@ namespace FileToVox.Converter.Image
                                     if (Top)
                                     {
                                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                                        AddBlock(ref schematic, new Block((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
+                                        AddBlock(ref schematic, new Voxel((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
                                     }
                                     else
                                     {
@@ -175,8 +175,8 @@ namespace FileToVox.Converter.Image
                             }
                             else
                             {
-                                Block block = new Block((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
-                                AddBlock(ref schematic, block);
+                                Voxel voxel = new Voxel((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
+                                AddBlock(ref schematic, voxel);
                             }
                         }
                         progressbar.Report((i++ / (float)size));

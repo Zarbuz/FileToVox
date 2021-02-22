@@ -162,7 +162,7 @@ namespace FileToVox.Converter
 	            Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
 	            Width = (ushort)(Math.Abs(maxX - minX) + 1),
 	            Height = (ushort)(Math.Abs(maxY - minY) + 1),
-                Blocks = new HashSet<Block>()
+                Blocks = new HashSet<Voxel>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
@@ -185,7 +185,7 @@ namespace FileToVox.Converter
                     ushort y = (ushort) voxel.Y;
                     ushort z = (ushort) voxel.Z;
                     
-                    schematic.Blocks.Add(new Block(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
+                    schematic.Blocks.Add(new Voxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }
