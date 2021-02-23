@@ -14,30 +14,30 @@ namespace FileToVox
 {
 	class Program
 	{
-		private static string _inputPath;
-		private static string _outputPath;
-		private static string _inputColorFile;
-		private static string _inputPaletteFile;
+		private static string mInputPath;
+		private static string mOutputPath;
+		private static string mInputColorFile;
+		private static string mInputPaletteFile;
 
-		private static bool _showHelp;
-		private static bool _verbose;
-		private static bool _excavate;
-		private static bool _color;
-		private static bool _top;
-		private static bool _flood;
-		private static bool _holes;
-		private static bool _lonely;
-		private static bool _slice;
+		private static bool mShowHelp;
+		private static bool mVerbose;
+		private static bool mExcavate;
+		private static bool mColor;
+		private static bool mTop;
+		private static bool mFlood;
+		private static bool mHoles;
+		private static bool mLonely;
+		private static bool mSlice;
 
-		private static float _slow;
+		private static float mSlow;
 
-		private static int _ignoreMinY = -1;
-		private static int _ignoreMaxY = 256;
-		private static float _scale = 1;
-		private static int _heightMap = 1;
-		private static int _gridSize = 126;
-		private static int _colorLimit = 256;
-		private static int _chunkSize = 128;
+		private static int mIgnoreMinY = -1;
+		private static int mIgnoreMaxY = 256;
+		private static float mScale = 1;
+		private static int mHeightMap = 1;
+		private static int mGridSize = 126;
+		private static int mColorLimit = 256;
+		private static int mChunkSize = 128;
 
 		private const int MAX_WORLD_WIDTH = 2001;
 		private const int MAX_WORLD_HEIGHT = 2001;
@@ -47,27 +47,27 @@ namespace FileToVox
 		{
 			OptionSet options = new OptionSet()
 			{
-				{"i|input=", "input path", v => _inputPath = v},
-				{"o|output=", "output path", v => _outputPath = v},
-				{"c|color", "enable color when generating heightmap", v => _color = v != null},
-				{"cm|color-from-file=", "load colors from file", v => _inputColorFile = v },
-				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => _colorLimit =v },
-				{"cs|chunk-size=", "set the chunk size", (int v) => _chunkSize = v},
-				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => _excavate = v != null },
-				{"fl|flood", "fill all invisible voxels", v => _flood = v != null },
-				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => _lonely = v != null },
-				{"fh|fix-holes", "fix holes", v => _holes = v != null },
-				{"gs|grid-size=", "set the grid size", (int v) => _gridSize = v },
-				{"h|help", "help informations", v => _showHelp = v != null},
-				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => _heightMap = v},
-				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => _ignoreMinY = v},
-				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => _ignoreMaxY = v},
-				{"p|palette=", "set the palette", v => _inputPaletteFile = v },
-				{"sc|scale=", "set the scale", (float v) => _scale = v},
-				{"si|slice", "indicate that each picture is a slice", v => _slice = v != null},
-				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => _slow = v },
-				{"t|top", "create voxels only at the top of the heightmap", v => _top = v != null},
-				{"v|verbose", "enable the verbose mode", v => _verbose = v != null},
+				{"i|input=", "input path", v => mInputPath = v},
+				{"o|output=", "output path", v => mOutputPath = v},
+				{"c|color", "enable color when generating heightmap", v => mColor = v != null},
+				{"cm|color-from-file=", "load colors from file", v => mInputColorFile = v },
+				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => mColorLimit =v },
+				{"cs|chunk-size=", "set the chunk size", (int v) => mChunkSize = v},
+				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => mExcavate = v != null },
+				{"fl|flood", "fill all invisible voxels", v => mFlood = v != null },
+				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => mLonely = v != null },
+				{"fh|fix-holes", "fix holes", v => mHoles = v != null },
+				{"gs|grid-size=", "set the grid size", (int v) => mGridSize = v },
+				{"h|help", "help informations", v => mShowHelp = v != null},
+				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => mHeightMap = v},
+				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => mIgnoreMinY = v},
+				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => mIgnoreMaxY = v},
+				{"p|palette=", "set the palette", v => mInputPaletteFile = v },
+				{"sc|scale=", "set the scale", (float v) => mScale = v},
+				{"si|slice", "indicate that each picture is a slice", v => mSlice = v != null},
+				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => mSlow = v },
+				{"t|top", "create voxels only at the top of the heightmap", v => mTop = v != null},
+				{"v|verbose", "enable the verbose mode", v => mVerbose = v != null},
 			};
 
 			try
@@ -77,11 +77,11 @@ namespace FileToVox
 				CheckArguments();
 				DisplayArguments();
 
-				if (_inputPath != null)
+				if (mInputPath != null)
 					ProcessFile();
 				CheckVerbose();
 				Console.WriteLine("[LOG] Done.");
-				if (_verbose)
+				if (mVerbose)
 				{
 					Console.ReadKey();
 				}
@@ -124,7 +124,7 @@ namespace FileToVox
 
 		private static void CheckHelp(OptionSet options)
 		{
-			if (_showHelp)
+			if (mShowHelp)
 			{
 				ShowHelp(options);
 				Environment.Exit(0);
@@ -133,79 +133,79 @@ namespace FileToVox
 
 		private static void CheckArguments()
 		{
-			if (_inputPath == null)
+			if (mInputPath == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --i");
-			if (_outputPath == null)
+			if (mOutputPath == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --o");
-			if (_ignoreMinY < -1)
+			if (mIgnoreMinY < -1)
 				throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
-			if (_ignoreMaxY > 256)
+			if (mIgnoreMaxY > 256)
 				throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
-			if (_scale <= 0)
+			if (mScale <= 0)
 				throw new ArgumentException("[ERROR] --scale argument must be positive");
-			if (_heightMap < 1)
+			if (mHeightMap < 1)
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
-			if (_colorLimit < 0)
+			if (mColorLimit < 0)
 				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
-			if (_colorLimit > 256)
+			if (mColorLimit > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
-			if (_chunkSize <= 10 || _chunkSize > 257)
+			if (mChunkSize <= 10 || mChunkSize > 257)
 				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 257 and greater than 10");
 		}
 
 		private static void DisplayArguments()
 		{
-			if (_inputPath != null)
-				Console.WriteLine("[INFO] Specified input path: " + _inputPath);
-			if (_outputPath != null)
-				Console.WriteLine("[INFO] Specified output path: " + _outputPath);
-			if (_inputColorFile != null)
-				Console.WriteLine("[INFO] Specified input color file: " + _inputColorFile);
-			if (_inputPaletteFile != null)
-				Console.WriteLine("[INFO] Specified palette file: " + _inputPaletteFile);
-			if (_ignoreMinY != -1)
-				Console.WriteLine("[INFO] Specified min Y layer : " + _ignoreMinY);
-			if (_ignoreMaxY != 256)
-				Console.WriteLine("[INFO] Specified max Y layer : " + _ignoreMaxY);
-			if (_colorLimit != 256)
-				Console.WriteLine("[INFO] Specified color limit: " + _colorLimit);
-			if (_scale != 0)
-				Console.WriteLine("[INFO] Specified increase size: " + _scale);
-			if (_gridSize != 126)
-				Console.WriteLine("[INFO] Specified grid size: " + _gridSize);
-			if (_chunkSize != 125)
-				Console.WriteLine("[INFO] Specified chunk size: " + _chunkSize);
-			if (_slow != 0)
-				Console.WriteLine("[INFO] Specified winding_number: " + _slow);
-			if (_excavate)
+			if (mInputPath != null)
+				Console.WriteLine("[INFO] Specified input path: " + mInputPath);
+			if (mOutputPath != null)
+				Console.WriteLine("[INFO] Specified output path: " + mOutputPath);
+			if (mInputColorFile != null)
+				Console.WriteLine("[INFO] Specified input color file: " + mInputColorFile);
+			if (mInputPaletteFile != null)
+				Console.WriteLine("[INFO] Specified palette file: " + mInputPaletteFile);
+			if (mIgnoreMinY != -1)
+				Console.WriteLine("[INFO] Specified min Y layer : " + mIgnoreMinY);
+			if (mIgnoreMaxY != 256)
+				Console.WriteLine("[INFO] Specified max Y layer : " + mIgnoreMaxY);
+			if (mColorLimit != 256)
+				Console.WriteLine("[INFO] Specified color limit: " + mColorLimit);
+			if (mScale != 0)
+				Console.WriteLine("[INFO] Specified increase size: " + mScale);
+			if (mGridSize != 126)
+				Console.WriteLine("[INFO] Specified grid size: " + mGridSize);
+			if (mChunkSize != 125)
+				Console.WriteLine("[INFO] Specified chunk size: " + mChunkSize);
+			if (mSlow != 0)
+				Console.WriteLine("[INFO] Specified winding_number: " + mSlow);
+			if (mExcavate)
 				Console.WriteLine("[INFO] Enabled option: excavate");
-			if (_color)
+			if (mColor)
 				Console.WriteLine("[INFO] Enabled option: color");
-			if (_heightMap != 1)
-				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + _heightMap + ")");
-			if (_top)
+			if (mHeightMap != 1)
+				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + mHeightMap + ")");
+			if (mTop)
 				Console.WriteLine("[INFO] Enabled option: top");
-			if (_flood)
+			if (mFlood)
 				Console.WriteLine("[INFO] Enabled option: flood");
-			if (_holes)
+			if (mHoles)
 				Console.WriteLine("[INFO] Enabled option: fix-holes");
-			if (_lonely)
+			if (mLonely)
 				Console.WriteLine("[INFO] Enabled option: fix-lonely");
-			if (_slice)
+			if (mSlice)
 				Console.WriteLine("[INFO] Enabled option: slice");
 
-			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(_outputPath));
+			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(mOutputPath));
 		}
 
 		private static void ProcessFile()
 		{
-			string path = Path.GetFullPath(_inputPath);
+			string path = Path.GetFullPath(mInputPath);
 			bool isFolder = false;
 			if (!Directory.Exists(path))
 			{
 				if (!File.Exists(path))
 				{
-					throw new FileNotFoundException("[ERROR] Input file not found", _inputPath);
+					throw new FileNotFoundException("[ERROR] Input file not found", mInputPath);
 				}
 			}
 			else
@@ -217,10 +217,10 @@ namespace FileToVox
 				AbstractToSchematic converter;
 				if (isFolder)
 				{
-					if (_slice)
+					if (mSlice)
 					{
-						converter = new FolderImageToSchematic(path, _excavate, _inputColorFile, _colorLimit);
-						SchematicToVox(converter, _outputPath);
+						converter = new FolderImageToSchematic(path, mExcavate, mInputColorFile, mColorLimit);
+						SchematicToVox(converter, mOutputPath);
 					}
 					else
 					{
@@ -233,7 +233,7 @@ namespace FileToVox
 							converter = GetConverter(file);
 							if (converter != null)
 							{
-								SchematicToVox(converter, Path.Combine(_outputPath, Path.GetFileNameWithoutExtension(file)));
+								SchematicToVox(converter, Path.Combine(mOutputPath, Path.GetFileNameWithoutExtension(file)));
 							}
 							else
 							{
@@ -247,7 +247,7 @@ namespace FileToVox
 					converter = GetConverter(path);
 					if (converter != null)
 					{
-						SchematicToVox(converter, _outputPath);
+						SchematicToVox(converter, mOutputPath);
 					}
 					else
 					{
@@ -272,21 +272,21 @@ namespace FileToVox
 				case ".binvox":
 					return new BinvoxToSchematic(path);
 				case ".csv":
-					return new CSVToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+					return new CSVToSchematic(path, mScale, mColorLimit, mHoles, mFlood, mLonely);
 				case ".obj":
-					return new OBJToSchematic(path, _gridSize, _excavate, _slow);
+					return new OBJToSchematic(path, mGridSize, mExcavate, mSlow);
 				case ".ply":
-					return new PLYToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+					return new PLYToSchematic(path, mScale, mColorLimit, mHoles, mFlood, mLonely);
 				case ".png":
-					return new PNGToSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+					return new PNGToSchematic(path, mInputColorFile, mHeightMap, mExcavate, mColor, mTop, mColorLimit);
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
-					return new SchematicToSchematic(path, _ignoreMinY, _ignoreMaxY, _excavate, _scale);
+					return new SchematicToSchematic(path, mIgnoreMinY, mIgnoreMaxY, mExcavate, mScale);
 				case ".tif":
-					return new TIFtoSchematic(path, _inputColorFile, _heightMap, _excavate, _color, _top, _colorLimit);
+					return new TIFtoSchematic(path, mInputColorFile, mHeightMap, mExcavate, mColor, mTop, mColorLimit);
 				case ".xyz":
-					return new XYZToSchematic(path, _scale, _colorLimit, _holes, _flood, _lonely);
+					return new XYZToSchematic(path, mScale, mColorLimit, mHoles, mFlood, mLonely);
 				case ".json":
 					return new JsonToSchematic(path);
 				default:
@@ -309,15 +309,15 @@ namespace FileToVox
 
 			VoxWriter writer = new VoxWriter();
 
-			if (_inputPaletteFile != null)
+			if (mInputPaletteFile != null)
 			{
-				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(_inputPaletteFile, _colorLimit);
+				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(mInputPaletteFile, mColorLimit);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				writer.WriteModel(_chunkSize, outputPath + ".vox", converterPalette.GetPalette(), schematic);
+				writer.WriteModel(mChunkSize, outputPath + ".vox", converterPalette.GetPalette(), schematic);
 			}
 			else
 			{
-				writer.WriteModel(_chunkSize, outputPath + ".vox", null, schematic);
+				writer.WriteModel(mChunkSize, outputPath + ".vox", null, schematic);
 			}
 		}
 
@@ -330,10 +330,10 @@ namespace FileToVox
 
 		private static void CheckVerbose()
 		{
-			if (_verbose)
+			if (mVerbose)
 			{
 				VoxReader reader = new VoxReader();
-				reader.LoadModel(_outputPath + ".vox");
+				reader.LoadModel(mOutputPath + ".vox");
 			}
 		}
 	}

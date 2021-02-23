@@ -1,7 +1,6 @@
 ﻿using FileToVox.Schematics;
 using System;
 using FileToVox.Generator.Terrain.Data;
-using FileToVox.Generator.Terrain.Environment;
 
 namespace FileToVox.Generator.Terrain
 {
