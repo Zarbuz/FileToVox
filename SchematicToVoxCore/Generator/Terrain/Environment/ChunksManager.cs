@@ -4,6 +4,7 @@ using FileToVox.Generator.Terrain.Data;
 using FileToVox.Generator.Terrain.Entities;
 using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace FileToVox.Generator.Terrain
 {
@@ -40,21 +41,21 @@ namespace FileToVox.Generator.Terrain
 
 	public class BiomeLookUp
 	{
-		public BiomeData Data;
+		public BiomeZone Zone;
 		public bool UniqueZone;
-		public List<BiomeData> OverlappingZones = new List<BiomeData>();
+		public List<BiomeZone> OverlappingZones = new List<BiomeZone>();
 
-		public BiomeLookUp(BiomeData biome, bool uniqueZone)
+		public BiomeLookUp(BiomeZone biome, bool uniqueZone)
 		{
-			Data = biome;
+			Zone = biome;
 			UniqueZone = uniqueZone;
 		}
 
-		public BiomeDefinition GetBiome(float altitude, float moisture)
+		public BiomeSettings GetBiome(float altitude, float moisture)
 		{
 			if (UniqueZone)
 			{
-				return Data.Biome;
+				return Zone.Biome;
 			}
 
 			for (int i = 0; i < OverlappingZones.Count; i++)
@@ -66,7 +67,7 @@ namespace FileToVox.Generator.Terrain
 				}
 			}
 
-			return Data.Biome;
+			return Zone.Biome;
 		}
 	}
 
@@ -74,7 +75,7 @@ namespace FileToVox.Generator.Terrain
 	{
 		public float Moisture;
 		public int GroundLevel;
-		public BiomeDefinition Biome;
+		public BiomeSettings Biome;
 	}
 
 	public partial class TerrainEnvironment
@@ -101,6 +102,16 @@ namespace FileToVox.Generator.Terrain
 			InitOctrees();
 			InitHeightMap();
 			InitBiomes();
+
+			if (mWorldTerrainData != null)
+			{
+				if (mWorldTerrainData.TerrainGeneratorSetttings == null)
+				{
+					mWorldTerrainData.TerrainGeneratorSetttings = new TerrainGeneratorSettings(); //TODO
+				}
+
+				mWorldTerrainData.TerrainGeneratorSetttings.Initialize();
+			}
 		}
 
 		#region PrivateMethods
@@ -128,8 +139,79 @@ namespace FileToVox.Generator.Terrain
 
 			if (mWorldTerrainData.Biomes == null || mWorldTerrainData.Biomes.Length == 0)
 			{
-				mWorldTerrainData.DefaultBiome = new BiomeDefinition();
+				mWorldTerrainData.DefaultBiome = new BiomeSettings(); //TODO
 			}
+
+			BiomeZone defaultBiome = new BiomeZone();
+			if (mWorldTerrainData.DefaultBiome != null)
+			{
+				mWorldTerrainData.DefaultBiome.ValidateSettings(mWorldTerrainData);
+				if (mWorldTerrainData.DefaultBiome.Zones != null && mWorldTerrainData.DefaultBiome.Zones.Length > 0)
+				{
+					defaultBiome = mWorldTerrainData.DefaultBiome.Zones[0];
+				}
+			}
+
+			for (int i = 0; i < mBiomeLookUps.Length; i++)
+			{
+				mBiomeLookUps[i] = new BiomeLookUp(defaultBiome, true);
+			}
+
+			if (mWorldTerrainData.Biomes == null)
+				return;
+
+			float maxHeight = mWorldTerrainData.TerrainGeneratorSetttings?.MaxHeight ?? 1000;
+			for (int i = 0; i < mWorldTerrainData.Biomes.Length; i++)
+			{
+				BiomeSettings biome = mWorldTerrainData.Biomes[i];
+				if (biome == null)
+					continue;
+				biome.ValidateSettings(mWorldTerrainData);
+				if (biome.Zones == null)
+					continue;
+
+				for (int j = 0; j <= biome.Zones.Length; j++)
+				{
+					BiomeZone zone = biome.Zones[j];
+					for (int elevation = 0; elevation <= 20; elevation++)
+					{
+						float e0 = maxHeight * elevation / 20f;
+						float e1 = maxHeight * (elevation + 1) / 20f;
+						for (int moisture = 0; moisture <= 20; moisture++)
+						{
+							float m0 = moisture / 20f;
+							float m1 = (moisture + 1) / 20f;
+							if (m0 <= zone.MoistureMax && m1 >= zone.MoistureMin)
+							{
+								int lookupIndex = elevation * 21 + moisture;
+								if (!mBiomeLookUps[lookupIndex].OverlappingZones.Contains(zone))
+								{
+									mBiomeLookUps[lookupIndex].OverlappingZones.Add(zone);
+									if (mBiomeLookUps[lookupIndex].OverlappingZones.Count > 1)
+									{
+										mBiomeLookUps[lookupIndex].UniqueZone = false;
+									}
+								}
+
+								mBiomeLookUps[lookupIndex].Zone = zone;
+								if (zone.MoistureMin > m0 || zone.MoistureMax < 1)
+								{
+									mBiomeLookUps[lookupIndex].UniqueZone = false;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			for (int i = 0; i < mBiomeLookUps.Length; i++)
+			{
+				if (!mBiomeLookUps[i].UniqueZone && !mBiomeLookUps[i].OverlappingZones.Contains(defaultBiome))
+				{
+					mBiomeLookUps[i].OverlappingZones.Add(defaultBiome);
+				}
+			}
+
 		}
 
 		#endregion

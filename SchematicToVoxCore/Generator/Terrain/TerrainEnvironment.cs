@@ -11,6 +11,7 @@ namespace FileToVox.Generator.Terrain
 		public TerrainEnvironment(WorldTerrainData terrainData)
 		{
 			mWorldTerrainData = terrainData;
+			Initialize();
 		}
 	}
 }

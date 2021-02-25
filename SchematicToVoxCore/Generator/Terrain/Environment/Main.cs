@@ -2,8 +2,6 @@
 {
 	public partial class TerrainEnvironment
 	{
-		
-
 		public void Initialize()
 		{
 			InitChunkManager();

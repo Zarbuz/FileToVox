@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace FileToVox.Generator.Terrain.Data
 {
 	[Serializable]
-	public struct BiomeData
+	public struct BiomeZone
 	{
 		public float AltitudeMin { get; set; }
 		public float AltitudeMax { get; set; }
@@ -16,13 +16,13 @@ namespace FileToVox.Generator.Terrain.Data
 		public float MoistureMax { get; set; }
 
 		[JsonIgnore]
-		public BiomeDefinition Biome;
+		public BiomeSettings Biome;
 	}
 
 	[Serializable]
 	public struct BiomeTree
 	{
-		public ModelDefinition Bits { get; set; }
+		public ModelSettings Bits { get; set; }
 		public float Probability { get; set; }
 	}
 
@@ -33,9 +33,9 @@ namespace FileToVox.Generator.Terrain.Data
 	}
 
 	[Serializable]
-	public class BiomeDefinition
+	public class BiomeSettings
 	{
-		public BiomeData[] Zones { get; set; }
+		public BiomeZone[] Zones { get; set; }
 		public Color VoxelTop { get; set; }
 		public Color VoxelDirt { get; set; }
 
@@ -45,5 +45,34 @@ namespace FileToVox.Generator.Terrain.Data
 		public float VegetationDensity { get; set; }
 		public BiomeVegetation[] Vegetation { get; set; }
 
+		public void ValidateSettings(WorldTerrainData world)
+		{
+			if (Trees == null)
+			{
+				Trees = new BiomeTree[0];
+			}
+
+			if (Vegetation == null)
+			{
+				Vegetation = new BiomeVegetation[0];
+			}
+			
+			if (Zones != null)
+			{
+				for (int i = 0; i < Zones.Length; i++)
+				{
+					BiomeZone zone = Zones[i];
+					zone.Biome = this;
+
+					if (zone.MoistureMin == 0 && zone.MoistureMax == 0)
+					{
+						zone.MoistureMax = 1;
+					}
+
+					Zones[i] = zone;
+				}
+			}
+
+		}
 	}
 }

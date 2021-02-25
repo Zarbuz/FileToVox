@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FileToVox.Generator.Terrain.Data
 {
-	public class ModelDefinition
+	public class ModelSettings
 	{
 		public int SizeX { get; set; }
 		public int SizeY { get; set; }
