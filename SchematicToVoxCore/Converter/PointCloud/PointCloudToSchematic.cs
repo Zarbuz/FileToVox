@@ -236,9 +236,6 @@ namespace FileToVox.Converter.PointCloud
 				Blocks = new HashSet<Voxel>()
 			};
 
-			LoadedSchematic.LengthSchematic = schematic.Length;
-			LoadedSchematic.WidthSchematic = schematic.Width;
-			LoadedSchematic.HeightSchematic = schematic.Height;
 			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 			list.ApplyOffset(new Vector3(minX, minY, minZ));
 			HashSet<Voxel> hashSet = list.ToHashSet();

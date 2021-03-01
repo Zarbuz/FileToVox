@@ -86,9 +86,6 @@ namespace FileToVox.Converter.Image
             schematic.Width = (ushort)maxWidth;
             schematic.Length = (ushort)maxLength;
 
-            LoadedSchematic.HeightSchematic = schematic.Height;
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.WidthSchematic = schematic.Width;
             List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
 
             schematic.Blocks = list.ToHashSet();

@@ -1,0 +1,118 @@
+{
+	"width": 100,
+	"length": 100,
+	"generatorType": "Terrain",
+	"seed": 10,
+	"biomes": [
+		{
+			"zones": [
+				{
+					"altitudeMin": 0,
+					"altitudeMax": "63.75",
+					"moistureMin": "0.2",
+					"moistureMax": "0.35"
+				},
+				{
+					"altitudeMin": "63.75",
+					"altitudeMax": "127.5",
+					"moistureMin": "0.25",
+					"moistureMax": "0.65"
+				}
+			],
+			"voxelTop": "12, 46, 45",
+			"voxelDirt": "57, 17, 155",
+			"treeDensity": "0.001",
+			"trees": [
+			],
+			"vegetationDensity": "0.3",
+			"vegetation": [
+				{
+					"color": "17, 151, 233",
+					"probability": "0.1"
+				}
+			]
+		}
+	],
+	"terrainGeneratorSettings": {
+		"maxHeight": 255,
+		"minHeight": -16,
+		"waterLevel": 25,
+		"steps": [
+			{
+				"enabled": true,
+				"operationType": "SampleHeightMapTexture",
+				"noiseTexturePath": "noise/NoiseBase.png",
+				"frequency": "0.1",
+				"noiseRangeMin": "0",
+				"noiseRangeMax": "0.3"
+			},
+			{
+				"enabled": true,
+				"operationType": "BlendAdditive",
+				"inputIndex0": 0,
+				"inputIndex1": 0,
+				"weight0": 1,
+				"weight1": "-0.3"
+			},
+			{
+				"enabled": true,
+				"operationType": "Shift",
+				"param": "0.6"
+			},
+			{
+				"enabled": true,
+				"operationType": "Exponential",
+				"param": "3.8"
+			},
+			{
+				"enabled": true,
+				"operationType": "Shift",
+				"param": "0.065"
+			},
+			{
+				"enabled": true,
+				"operationType": "FlattenOrRaise",
+				"threshold": "0.105",
+				"thresholdParam": "0.1"
+			},
+			{
+				"enabled": true,
+				"operationType": "SampleHeightMapTexture",
+				"noiseTexturePath": "noise/NoiseDetail.png",
+				"frequency": "0.3",
+				"noiseRangeMin": "0",
+				"noiseRangeMax": "0.4"
+			},
+			{
+				"enabled": true,
+				"operationType": "Shift",
+				"param": "0.8"
+			},
+			{
+				"enabled": true,
+				"operationType": "BlendMultiply",
+				"inputIndex1": "7",
+				"inputIndex2": "5"
+			},
+			{
+				"enabled": true,
+				"operationType": "FlattenOrRaise",
+				"threshold": "0.11",
+				"thresholdParam": "5"
+			},
+			{
+				"enabled": true,
+				"operationType": "BeachMask",
+				"inputIndex0": "0",
+				"threshold": "0.14"
+			}
+		],
+		"seaDepthMultiplier": 1,
+		"beachWidth": "0.0009",
+		"waterColor": "0, 67, 255",
+		"shoreColor": "255, 244, 153",
+		"bedrockColor": "44, 44, 44",
+		"moisturePath": "noise/NoiseMoisture.png",
+		"moistureScale": "0.2"
+	}
+}

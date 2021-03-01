@@ -303,7 +303,7 @@ namespace FileToVox.Vox
 					writer.Write((i != 0) ? (byte)i : (byte)1);
 				}
 
-				//_schematic.Blocks.Remove(block);
+				//mSchematic.Blocks.Remove(block);
 			}
 		}
 

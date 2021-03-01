@@ -72,10 +72,6 @@ namespace FileToVox.Converter
                 Height = (ushort) points.Cast<float>().Max()
             };
 
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Height;
-            LoadedSchematic.LengthSchematic = schematic.Length;
-
             for (int i = 0; i < points.GetLength(0); i++)
             {
                 for (int j = 0; j < points.GetLength(1); j++)

@@ -39,9 +39,7 @@ namespace FileToVox
 		private static int mColorLimit = 256;
 		private static int mChunkSize = 128;
 
-		private const int MAX_WORLD_WIDTH = 2001;
-		private const int MAX_WORLD_HEIGHT = 2001;
-		private const int MAX_WORLD_LENGTH = 2001;
+		
 
 		public static void Main(string[] args)
 		{
@@ -301,9 +299,9 @@ namespace FileToVox
 			Console.WriteLine($"[INFO] Vox Length: {schematic.Length}");
 			Console.WriteLine($"[INFO] Vox Height: {schematic.Height}");
 
-			if (schematic.Width > MAX_WORLD_WIDTH || schematic.Length > MAX_WORLD_LENGTH || schematic.Height > MAX_WORLD_HEIGHT)
+			if (schematic.Width > Schematic.MAX_WORLD_WIDTH || schematic.Length > Schematic.MAX_WORLD_LENGTH || schematic.Height > Schematic.MAX_WORLD_HEIGHT)
 			{
-				Console.WriteLine("[ERROR] Voxel model is too big ! MagicaVoxel can't support model bigger than 2000^3");
+				Console.WriteLine("[ERROR] Model is too big ! MagicaVoxel can't support model bigger than 2000x2000x1000");
 				return;
 			}
 

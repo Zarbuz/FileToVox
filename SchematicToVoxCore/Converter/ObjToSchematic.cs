@@ -43,10 +43,6 @@ namespace FileToVox.Converter
                 Length = (ushort)bmp.Dimensions.z
             };
 
-            LoadedSchematic.WidthSchematic = schematic.Width;
-            LoadedSchematic.HeightSchematic = schematic.Height;
-            LoadedSchematic.LengthSchematic = schematic.Length;
-
             if (mWindingNumber != 0)
             {
                 spatial.WindingNumber(Vector3d.Zero);  // seed cache outside of parallel eval

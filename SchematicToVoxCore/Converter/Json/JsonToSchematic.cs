@@ -14,11 +14,13 @@ namespace FileToVox.Converter.Json
 		public JsonToSchematic(string path) : base(path)
 		{
 			JsonBaseImportData data = JsonConvert.DeserializeObject<JsonBaseImportData>(File.ReadAllText(path));
-
 			switch (data.GeneratorType)
 			{
 				case GeneratorType.Terrain:
-					mGenerator = new TerrainGenerator(data as WorldTerrainData);
+					string directoryName = Path.GetDirectoryName(path);
+					WorldTerrainData worldTerrainData = data as WorldTerrainData;
+					worldTerrainData.DirectoryPath = directoryName;
+					mGenerator = new TerrainGenerator(worldTerrainData);
 					break;
 				case GeneratorType.City:
 					break;
