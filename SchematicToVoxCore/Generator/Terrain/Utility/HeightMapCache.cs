@@ -80,5 +80,17 @@
 			Heights = theSector.Heights;
 			return Heights[heightIndex].GroundLevel != 0;
 		}
+
+		public void Clear()
+		{
+			mSectors.Clear();
+			for (int k = 0; k < mSectorsPool.Length; k++)
+			{
+				mSectorsPool[k].Key = 0;
+				mSectorsPool[k].Uses = 0;
+			}
+			mLastKey = 0;
+			mLastSector = -1;
+		}
 	}
 }

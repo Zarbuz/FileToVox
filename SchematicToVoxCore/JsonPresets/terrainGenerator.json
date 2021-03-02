@@ -1,6 +1,6 @@
 {
-	"width": 100,
-	"length": 100,
+	"width": 500,
+	"length": 500,
 	"generatorType": "Terrain",
 	"seed": 10,
 	"biomes": [
@@ -19,15 +19,15 @@
 					"moistureMax": "0.65"
 				}
 			],
-			"voxelTop": "12, 46, 45",
-			"voxelDirt": "57, 17, 155",
+			"voxelTop": "101, 187, 77",
+			"voxelDirt": "153, 102, 51",
 			"treeDensity": "0.001",
 			"trees": [
 			],
 			"vegetationDensity": "0.3",
 			"vegetation": [
 				{
-					"color": "17, 151, 233",
+					"color": "255, 80, 80",
 					"probability": "0.1"
 				}
 			]

@@ -79,6 +79,22 @@ namespace FileToVox.Generator.Terrain
 			}
 		}
 
+		public void DisposeAll()
+		{
+			mLastChunkFetch = null;
+
+			if (mCachedChunks != null)
+			{
+				mCachedChunks.Clear();
+				mCachedChunks = null;
+			}
+
+			// Clear heightmap
+			if (mHeightMapCache != null)
+			{
+				mHeightMapCache.Clear();
+			}
+		}
 
 		public void CheckChunksInRange()
 		{

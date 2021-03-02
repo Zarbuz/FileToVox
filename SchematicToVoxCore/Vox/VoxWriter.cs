@@ -29,7 +29,7 @@ namespace FileToVox.Vox
 		private List<Color> mUsedColors;
 		private List<Color> mPalette;
 		private uint[,,] mBlocks;
-		private int mChunkSize = 125;
+		private int mChunkSize;
 
 		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
 		{

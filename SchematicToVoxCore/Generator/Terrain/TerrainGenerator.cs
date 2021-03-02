@@ -16,22 +16,28 @@ namespace FileToVox.Generator.Terrain
 		public Schematic WriteSchematic()
 		{
 			TerrainEnvironment.Instance.StartGeneration();
+			Schematic schematic = GetSchematic();
+			TerrainEnvironment.Instance.DisposeAll();
+			return schematic;
+		}
 
+		private Schematic GetSchematic()
+		{
 			int width = Math.Min(Math.Max(TerrainEnvironment.Instance.WorldTerrainData.Width, TerrainEnvironment.Instance.WorldTerrainData.Length), 2000);
 			int chunkXZDistance = width / 2;
 			int chunkYDistance = 1000 / 2;
 
 			int visibleXMin = -chunkXZDistance;
-			int visibleXMax = chunkXZDistance;
+			int visibleXMax = chunkXZDistance - 1;
 
 			int visibleZMin = -chunkXZDistance;
-			int visibleZMax = chunkXZDistance;
+			int visibleZMax = chunkXZDistance - 1;
 
 			int visibleYMin = -chunkYDistance;
-			int visibleYMax = chunkYDistance;
+			int visibleYMax = chunkYDistance - 1;
 
 			uint[,,] voxels = TerrainEnvironment.Instance.GetVoxels(new Vector3(visibleXMin, visibleYMin, visibleZMin), new Vector3(visibleXMax, visibleYMax, visibleZMax));
-			Schematic schematic = new Schematic((ushort)(TerrainEnvironment.Instance.WorldTerrainData.Width + 1), 1000, (ushort)(TerrainEnvironment.Instance.WorldTerrainData.Length + 1));
+			Schematic schematic = new Schematic((ushort)TerrainEnvironment.Instance.WorldTerrainData.Width, Schematic.MAX_WORLD_HEIGHT, (ushort)TerrainEnvironment.Instance.WorldTerrainData.Length);
 			schematic.Blocks = new HashSet<Voxel>();
 			for (int y = 0; y < voxels.GetLength(0); y++)
 			{
@@ -41,7 +47,7 @@ namespace FileToVox.Generator.Terrain
 					{
 						if (voxels[y, z, x] != 0)
 						{
-							schematic.Blocks.Add(new Voxel((ushort) x, (ushort) y, (ushort) z, voxels[y, z, x]));
+							schematic.Blocks.Add(new Voxel((ushort)x, (ushort)y, (ushort)z, voxels[y, z, x]));
 						}
 					}
 				}

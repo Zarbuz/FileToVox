@@ -339,12 +339,12 @@ namespace FileToVox.Generator.Terrain.Data
 					biome = new BiomeSettings(); //TODO
 				}
 
-				int y = (int) (surfaceLevel - position.Y);
+				int y = (int)(surfaceLevel - position.Y);
 				if (y >= TerrainEnvironment.CHUNK_SIZE)
 				{
 					y = TerrainEnvironment.CHUNK_SIZE - 1;
 				}
-					
+
 				pos.Y = position.Y + y;
 				pos.X = position.X + (arrayIndex & (TerrainEnvironment.CHUNK_SIZE - 1));
 				pos.Z = position.Z + (arrayIndex >> shiftAmount);

@@ -4,6 +4,8 @@ using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using System;
+using System.Drawing;
+using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Generator.Terrain
 {
@@ -34,17 +36,13 @@ namespace FileToVox.Generator.Terrain
 
 		public bool GetChunk(Vector3 position, out VoxelChunk chunk, bool forceCreation = false)
 		{
-			int chunkX = (int)(position.X / CHUNK_SIZE);
-			int chunkY = (int)(position.Y / CHUNK_SIZE);
-			int chunkZ = (int)(position.Z / CHUNK_SIZE);
+			FastMath.FloorToInt(position.X / CHUNK_SIZE, position.Y / CHUNK_SIZE, position.Z / CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 			return GetChunkFast(chunkX, chunkY, chunkZ, out chunk, forceCreation);
 		}
 
 		public bool GetVoxelIndex(Vector3 position, out VoxelChunk chunk, out int voxelIndex, bool createChunkIfNotExists = true)
 		{
-			int chunkX = (int)(position.X / CHUNK_SIZE);
-			int chunkY = (int)(position.Y / CHUNK_SIZE);
-			int chunkZ = (int)(position.Z / CHUNK_SIZE);
+			FastMath.FloorToInt(position.X / CHUNK_SIZE, position.Y / CHUNK_SIZE, position.Z / CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
 			if (GetChunkFast(chunkX, chunkY, chunkZ, out chunk, createChunkIfNotExists))
 			{
@@ -61,9 +59,7 @@ namespace FileToVox.Generator.Terrain
 
 		public Vector3 GetChunkPosition(Vector3 position)
 		{
-			int x = (int)(position.X / CHUNK_SIZE);
-			int y = (int)(position.Y / CHUNK_SIZE);
-			int z = (int)(position.Z / CHUNK_SIZE);
+			FastMath.FloorToInt(position.X / CHUNK_SIZE, position.Y / CHUNK_SIZE, position.Z / CHUNK_SIZE, out int x, out int y, out int z);
 
 			x = x * CHUNK_SIZE + CHUNK_HALF_SIZE;
 			y = y * CHUNK_SIZE + CHUNK_HALF_SIZE;
@@ -102,6 +98,9 @@ namespace FileToVox.Generator.Terrain
 						if (GetChunk(position, out VoxelChunk chunk, false))
 						{
 							FastMath.FloorToInt(chunk.Position.X, chunk.Position.Y, chunk.Position.Z, out int chunkMinX, out int chunkMinY, out int chunkMinZ);
+							chunkMinX -= CHUNK_HALF_SIZE;
+							chunkMinY -= CHUNK_HALF_SIZE;
+							chunkMinZ -= CHUNK_HALF_SIZE;
 							for (int vy = 0; vy < CHUNK_SIZE; vy++)
 							{
 								int wy = chunkMinY + vy;
