@@ -122,10 +122,6 @@ namespace FileToVox.Converter.Image
 		        Blocks = new HashSet<Voxel>()
 	        };
 
-	        LoadedSchematic.LengthSchematic = schematic.Length;
-	        LoadedSchematic.WidthSchematic = schematic.Width;
-	        LoadedSchematic.HeightSchematic = schematic.Height;
-
 	        Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
             DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack);
             DirectBitmap directBitmap = new DirectBitmap(bitmap);

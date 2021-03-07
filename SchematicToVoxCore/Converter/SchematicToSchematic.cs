@@ -96,11 +96,9 @@ namespace FileToVox.Converter
                 {
                     case "Width": //Short
                         raw.Width = tag.ShortValue;
-                        LoadedSchematic.WidthSchematic = (ushort)raw.Width;
                         break;
                     case "Height": //Short
                         raw.Heigth = tag.ShortValue;
-                        LoadedSchematic.HeightSchematic = (ushort)raw.Heigth;
                         break;
                     case "Length": //Short
                         raw.Length = tag.ShortValue;
@@ -135,10 +133,6 @@ namespace FileToVox.Converter
             }
 
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
-
-            LoadedSchematic.WidthSchematic = (ushort)(rawSchematic.Width * mScale);
-            LoadedSchematic.LengthSchematic = (ushort)(rawSchematic.Length * mScale);
-            LoadedSchematic.HeightSchematic = (ushort)(rawSchematic.Heigth * mScale);
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
             ConcurrentBag<Voxel> blocks = new ConcurrentBag<Voxel>();

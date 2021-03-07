@@ -1,4 +1,5 @@
-﻿using FileToVox.Converter.Json;
+﻿using System.Text.Json.Serialization;
+using FileToVox.Converter.Json;
 
 namespace FileToVox.Generator.Terrain.Data
 {
@@ -9,6 +10,8 @@ namespace FileToVox.Generator.Terrain.Data
 
 		public BiomeSettings DefaultBiome { get; set; }
 
-		public TerrainGeneratorSettings TerrainGeneratorSetttings { get; set; }
+		public TerrainGeneratorSettings TerrainGeneratorSettings { get; set; }
+
+		[JsonIgnore] public string DirectoryPath { get; set; }
 	}
 }

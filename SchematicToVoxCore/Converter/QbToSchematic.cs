@@ -165,10 +165,6 @@ namespace FileToVox.Converter
                 Blocks = new HashSet<Voxel>()
             };
 
-            LoadedSchematic.LengthSchematic = schematic.Length;
-            LoadedSchematic.HeightSchematic = schematic.Height;
-            LoadedSchematic.WidthSchematic = schematic.Width;
-
             Console.WriteLine("[LOG] Started to write schematic from qb...");
             Console.WriteLine("[INFO] Qb Width: " + schematic.Width);
             Console.WriteLine("[INFO] Qb Length: " + schematic.Length);

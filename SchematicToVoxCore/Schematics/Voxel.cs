@@ -9,8 +9,8 @@ namespace FileToVox.Schematics
         public readonly ushort X;
         public readonly ushort Y;
         public readonly ushort Z;
-        public readonly uint Color;
         public readonly int PalettePosition;
+        public uint Color;
 
         public Voxel(ushort x, ushort y, ushort z, uint color, int palettePosition = -1)
         {
@@ -21,6 +21,7 @@ namespace FileToVox.Schematics
             PalettePosition = palettePosition;
         }
 
+
         public bool IsDefaultValue()
         {
             return X == Y && Y == Z && Z == 0;
@@ -29,7 +30,7 @@ namespace FileToVox.Schematics
         public override int GetHashCode()
         {
             //the index of the block at X,Y,Z is (Y×length + Z)×width + X
-            return (Y * LoadedSchematic.LengthSchematic + Z) * LoadedSchematic.WidthSchematic + X;
+            return (Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X;
         }
 
         public bool Equals(Voxel other)

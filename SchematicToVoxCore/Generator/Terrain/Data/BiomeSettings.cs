@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.Drawing;
-using System.Text;
-using FileToVox.Schematics;
-using Newtonsoft.Json;
 
 namespace FileToVox.Generator.Terrain.Data
 {
@@ -45,6 +42,7 @@ namespace FileToVox.Generator.Terrain.Data
 		public float VegetationDensity { get; set; }
 		public BiomeVegetation[] Vegetation { get; set; }
 
+		[JsonIgnore] public int BiomeGeneration;
 		public void ValidateSettings(WorldTerrainData world)
 		{
 			if (Trees == null)

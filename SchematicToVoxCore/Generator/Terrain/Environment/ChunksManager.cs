@@ -3,42 +3,11 @@ using System.Collections.Generic;
 using FileToVox.Generator.Terrain.Data;
 using FileToVox.Generator.Terrain.Entities;
 using FileToVox.Generator.Terrain.Utility;
+using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace FileToVox.Generator.Terrain
 {
-	public class Octree
-	{
-		public Vector3 Center;
-		public int Extents;
-		public Octree Parent;
-		public Octree[] Children;
-		public int ExploredChildren;
-		public bool Explored;
-
-		public Octree(Octree parent, Vector3 center, int extents)
-		{
-			Parent = parent;
-			Center = center;
-			Extents = extents;
-		}
-
-		public void Explode()
-		{
-			Children = new Octree[8];
-			int half = Extents / 2;
-			Children[0] = new Octree(this, new Vector3(Center.X - half, Center.Y + half, Center.Z + half), half);
-			Children[1] = new Octree(this, new Vector3(Center.X + half, Center.Y + half, Center.Z + half), half);
-			Children[2] = new Octree(this, new Vector3(Center.X - half, Center.Y + half, Center.Z - half), half);
-			Children[3] = new Octree(this, new Vector3(Center.X + half, Center.Y + half, Center.Z - half), half);
-			Children[4] = new Octree(this, new Vector3(Center.X - half, Center.Y - half, Center.Z + half), half);
-			Children[5] = new Octree(this, new Vector3(Center.X + half, Center.Y - half, Center.Z + half), half);
-			Children[6] = new Octree(this, new Vector3(Center.X - half, Center.Y - half, Center.Z - half), half);
-			Children[7] = new Octree(this, new Vector3(Center.X + half, Center.Y - half, Center.Z - half), half);
-		}
-	}
-
 	public class BiomeLookUp
 	{
 		public BiomeZone Zone;
@@ -61,7 +30,7 @@ namespace FileToVox.Generator.Terrain
 			for (int i = 0; i < OverlappingZones.Count; i++)
 			{
 				if (altitude >= OverlappingZones[i].AltitudeMin && altitude < OverlappingZones[i].AltitudeMax &&
-				    moisture >= OverlappingZones[i].MoistureMin && moisture < OverlappingZones[i].MoistureMax)
+					moisture >= OverlappingZones[i].MoistureMin && moisture < OverlappingZones[i].MoistureMax)
 				{
 					return OverlappingZones[i].Biome;
 				}
@@ -80,49 +49,106 @@ namespace FileToVox.Generator.Terrain
 
 	public partial class TerrainEnvironment
 	{
+		#region Fields
 		private Dictionary<int, CachedChunk> mCachedChunks;
-		private Octree[] mChunkRequests;
-		private int mChunkRequestLast;
-		private const int CHUNKS_CREATION_BUFFER_SIZE = 15000;
-
-
-		private Dictionary<Vector3, Octree> mOctreeRoots;
-		private int mOctreeSize;
-
+		private int mVisibleXMin, mVisibleXMax, mVisibleYMin, mVisibleYMax, mVisibleZMin, mVisibleZMax;
 
 		private HeightMapCache mHeightMapCache;
 		private BiomeLookUp[] mBiomeLookUps;
+		#endregion
+
+		#region PublicMethods
 
 		public void InitChunkManager()
 		{
 			mCachedChunks = new Dictionary<int, CachedChunk>();
-			mChunkRequests = new Octree[CHUNKS_CREATION_BUFFER_SIZE];
-			mChunkRequestLast = -1;
 
-			InitOctrees();
 			InitHeightMap();
 			InitBiomes();
 
-			if (mWorldTerrainData != null)
+			NoiseTools.SeedOffset = WorldRandom.GetVector3(Vector3.zero, 1024);
+
+			if (WorldTerrainData != null)
 			{
-				if (mWorldTerrainData.TerrainGeneratorSetttings == null)
+				if (WorldTerrainData.TerrainGeneratorSettings == null)
 				{
-					mWorldTerrainData.TerrainGeneratorSetttings = new TerrainGeneratorSettings(); //TODO
+					WorldTerrainData.TerrainGeneratorSettings = new TerrainGeneratorSettings(); //TODO
 				}
 
-				mWorldTerrainData.TerrainGeneratorSetttings.Initialize();
+				WorldTerrainData.TerrainGeneratorSettings.Initialize();
 			}
 		}
 
-		#region PrivateMethods
-
-		private void InitOctrees()
+		public void DisposeAll()
 		{
-			mOctreeRoots = new Dictionary<Vector3, Octree>();
-			mOctreeSize = 60 * CHUNK_SIZE * 2; //60: max value -> 60 * 16 *2 < 2000
-			float l2 = MathF.Log(mOctreeSize, 2);
-			mOctreeSize = (int) MathF.Pow(2, MathF.Ceiling(l2));
+			mLastChunkFetch = null;
+
+			if (mCachedChunks != null)
+			{
+				mCachedChunks.Clear();
+				mCachedChunks = null;
+			}
+
+			// Clear heightmap
+			if (mHeightMapCache != null)
+			{
+				mHeightMapCache.Clear();
+			}
 		}
+
+		public void CheckChunksInRange()
+		{
+			//MV has a max size of 2000x2000
+			int width = Math.Min(Math.Max(WorldTerrainData.Width, WorldTerrainData.Length), Schematic.MAX_WORLD_WIDTH);
+			int chunkXZDistance = (width / CHUNK_SIZE) / 2;
+			int chunkYDistance = (Schematic.MAX_WORLD_HEIGHT / CHUNK_SIZE) / 2;
+
+			mVisibleXMin = -chunkXZDistance;
+			mVisibleXMax = chunkXZDistance;
+
+			mVisibleZMin = -chunkXZDistance;
+			mVisibleZMax = chunkXZDistance;
+
+			mVisibleYMin = -chunkYDistance;
+			mVisibleYMax = chunkYDistance;
+			CheckNewNearChunks();
+		}
+
+		public void GetHeightMapInfoFast(float x, float z, HeightMapInfo[] heightChunkData)
+		{
+			int ix = FastMath.FloorToInt(x);
+			int iz = FastMath.FloorToInt(z);
+
+			TerrainGeneratorSettings tg = WorldTerrainData.TerrainGeneratorSettings;
+			for (int zz = 0; zz < CHUNK_SIZE; zz++)
+			{
+				for (int xx = 0; xx < CHUNK_SIZE; xx++)
+				{
+					if (!mHeightMapCache.TryGetValue(ix + xx, iz + zz, out HeightMapInfo[] heights, out int heightsIndex))
+					{
+						tg.GetHeightAndMoisture(ix + xx, iz + zz, out float altitude, out float moisture);
+						if (altitude > 1f)
+							altitude = 1f;
+						else if (altitude < 0f)
+							altitude = 0f;
+						if (moisture > 1f)
+							moisture = 1f;
+						else if (moisture < 0f)
+							moisture = 0f;
+						int biomeIndex = (int)(altitude * 20) * 21 + (int)(moisture * 20f);
+						float groundLevel = altitude * tg.MaxHeight;
+						heights[heightsIndex].GroundLevel = (int)groundLevel;
+						heights[heightsIndex].Moisture = moisture;
+						heights[heightsIndex].Biome = mBiomeLookUps[biomeIndex].GetBiome(groundLevel, moisture);
+					}
+					heightChunkData[zz * CHUNK_SIZE + xx] = heights[heightsIndex];
+				}
+			}
+		}
+
+		#endregion
+
+		#region PrivateMethods
 
 		private void InitHeightMap()
 		{
@@ -134,21 +160,21 @@ namespace FileToVox.Generator.Terrain
 		private void InitBiomes()
 		{
 			mBiomeLookUps = new BiomeLookUp[441];
-			if (mWorldTerrainData == null)
+			if (WorldTerrainData == null)
 				return;
 
-			if (mWorldTerrainData.Biomes == null || mWorldTerrainData.Biomes.Length == 0)
+			if (WorldTerrainData.Biomes == null || WorldTerrainData.Biomes.Length == 0)
 			{
-				mWorldTerrainData.DefaultBiome = new BiomeSettings(); //TODO
+				WorldTerrainData.DefaultBiome = new BiomeSettings(); //TODO
 			}
 
 			BiomeZone defaultBiome = new BiomeZone();
-			if (mWorldTerrainData.DefaultBiome != null)
+			if (WorldTerrainData.DefaultBiome != null)
 			{
-				mWorldTerrainData.DefaultBiome.ValidateSettings(mWorldTerrainData);
-				if (mWorldTerrainData.DefaultBiome.Zones != null && mWorldTerrainData.DefaultBiome.Zones.Length > 0)
+				WorldTerrainData.DefaultBiome.ValidateSettings(WorldTerrainData);
+				if (WorldTerrainData.DefaultBiome.Zones != null && WorldTerrainData.DefaultBiome.Zones.Length > 0)
 				{
-					defaultBiome = mWorldTerrainData.DefaultBiome.Zones[0];
+					defaultBiome = WorldTerrainData.DefaultBiome.Zones[0];
 				}
 			}
 
@@ -157,26 +183,23 @@ namespace FileToVox.Generator.Terrain
 				mBiomeLookUps[i] = new BiomeLookUp(defaultBiome, true);
 			}
 
-			if (mWorldTerrainData.Biomes == null)
+			if (WorldTerrainData.Biomes == null)
 				return;
 
-			float maxHeight = mWorldTerrainData.TerrainGeneratorSetttings?.MaxHeight ?? 1000;
-			for (int i = 0; i < mWorldTerrainData.Biomes.Length; i++)
+			for (int i = 0; i < WorldTerrainData.Biomes.Length; i++)
 			{
-				BiomeSettings biome = mWorldTerrainData.Biomes[i];
+				BiomeSettings biome = WorldTerrainData.Biomes[i];
 				if (biome == null)
 					continue;
-				biome.ValidateSettings(mWorldTerrainData);
+				biome.ValidateSettings(WorldTerrainData);
 				if (biome.Zones == null)
 					continue;
 
-				for (int j = 0; j <= biome.Zones.Length; j++)
+				for (int j = 0; j < biome.Zones.Length; j++)
 				{
 					BiomeZone zone = biome.Zones[j];
 					for (int elevation = 0; elevation <= 20; elevation++)
 					{
-						float e0 = maxHeight * elevation / 20f;
-						float e1 = maxHeight * (elevation + 1) / 20f;
 						for (int moisture = 0; moisture <= 20; moisture++)
 						{
 							float m0 = moisture / 20f;
@@ -214,6 +237,25 @@ namespace FileToVox.Generator.Terrain
 
 		}
 
+		private void CheckNewNearChunks()
+		{
+			for (int x = mVisibleXMin; x <= mVisibleXMax; x++)
+			{
+				int x00 = Schematic.MAX_WORLD_LENGTH * Schematic.MAX_WORLD_HEIGHT * (x + Schematic.MAX_WORLD_WIDTH);
+				for (int y = mVisibleYMin; y <= mVisibleYMax; y++)
+				{
+					int y00 = Schematic.MAX_WORLD_LENGTH * (y + Schematic.MAX_WORLD_HEIGHT);
+					int h00 = x00 + y00;
+					for (int z = mVisibleZMin; z <= mVisibleZMax; z++)
+					{
+						int hash = h00 + z;
+						CreateChunk(hash, x, y, z);
+					}
+				}
+			}
+		}
 		#endregion
+
+
 	}
 }

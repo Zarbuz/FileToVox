@@ -6,7 +6,11 @@ namespace FileToVox.Schematics
 {
 	public class Schematic
     {
-        public ushort Width { get; set; }
+	    public const int MAX_WORLD_WIDTH = 2000;
+	    public const int MAX_WORLD_HEIGHT = 1000;
+	    public const int MAX_WORLD_LENGTH = 2000;
+
+		public ushort Width { get; set; }
         public ushort Height { get; set; }
         public ushort Length { get; set; }
         /// <summary>Contains all usual blocks</summary>

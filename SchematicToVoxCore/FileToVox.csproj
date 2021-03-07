@@ -41,7 +41,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="JsonPresets\generator.json">
+    <None Update="JsonPresets\noise\NoiseBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JsonPresets\noise\NoiseDetail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JsonPresets\noise\NoiseMoisture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JsonPresets\terrainGenerator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Schematics\config.txt">

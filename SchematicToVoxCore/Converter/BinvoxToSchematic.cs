@@ -45,10 +45,6 @@ namespace FileToVox.Converter
                     Blocks = new HashSet<Voxel>()
                 };
 
-                LoadedSchematic.HeightSchematic = schematic.Height;
-                LoadedSchematic.LengthSchematic = schematic.Length;
-                LoadedSchematic.WidthSchematic = schematic.Width;
-
                 int xmult = (int)(mDimensions.Z * mDimensions.Y);
                 int zmult = (int) (mDimensions.Z);
 
