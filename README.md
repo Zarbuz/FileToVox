@@ -19,7 +19,6 @@ FileToVox can import a folder of images (.PNG) where each image is a layer. (Use
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
-
 # How use it ? 
 
 - You need to open a console (like cmd or Powershell in Windows)
@@ -28,7 +27,16 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 - [INPUT] refer to a input filepath (mandatory)
 - [OUTPUT] refer to the destination path (mandatory)
 
+# Installation 
+ 
+Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
+
+**You need to install the .NET Core Runtime Library : https://dotnet.microsoft.com/download/dotnet-core/current/runtime**
+Then extract the content of the zip file in the folder of your choice.
+
 ## MacOS or Linux
+
+You should install .NET Core Runtime : https://docs.microsoft.com/en-us/dotnet/core/install/macos
 
 If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
 
@@ -97,12 +105,7 @@ Note : you can also add argument to the conversion but the argument will be appl
 You can process a folder of pictures (all must be .PNG). This is usefull when you import export slices of fractal from program like Mandelbulb3D. To indicate to FileToVox that each picture in your folder is a slice, add the argument `--slice`. 
 
 
-# Installation 
- 
-Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
 
-**You need to install the .NET Core Runtime Library : https://dotnet.microsoft.com/download/dotnet-core/current/runtime**
-Then extract the content of zip file in the folder of your choice.
 
 ## config.txt
 
