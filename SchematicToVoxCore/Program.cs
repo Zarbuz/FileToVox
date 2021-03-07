@@ -173,7 +173,7 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified increase size: " + mScale);
 			if (mGridSize != 126)
 				Console.WriteLine("[INFO] Specified grid size: " + mGridSize);
-			if (mChunkSize != 125)
+			if (mChunkSize != 128)
 				Console.WriteLine("[INFO] Specified chunk size: " + mChunkSize);
 			if (mSlow != 0)
 				Console.WriteLine("[INFO] Specified winding_number: " + mSlow);

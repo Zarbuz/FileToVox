@@ -52,7 +52,7 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --c        --color                    enable color when generating heightmap
 --cl       --color-limit=VALUE        set the maximal number of colors for the palette
 --cm       --color-from-file=VALUE    load color from another file
---cs       --chunk-size=VALUE         set the chunk size (default: 125, min: 11, max: 256)
+--cs       --chunk-size=VALUE         set the chunk size (default: 128, min: 11, max: 256)
 --e        --excavate                 delete all voxels which doesn't have at least one face connected with air
 --fl       --flood                    fill all invisibles voxels
 --flo      --fix-lonely               delete all voxels where all connected voxels are air
