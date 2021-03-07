@@ -4,8 +4,6 @@ using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using System;
-using System.Drawing;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Generator.Terrain
 {

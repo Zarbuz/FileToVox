@@ -2,7 +2,7 @@
 	"width": 500,
 	"length": 500,
 	"generatorType": "Terrain",
-	"seed": 10,
+	"seed": 12,
 	"biomes": [
 		{
 			"zones": [
@@ -21,6 +21,90 @@
 			],
 			"voxelTop": "101, 187, 77",
 			"voxelDirt": "153, 102, 51",
+			"treeDensity": "0.001",
+			"trees": [
+			],
+			"vegetationDensity": "0.3",
+			"vegetation": [
+				{
+					"color": "255, 80, 80",
+					"probability": "0.1"
+				}
+			]
+		},
+		{
+			"zones": [
+				{
+					"altitudeMin": "191.25",
+					"altitudeMax": "255",
+					"moistureMin": "0",
+					"moistureMax": "0.35"
+				},
+				{
+					"altitudeMin": "127.5",
+					"altitudeMax": "255",
+					"moistureMin": "0",
+					"moistureMax": "0.15"
+				}
+			],
+			"voxelTop": "183, 117, 102",
+			"voxelDirt": "227, 159, 144",
+			"treeDensity": "0.001",
+			"trees": [
+			],
+			"vegetationDensity": "0.3",
+			"vegetation": [
+				{
+					"color": "255, 80, 80",
+					"probability": "0.1"
+				}
+			]
+		},
+		{
+			"zones": [
+				{
+					"altitudeMin": "0",
+					"altitudeMax": "127.5",
+					"moistureMin": "0",
+					"moistureMax": "0.15"
+				},
+				{
+					"altitudeMin": "127.5",
+					"altitudeMax": "191.25",
+					"moistureMin": "0.15",
+					"moistureMax": "0.35"
+				}
+			],
+			"voxelTop": "227, 227, 144",
+			"voxelDirt": "225, 225, 100",
+			"treeDensity": "0.001",
+			"trees": [
+			],
+			"vegetationDensity": "0.3",
+			"vegetation": [
+				{
+					"color": "255, 80, 80",
+					"probability": "0.1"
+				}
+			]
+		},
+		{
+			"zones": [
+				{
+					"altitudeMin": "0",
+					"altitudeMax": "63.75",
+					"moistureMin": "0.35",
+					"moistureMax": "0.65"
+				},
+				{
+					"altitudeMin": "63.75",
+					"altitudeMax": "127.5",
+					"moistureMin": "0.65",
+					"moistureMax": "0.85"
+				}
+			],
+			"voxelTop": "107, 207, 67",
+			"voxelDirt": "83, 157, 54",
 			"treeDensity": "0.001",
 			"trees": [
 			],

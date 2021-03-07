@@ -336,7 +336,9 @@ namespace FileToVox.Generator.Terrain.Data
 				BiomeSettings biome = mHeightChunkData[arrayIndex].Biome;
 				if (biome == null)
 				{
-					biome = new BiomeSettings(); //TODO
+					biome = TerrainEnvironment.Instance.WorldTerrainData.DefaultBiome;
+					if (biome == null)
+						continue;
 				}
 
 				int y = (int)(surfaceLevel - position.Y);
