@@ -12,14 +12,14 @@ namespace FileToVox.Converter.Image
 {
 	public class FolderImageToSchematic : AbstractToSchematic
     {
-        private readonly bool _excavate;
-        private readonly string _inputColorFile;
-        private readonly int _colorLimit;
+        private readonly bool mExcavate;
+        private readonly string mInputColorFile;
+        private readonly int mColorLimit;
         public FolderImageToSchematic(string path, bool excavate, string inputColorFile, int colorLimit) : base(path)
         {
-            _excavate = excavate;
-            _inputColorFile = inputColorFile;
-            _colorLimit = colorLimit;
+            mExcavate = excavate;
+            mInputColorFile = inputColorFile;
+            mColorLimit = colorLimit;
         }
 
         public override Schematic WriteSchematic()
@@ -27,11 +27,11 @@ namespace FileToVox.Converter.Image
             int height = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
-            List<Block> blocks = new List<Block>();
+            List<Voxel> blocks = new List<Voxel>();
             Bitmap bitmapColor = null;
-            if (_inputColorFile != null)
+            if (mInputColorFile != null)
             {
-	            bitmapColor = new Bitmap(_inputColorFile);
+	            bitmapColor = new Bitmap(mInputColorFile);
 	            if (bitmapColor.Width > 256 || bitmapColor.Height > 1)
 	            {
 		            throw new ArgumentException("[ERROR] The input color file must have a dimension of 256x1 px");
@@ -55,7 +55,7 @@ namespace FileToVox.Converter.Image
                             Color color = directBitmap.GetPixel(x, y);
                             if (color != Color.Empty && color != Color.Transparent && color != Color.Black && (color.R != 0 && color.G != 0 && color.B != 0))
                             {
-	                            if (_inputColorFile != null)
+	                            if (mInputColorFile != null)
 	                            {
 		                            double distance = Math.Sqrt(Math.Pow((height / 2) - x, 2) + Math.Pow((height / 2) - y, 2));
 		                            float range = (float) Math.Abs(distance / (height / 2)); //
@@ -65,13 +65,13 @@ namespace FileToVox.Converter.Image
 
 	                            maxWidth = maxWidth < directBitmap.Width ? directBitmap.Width : maxWidth;
                                 maxLength = maxLength < directBitmap.Height ? directBitmap.Height : maxLength;
-                                if (_excavate)
+                                if (mExcavate)
                                 {
                                     CheckNeighbor(ref blocks, directBitmap, color, i, x, y);
                                 }
                                 else
                                 {
-                                    blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+                                    blocks.Add(new Voxel((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                                 }
                             }
                         }
@@ -89,7 +89,7 @@ namespace FileToVox.Converter.Image
             LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.LengthSchematic = schematic.Length;
             LoadedSchematic.WidthSchematic = schematic.Width;
-            List<Block> list = Quantization.ApplyQuantization(blocks, _colorLimit);
+            List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
 
             schematic.Blocks = list.ToHashSet();
 
@@ -97,7 +97,7 @@ namespace FileToVox.Converter.Image
             return schematic;
         }
 
-        private void CheckNeighbor(ref List<Block> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
+        private void CheckNeighbor(ref List<Voxel> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
         {
             if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
             {
@@ -113,7 +113,7 @@ namespace FileToVox.Converter.Image
 
                 if (!leftColor || !topColor || !rightColor || !bottomColor)
                 {
-	                blocks.Add(new Block((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
+	                blocks.Add(new Voxel((ushort) x, (ushort) i, (ushort) y, color.ColorToUInt()));
                 }
             }
         }

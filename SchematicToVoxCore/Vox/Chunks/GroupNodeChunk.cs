@@ -2,7 +2,7 @@
 {
     public class GroupNodeChunk : NodeChunk
     { // nGRP: Group Node Chunk
-        public int[] childIds;
+        public int[] ChildIds;
         public override NodeType Type => NodeType.Group;
     }
 }

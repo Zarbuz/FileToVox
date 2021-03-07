@@ -5,23 +5,23 @@ namespace FileToVox.Vox.Chunks
 {
     public class TransformNodeChunk : NodeChunk
     { // nTRN: Transform Node Chunk
-        public int childId;
-        public int reservedId;
-        public int layerId;
-        public DICT[] frameAttributes;
+        public int ChildId;
+        public int ReservedId;
+        public int LayerId;
+        public DICT[] FrameAttributes;
 
         public override NodeType Type => NodeType.Transform;
 
         public Rotation RotationAt(int frame = 0)
-            => frame < frameAttributes.Length ? frameAttributes[frame]._r : Rotation._PX_PY_P;
+            => frame < FrameAttributes.Length ? FrameAttributes[frame]._r : Rotation._PX_PY_P;
         public Vector3 TranslationAt(int frame = 0)
-            => frame < frameAttributes.Length ? frameAttributes[frame]._t : Vector3.zero;
+            => frame < FrameAttributes.Length ? FrameAttributes[frame]._t : Vector3.zero;
 
         public string Name
         {
             get
             {
-                var kv = attributes.FirstOrDefault(a => a.Key == "_name");
+                var kv = Attributes.FirstOrDefault(a => a.Key == "_name");
                 return kv.Key != null ? kv.Value : string.Empty;
             }
         }
@@ -29,7 +29,7 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var kv = attributes.FirstOrDefault(a => a.Key == "_hidden");
+                var kv = Attributes.FirstOrDefault(a => a.Key == "_hidden");
                 return kv.Key != null ? kv.Value != "0" : false;
             }
         }

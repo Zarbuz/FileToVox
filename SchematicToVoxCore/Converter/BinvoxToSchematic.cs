@@ -12,12 +12,12 @@ namespace FileToVox.Converter
 {
 	public class BinvoxToSchematic : AbstractToSchematic
     {
-        private bool _headerRead;
-        private bool _voxelsRead;
-        private Vector3 _dimensions;
-        private Vector3 _translate;
-        private double _scale;
-        private byte[] _voxels;
+        private bool mHeaderRead;
+        private bool mVoxelsRead;
+        private Vector3 mDimensions;
+        private Vector3 mTranslate;
+        private double mScale;
+        private byte[] mVoxels;
 
         public BinvoxToSchematic(string path) : base(path)
         {
@@ -25,9 +25,9 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
-            _voxels = null;
-            _headerRead = false;
-            _voxelsRead = false;
+            mVoxels = null;
+            mHeaderRead = false;
+            mVoxelsRead = false;
             return WriteSchematicFromBinvox();
         }
 
@@ -39,18 +39,18 @@ namespace FileToVox.Converter
                 ReadVoxels(lineReader);
                 Schematic schematic = new Schematic()
                 {
-                    Width = (ushort)_dimensions.Z,
-                    Height = (ushort)_dimensions.Y,
-                    Length = (ushort)_dimensions.X,
-                    Blocks = new HashSet<Block>()
+                    Width = (ushort)mDimensions.Z,
+                    Height = (ushort)mDimensions.Y,
+                    Length = (ushort)mDimensions.X,
+                    Blocks = new HashSet<Voxel>()
                 };
 
                 LoadedSchematic.HeightSchematic = schematic.Height;
                 LoadedSchematic.LengthSchematic = schematic.Length;
                 LoadedSchematic.WidthSchematic = schematic.Width;
 
-                int xmult = (int)(_dimensions.Z * _dimensions.Y);
-                int zmult = (int) (_dimensions.Z);
+                int xmult = (int)(mDimensions.Z * mDimensions.Y);
+                int zmult = (int) (mDimensions.Z);
 
 
                 for (int Y = 0; Y < schematic.Height; Y++)
@@ -60,9 +60,9 @@ namespace FileToVox.Converter
                         for (int X = 0; X < schematic.Width; X++)
                         {
                             int index = X * xmult + Z * zmult + Y;
-                            if (_voxels[index] == 1)
+                            if (mVoxels[index] == 1)
                             {
-                                schematic.Blocks.Add(new Block((ushort) X, (ushort) Y, (ushort) Z,
+                                schematic.Blocks.Add(new Voxel((ushort) X, (ushort) Y, (ushort) Z,
                                     Color.Wheat.ColorToUInt()));
                             }
                         }
@@ -77,7 +77,7 @@ namespace FileToVox.Converter
 
         private void ReadHeader(LineReader lineReader)
         {
-            if (!_headerRead)
+            if (!mHeaderRead)
             {
                 bool done = false;
                 while (!done)
@@ -86,23 +86,23 @@ namespace FileToVox.Converter
                     if (line.StartsWith("data"))
                     {
                         done = true;
-                        _headerRead = true;
+                        mHeaderRead = true;
                     }
                     else if (line.StartsWith("dim"))
                     {
                         string[] dimensions = line.Split(' ');
-                        _dimensions = new Vector3(int.Parse(dimensions[1]), int.Parse(dimensions[2]), int.Parse(dimensions[3]));
-                        _voxels = new byte[(int)(_dimensions.X * _dimensions.Y * _dimensions.Z)];
+                        mDimensions = new Vector3(int.Parse(dimensions[1]), int.Parse(dimensions[2]), int.Parse(dimensions[3]));
+                        mVoxels = new byte[(int)(mDimensions.X * mDimensions.Y * mDimensions.Z)];
                     }
                     else if (line.StartsWith("translate"))
                     {
                         string[] translations = line.Split(' ');
-                        _translate = new Vector3(float.Parse(translations[1], CultureInfo.InvariantCulture), float.Parse(translations[2], CultureInfo.InvariantCulture), float.Parse(translations[3], CultureInfo.InvariantCulture));
+                        mTranslate = new Vector3(float.Parse(translations[1], CultureInfo.InvariantCulture), float.Parse(translations[2], CultureInfo.InvariantCulture), float.Parse(translations[3], CultureInfo.InvariantCulture));
                     }
                     else if (line.StartsWith("scale"))
                     {
                         string[] scales = line.Split(' ');
-                        _scale = float.Parse(scales[1], CultureInfo.InvariantCulture);
+                        mScale = float.Parse(scales[1], CultureInfo.InvariantCulture);
                     }
                 }
             }
@@ -110,9 +110,9 @@ namespace FileToVox.Converter
 
         private void ReadVoxels(LineReader lineReader)
         {
-            if (!_voxelsRead)
+            if (!mVoxelsRead)
             {
-                int size = (int)(_dimensions.X * _dimensions.Y * _dimensions.Z);
+                int size = (int)(mDimensions.X * mDimensions.Y * mDimensions.Z);
                 byte value;
                 int count;
                 int index = 0;
@@ -125,14 +125,14 @@ namespace FileToVox.Converter
                     end_index = index + count;
                     for (int i = index; i < end_index; i++)
                     {
-                        _voxels[i] = value;
+                        mVoxels[i] = value;
                     }
 
                     index = end_index;
                 }
 
 
-                _voxelsRead = true;
+                mVoxelsRead = true;
             }
         }
     }

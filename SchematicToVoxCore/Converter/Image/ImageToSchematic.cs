@@ -12,12 +12,12 @@ namespace FileToVox.Converter.Image
 {
     public abstract class ImageToSchematic : AbstractToSchematic
     {
-        protected readonly bool _excavate;
-        protected readonly int _maxHeight;
-        protected readonly bool _color;
-        protected readonly bool _top;
-        protected readonly string _colorPath;
-        protected readonly int _colorLimit;
+        protected readonly bool Excavate;
+        protected readonly int MaxHeight;
+        protected readonly bool Color;
+        protected readonly bool Top;
+        protected readonly string ColorPath;
+        protected readonly int ColorLimit;
 
         [StructLayout(LayoutKind.Explicit)]
         public struct RGB
@@ -32,31 +32,31 @@ namespace FileToVox.Converter.Image
 
         protected ImageToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path)
         {
-            _colorPath = colorPath;
-            _maxHeight = height;
-            _excavate = excavate;
-            _color = color;
-            _top = top;
-            _colorLimit = colorLimit;
+            ColorPath = colorPath;
+            MaxHeight = height;
+            Excavate = excavate;
+            Color = color;
+            Top = top;
+            ColorLimit = colorLimit;
         }
 
         protected void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
         {
             for (int z = minZ; z < maxZ; z++)
             {
-                AddBlock(ref schematic, new Block((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
+                AddBlock(ref schematic, new Voxel((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
             }
         }
 
-        protected void AddBlock(ref Schematic schematic, Block block)
+        protected void AddBlock(ref Schematic schematic, Voxel voxel)
         {
             try
             {
-                schematic.Blocks.Add(block);
+                schematic.Blocks.Add(voxel);
             }
             catch (OutOfMemoryException)
             {
-                Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {block.ToString()}");
+                Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {voxel.ToString()}");
             }
         }
 
@@ -64,7 +64,7 @@ namespace FileToVox.Converter.Image
         {
             int intensity = (int)(color.R + color.G + color.B);
             float position = intensity / (float)765;
-            return (int)(position * _maxHeight);
+            return (int)(position * MaxHeight);
         }
 
         protected void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y)
@@ -98,7 +98,7 @@ namespace FileToVox.Converter.Image
                     {
                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
                         AddBlock(ref schematic,
-                            new Block((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
+                            new Voxel((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
                     }
                 }
                 else
@@ -118,8 +118,8 @@ namespace FileToVox.Converter.Image
 	        {
 		        Width = (ushort)(bitmap.Width + 1),
 		        Length = (ushort)(bitmap.Height + 1),
-		        Height = (ushort)(_maxHeight + 1),
-		        Blocks = new HashSet<Block>()
+		        Height = (ushort)(MaxHeight + 1),
+		        Blocks = new HashSet<Voxel>()
 	        };
 
 	        LoadedSchematic.LengthSchematic = schematic.Length;
@@ -150,22 +150,22 @@ namespace FileToVox.Converter.Image
                     for (int y = 0; y < h; y++)
                     {
                         Color color = directBitmap.GetPixel(x, y);
-                        Color finalColor = (_colorPath != null) ? directBitmapColor.GetPixel(x, y) : (_color) ? color : Color.White;
+                        Color finalColor = (ColorPath != null) ? directBitmapColor.GetPixel(x, y) : (Color) ? color : System.Drawing.Color.White;
                         if (color.A != 0)
                         {
-                            if (_maxHeight != 1)
+                            if (MaxHeight != 1)
                             {
-                                if (_excavate)
+                                if (Excavate)
                                 {
                                     GenerateFromMinNeighbor(ref schematic, directBitmapBlack, w, h, finalColor, x, y);
                                 }
                                 else
                                 {
                                     int height = GetHeight(directBitmapBlack.GetPixel(x, y));
-                                    if (_top)
+                                    if (Top)
                                     {
                                         int finalHeight = (height - 1 < 0) ? 0 : height - 1;
-                                        AddBlock(ref schematic, new Block((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
+                                        AddBlock(ref schematic, new Voxel((ushort)x, (ushort)finalHeight, (ushort)y, finalColor.ColorToUInt()));
                                     }
                                     else
                                     {
@@ -175,8 +175,8 @@ namespace FileToVox.Converter.Image
                             }
                             else
                             {
-                                Block block = new Block((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
-                                AddBlock(ref schematic, block);
+                                Voxel voxel = new Voxel((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
+                                AddBlock(ref schematic, voxel);
                             }
                         }
                         progressbar.Report((i++ / (float)size));

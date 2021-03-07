@@ -2,6 +2,6 @@
 {
     public class RendererSettingChunk
     { // rOBJ: Renderer Setting Chunk (undocumented)
-        public KeyValue[] attributes;
+        public KeyValue[] Attributes;
     }
 }

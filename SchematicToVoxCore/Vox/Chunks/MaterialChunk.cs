@@ -5,15 +5,15 @@ namespace FileToVox.Vox.Chunks
 {
     public class MaterialChunk
     {
-        public int id;
-        public KeyValue[] properties;
+        public int Id;
+        public KeyValue[] Properties;
 
         public MaterialType Type
         {
             get
             {
-                var result = MaterialType._diffuse;
-                var item = properties.FirstOrDefault(i => i.Key == "_type");
+                MaterialType result = MaterialType._diffuse;
+                KeyValue item = Properties.FirstOrDefault(i => i.Key == "_type");
                 if (item.Key != null)
                     Enum.TryParse(item.Value, out result);
                 return result;
@@ -24,8 +24,8 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var result = 1f;
-                var item = properties.FirstOrDefault(i => i.Key == "_weight");
+                float result = 1f;
+                KeyValue item = Properties.FirstOrDefault(i => i.Key == "_weight");
                 if (item.Key != null)
                     float.TryParse(item.Value, out result);
                 return result;
@@ -36,8 +36,8 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var result = 1f;
-                var item = properties.FirstOrDefault(i => i.Key == "_rough");
+                float result = 1f;
+                KeyValue item = Properties.FirstOrDefault(i => i.Key == "_rough");
                 if (item.Key != null)
                     float.TryParse(item.Value, out result);
                 return result;
@@ -48,8 +48,8 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var result = 1f;
-                var item = properties.FirstOrDefault(i => i.Key == "_spec");
+                float result = 1f;
+                KeyValue item = Properties.FirstOrDefault(i => i.Key == "_spec");
                 if (item.Key != null)
                     float.TryParse(item.Value, out result);
                 return result;
@@ -59,8 +59,8 @@ namespace FileToVox.Vox.Chunks
         {
             get
             {
-                var result = 1f;
-                var item = properties.FirstOrDefault(i => i.Key == "_flux");
+                float result = 1f;
+                KeyValue item = Properties.FirstOrDefault(i => i.Key == "_flux");
                 if (item.Key != null)
                     float.TryParse(item.Value, out result);
                 return result;

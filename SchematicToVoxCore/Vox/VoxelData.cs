@@ -4,8 +4,8 @@ namespace FileToVox.Vox
 {
     public class VoxelData
     {
-        private int _voxelWide, _voxelsTall, _voxelsDeep;
-        private byte[] colors;
+        private int mVoxelWide, mVoxelsTall, mVoxelsDeep;
+        private byte[] mColors;
 
         /// <summary>
         /// Creates a voxeldata with provided dimensions
@@ -24,10 +24,10 @@ namespace FileToVox.Vox
 
         public void Resize(int voxelsWide, int voxelsTall, int voxelsDeep)
         {
-            _voxelWide = voxelsWide;
-            _voxelsTall = voxelsTall;
-            _voxelsDeep = voxelsDeep;
-            colors = new byte[_voxelWide * _voxelsTall * _voxelsDeep];
+            mVoxelWide = voxelsWide;
+            mVoxelsTall = voxelsTall;
+            mVoxelsDeep = voxelsDeep;
+            mColors = new byte[mVoxelWide * mVoxelsTall * mVoxelsDeep];
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace FileToVox.Vox
         /// <param name="z"></param>
         /// <returns></returns>
         public int GetGridPos(int x, int y, int z)
-            => (_voxelWide * _voxelsTall) * z + (_voxelWide * y) + x;
+            => (mVoxelWide * mVoxelsTall) * z + (mVoxelWide * y) + x;
 
         /// <summary>
         /// Set a color index from voxel coordinates
@@ -49,7 +49,7 @@ namespace FileToVox.Vox
         /// <param name="value"></param>
         /// <returns></returns>
         public int Set(int x, int y, int z, byte value)
-            => colors[GetGridPos(x, y, z)] = value;
+            => mColors[GetGridPos(x, y, z)] = value;
 
         /// <summary>
         /// Sets a colors index from grid position
@@ -58,7 +58,7 @@ namespace FileToVox.Vox
         /// <param name="value"></param>
         /// <returns></returns>
         public int Set(int x, byte value)
-            => colors[x] = value;
+            => mColors[x] = value;
 
         /// <summary>
         /// Gets a palette index from voxel coordinates
@@ -68,53 +68,53 @@ namespace FileToVox.Vox
         /// <param name="z"></param>
         /// <returns></returns>
         public int Get(int x, int y, int z)
-            => colors[GetGridPos(x, y, z)];
+            => mColors[GetGridPos(x, y, z)];
 
         /// <summary>
         /// Gets a palette index from a grid position
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        public byte Get(int x) => colors[x];
+        public byte Get(int x) => mColors[x];
 
         /// <summary>
         /// Width of the data in voxels
         /// </summary>
-        public int VoxelsWide => _voxelWide;
+        public int VoxelsWide => mVoxelWide;
 
         /// <summary>
         /// Height of the data in voxels
         /// </summary>
-        public int VoxelsTall => _voxelsTall;
+        public int VoxelsTall => mVoxelsTall;
 
         /// <summary>
         /// Depth of the data in voxels
         /// </summary>
-        public int VoxelsDeep => _voxelsDeep;
+        public int VoxelsDeep => mVoxelsDeep;
 
-        public byte[] Colors => colors;
+        public byte[] Colors => mColors;
 
         public bool Contains(int x, int y, int z)
-            => x >= 0 && y >= 0 && z >= 0 && x < _voxelWide && y < _voxelsTall && z < _voxelsDeep;
+            => x >= 0 && y >= 0 && z >= 0 && x < mVoxelWide && y < mVoxelsTall && z < mVoxelsDeep;
 
         public byte GetSafe(int x, int y, int z)
-            => Contains(x, y, z) ? colors[GetGridPos(x, y, z)] : (byte)0;
+            => Contains(x, y, z) ? mColors[GetGridPos(x, y, z)] : (byte)0;
 
         public VoxelData ToSmaller()
         {
             var work = new byte[8];
             var result = new VoxelData(
-                (_voxelWide + 1) >> 1,
-                (_voxelsTall + 1) >> 1,
-                (_voxelsDeep + 1) >> 1);
+                (mVoxelWide + 1) >> 1,
+                (mVoxelsTall + 1) >> 1,
+                (mVoxelsDeep + 1) >> 1);
             int i = 0;
-            for (int z = 0; z < _voxelsDeep; z += 2)
+            for (int z = 0; z < mVoxelsDeep; z += 2)
             {
                 int z1 = z + 1;
-                for (int y = 0; y < _voxelsTall; y += 2)
+                for (int y = 0; y < mVoxelsTall; y += 2)
                 {
                     int y1 = y + 1;
-                    for (int x = 0; x < _voxelWide; x += 2)
+                    for (int x = 0; x < mVoxelWide; x += 2)
                     {
                         int x1 = x + 1;
                         work[0] = GetSafe(x, y, z);
@@ -132,11 +132,11 @@ namespace FileToVox.Vox
                             var count = groups.ElementAt(0).Count();
                             var group = groups.TakeWhile(v => v.Count() == count)
                                 .OrderByDescending(v => v.Key).First();
-                            result.colors[i++] = group.Key;
+                            result.mColors[i++] = group.Key;
                         }
                         else
                         {
-                            result.colors[i++] = 0;
+                            result.mColors[i++] = 0;
                         }
                     }
                 }

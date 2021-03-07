@@ -10,15 +10,15 @@ namespace FileToVox.Converter
 {
 	public class OBJToSchematic : AbstractToSchematic
     {
-        private readonly int _gridSize;
-        private readonly bool _excavate;
-        private readonly float _winding_number;
+        private readonly int mGridSize;
+        private readonly bool mExcavate;
+        private readonly float mWindingNumber;
 
         public OBJToSchematic(string path, int gridSize, bool excavate, float winding_number) : base(path)
         {
-            _gridSize = gridSize;
-            _excavate = excavate;
-            _winding_number = winding_number;
+            mGridSize = gridSize;
+            mExcavate = excavate;
+            mWindingNumber = winding_number;
         }
 
         public override Schematic WriteSchematic()
@@ -27,7 +27,7 @@ namespace FileToVox.Converter
             AxisAlignedBox3d bounds = mesh.CachedBounds;
 
             DMeshAABBTree3 spatial = new DMeshAABBTree3(mesh, autoBuild: true);
-            double cellsize = mesh.CachedBounds.MaxDim / _gridSize;
+            double cellsize = mesh.CachedBounds.MaxDim / mGridSize;
             ShiftGridIndexer3 indexer = new ShiftGridIndexer3(bounds.Min, cellsize);
 
             MeshSignedDistanceGrid sdf = new MeshSignedDistanceGrid(mesh, cellsize);
@@ -37,7 +37,7 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic()
             {
-                Blocks = new HashSet<Block>(),
+                Blocks = new HashSet<Voxel>(),
                 Width = (ushort)bmp.Dimensions.x,
                 Height = (ushort)bmp.Dimensions.y,
                 Length = (ushort)bmp.Dimensions.z
@@ -47,7 +47,7 @@ namespace FileToVox.Converter
             LoadedSchematic.HeightSchematic = schematic.Height;
             LoadedSchematic.LengthSchematic = schematic.Length;
 
-            if (_winding_number != 0)
+            if (mWindingNumber != 0)
             {
                 spatial.WindingNumber(Vector3d.Zero);  // seed cache outside of parallel eval
 
@@ -58,17 +58,17 @@ namespace FileToVox.Converter
                     gParallel.ForEach(bmp.Indices(), (idx) =>
                     {
                         Vector3d v = indexer.FromGrid(idx);
-                        bmp.SafeSet(idx, spatial.WindingNumber(v) > _winding_number);
+                        bmp.SafeSet(idx, spatial.WindingNumber(v) > mWindingNumber);
                         count++;
                         progressbar.Report(count / (float)list.Count);
                     });
                 }
-                if (!_excavate)
+                if (!mExcavate)
                 {
                     foreach (Vector3i idx in bmp.Indices())
                     {
                         if (bmp.Get(idx))
-                            schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+                            schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                     }
                 }
             }
@@ -85,9 +85,9 @@ namespace FileToVox.Converter
                         bool isInside = f < 0;
                         bmp.Set(idx, (f < 0));
 
-                        if (!_excavate && isInside)
+                        if (!mExcavate && isInside)
                         {
-                            schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+                            schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                         }
                         progressbar.Report((i / (float)count));
                     }
@@ -96,12 +96,12 @@ namespace FileToVox.Converter
 
 
 
-            if (_excavate)
+            if (mExcavate)
             {
                 foreach (Vector3i idx in bmp.Indices())
                 {
                     if (bmp.Get(idx) && IsBlockConnectedToAir(bmp, idx))
-                        schematic.Blocks.Add(new Block((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+                        schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
                 }
             }
 

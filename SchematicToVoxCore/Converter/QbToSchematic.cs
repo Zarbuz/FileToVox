@@ -12,8 +12,8 @@ namespace FileToVox.Converter
 {
 	public class QBToSchematic : AbstractToSchematic
     {
-        private const int CodeFlag = 2;
-        private const int Nextsliceflag = 6;
+        private const int CODE_FLAG = 2;
+        private const int NEXT_SLICE_FLAG = 6;
 
         public QBToSchematic(string path) : base(path)
         {
@@ -91,11 +91,11 @@ namespace FileToVox.Converter
                             while (true)
                             {
                                 uint data = reader.ReadUInt32();
-                                if (data == Nextsliceflag)
+                                if (data == NEXT_SLICE_FLAG)
                                 {
                                     break;
                                 }
-                                else if (data == CodeFlag)
+                                else if (data == CODE_FLAG)
                                 {
                                     uint count = reader.ReadUInt32();
                                     data = reader.ReadUInt32();
@@ -162,7 +162,7 @@ namespace FileToVox.Converter
 	            Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
 	            Width = (ushort)(Math.Abs(maxX - minX) + 1),
 	            Height = (ushort)(Math.Abs(maxY - minY) + 1),
-                Blocks = new HashSet<Block>()
+                Blocks = new HashSet<Voxel>()
             };
 
             LoadedSchematic.LengthSchematic = schematic.Length;
@@ -185,7 +185,7 @@ namespace FileToVox.Converter
                     ushort y = (ushort) voxel.Y;
                     ushort z = (ushort) voxel.Z;
                     
-                    schematic.Blocks.Add(new Block(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
+                    schematic.Blocks.Add(new Voxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }
