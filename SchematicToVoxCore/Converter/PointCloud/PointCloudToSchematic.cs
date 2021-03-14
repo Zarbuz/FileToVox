@@ -224,17 +224,7 @@ namespace FileToVox.Converter.PointCloud
 			float minY = _blocks.MinBy(t => t.Y).Y;
 			float minZ = _blocks.MinBy(t => t.Z).Z;
 
-			float maxX = _blocks.MaxBy(t => t.X).X;
-			float maxY = _blocks.MaxBy(t => t.Y).Y;
-			float maxZ = _blocks.MaxBy(t => t.Z).Z;
-
-			Schematic schematic = new Schematic()
-			{
-				Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
-				Width = (ushort)(Math.Abs(maxX - minX) + 1),
-				Height = (ushort)(Math.Abs(maxY - minY) + 1),
-				Blocks = new HashSet<Voxel>()
-			};
+			Schematic schematic = new Schematic();
 
 			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 			list.ApplyOffset(new Vector3(minX, minY, minZ));

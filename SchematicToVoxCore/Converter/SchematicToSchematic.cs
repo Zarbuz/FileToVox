@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using FileToVox.Utils;
 
 namespace FileToVox.Converter
 {
@@ -76,12 +77,7 @@ namespace FileToVox.Converter
         {
             RawSchematic raw = LoadRaw(nbtFile);
             HashSet<Voxel> blocks = GetBlocks(raw);
-            string name = Path.GetFileNameWithoutExtension(nbtFile.FileName);
-            Schematic schematic = new Schematic((ushort)raw.Width, (ushort)raw.Heigth, (ushort)raw.Length, blocks);
-
-            schematic.Width *= (ushort)mScale;
-            schematic.Height *= (ushort)mScale;
-            schematic.Length *= (ushort)mScale;
+            Schematic schematic = new Schematic(blocks);
             return schematic;
         }
 
@@ -127,7 +123,7 @@ namespace FileToVox.Converter
 
         private HashSet<Voxel> GetBlocks(RawSchematic rawSchematic)
         {
-            if (rawSchematic.Heigth > 2016 || rawSchematic.Length > 2016 || rawSchematic.Width > 2016)
+            if (rawSchematic.Heigth > Schematic.MAX_WORLD_HEIGHT || rawSchematic.Length > Schematic.MAX_WORLD_LENGTH || rawSchematic.Width > Schematic.MAX_WORLD_WIDTH)
             {
                 throw new Exception("Schematic is too big");
             }
@@ -135,37 +131,46 @@ namespace FileToVox.Converter
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            ConcurrentBag<Voxel> blocks = new ConcurrentBag<Voxel>();
+            HashSet<Voxel> blocks = new HashSet<Voxel>();
 
             int minY = Math.Max(mIgnoreMinY, 0);
             int maxY = rawSchematic.Heigth <= mIgnoreMaxY ? Math.Min(mIgnoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
 
-            Parallel.For(minY, (maxY * mScale), y =>
+            int total = (maxY * mScale) * (rawSchematic.Length * mScale) * (rawSchematic.Width * mScale);
+            int indexProgress = 0;
+            using (ProgressBar progressbar = new ProgressBar())
             {
-                for (int z = 0; z < (rawSchematic.Length * mScale); z++)
-                {
-                    for (int x = 0; x < (rawSchematic.Width * mScale); x++)
-                    {
-                        int yProgress = (y / mScale);
-                        int zProgress = (z / mScale);
-                        int xProgress = (x / mScale);
-                        int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
-                        int blockId = rawSchematic.Blocks[index];
-                        if (blockId != 0)
-                        {
-                            Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z,
-                                GetBlockColor(rawSchematic.Blocks[index],
-                                    rawSchematic.Data[index]).ColorToUInt());
-                            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, minY, maxY) || !mExcavate))
-                            {
-                                blocks.Add(voxel);
-                            }
-                        }
-                    }
-                }
-            });
+	            for (int y = minY; y < (maxY * mScale); y++)
+	            {
+		            for (int z = 0; z < (rawSchematic.Length * mScale); z++)
+		            {
+			            for (int x = 0; x < (rawSchematic.Width * mScale); x++)
+			            {
+				            int yProgress = (y / mScale);
+				            int zProgress = (z / mScale);
+				            int xProgress = (x / mScale);
+				            int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
+				            int blockId = rawSchematic.Blocks[index];
+				            if (blockId != 0)
+				            {
+					            Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z, GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]).ColorToUInt());
+					            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, minY, maxY) || !mExcavate))
+					            {
+						            if (!blocks.Contains(voxel))
+						            {
+							            blocks.Add(voxel);
+                                    }
+                                }
+				            }
+
+                            progressbar.Report(indexProgress++ / (float)total);
+			            }
+		            }
+	            }
+            }
+
             Console.WriteLine($"[LOG] Done.");
-            return blocks.ToHashSet();
+            return blocks;
         }
 
         private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Voxel voxel, int minY, int maxY)

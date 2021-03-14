@@ -37,29 +37,21 @@ namespace FileToVox.Converter
             {
                 ReadHeader(lineReader);
                 ReadVoxels(lineReader);
-                Schematic schematic = new Schematic()
-                {
-                    Width = (ushort)mDimensions.Z,
-                    Height = (ushort)mDimensions.Y,
-                    Length = (ushort)mDimensions.X,
-                    Blocks = new HashSet<Voxel>()
-                };
+                Schematic schematic = new Schematic();
 
                 int xmult = (int)(mDimensions.Z * mDimensions.Y);
                 int zmult = (int) (mDimensions.Z);
 
-
-                for (int Y = 0; Y < schematic.Height; Y++)
+                for (int Y = 0; Y < mDimensions.Y; Y++)
                 {
-                    for (int Z = 0; Z < schematic.Length; Z++)
+                    for (int Z = 0; Z < mDimensions.Z; Z++)
                     {
-                        for (int X = 0; X < schematic.Width; X++)
+                        for (int X = 0; X < mDimensions.X; X++)
                         {
                             int index = X * xmult + Z * zmult + Y;
                             if (mVoxels[index] == 1)
                             {
-                                schematic.Blocks.Add(new Voxel((ushort) X, (ushort) Y, (ushort) Z,
-                                    Color.Wheat.ColorToUInt()));
+                                schematic.Blocks.Add(new Voxel((ushort) X, (ushort) Y, (ushort) Z, Color.Wheat.ColorToUInt()));
                             }
                         }
                     }

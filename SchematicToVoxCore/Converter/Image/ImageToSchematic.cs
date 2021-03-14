@@ -114,13 +114,7 @@ namespace FileToVox.Converter.Image
 
         protected Schematic WriteSchematicIntern(Bitmap bitmap, Bitmap bitmapColor)
         {
-	        Schematic schematic = new Schematic
-	        {
-		        Width = (ushort)(bitmap.Width + 1),
-		        Length = (ushort)(bitmap.Height + 1),
-		        Height = (ushort)(MaxHeight + 1),
-		        Blocks = new HashSet<Voxel>()
-	        };
+	        Schematic schematic = new Schematic();
 
 	        Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
             DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack);

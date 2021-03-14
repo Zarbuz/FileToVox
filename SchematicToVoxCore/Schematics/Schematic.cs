@@ -10,10 +10,52 @@ namespace FileToVox.Schematics
 	    public const int MAX_WORLD_HEIGHT = 1000;
 	    public const int MAX_WORLD_LENGTH = 2000;
 
-		public ushort Width { get; set; }
-        public ushort Height { get; set; }
-        public ushort Length { get; set; }
-        /// <summary>Contains all usual blocks</summary>
+	    private ushort mWidth;
+
+	    public ushort Width
+	    {
+		    get
+		    {
+			    if (mWidth == 0)
+			    {
+				    mWidth = (ushort) (Blocks.Max(v => v.X) + 1);
+			    }
+
+			    return mWidth;
+		    }
+	    }
+
+	    private ushort mHeight;
+
+	    public ushort Height
+	    {
+		    get
+		    {
+			    if (mHeight == 0)
+			    {
+				    mHeight = (ushort) (Blocks.Max(v => v.Y) + 1);
+			    }
+
+			    return mHeight;
+		    }
+	    }
+
+	    private ushort mLength;
+
+	    public ushort Length
+	    {
+		    get
+		    {
+			    if (mLength == 0)
+			    {
+				    mLength = (ushort) (Blocks.Max(v => v.Z) + 1);
+			    }
+
+			    return mLength;
+		    }
+	    }
+
+	    /// <summary>Contains all usual blocks</summary>
         public HashSet<Voxel> Blocks { get; set; }
 
         public Schematic()
@@ -21,14 +63,7 @@ namespace FileToVox.Schematics
             Blocks = new HashSet<Voxel>();
         }
 
-        public Schematic(ushort width, ushort height, ushort length)
-        {
-            Width = width;
-            Height = height;
-            Length = length;
-        }
-
-        public Schematic(ushort width, ushort height, ushort length, HashSet<Voxel> blocks) : this(width, height, length)
+        public Schematic(HashSet<Voxel> blocks)
         {
             Blocks = blocks;
         }

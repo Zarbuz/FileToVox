@@ -65,12 +65,7 @@ namespace FileToVox.Converter
                 }
             }
 
-            Schematic schematic = new Schematic()
-            {
-                Length = (ushort) nRows,
-                Width = (ushort) nCols,
-                Height = (ushort) points.Cast<float>().Max()
-            };
+            Schematic schematic = new Schematic();
 
             for (int i = 0; i < points.GetLength(0); i++)
             {
@@ -78,8 +73,7 @@ namespace FileToVox.Converter
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.Blocks.Add(new Voxel((ushort) i, (ushort) points[i, j], (ushort) j,
-                            Color.White.ColorToUInt()));
+                        schematic.Blocks.Add(new Voxel((ushort) i, (ushort) points[i, j], (ushort) j, Color.White.ColorToUInt()));
                     }
                 }
             }

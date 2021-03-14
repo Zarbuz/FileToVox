@@ -35,14 +35,7 @@ namespace FileToVox.Converter
 
             Bitmap3 bmp = new Bitmap3(sdf.Dimensions);
 
-            Schematic schematic = new Schematic()
-            {
-                Blocks = new HashSet<Voxel>(),
-                Width = (ushort)bmp.Dimensions.x,
-                Height = (ushort)bmp.Dimensions.y,
-                Length = (ushort)bmp.Dimensions.z
-            };
-
+            Schematic schematic = new Schematic();
             if (mWindingNumber != 0)
             {
                 spatial.WindingNumber(Vector3d.Zero);  // seed cache outside of parallel eval

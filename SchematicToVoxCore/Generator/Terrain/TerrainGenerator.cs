@@ -37,8 +37,7 @@ namespace FileToVox.Generator.Terrain
 			int visibleYMax = chunkYDistance - 1;
 
 			uint[,,] voxels = TerrainEnvironment.Instance.GetVoxels(new Vector3(visibleXMin, visibleYMin, visibleZMin), new Vector3(visibleXMax, visibleYMax, visibleZMax));
-			Schematic schematic = new Schematic((ushort)TerrainEnvironment.Instance.WorldTerrainData.Width, Schematic.MAX_WORLD_HEIGHT, (ushort)TerrainEnvironment.Instance.WorldTerrainData.Length);
-			schematic.Blocks = new HashSet<Voxel>();
+			Schematic schematic = new Schematic();
 			for (int y = 0; y < voxels.GetLength(0); y++)
 			{
 				for (int z = 0; z < voxels.GetLength(1); z++)

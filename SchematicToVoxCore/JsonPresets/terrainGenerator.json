@@ -1,6 +1,6 @@
 {
-	"width": 500,
-	"length": 500,
+	"width": 1000,
+	"length": 1000,
 	"generatorType": "Terrain",
 	"seed": 12,
 	"biomes": [

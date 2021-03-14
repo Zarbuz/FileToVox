@@ -38,8 +38,6 @@ namespace FileToVox.Converter.Image
 	            }
             }
 
-            int maxWidth = 0;
-            int maxLength = 0;
             using (ProgressBar progressbar = new ProgressBar())
             {
                 string[] files = Directory.GetFiles(_path);
@@ -63,8 +61,6 @@ namespace FileToVox.Converter.Image
 		                            color = bitmapColor.GetPixel((int)(range * (bitmapColor.Width - 1)), 0);
 	                            }
 
-	                            maxWidth = maxWidth < directBitmap.Width ? directBitmap.Width : maxWidth;
-                                maxLength = maxLength < directBitmap.Height ? directBitmap.Height : maxLength;
                                 if (mExcavate)
                                 {
                                     CheckNeighbor(ref blocks, directBitmap, color, i, x, y);
@@ -82,10 +78,6 @@ namespace FileToVox.Converter.Image
             }
 
             Schematic schematic = new Schematic();
-            schematic.Height = (ushort)height;
-            schematic.Width = (ushort)maxWidth;
-            schematic.Length = (ushort)maxLength;
-
             List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
 
             schematic.Blocks = list.ToHashSet();

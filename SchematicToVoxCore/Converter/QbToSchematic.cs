@@ -153,17 +153,7 @@ namespace FileToVox.Converter
             int minY = voxels.Min(x => x.Y);
             int minZ = voxels.Min(x => x.Z);
 
-            int maxX = voxels.Max(x => x.X);
-            int maxY = voxels.Max(x => x.Y);
-            int maxZ = voxels.Max(x => x.Z);
-
-            Schematic schematic = new Schematic
-            {
-	            Length = (ushort)(Math.Abs(maxZ - minZ) + 1),
-	            Width = (ushort)(Math.Abs(maxX - minX) + 1),
-	            Height = (ushort)(Math.Abs(maxY - minY) + 1),
-                Blocks = new HashSet<Voxel>()
-            };
+            Schematic schematic = new Schematic();
 
             Console.WriteLine("[LOG] Started to write schematic from qb...");
             Console.WriteLine("[INFO] Qb Width: " + schematic.Width);

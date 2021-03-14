@@ -38,16 +38,15 @@ namespace FileToVox.Vox
 			mSchematic = schematic;
 			mPalette = palette;
 			mBlocks = mSchematic.Blocks.To3DArray(schematic);
-			using (var writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
+			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
 			{
 				writer.Write(Encoding.UTF8.GetBytes(HEADER));
 				writer.Write(VERSION);
 				writer.Write(Encoding.UTF8.GetBytes(MAIN));
 				writer.Write(0); //MAIN CHUNK has a size of 0
 				writer.Write(CountChildrenSize());
-				WriteChunks(writer);
+				return WriteChunks(writer);
 			}
-			return true;
 		}
 
 		/// <summary>
@@ -118,13 +117,6 @@ namespace FileToVox.Vox
 					}
 				}
 			}
-			//Parallel.ForEach(_schematic.Blocks, block =>
-			//{
-			//    if (block.X >= min.X && block.Y >= min.Y && block.Z >= min.Z && block.X < max.X && block.Y < max.Y && block.Z < max.Z)
-			//    {
-			//        concurrent.Add(block);
-			//    }
-			//});
 
 			return list;
 		}
@@ -198,7 +190,7 @@ namespace FileToVox.Vox
 		/// Main loop for write all chunks
 		/// </summary>
 		/// <param name="writer"></param>
-		private void WriteChunks(BinaryWriter writer)
+		private bool WriteChunks(BinaryWriter writer)
 		{
 			WritePaletteChunk(writer);
 			for (int i = 0; i < 256; i++)
@@ -230,7 +222,17 @@ namespace FileToVox.Vox
 			if (mTotalBlockCount != mCountBlocks)
 			{
 				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
+				if (Program.DEBUG)
+				{
+					foreach (Voxel voxel in mSchematic.Blocks)
+					{
+						Console.WriteLine("Missed writing of the voxel: " + voxel);
+					}
+				}
+				return false;
 			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -303,7 +305,11 @@ namespace FileToVox.Vox
 					writer.Write((i != 0) ? (byte)i : (byte)1);
 				}
 
-				//mSchematic.Blocks.Remove(block);
+				if (Program.DEBUG)
+				{
+					mSchematic.Blocks.Remove(block);
+				}
+
 			}
 		}
 

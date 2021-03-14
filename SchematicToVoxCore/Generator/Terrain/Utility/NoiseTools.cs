@@ -50,9 +50,9 @@ namespace FileToVox.Generator.Terrain.Utility
 			int ty0 = posZInt % textureSize;
 			int tx0 = posXInt % textureSize;
 
-			var ty = (ty0 == textureSize - 1) ? 0 : ty0 + 1;
+			int ty = (ty0 == textureSize - 1) ? 0 : ty0 + 1;
 			float noiseUL = noiseArray[ty * textureSize + tx0];
-			var tx = (tx0 == textureSize - 1) ? 0 : tx0 + 1;
+			int tx = (tx0 == textureSize - 1) ? 0 : tx0 + 1;
 			float noiseUR = noiseArray[ty * textureSize + tx];
 			float noiseBL = noiseArray[ty0 * textureSize + tx0];
 			float noiseBR = noiseArray[ty0 * textureSize + tx];

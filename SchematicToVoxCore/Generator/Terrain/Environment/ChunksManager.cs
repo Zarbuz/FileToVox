@@ -90,10 +90,7 @@ namespace FileToVox.Generator.Terrain
 			}
 
 			// Clear heightmap
-			if (mHeightMapCache != null)
-			{
-				mHeightMapCache.Clear();
-			}
+			mHeightMapCache?.Clear();
 		}
 
 		public void CheckChunksInRange()
@@ -114,7 +111,7 @@ namespace FileToVox.Generator.Terrain
 			CheckNewNearChunks();
 		}
 
-		public void GetHeightMapInfoFast(float x, float z, HeightMapInfo[] heightChunkData)
+		public void GetHeightMapInfo(float x, float z, HeightMapInfo[] heightChunkData)
 		{
 			int ix = FastMath.FloorToInt(x);
 			int iz = FastMath.FloorToInt(z);

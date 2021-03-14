@@ -62,26 +62,19 @@ namespace FileToVox.Generator.Terrain.Data
 
 	public class TerrainGeneratorSettings
 	{
-		protected const int ONE_Y_ROW = TerrainEnvironment.CHUNK_SIZE * TerrainEnvironment.CHUNK_SIZE;
-		protected const int ONE_Z_ROW = TerrainEnvironment.CHUNK_SIZE;
+		#region Fields
 
 		public float MaxHeight { get; set; } = 100;
-
 		public float MinHeight { get; set; }
-
 		public int WaterLevel { get; set; } = 25;
-
 		public StepData[] Steps { get; set; }
-
 		public float SeaDepthMultiplier { get; set; }
 		public float BeachWidth { get; set; } = 0.001f;
 		public Color WaterColor { get; set; }
 		public Color ShoreColor { get; set; }
 		public Color BedrockColor { get; set; }
-
 		public string MoisturePath { get; set; }
 		public float MoistureScale { get; set; } = 0.2f;
-
 
 		protected float[] mMoistureValues;
 		protected int mNoiseMoistureTextureSize;
@@ -89,6 +82,18 @@ namespace FileToVox.Generator.Terrain.Data
 		protected string mLastMoistureTextureLoaded;
 		protected float mSeaLevelAlignedWithInt, mBeachLevelAlignedWithInt;
 		protected int mGeneration;
+
+		#endregion
+
+		#region StaticConst
+
+		protected const int ONE_Y_ROW = TerrainEnvironment.CHUNK_SIZE * TerrainEnvironment.CHUNK_SIZE;
+
+
+		#endregion
+
+
+		#region PublicMethods
 
 		public void Initialize()
 		{
@@ -321,7 +326,7 @@ namespace FileToVox.Generator.Terrain.Data
 			int waterLevel = WaterLevel > 0 ? WaterLevel : -1;
 			Voxel[] voxels = chunk.Voxels;
 			mGeneration++;
-			TerrainEnvironment.Instance.GetHeightMapInfoFast(position.X, position.Z, mHeightChunkData);
+			TerrainEnvironment.Instance.GetHeightMapInfo(position.X, position.Z, mHeightChunkData);
 			int shiftAmount = (int)MathF.Log(TerrainEnvironment.CHUNK_SIZE, 2);
 
 			for (int arrayIndex = 0; arrayIndex < TerrainEnvironment.CHUNK_SIZE * TerrainEnvironment.CHUNK_SIZE; arrayIndex++)
@@ -430,5 +435,7 @@ namespace FileToVox.Generator.Terrain.Data
 				}
 			}
 		}
+
+		#endregion
 	}
 }
