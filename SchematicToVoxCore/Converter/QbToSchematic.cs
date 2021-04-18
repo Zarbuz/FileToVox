@@ -29,7 +29,7 @@ namespace FileToVox.Converter
         private List<VoxelDTO> LoadVoxels()
         {
             List<VoxelDTO> voxels = new List<VoxelDTO>();
-            using (FileStream fs = File.OpenRead(_path))
+            using (FileStream fs = File.OpenRead(Path))
             {
                 BinaryReader reader = new BinaryReader(fs);
                 uint version = reader.ReadUInt32();

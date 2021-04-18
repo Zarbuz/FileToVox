@@ -15,7 +15,7 @@ namespace FileToVox.Converter.PointCloud
 
 			List<Vector3> bodyVertices = new List<Vector3>();
 			List<Color> bodyColors = new List<Color>();
-			using (StreamReader reader = new StreamReader(_path))
+			using (StreamReader reader = new StreamReader(Path))
 			{
 				while (!reader.EndOfStream)
 				{

@@ -24,7 +24,6 @@ namespace FileToVox
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
-		private static bool TOP;
 		private static bool FLOOD;
 		private static bool HOLES;
 		private static bool LONELY;
@@ -63,7 +62,6 @@ namespace FileToVox
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
-				{"t|top", "create voxels only at the top of the heightmap", v => TOP = v != null},
 				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
 			};
 
@@ -188,8 +186,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (TOP)
-				Console.WriteLine("[INFO] Enabled option: top");
 			if (FLOOD)
 				Console.WriteLine("[INFO] Enabled option: flood");
 			if (HOLES)
@@ -284,13 +280,13 @@ namespace FileToVox
 				case ".ply":
 					return new PLYToSchematic(path, SCALE, COLOR_LIMIT, HOLES, FLOOD, LONELY);
 				case ".png":
-					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, TOP, COLOR_LIMIT);
+					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
 					return new SchematicToSchematic(path, IGNORE_MIN_Y, IGNORE_MAX_Y, EXCAVATE, SCALE);
 				case ".tif":
-					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, TOP, COLOR_LIMIT);
+					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":
 					return new XYZToSchematic(path, SCALE, COLOR_LIMIT, HOLES, FLOOD, LONELY);
 				case ".json":

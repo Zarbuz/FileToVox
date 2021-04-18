@@ -23,7 +23,7 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
-            DMesh3 mesh = StandardMeshReader.ReadMesh(_path);
+            DMesh3 mesh = StandardMeshReader.ReadMesh(Path);
             AxisAlignedBox3d bounds = mesh.CachedBounds;
 
             DMeshAABBTree3 spatial = new DMeshAABBTree3(mesh, autoBuild: true);

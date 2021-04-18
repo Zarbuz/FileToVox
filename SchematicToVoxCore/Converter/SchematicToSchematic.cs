@@ -1,13 +1,11 @@
 ﻿using FileToVox.Schematics;
+using FileToVox.Utils;
 using fNbt;
 using SchematicToVoxCore.Extensions;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
-using FileToVox.Utils;
 
 namespace FileToVox.Converter
 {
@@ -31,7 +29,7 @@ namespace FileToVox.Converter
 
         public override Schematic WriteSchematic()
         {
-            NbtFile file = new NbtFile(_path);
+            NbtFile file = new NbtFile(Path);
             return LoadSchematic(file);
         }
 

@@ -33,7 +33,7 @@ namespace FileToVox.Converter
 
         private Schematic WriteSchematicFromBinvox()
         {
-            using (LineReader lineReader = new LineReader(File.Open(_path, FileMode.Open), Encoding.UTF8))
+            using (LineReader lineReader = new LineReader(File.Open(Path, FileMode.Open), Encoding.UTF8))
             {
                 ReadHeader(lineReader);
                 ReadVoxels(lineReader);

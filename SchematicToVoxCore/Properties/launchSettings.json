@@ -2,7 +2,7 @@
   "profiles": {
     "SchematicToVoxCore": {
       "commandName": "Project",
-      "commandLineArgs": "--i JsonPresets/terrainGenerator.json --o terrain"
+      "commandLineArgs": "--i AncientTemple_MediumB.qb --o AncientTemple_MediumB"
     }
   }
 }

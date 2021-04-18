@@ -18,7 +18,7 @@ namespace FileToVox.Converter.PointCloud
         protected sealed override BodyDataDTO ReadContentFile()
         {
 			BodyDataDTO dataFile = new BodyDataDTO();
-			StreamReader file = new StreamReader(_path);
+			StreamReader file = new StreamReader(Path);
 			string line;
 
 			List<Vector3> bodyVertices = new List<Vector3>();

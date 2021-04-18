@@ -5,6 +5,8 @@ using FileToVox.Schematics;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using FileToVox.Generator.Heightmap;
+using FileToVox.Generator.Heightmap.Data;
 
 namespace FileToVox.Converter.Json
 {
@@ -17,12 +19,16 @@ namespace FileToVox.Converter.Json
 			switch (data.GeneratorType)
 			{
 				case GeneratorType.Terrain:
-					string directoryName = Path.GetDirectoryName(path);
+					string directoryName = System.IO.Path.GetDirectoryName(path);
 					WorldTerrainData worldTerrainData = data as WorldTerrainData;
 					worldTerrainData.DirectoryPath = directoryName;
 					mGenerator = new TerrainGenerator(worldTerrainData);
 					break;
 				case GeneratorType.City:
+					break;
+				case GeneratorType.Heightmap:
+					HeightmapData heightmapData = data as HeightmapData;
+					mGenerator = new HeightmapGenerator(heightmapData);
 					break;
 			}
 			Console.WriteLine(data);
