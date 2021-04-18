@@ -85,7 +85,7 @@ namespace FileToVox.Utils
 					for (int y = 0; y < h; y++)
 					{
 						Color color = directBitmap.GetPixel(x, y);
-						Color finalColor = (heightmapStep.ColorTexturePath != null) ? directBitmapColor.GetPixel(x, y) : (heightmapStep.EnableColor) ? color : Color.White;
+						Color finalColor = !string.IsNullOrEmpty(heightmapStep.ColorTexturePath) ? directBitmapColor.GetPixel(x, y) : (heightmapStep.EnableColor) ? color : Color.White;
 						if (color.A != 0)
 						{
 							if (heightmapStep.Height != 1)

@@ -41,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="JsonPresets\heightmapGenerator.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="JsonPresets\noise\NoiseBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

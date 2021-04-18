@@ -18,6 +18,7 @@ namespace FileToVox.Generator.Heightmap
 		public Schematic WriteSchematic()
 		{
 			Schematic finalSchematic = new Schematic();
+			Console.WriteLine("[INFO] Count steps: " +mHeightmapData.Steps.Length);
 			for (int index = 0; index < mHeightmapData.Steps.Length; index++)
 			{
 				HeightmapStep step = mHeightmapData.Steps[index];
