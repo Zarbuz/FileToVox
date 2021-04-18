@@ -111,6 +111,11 @@ namespace FileToVox.Schematics
 			BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
 		}
 
+		public void ReplaceVoxel(int x, int y, int z, uint color)
+		{
+			BlockDict[GetVoxelIndex(x, y, z)].Color = color;
+		}
+
 		public void RemoveVoxel(int x, int y, int z)
 		{
 			ulong index = GetVoxelIndex(x, y, z);

@@ -1,4 +1,6 @@
-﻿using FileToVox.Converter.Json;
+﻿using System;
+using System.IO;
+using FileToVox.Converter.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -43,6 +45,21 @@ namespace FileToVox.Generator.Heightmap.Data
 
 		public void ValidateSettings()
 		{
+			if (string.IsNullOrEmpty(TexturePath))
+			{
+				throw new ArgumentException("[ERROR] Missing TexturePath");
+			}
+
+			if (!string.IsNullOrEmpty(TexturePath) && !File.Exists(TexturePath))
+			{
+				throw new ArgumentException("[ERROR] The TexturePath is invalid: " + TexturePath);
+			}
+
+			if (!string.IsNullOrEmpty(ColorTexturePath) && !File.Exists(ColorTexturePath))
+			{
+				throw new ArgumentException("[ERROR] The TexturePath is invalid: " + ColorTexturePath);
+			}
+
 			if (Height < 0)
 			{
 				Height = 1;

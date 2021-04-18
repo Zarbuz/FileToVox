@@ -6,6 +6,7 @@ Current files support:
 - .asc (Esri ASCII raster format)
 - .binvox
 - .csv
+- .json (House-made format)
 - .obj
 - .ply (Binary and ASCII)
 - .png
@@ -66,7 +67,6 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --si       --slice                    flag the current input folder as slice
 --sc       --scale=VALUE              set the scale
 --sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
---t,        --top                     create voxels only at the top of the heightmap
 --v,        -verbose                  enable the verbose mode
  ```
 
@@ -92,7 +92,6 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--slice`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| `--top`             | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 
 ### 2. Batching
 

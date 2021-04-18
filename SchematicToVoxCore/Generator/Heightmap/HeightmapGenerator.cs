@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using FileToVox.Generator.Heightmap.Data;
 using FileToVox.Schematics;
+using FileToVox.Utils;
 
 namespace FileToVox.Generator.Heightmap
 {
@@ -14,19 +17,24 @@ namespace FileToVox.Generator.Heightmap
 
 		public Schematic WriteSchematic()
 		{
-			Schematic schematic = new Schematic();
+			Schematic finalSchematic = new Schematic();
 			for (int index = 0; index < mHeightmapData.Steps.Length; index++)
 			{
 				HeightmapStep step = mHeightmapData.Steps[index];
-				if (string.IsNullOrEmpty(step.TexturePath))
+				step.ValidateSettings();
+
+				Bitmap bitmap = new Bitmap(new FileInfo(step.TexturePath).FullName);
+				Bitmap bitmapColor = null;
+				if (!string.IsNullOrEmpty(step.ColorTexturePath))
 				{
-					throw new ArgumentException("[ERROR] Missing mandatory texture path for step: " + (index + 1));
+					bitmapColor = new Bitmap(new FileInfo(step.ColorTexturePath).FullName);
 				}
 
-				
+				Schematic schematicStep = ImageUtils.WriteSchematicFromImage(bitmap, bitmapColor, step);
+				finalSchematic = SchematicMerger.Merge(finalSchematic, schematicStep, step.PlacementMode);
 			}
 
-			return schematic;
+			return finalSchematic;
 		}
 	}
 }
