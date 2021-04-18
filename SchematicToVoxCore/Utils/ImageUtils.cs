@@ -151,20 +151,20 @@ namespace FileToVox.Utils
 			{
 				case RotationMode.X:
 					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_WIDTH - y);
-					finalX = (ushort)(!reverse ? x : Schematic.MAX_WORLD_LENGTH  - x);
-					finalZ = (ushort)(!reverse ? z : Schematic.MAX_WORLD_HEIGHT - z);
+					finalX = (ushort)(x);
+					finalZ = (ushort)(z);
 					voxel = new Voxel(finalY, finalZ, finalX, color.ColorToUInt());
 					break;
 				case RotationMode.Y: //historic 
-					finalX = (ushort)(!reverse ? x : Schematic.MAX_WORLD_WIDTH - x);
+					finalX = (ushort)(x);
 					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_HEIGHT - y);
-					finalZ = (ushort)(!reverse ? z : Schematic.MAX_WORLD_LENGTH - z);
+					finalZ = (ushort)(z);
 					voxel = new Voxel(finalX, finalY, finalZ, color.ColorToUInt());
 					break;
 				case RotationMode.Z:
-					finalX = (ushort)(!reverse ? x : Schematic.MAX_WORLD_HEIGHT - x);
-					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_LENGTH- y);
-					finalZ = (ushort)(!reverse ? z : Schematic.MAX_WORLD_WIDTH - z);
+					finalX = (ushort)(x);
+					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_LENGTH - y);
+					finalZ = (ushort)(z);
 					voxel = new Voxel(finalZ, finalX, finalY, color.ColorToUInt());
 					break;
 				default:
