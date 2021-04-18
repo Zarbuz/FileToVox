@@ -18,12 +18,13 @@ namespace FileToVox.Generator.Heightmap
 		public Schematic WriteSchematic()
 		{
 			Schematic finalSchematic = new Schematic();
-			Console.WriteLine("[INFO] Count steps: " +mHeightmapData.Steps.Length);
+			Console.WriteLine("[INFO] Count steps: " + mHeightmapData.Steps.Length);
 			for (int index = 0; index < mHeightmapData.Steps.Length; index++)
 			{
+				Console.WriteLine("[INFO] Start parse heightmap for step : " + index);
 				HeightmapStep step = mHeightmapData.Steps[index];
 				step.ValidateSettings();
-
+				step.DisplayInfo();
 				Bitmap bitmap = new Bitmap(new FileInfo(step.TexturePath).FullName);
 				Bitmap bitmapColor = null;
 				if (!string.IsNullOrEmpty(step.ColorTexturePath))

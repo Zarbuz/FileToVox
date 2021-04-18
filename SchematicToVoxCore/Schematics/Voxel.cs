@@ -46,9 +46,9 @@ namespace FileToVox.Schematics
             return $"X: {X}, Y: {Y}, Z: {Z}, Color: {Color.ToString()}";
         }
 
-		public ulong GetIndex()
+		public long GetIndex()
 		{
-			return (ulong) ((Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X);
+			return (Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X;
         }
 
     }

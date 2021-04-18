@@ -59,15 +59,15 @@ namespace FileToVox.Schematics
 	    /// <summary>Contains all usual blocks</summary>
         //public HashSet<Voxel> Blocks { get; set; }
 
-		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
+		public Dictionary<long, Voxel> BlockDict { get; private set; }
 
         public Schematic()
         {
             //Blocks = new HashSet<Voxel>();
-            BlockDict = new Dictionary<ulong, Voxel>(); //TODO
+            BlockDict = new Dictionary<long, Voxel>(); //TODO
         }
 
-        public Schematic(Dictionary<ulong, Voxel> blocks)
+        public Schematic(Dictionary<long, Voxel> blocks)
         {
 	        BlockDict = blocks;
         }
@@ -86,9 +86,9 @@ namespace FileToVox.Schematics
 	        }
         }
 
-		public static ulong GetVoxelIndex(int x, int y, int z)
+		public static long GetVoxelIndex(int x, int y, int z)
 		{
-			return (ulong) ((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
+			return ((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
 		}
 
 		public void AddVoxel(Voxel voxel)
@@ -118,7 +118,7 @@ namespace FileToVox.Schematics
 
 		public void RemoveVoxel(int x, int y, int z)
 		{
-			ulong index = GetVoxelIndex(x, y, z);
+			long index = GetVoxelIndex(x, y, z);
 			if (BlockDict.ContainsKey(index))
 			{
 				BlockDict.Remove(index);
@@ -127,7 +127,7 @@ namespace FileToVox.Schematics
 
 		public uint GetColorAtVoxelIndex(int x, int y, int z)
 		{
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			long voxelIndex = GetVoxelIndex(x, y, z);
 			if (BlockDict.ContainsKey(voxelIndex))
 			{
 				return BlockDict[voxelIndex].Color;
@@ -137,7 +137,7 @@ namespace FileToVox.Schematics
 
 		public Voxel GetVoxel(int x, int y, int z)
 		{
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			long voxelIndex = GetVoxelIndex(x, y, z);
 			if (BlockDict.ContainsKey(voxelIndex))
 			{
 				return BlockDict[voxelIndex];
@@ -145,5 +145,7 @@ namespace FileToVox.Schematics
 
 			return null;
 		}
+
+		
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Utils;
 
 namespace FileToVox.Schematics
 {
@@ -16,8 +17,8 @@ namespace FileToVox.Schematics
 					return MergeReplace(schematicA, schematicB);
 				case PlacementMode.SUBSTRACT:
 					return MergeSubstract(schematicA, schematicB);
-				//case PlacementMode.TOP_ONLY:
-				//	return MergeTopOnly(schematicA, schematicB);
+				case PlacementMode.TOP_ONLY:
+					return MergeTopOnly(schematicA, schematicB);
 				default:
 					return MergeAdditive(schematicA, schematicB);
 			}
@@ -25,55 +26,108 @@ namespace FileToVox.Schematics
 
 		private static Schematic MergeAdditive(Schematic schematicA, Schematic schematicB)
 		{
+			Console.WriteLine("[INFO] Start to merge schematic with additive mode");
+
 			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
-			foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
+			using (ProgressBar progressbar = new ProgressBar())
 			{
-				resultSchematic.AddVoxel(voxel.Value);
+				int index = 0;
+				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
+				{
+					resultSchematic.AddVoxel(voxel.Value);
+					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
+				}
 			}
+
+			Console.WriteLine("[INFO] Done");
 
 			return resultSchematic;
 		}
 
 		private static Schematic MergeReplace(Schematic schematicA, Schematic schematicB)
 		{
+			Console.WriteLine("[INFO] Start to merge schematic with replace mode");
+
 			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
-			foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
+			using (ProgressBar progressbar = new ProgressBar())
 			{
-				if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+				int index = 0;
+				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
 				{
-					resultSchematic.ReplaceVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z, voxel.Value.Color);
+					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+					{
+						resultSchematic.ReplaceVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z, voxel.Value.Color);
+					}
+					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
 				}
 			}
 
+			Console.WriteLine("[INFO] Done");
 			return resultSchematic;
 		}
 
 		private static Schematic MergeSubstract(Schematic schematicA, Schematic schematicB)
 		{
+			Console.WriteLine("[INFO] Start to merge schematic with subtract mode");
+
 			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
-			foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
+			using (ProgressBar progressbar = new ProgressBar())
 			{
-				if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+				int index = 0;
+				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
 				{
-					resultSchematic.RemoveVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z);
+					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+					{
+						resultSchematic.RemoveVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z);
+					}
+					progressbar.Report(index++/ (float)schematicB.BlockDict.Count);
+
 				}
 			}
-
+		
+			Console.WriteLine("[INFO] Done");
 			return resultSchematic;
 		}
 
-		//private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB)
-		//{
-		//	Schematic resultSchematic = new Schematic(schematicA.BlockDict);
-		//	foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
-		//	{
-		//		if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
-		//		{
-		//			resultSchematic.RemoveVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z);
-		//		}
-		//	}
+		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB)
+		{
+			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
 
-		//	return resultSchematic;
-		//}
+			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
+			using (ProgressBar progressbar = new ProgressBar())
+			{
+				int max = schematicA.Length * schematicA.Length;
+				int index = 0;
+				for (int z = 0; z < schematicA.Length; z++)
+				{
+					for (int x = 0; x < schematicA.Width; x++)
+					{
+						int maxHeight = 0;
+						for (int y = 0; y < schematicA.Height; y++)
+						{
+							if (schematicA.GetColorAtVoxelIndex(x, y, z) != 0)
+							{
+								maxHeight = y;
+							}
+						}
+
+						for (int y = 0; y < schematicB.Height; y++)
+						{
+							uint color = schematicB.GetColorAtVoxelIndex(x, y, z);
+							if (color != 0)
+							{
+								resultSchematic.AddVoxel(x, y + maxHeight, z, color);
+							}
+						}
+
+						progressbar.Report(index++ / (double)max);
+
+					}
+				}
+			}
+
+			Console.WriteLine("[INFO] Done");
+			return resultSchematic;
+		}
 	}
 }

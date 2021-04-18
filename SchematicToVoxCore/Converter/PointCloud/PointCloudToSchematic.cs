@@ -94,7 +94,7 @@ namespace FileToVox.Converter.PointCloud
 						{
 							for (ushort x = 0; x < schematic.Width; x++)
 							{
-								ulong voxelIndex = Schematic.GetVoxelIndex(x, y, z);
+								long voxelIndex = Schematic.GetVoxelIndex(x, y, z);
 								if (!schematic.BlockDict.ContainsKey(voxelIndex) && x > 0 && x <= schematic.Width && y > 0 && y <= schematic.Height && z > 0 && z <= schematic.Length)
 								{
 									Check1X1X1Hole(ref schematic, x, y, z);

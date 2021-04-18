@@ -74,7 +74,7 @@ namespace FileToVox.Converter
         private Schematic LoadSchematic(NbtFile nbtFile)
         {
             RawSchematic raw = LoadRaw(nbtFile);
-            Dictionary<ulong, Voxel> blocks = GetBlocks(raw);
+            Dictionary<long, Voxel> blocks = GetBlocks(raw);
             Schematic schematic = new Schematic(blocks);
             return schematic;
         }
@@ -119,7 +119,7 @@ namespace FileToVox.Converter
             return raw;
         }
 
-        private Dictionary<ulong, Voxel> GetBlocks(RawSchematic rawSchematic)
+        private Dictionary<long, Voxel> GetBlocks(RawSchematic rawSchematic)
         {
             if (rawSchematic.Heigth > Schematic.MAX_WORLD_HEIGHT || rawSchematic.Length > Schematic.MAX_WORLD_LENGTH || rawSchematic.Width > Schematic.MAX_WORLD_WIDTH)
             {
@@ -129,7 +129,7 @@ namespace FileToVox.Converter
             Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
 
             //Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
-            Dictionary<ulong, Voxel> blocks = new Dictionary<ulong, Voxel>();
+            Dictionary<long, Voxel> blocks = new Dictionary<long, Voxel>();
 
             int minY = Math.Max(mIgnoreMinY, 0);
             int maxY = rawSchematic.Heigth <= mIgnoreMaxY ? Math.Min(mIgnoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
@@ -154,7 +154,7 @@ namespace FileToVox.Converter
 					            Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z, GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]).ColorToUInt());
 					            if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, minY, maxY) || !mExcavate))
 					            {
-						            ulong voxelIndex = Schematic.GetVoxelIndex(x, y, z);
+						            long voxelIndex = Schematic.GetVoxelIndex(x, y, z);
                                     if (!blocks.ContainsKey(voxelIndex))
                                     {
 	                                    blocks[voxelIndex] = voxel;

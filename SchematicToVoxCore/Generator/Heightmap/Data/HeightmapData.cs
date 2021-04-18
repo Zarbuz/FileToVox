@@ -75,5 +75,21 @@ namespace FileToVox.Generator.Heightmap.Data
 				ColorLimit = 256;
 			}
 		}
+
+		public void DisplayInfo()
+		{
+			Console.WriteLine("[INFO] ###############################");
+			Console.WriteLine("[INFO] TexturePath: " + TexturePath);
+			Console.WriteLine("[INFO] ColorTexturePath: " + ColorTexturePath);
+			Console.WriteLine("[INFO] Height: " + Height);
+			Console.WriteLine("[INFO] Offset: " + Offset);
+			Console.WriteLine("[INFO] EnableColor: " + EnableColor);
+			Console.WriteLine("[INFO] ColorLimit: " + ColorLimit);
+			Console.WriteLine("[INFO] Excavate: " + Excavate);
+			Console.WriteLine("[INFO] Reverse: " + Reverse);
+			Console.WriteLine("[INFO] PlacementMode: " + PlacementMode);
+			Console.WriteLine("[INFO] RotationMode: " + RotationMode);
+			Console.WriteLine("[INFO] ###############################");
+		}
 	}
 }
