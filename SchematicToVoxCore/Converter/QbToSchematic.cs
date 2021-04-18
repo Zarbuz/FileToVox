@@ -171,7 +171,7 @@ namespace FileToVox.Converter
                     ushort y = (ushort) voxel.Y;
                     ushort z = (ushort) voxel.Z;
                     
-                    schematic.Blocks.Add(new Voxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
+                    schematic.AddVoxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }

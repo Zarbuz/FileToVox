@@ -44,6 +44,7 @@ namespace FileToVox.Converter.Image
 	            Excavate = Excavate,
 	            Height = MaxHeight,
 	            Offset = 0,
+				Reverse = false,
 	            PlacementMode = PlacementMode.ADDITIVE,
 	            RotationMode = RotationMode.Y
             };

@@ -51,7 +51,7 @@ namespace FileToVox.Converter
                             int index = X * xmult + Z * zmult + Y;
                             if (mVoxels[index] == 1)
                             {
-                                schematic.Blocks.Add(new Voxel((ushort) X, (ushort) Y, (ushort) Z, Color.Wheat.ColorToUInt()));
+                                schematic.AddVoxel(X, Y, Z, Color.Wheat);
                             }
                         }
                     }

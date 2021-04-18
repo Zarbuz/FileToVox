@@ -46,7 +46,7 @@ namespace FileToVox.Generator.Terrain
 					{
 						if (voxels[y, z, x] != 0)
 						{
-							schematic.Blocks.Add(new Voxel((ushort)x, (ushort)y, (ushort)z, voxels[y, z, x]));
+							schematic.AddVoxel(x, y, z, voxels[y, z, x]);
 						}
 					}
 				}

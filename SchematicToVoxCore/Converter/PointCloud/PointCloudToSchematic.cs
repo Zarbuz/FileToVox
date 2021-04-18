@@ -79,7 +79,7 @@ namespace FileToVox.Converter.PointCloud
 			}
 		}
 
-		protected HashSet<Voxel> FillHoles(uint[,,] blocks, Schematic schematic)
+		protected void FillHoles(ref Schematic schematic)
 		{
 			Console.WriteLine("[LOG] Started to fill holes...");
 			int max = schematic.Width * schematic.Height * schematic.Length * 2;
@@ -94,12 +94,13 @@ namespace FileToVox.Converter.PointCloud
 						{
 							for (ushort x = 0; x < schematic.Width; x++)
 							{
-								if (blocks[x, y, z] == 0 && x > 0 && x <= schematic.Width && y > 0 && y <= schematic.Height && z > 0 && z <= schematic.Length)
+								ulong voxelIndex = Schematic.GetVoxelIndex(x, y, z);
+								if (!schematic.BlockDict.ContainsKey(voxelIndex) && x > 0 && x <= schematic.Width && y > 0 && y <= schematic.Height && z > 0 && z <= schematic.Length)
 								{
-									blocks = Check1X1X1Hole(blocks, x, y, z);
-									blocks = Check1X2X1Hole(blocks, x, y, z);
-									blocks = Check2X1X1Hole(blocks, x, y, z);
-									blocks = Check1X1X2Hole(blocks, x, y, z);
+									Check1X1X1Hole(ref schematic, x, y, z);
+									Check1X2X1Hole(ref schematic, x, y, z);
+									Check2X1X1Hole(ref schematic, x, y, z);
+									Check1X1X2Hole(ref schematic, x, y, z);
 								}
 
 								progressBar.Report(index / (float)max);
@@ -111,10 +112,9 @@ namespace FileToVox.Converter.PointCloud
 			}
 
 			Console.WriteLine("[LOG] Done.");
-			return blocks.ToHashSetFrom3DArray();
 		}
 
-		protected HashSet<Voxel> FillInvisiblesVoxels(uint[,,] blocks, Schematic schematic)
+		protected void FillInvisiblesVoxels(ref Schematic schematic)
 		{
 			int max = schematic.Width * schematic.Height * schematic.Length;
 			int index = 0;
@@ -130,15 +130,15 @@ namespace FileToVox.Converter.PointCloud
 						bool fill = false;
 						for (ushort x = 0; x < schematic.Width; x++)
 						{
-							if (blocks[x, y, z] != 0 && !fill && HasHoleInLine(blocks, schematic.Width, (ushort)(x + 1), y, z))
+							if (schematic.GetColorAtVoxelIndex(x, y, z) != 0 && !fill && HasHoleInLine(schematic, schematic.Width, (ushort)(x + 1), y, z))
 							{
 								fill = true;
 							}
-							else if (blocks[x, y, z] == 0 && fill)
+							else if (schematic.GetColorAtVoxelIndex(x, y, z) == 0 && fill)
 							{
-								blocks[x, y, z] = white;
+								schematic.AddVoxel(x, y, z, white);
 							}
-							else if (blocks[x, y, z] != 0 && fill && !HasHoleInLine(blocks, schematic.Width, (ushort)(x + 1), y, z))
+							else if (schematic.GetColorAtVoxelIndex(x, y, z) != 0 && fill && !HasHoleInLine(schematic, schematic.Width, (ushort)(x + 1), y, z))
 							{
 								fill = false;
 							}
@@ -161,18 +161,18 @@ namespace FileToVox.Converter.PointCloud
 						{
 							for (ushort x = 0; x < schematic.Width; x++)
 							{
-								if (blocks[x, y, z] == white && x - 1 >= 0 && x + 1 < schematic.Width && y - 1 >= 0 && y + 1 <= schematic.Height && z - 1 >= 0 && z <= schematic.Length)
+								if (schematic.GetColorAtVoxelIndex(x, y, z) == white && x - 1 >= 0 && x + 1 < schematic.Width && y - 1 >= 0 && y + 1 <= schematic.Height && z - 1 >= 0 && z <= schematic.Length)
 								{
-									uint left = blocks[x - 1, y, z];
-									uint right = blocks[x + 1, y, z];
-									uint top = blocks[x, y + 1, z];
-									uint bottom = blocks[x, y - 1, z];
-									uint front = blocks[x, y, z - 1];
-									uint back = blocks[x, y, z + 1];
+									uint left = schematic.GetColorAtVoxelIndex(x - 1, y, z);
+									uint right = schematic.GetColorAtVoxelIndex(x + 1, y, z);
+									uint top = schematic.GetColorAtVoxelIndex(x, y + 1, z);
+									uint bottom = schematic.GetColorAtVoxelIndex(x, y - 1, z);
+									uint front = schematic.GetColorAtVoxelIndex(x, y, z - 1);
+									uint back = schematic.GetColorAtVoxelIndex(x, y, z + 1);
 
 									if (left == 0 || right == 0 || top == 0 || bottom == 0 || front == 0 || back == 0)
 									{
-										blocks[x, y, z] = 0;
+										schematic.RemoveVoxel(x, y, z);
 									}
 								}
 
@@ -185,10 +185,9 @@ namespace FileToVox.Converter.PointCloud
 				}
 			}
 			Console.WriteLine("[LOG] Done.");
-			return blocks.ToHashSetFrom3DArray();
 		}
 
-		protected HashSet<Voxel> FixLonelyVoxels(uint[,,] blocks, Schematic schematic)
+		protected void FixLonelyVoxels(ref Schematic schematic)
 		{
 			Console.WriteLine("[LOG] Started to delete lonely voxels...");
 			int max = schematic.Width * schematic.Height * schematic.Length * 2;
@@ -201,11 +200,16 @@ namespace FileToVox.Converter.PointCloud
 					{
 						for (ushort x = 0; x < schematic.Width; x++)
 						{
-							if (blocks[x, y, z] != 0 && x > 0 && x < schematic.Width && y > 0 && y < schematic.Height && z > 0 && z < schematic.Length)
+							if (schematic.GetColorAtVoxelIndex(x, y, z) != 0 && x > 0 && x < schematic.Width && y > 0 && y < schematic.Height && z > 0 && z < schematic.Length)
 							{
-								if (blocks[x - 1, y, z] == 0 && blocks[x + 1, y, z] == 0 && blocks[x, y - 1, z] == 0 && blocks[x, y + 1, z] == 0 && blocks[x, y, z - 1] == 0 && blocks[x, y, z + 1] == 0)
+								if (schematic.GetColorAtVoxelIndex(x - 1, y, z) == 0 
+								    && schematic.GetColorAtVoxelIndex(x+1, y, z) == 0 
+								    && schematic.GetColorAtVoxelIndex(x, y  -1, z) == 0
+								    && schematic.GetColorAtVoxelIndex(x, y +1, z) == 0 
+								    && schematic.GetColorAtVoxelIndex(x, y, z - 1) == 0 
+								    && schematic.GetColorAtVoxelIndex(x, y, z + 1) == 0)
 								{
-									blocks[x, y, z] = 0;
+									schematic.RemoveVoxel(x, y, z);
 								}
 							}
 
@@ -216,26 +220,24 @@ namespace FileToVox.Converter.PointCloud
 				}
 			}
 			Console.WriteLine("[LOG] Done.");
-			return blocks.ToHashSetFrom3DArray();
 		}
 		public override Schematic WriteSchematic()
 		{
 			float minX = _blocks.MinBy(t => t.X).X;
 			float minY = _blocks.MinBy(t => t.Y).Y;
 			float minZ = _blocks.MinBy(t => t.Z).Z;
-
-			Schematic schematic = new Schematic();
-
+			
 			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 			list.ApplyOffset(new Vector3(minX, minY, minZ));
-			HashSet<Voxel> hashSet = list.ToHashSet();
+
+			Schematic schematic = new Schematic(list.ToVoxelDictionary());
+			
 			if (_holes)
-				hashSet = FillHoles(hashSet.To3DArray(schematic), schematic);
+				FillHoles(ref schematic);
 			if (_flood)
-				hashSet = FillInvisiblesVoxels(hashSet.To3DArray(schematic), schematic);
+				FillInvisiblesVoxels(ref schematic);
 			if (_lonely)
-				hashSet = FixLonelyVoxels(hashSet.To3DArray(schematic), schematic);
-			schematic.Blocks = hashSet;
+				FixLonelyVoxels(ref schematic);
 
 			return schematic;
 		}
@@ -247,39 +249,39 @@ namespace FileToVox.Converter.PointCloud
 		/// X0X
 		/// .X.
 		/// </summary>
-		/// <param name="blocks"></param>
+		/// <param name="schematic"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="z"></param>
+		/// <param name="blocks"></param>
 		/// <returns></returns>
-		private static uint[,,] Check1X1X1Hole(uint[,,] blocks, ushort x, ushort y, ushort z)
+		private static void Check1X1X1Hole(ref Schematic schematic, ushort x, ushort y, ushort z)
 		{
-			uint left = blocks[x - 1, y, z];
-			uint right = blocks[x + 1, y, z];
+			uint left = schematic.GetColorAtVoxelIndex(x-1, y, z);
+			uint right = schematic.GetColorAtVoxelIndex(x+1, y, z);
 
-			uint front = blocks[x, y, z - 1];
-			uint back = blocks[x, y, z + 1];
+			uint front = schematic.GetColorAtVoxelIndex(x, z - 1, x);
+			uint back = schematic.GetColorAtVoxelIndex(x, y, z + 1);
 
-			uint top = blocks[x, y + 1, z];
-			uint bottom = blocks[x, y - 1, z];
+			uint top = schematic.GetColorAtVoxelIndex(x, y +1, z);
+			uint bottom = schematic.GetColorAtVoxelIndex(x, y - 1, z);
 
 
 			if (left != 0 && right != 0 && front != 0 && back != 0)
 			{
-				blocks[x, y, z] = left;
+				schematic.AddVoxel(x, y, z, left);
 			}
 
 			if (top != 0 && bottom != 0 && left != 0 && right != 0)
 			{
-				blocks[x, y, z] = top;
+				schematic.AddVoxel(x, y, z, top);
 			}
 
 			if (front != 0 && back != 0 && top != 0 && bottom != 0)
 			{
-				blocks[x, y, z] = front;
+				schematic.AddVoxel(x, y, z, front);
 			}
 
-			return blocks;
 		}
 
 		/// <summary>
@@ -292,35 +294,33 @@ namespace FileToVox.Converter.PointCloud
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <returns></returns>
-		private static uint[,,] Check1X2X1Hole(uint[,,] blocks, ushort x, ushort y, ushort z)
+		private static void Check1X2X1Hole(ref Schematic schematic, ushort x, ushort y, ushort z)
 		{
-			uint left = blocks[x - 1, y, z];
-			uint right = blocks[x + 1, y, z];
+			uint left = schematic.GetColorAtVoxelIndex(x-1, y, z);
+			uint right = schematic.GetColorAtVoxelIndex(x+1, y, z);
 
-			uint top = blocks[x, y - 1, z];
-			uint bottom = blocks[x, y + 1, z];
+			uint top = schematic.GetColorAtVoxelIndex(x, y +1, z);
+			uint bottom = schematic.GetColorAtVoxelIndex(x, y - 1, z);
 
-			uint front = blocks[x, y, z - 1];
-			uint back = blocks[x, y, z + 1];
+			uint front = schematic.GetColorAtVoxelIndex(x, z - 1, x);
+			uint back = schematic.GetColorAtVoxelIndex(x, y, z + 1);
 
-			uint diagonalLeft = blocks[x - 1, y - 1, z];
-			uint diagonalRight = blocks[x + 1, y - 1, z];
+			uint diagonalLeft = schematic.GetColorAtVoxelIndex(x -1, y - 1, z);
+			uint diagonalRight = schematic.GetColorAtVoxelIndex(x +1, y - 1, z);
 
-			uint diagonalLeft2 = blocks[x, y - 1, z + 1];
-			uint diagonalRight2 = blocks[x, y - 1, z - 1];
+			uint diagonalLeft2 = schematic.GetColorAtVoxelIndex(x, y - 1, z + 1);
+			uint diagonalRight2 = schematic.GetColorAtVoxelIndex(x, y - 1, z - 1);
 
 
 			if (bottom == 0 && top != 0 && right != 0 && left != 0 && diagonalRight != 0 && diagonalLeft != 0)
 			{
-				blocks[x, y, z] = top;
+				schematic.AddVoxel(x, y, z, top);
 			}
 
 			if (bottom == 0 && top != 0 && front != 0 && back != 0 && diagonalRight2 != 0 && diagonalLeft2 != 0)
 			{
-				blocks[x, y, z] = top;
+				schematic.AddVoxel(x, y, z, top);
 			}
-
-			return blocks;
 		}
 
 
@@ -334,49 +334,45 @@ namespace FileToVox.Converter.PointCloud
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <returns></returns>
-		private static uint[,,] Check2X1X1Hole(uint[,,] blocks, ushort x, ushort y, ushort z)
+		private static void Check2X1X1Hole(ref Schematic schematic, ushort x, ushort y, ushort z)
 		{
-			uint left = blocks[x - 1, y, z];
-			uint right = blocks[x + 1, y, z];
+			uint left = schematic.GetColorAtVoxelIndex(x-1, y, z);
+			uint right = schematic.GetColorAtVoxelIndex(x+1, y, z);
 
-			uint top = blocks[x, y - 1, z];
-			uint bottom = blocks[x, y + 1, z];
+			uint top = schematic.GetColorAtVoxelIndex(x, y +1, z);
+			uint bottom = schematic.GetColorAtVoxelIndex(x, y - 1, z);
 
-			uint diagonalLeft = blocks[x, y + 1, z + 1];
-			uint diagonalRight = blocks[x, y - 1, z + 1];
+			uint diagonalLeft = schematic.GetColorAtVoxelIndex(x, y - 1, z + 1);
+			uint diagonalRight = schematic.GetColorAtVoxelIndex(x, y - 1, z - 1);
 
 			if (top != 0 && bottom != 0 && right == 0 && left != 0 && diagonalRight != 0 && diagonalLeft != 0)
 			{
-				blocks[x, y, z] = bottom;
+				schematic.AddVoxel(x, y, z, bottom);
 			}
-
-			return blocks;
 		}
 
-		private static uint[,,] Check1X1X2Hole(uint[,,] blocks, ushort x, ushort y, ushort z)
+		private static void Check1X1X2Hole(ref Schematic schematic, ushort x, ushort y, ushort z)
 		{
-			uint left = blocks[x - 1, y, z];
-			uint right = blocks[x + 1, y, z];
+			uint left = schematic.GetColorAtVoxelIndex(x-1, y, z);
+			uint right = schematic.GetColorAtVoxelIndex(x+1, y, z);
 
-			uint front = blocks[x, y, z - 1];
-			uint back = blocks[x, y, z + 1];
+			uint front = schematic.GetColorAtVoxelIndex(x, z - 1, x);
+			uint back = schematic.GetColorAtVoxelIndex(x, y, z + 1);
 
-			uint diagonalLeft = blocks[x + 1, y, z + 1];
-			uint diagonalRight = blocks[x - 1, y, z + 1];
+			uint diagonalLeft = schematic.GetColorAtVoxelIndex(x +1, y, z + 1);
+			uint diagonalRight = schematic.GetColorAtVoxelIndex(x -1, y, z + 1);
 
 			if (back != 0 && front == 0 && left != 0 && right != 0 && diagonalRight != 0 && diagonalLeft != 0)
 			{
-				blocks[x, y, z] = back;
+				schematic.AddVoxel(x, y, z, back);
 			}
-
-			return blocks;
 		}
 
-		private static bool HasHoleInLine(uint[,,] blocks, ushort width, ushort startX, ushort y, ushort z)
+		private static bool HasHoleInLine(Schematic schematic, ushort width, ushort startX, ushort y, ushort z)
 		{
 			for (int x = startX; x < width; x++)
 			{
-				if (blocks[x, y, z] != 0)
+				if (schematic.GetColorAtVoxelIndex(x, y, z) != 0)
 					return true;
 			}
 

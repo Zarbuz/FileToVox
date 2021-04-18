@@ -56,8 +56,10 @@ namespace FileToVox.Converter
                 {
                     foreach (Vector3i idx in bmp.Indices())
                     {
-                        if (bmp.Get(idx))
-                            schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+	                    if (bmp.Get(idx))
+	                    {
+                            schematic.AddVoxel(idx.x, idx.y, idx.z, Color.White);
+	                    }
                     }
                 }
             }
@@ -76,7 +78,7 @@ namespace FileToVox.Converter
 
                         if (!mExcavate && isInside)
                         {
-                            schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+	                        schematic.AddVoxel(idx.x, idx.y, idx.z, Color.White);
                         }
                         progressbar.Report((i / (float)count));
                     }
@@ -89,8 +91,10 @@ namespace FileToVox.Converter
             {
                 foreach (Vector3i idx in bmp.Indices())
                 {
-                    if (bmp.Get(idx) && IsBlockConnectedToAir(bmp, idx))
-                        schematic.Blocks.Add(new Voxel((ushort)idx.x, (ushort)idx.y, (ushort)idx.z, Color.White.ColorToUInt()));
+	                if (bmp.Get(idx) && IsBlockConnectedToAir(bmp, idx))
+	                {
+		                schematic.AddVoxel(idx.x, idx.y, idx.z, Color.White);
+                    }
                 }
             }
 

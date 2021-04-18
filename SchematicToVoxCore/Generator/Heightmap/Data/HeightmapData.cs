@@ -22,8 +22,6 @@ namespace FileToVox.Generator.Heightmap.Data
 		X,
 		Y,
 		Z,
-		XZ,
-		XYZ
 	}
 
 	public class HeightmapStep
@@ -35,6 +33,7 @@ namespace FileToVox.Generator.Heightmap.Data
 		public bool EnableColor { get; set; }
 		public int ColorLimit { get; set; } = 256;
 		public bool Excavate { get; set; }
+		public bool Reverse { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
 		public PlacementMode PlacementMode { get; set; }

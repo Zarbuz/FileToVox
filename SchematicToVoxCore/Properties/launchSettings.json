@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SchematicToVoxCore": {
-      "commandName": "Project",
-      "commandLineArgs": "--i AncientTemple_MediumB.qb --o AncientTemple_MediumB"
-    }
-  }
-}

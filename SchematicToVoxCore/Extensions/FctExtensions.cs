@@ -97,38 +97,17 @@ namespace SchematicToVoxCore.Extensions
             return list;
         }
 
-        public static uint[,,] To3DArray(this HashSet<Voxel> source, Schematic schematic)
-        {
-            uint[,,] blocks = new uint[schematic.Width + 1, schematic.Height + 1, schematic.Length + 1];
+		public static Dictionary<ulong, Voxel> ToVoxelDictionary(this List<Voxel> voxels)
+		{
+			Dictionary<ulong, Voxel> dictionary = new Dictionary<ulong, Voxel>();
+			foreach (Voxel voxel in voxels)
+			{
+				dictionary[Schematic.GetVoxelIndex(voxel.X, voxel.Y, voxel.Z)] = voxel;
+			}
 
-            foreach (Voxel block in source)
-            {
-                blocks[block.X, block.Y, block.Z] = block.Color;
-            }
-
-            return blocks;
-        }
-
-        public static HashSet<Voxel> ToHashSetFrom3DArray(this uint[,,] source)
-        {
-            HashSet<Voxel> blocks = new HashSet<Voxel>();
-
-            for (int y = 0; y < source.GetLength(1); y++)
-            {
-                for (int z = 0; z < source.GetLength(2); z++)
-                {
-                    for (int x = 0; x < source.GetLength(0); x++)
-                    {
-                        if (source[x, y, z] != 0)
-                        {
-                            blocks.Add(new Voxel((ushort)x, (ushort)y, (ushort)z, source[x, y, z]));
-                        }
-                    }
-                }
-            }
-
-            return blocks;
-        }
+			return dictionary;
+		}
+      
     }
 
 	

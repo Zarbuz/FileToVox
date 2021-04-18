@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using FileToVox.Schematics.Tools;
+using FileToVox.Utils;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Threading.Tasks;
-using FileToVox.Extensions;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using MoreLinq;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Converter.PointCloud
 {
-    public class PLYToSchematic : PointCloudToSchematic
+	public class PLYToSchematic : PointCloudToSchematic
     {
         #region Internal data structure
 
