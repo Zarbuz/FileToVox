@@ -1,15 +1,13 @@
-﻿using FileToVox.Schematics;
-using SchematicToVoxCore.Extensions;
+﻿using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Schematics;
+using FileToVox.Utils;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using FileToVox.Generator.Heightmap.Data;
-using FileToVox.Utils;
 
 namespace FileToVox.Converter.Image
 {
-    public class PNGToSchematic : ImageToSchematic
+	public class PNGToSchematic : ImageToSchematic
     {
         public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, int colorLimit)
             : base(path, colorPath, height, excavate, color, colorLimit)

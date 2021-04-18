@@ -33,7 +33,7 @@ namespace FileToVox.Generator.Heightmap.Data
 		public int Height { get; set; }
 		public int Offset { get; set; }
 		public bool EnableColor { get; set; }
-		public int ColorLimit { get; set; }
+		public int ColorLimit { get; set; } = 256;
 		public bool Excavate { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
@@ -41,5 +41,23 @@ namespace FileToVox.Generator.Heightmap.Data
 
 		[JsonConverter(typeof(StringEnumConverter))]
 		public RotationMode RotationMode { get; set; }
+
+		public void ValidateSettings()
+		{
+			if (Height < 0)
+			{
+				Height = 1;
+			}
+
+			if (Offset < 0)
+			{
+				Offset = 0;
+			}
+
+			if (ColorLimit < 0)
+			{
+				ColorLimit = 256;
+			}
+		}
 	}
 }

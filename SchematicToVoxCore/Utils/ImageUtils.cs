@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Xml.Linq;
 using FileToVox.Converter.Image;
 using FileToVox.Extensions;
 using FileToVox.Generator.Heightmap.Data;
@@ -47,7 +48,7 @@ namespace FileToVox.Utils
 			{
 				if (heightmapStep.ColorLimit != 256 || clone.CountColor() > 256)
 				{
-					System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, heightmapStep.ColorLimit);
+					Image image = quantizer.QuantizeImage(clone, 10, 70, heightmapStep.ColorLimit);
 					bitmap = new Bitmap(image);
 				}
 			}
@@ -64,9 +65,9 @@ namespace FileToVox.Utils
             DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack);
             DirectBitmap directBitmap = new DirectBitmap(bitmap);
             DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor);
-            if (bitmap.Width > 2000 || bitmap.Height > 2000)
+            if (bitmap.Width > Schematic.MAX_WORLD_WIDTH || bitmap.Height > Schematic.MAX_WORLD_LENGTH)
             {
-                throw new ArgumentException("Image is too big (max size 2000x2000 px)");
+                throw new ArgumentException($"Image is too big (max size ${Schematic.MAX_WORLD_WIDTH}x${Schematic.MAX_WORLD_LENGTH} px)");
             }
 
             using (ProgressBar progressbar = new ProgressBar())
@@ -84,25 +85,24 @@ namespace FileToVox.Utils
                     for (int y = 0; y < h; y++)
                     {
                         Color color = directBitmap.GetPixel(x, y);
-                        Color finalColor = (heightmapStep.ColorTexturePath != null) ? directBitmapColor.GetPixel(x, y) : (heightmapStep.EnableColor) ? color : System.Drawing.Color.White;
+                        Color finalColor = (heightmapStep.ColorTexturePath != null) ? directBitmapColor.GetPixel(x, y) : (heightmapStep.EnableColor) ? color : Color.White;
                         if (color.A != 0)
                         {
                             if (heightmapStep.Height != 1)
                             {
                                 if (heightmapStep.Excavate)
                                 {
-                                    GenerateFromMinNeighbor(ref schematic, directBitmapBlack, w, h, finalColor, x, y, heightmapStep.Height);
+                                    GenerateFromMinNeighbor(ref schematic, directBitmapBlack, w, h, finalColor, x, y, heightmapStep.Height, heightmapStep.Offset);
                                 }
                                 else
                                 {
-                                    int computeHeight = GetHeight(directBitmapBlack.GetPixel(x, y), heightmapStep.Height);
-	                                AddMultipleBlocks(ref schematic, 0, computeHeight, x, y, finalColor);
+                                    int computeHeight = GetHeight(directBitmapBlack.GetPixel(x, y), heightmapStep.Height) + heightmapStep.Offset;
+	                                AddMultipleBlocks(ref schematic, heightmapStep.Offset, computeHeight, x, y, finalColor);
                                 }
                             }
                             else
                             {
-                                Voxel voxel = new Voxel((ushort)x, 0, (ushort)y, finalColor.ColorToUInt());
-                                AddBlock(ref schematic, voxel);
+	                            AddSingleVoxel(ref schematic, x, heightmapStep.Offset, y, finalColor);
                             }
                         }
                         progressbar.Report((i++ / (float)size));
@@ -114,12 +114,18 @@ namespace FileToVox.Utils
             return schematic;
         }
 
-        public static void AddMultipleBlocks(ref Schematic schematic, int minZ, int maxZ, int x, int y, Color color)
+        public static void AddMultipleBlocks(ref Schematic schematic, int min, int max, int x, int y, Color color)
         {
-            for (int z = minZ; z < maxZ; z++)
+            for (int i = min; i < max; i++)
             {
-                AddBlock(ref schematic, new Voxel((ushort)x, (ushort)z, (ushort)y, color.ColorToUInt()));
+                AddBlock(ref schematic, new Voxel((ushort)x, (ushort)i, (ushort)y, color.ColorToUInt()));
             }
+        }
+
+        public static void AddSingleVoxel(ref Schematic schematic, int x, int y, int z, Color color)
+        {
+	        Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z, color.ColorToUInt());
+            AddBlock(ref schematic, voxel);
         }
 
         public static void AddBlock(ref Schematic schematic, Voxel voxel)
@@ -141,9 +147,9 @@ namespace FileToVox.Utils
             return (int)(position * height);
         }
 
-        public static void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y, int height)
+        public static void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y, int height, int offset)
         {
-            int computeHeight = GetHeight(blackBitmap.GetPixel(x, y), height);
+            int computeHeight = GetHeight(blackBitmap.GetPixel(x, y), height) + offset;
             try
             {
                 if (x - 1 >= 0 && x + 1 < w && y - 1 >= 0 && y + 1 < h)
@@ -153,10 +159,10 @@ namespace FileToVox.Utils
                     Color colorRight = blackBitmap.GetPixel(x + 1, y);
                     Color colorBottom = blackBitmap.GetPixel(x, y + 1);
 
-                    int heightLeft = GetHeight(colorLeft, height);
-                    int heightTop = GetHeight(colorTop, height);
-                    int heightRight = GetHeight(colorRight, height);
-                    int heightBottom = GetHeight(colorBottom, height);
+                    int heightLeft = GetHeight(colorLeft, height) + offset;
+                    int heightTop = GetHeight(colorTop, height) + offset;
+                    int heightRight = GetHeight(colorRight, height) + offset;
+                    int heightBottom = GetHeight(colorBottom, height) + offset;
 
                     var list = new List<int>
                         {
@@ -166,18 +172,17 @@ namespace FileToVox.Utils
                     int min = list.Min();
                     if (min < computeHeight)
                     {
-                        AddMultipleBlocks(ref schematic, list.Min(), computeHeight, x, y, color);
+                        AddMultipleBlocks(ref schematic, min, computeHeight, x, y, color);
                     }
                     else
                     {
                         int finalHeight = (computeHeight - 1 < 0) ? 0 : computeHeight - 1;
-                        AddBlock(ref schematic,
-                            new Voxel((ushort)x, (ushort)finalHeight, (ushort)y, color.ColorToUInt()));
+                        AddSingleVoxel(ref schematic, x, finalHeight, y, color);
                     }
                 }
                 else
                 {
-                    AddMultipleBlocks(ref schematic, 0, computeHeight, x, y, color);
+                    AddMultipleBlocks(ref schematic, offset, computeHeight, x, y, color);
                 }
             }
             catch (IndexOutOfRangeException)

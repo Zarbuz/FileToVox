@@ -6,6 +6,7 @@
     {
       "texturePath": "",
       "colorTexturePath": "",
+      "height": 200, 
       "offset": 0,
       "colorLimit": -1, 
       "enableColor":  true, 
