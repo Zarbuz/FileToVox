@@ -33,7 +33,7 @@ namespace FileToVox.Generator.Heightmap
 				}
 
 				Schematic schematicStep = ImageUtils.WriteSchematicFromImage(bitmap, bitmapColor, step);
-				finalSchematic = SchematicMerger.Merge(finalSchematic, schematicStep, step.PlacementMode);
+				finalSchematic = SchematicMerger.Merge(finalSchematic, schematicStep, step);
 			}
 
 			return finalSchematic;

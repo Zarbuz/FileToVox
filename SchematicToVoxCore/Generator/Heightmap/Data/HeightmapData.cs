@@ -32,6 +32,7 @@ namespace FileToVox.Generator.Heightmap.Data
 		public string ColorTexturePath { get; set; }
 		public int Height { get; set; }
 		public int Offset { get; set; }
+		public int OffsetMerge { get; set; }
 		public bool EnableColor { get; set; }
 		public int ColorLimit { get; set; } = 256;
 		public bool Excavate { get; set; }
@@ -60,14 +61,14 @@ namespace FileToVox.Generator.Heightmap.Data
 				throw new ArgumentException("[ERROR] The TexturePath is invalid: " + ColorTexturePath);
 			}
 
-			if (Height < 0)
-			{
-				Height = 1;
-			}
-
 			if (Offset < 0)
 			{
 				Offset = 0;
+			}
+
+			if (Height < 0)
+			{
+				Height = 1;
 			}
 
 			if (ColorLimit < 0)
@@ -83,6 +84,7 @@ namespace FileToVox.Generator.Heightmap.Data
 			Console.WriteLine("[INFO] ColorTexturePath: " + ColorTexturePath);
 			Console.WriteLine("[INFO] Height: " + Height);
 			Console.WriteLine("[INFO] Offset: " + Offset);
+			Console.WriteLine("[INFO] OffsetMerge: " + OffsetMerge);
 			Console.WriteLine("[INFO] EnableColor: " + EnableColor);
 			Console.WriteLine("[INFO] ColorLimit: " + ColorLimit);
 			Console.WriteLine("[INFO] Excavate: " + Excavate);

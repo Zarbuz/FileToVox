@@ -121,5 +121,7 @@ namespace FileToVox.Generator.Terrain.Chunk
 			}
 			set => mBack = value;
 		}
+
+
 	}
 }

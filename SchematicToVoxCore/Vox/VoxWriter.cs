@@ -107,8 +107,7 @@ namespace FileToVox.Vox
 				{
 					for (int x = (int)min.X; x < max.X; x++)
 					{
-						Voxel voxel = mSchematic.GetVoxel(x, y, z);
-						if (voxel != null)
+						if (mSchematic.GetVoxel(x, y, z, out Voxel voxel))
 						{
 							list.Add(voxel);
 						}

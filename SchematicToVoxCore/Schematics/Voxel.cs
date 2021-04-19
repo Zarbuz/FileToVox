@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace FileToVox.Schematics
 {
     [StructLayout(LayoutKind.Sequential)]
-    public class Voxel : IEquatable<Voxel>
+    public struct Voxel : IEquatable<Voxel>
     {
         public readonly ushort X;
         public readonly ushort Y;
@@ -46,9 +46,9 @@ namespace FileToVox.Schematics
             return $"X: {X}, Y: {Y}, Z: {Z}, Color: {Color.ToString()}";
         }
 
-		public long GetIndex()
+		public ulong GetIndex()
 		{
-			return (Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X;
+			return (ulong) ((Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X);
         }
 
     }

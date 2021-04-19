@@ -7,9 +7,9 @@ namespace FileToVox.Schematics
 {
 	public static class SchematicMerger
 	{
-		public static Schematic Merge(Schematic schematicA, Schematic schematicB, PlacementMode placementMode)
+		public static Schematic Merge(Schematic schematicA, Schematic schematicB, HeightmapStep heightmapStep)
 		{
-			switch (placementMode)
+			switch (heightmapStep.PlacementMode)
 			{
 				case PlacementMode.ADDITIVE:
 					return MergeAdditive(schematicA, schematicB);
@@ -18,7 +18,7 @@ namespace FileToVox.Schematics
 				case PlacementMode.SUBSTRACT:
 					return MergeSubstract(schematicA, schematicB);
 				case PlacementMode.TOP_ONLY:
-					return MergeTopOnly(schematicA, schematicB);
+					return MergeTopOnly(schematicA, schematicB, heightmapStep);
 				default:
 					return MergeAdditive(schematicA, schematicB);
 			}
@@ -32,7 +32,7 @@ namespace FileToVox.Schematics
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
+				foreach (var voxel in schematicB.BlockDict)
 				{
 					resultSchematic.AddVoxel(voxel.Value);
 					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
@@ -52,7 +52,7 @@ namespace FileToVox.Schematics
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
+				foreach (var voxel in schematicB.BlockDict)
 				{
 					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
 					{
@@ -74,7 +74,7 @@ namespace FileToVox.Schematics
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (KeyValuePair<long, Voxel> voxel in schematicB.BlockDict)
+				foreach (var voxel in schematicB.BlockDict)
 				{
 					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
 					{
@@ -89,14 +89,14 @@ namespace FileToVox.Schematics
 			return resultSchematic;
 		}
 
-		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB)
+		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB, HeightmapStep heightmapStep)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
 
 			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				int max = schematicA.Length * schematicA.Length;
+				int max = schematicA.Length * schematicA.Width;
 				int index = 0;
 				for (int z = 0; z < schematicA.Length; z++)
 				{
@@ -112,12 +112,15 @@ namespace FileToVox.Schematics
 							}
 						}
 
-						for (int y = 0; y < schematicB.Height; y++)
+						if (maxHeight != 0)
 						{
-							uint color = schematicB.GetColorAtVoxelIndex(x, y, z);
-							if (color != 0)
+							for (int y = 0; y < schematicB.Height; y++)
 							{
-								resultSchematic.AddVoxel(x, y + maxHeight, z, color);
+								uint color = schematicB.GetColorAtVoxelIndex(x, y, z);
+								if (color != 0)
+								{
+									resultSchematic.AddVoxel(x, y + maxHeight + heightmapStep.OffsetMerge, z, color);
+								}
 							}
 						}
 

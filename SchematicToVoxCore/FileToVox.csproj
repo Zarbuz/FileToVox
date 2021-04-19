@@ -58,7 +58,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="JsonPresets\terrainGenerator.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Schematics\config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
