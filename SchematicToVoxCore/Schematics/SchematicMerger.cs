@@ -103,11 +103,12 @@ namespace FileToVox.Schematics
 					for (int x = 0; x < schematicA.Width; x++)
 					{
 						int maxHeight = 0;
-						for (int y = 0; y < schematicA.Height; y++)
+						for (int y = schematicA.Height - 1; y >= 0; y--)
 						{
 							if (schematicA.GetColorAtVoxelIndex(x, y, z) != 0)
 							{
 								maxHeight = y;
+								break;
 							}
 						}
 

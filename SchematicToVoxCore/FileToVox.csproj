@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Utils\ImageUtils.cs~RF1b5862a.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.633" />
     <PackageReference Include="fNbt" Version="0.6.4" />
     <PackageReference Include="geometry3Sharp" Version="1.0.324" />

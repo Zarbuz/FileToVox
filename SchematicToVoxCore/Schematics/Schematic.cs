@@ -138,14 +138,14 @@ namespace FileToVox.Schematics
 		public Voxel GetVoxel(int x, int y, int z)
 		{
 			long voxelIndex = GetVoxelIndex(x, y, z);
-			if (BlockDict.ContainsKey(voxelIndex))
-			{
-				return BlockDict[voxelIndex];
-			}
-
-			return null;
+			BlockDict.TryGetValue(voxelIndex, out Voxel voxel);
+			return voxel;
 		}
 
-		
+		public bool ContainsVoxel(int x, int y, int z)
+		{
+			long voxelIndex = GetVoxelIndex(x, y, z);
+			return BlockDict.TryGetValue(voxelIndex, out _);
+		}
 	}
 }

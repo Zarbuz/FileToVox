@@ -127,7 +127,7 @@ namespace FileToVox.Vox
 				{
 					for (int x = (int)min.X; x < max.X; x++)
 					{
-						if (mSchematic.GetVoxel(x, y, z) != null)
+						if (mSchematic.ContainsVoxel(x, y, z))
 						{
 							return true;
 						}
@@ -160,6 +160,11 @@ namespace FileToVox.Vox
 				int worldMaxZ = mSchematic.BlockDict.Values.Max(v => v.Z);
 
 				int i = 0;
+				int maxY = (int) Math.Ceiling((worldMaxY / (float)mChunkSize));
+				int maxX = (int) Math.Ceiling((worldMaxX / (float)mChunkSize));
+				int maxZ = (int) Math.Ceiling((worldMaxZ / (float)mChunkSize));
+
+				int max = maxZ * maxX * maxY;
 				for (int y = worldMinY; y <= worldMaxY; y+= mChunkSize)
 				{
 					for (int z = worldMinZ; z <= worldMaxZ; z+= mChunkSize)
@@ -171,7 +176,7 @@ namespace FileToVox.Vox
 								list.Add(new BlockGlobal(x, y, z));
 							}
 
-							progressBar.Report(i++ / (float)mCountSize);
+							progressBar.Report(i++ / (float)max);
 						}
 					}
 				}
@@ -327,11 +332,7 @@ namespace FileToVox.Vox
 					writer.Write((i != 0) ? (byte)i : (byte)1);
 				}
 
-				if (Program.DEBUG)
-				{
-					mSchematic.BlockDict.Remove(block.GetIndex());
-				}
-
+				mSchematic.BlockDict.Remove(block.GetIndex());
 			}
 		}
 
