@@ -4,6 +4,7 @@ using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 using System;
+using FileToVox.Schematics;
 
 namespace FileToVox.Generator.Terrain
 {
@@ -65,7 +66,7 @@ namespace FileToVox.Generator.Terrain
 			return new Vector3(x, y, z);
 		}
 
-		public uint[,,] GetVoxels(Vector3 boxMin, Vector3 boxMax)
+		public Schematic CreateSchematic(Vector3 boxMin, Vector3 boxMax)
 		{
 			Vector3 position = new Vector3();
 			Vector3 chunkMinPos = GetChunkPosition(boxMin);
@@ -78,11 +79,7 @@ namespace FileToVox.Generator.Terrain
 			int maxY = (int)boxMax.Y;
 			int maxZ = (int)boxMax.Z;
 
-			int sizeY = maxY - minY;
-			int sizeZ = maxZ - minZ;
-			int sizeX = maxX - minX;
-
-			uint[,,] voxels = new uint[sizeY + 1, sizeZ + 1, sizeX + 1];
+			Schematic schematic = new Schematic();
 
 			for (float y = chunkMinPos.Y; y <= chunkMaxPos.Y; y += CHUNK_SIZE)
 			{
@@ -119,7 +116,7 @@ namespace FileToVox.Generator.Terrain
 										if (wx < minX || wx > maxX)
 											continue;
 										int mx = wx - minX;
-										voxels[my, mz, mx] = chunk.Voxels[voxelIndex].Color;
+										schematic.AddVoxel(mx, my, mz, chunk.Voxels[voxelIndex].Color);
 									}
 								}
 							}
@@ -147,7 +144,7 @@ namespace FileToVox.Generator.Terrain
 										if (wx < minX || wx > maxX)
 											continue;
 										int mx = wx - minX;
-										voxels[my, mz, mx] = 0;
+										schematic.RemoveVoxel(mx, my, mz);
 									}
 								}
 							}
@@ -156,7 +153,7 @@ namespace FileToVox.Generator.Terrain
 				}
 			}
 
-			return voxels;
+			return schematic;
 		}
 	}
 }

@@ -24,6 +24,11 @@ namespace FileToVox.Generator.Terrain
 
 			VoxelChunk chunk = new VoxelChunk();
 			chunk.Voxels = new Voxel[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+			for (int i = 0; i < chunk.Voxels.Length; i++)
+			{
+				chunk.Voxels[i] = new Voxel();
+			}
+
 			chunk.Position = position;
 
 			WorldTerrainData.TerrainGeneratorSettings.PaintChunk(chunk);

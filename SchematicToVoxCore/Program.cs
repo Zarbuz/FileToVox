@@ -37,7 +37,7 @@ namespace FileToVox
 		private static int HEIGHT_MAP = 1;
 		private static int GRID_SIZE = 128;
 		private static int COLOR_LIMIT = 256;
-		private static int CHUNK_SIZE = 128;
+		public static int CHUNK_SIZE = 128;
 
 		public static void Main(string[] args)
 		{

@@ -25,7 +25,7 @@ namespace FileToVox.Vox
 		private int mChildrenChunkSize;
 		private Schematic mSchematic;
 		private readonly Rotation mRotation = Rotation._PZ_PX_P;
-		private List<BlockGlobal> mFirstBlockInEachRegion;
+		private List<Region> mFirstBlockInEachRegion;
 		private List<Color> mUsedColors;
 		private List<Color> mPalette;
 		private int mChunkSize;
@@ -58,7 +58,7 @@ namespace FileToVox.Vox
 			mHeight = (int)Math.Ceiling(((decimal)mSchematic.Height / mChunkSize)) + 1;
 
 			mCountSize = mWidth * mLength * mHeight;
-			mFirstBlockInEachRegion = GetFirstBlockForEachRegion();
+			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
 			mTotalBlockCount = mSchematic.BlockDict.Count;
 
@@ -115,85 +115,6 @@ namespace FileToVox.Vox
 				}
 			}
 
-			return list;
-		}
-
-		private bool HasBlockInRegion(Vector3 min, Vector3 max)
-		{
-			for (int y = (int)min.Y; y < max.Y; y++)
-			{
-				for (int z = (int)min.Z; z < max.Z; z++)
-				{
-					for (int x = (int)min.X; x < max.X; x++)
-					{
-						if (mSchematic.ContainsVoxel(x, y, z))
-						{
-							return true;
-						}
-					}
-				}
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Get world coordinates of the first block in each region
-		/// </summary>
-		private List<BlockGlobal> GetFirstBlockForEachRegion()
-		{
-			List<BlockGlobal> list = new List<BlockGlobal>();
-
-			//x = Index % XSIZE;
-			//y = (Index / XSIZE) % YSIZE;
-			//z = Index / (XSIZE * YSIZE);
-			Console.WriteLine("[LOG] Started to compute the first block for each region");
-			using (ProgressBar progressBar = new ProgressBar())
-			{
-				int worldMinX = mSchematic.BlockDict.Values.Min(v => v.X);
-				int worldMinY = mSchematic.BlockDict.Values.Min(v => v.Y);
-				int worldMinZ = mSchematic.BlockDict.Values.Min(v => v.Z);
-
-				int worldMaxX = mSchematic.BlockDict.Values.Max(v => v.X);
-				int worldMaxY = mSchematic.BlockDict.Values.Max(v => v.Y);
-				int worldMaxZ = mSchematic.BlockDict.Values.Max(v => v.Z);
-
-				int i = 0;
-				int maxY = (int) Math.Ceiling((worldMaxY / (float)mChunkSize));
-				int maxX = (int) Math.Ceiling((worldMaxX / (float)mChunkSize));
-				int maxZ = (int) Math.Ceiling((worldMaxZ / (float)mChunkSize));
-
-				int max = maxZ * maxX * maxY;
-				for (int y = worldMinY; y <= worldMaxY; y+= mChunkSize)
-				{
-					for (int z = worldMinZ; z <= worldMaxZ; z+= mChunkSize)
-					{
-						for (int x = worldMinX; x <= worldMaxX; x+= mChunkSize)
-						{
-							if (HasBlockInRegion(new Vector3(x, y, z), new Vector3(x + mChunkSize, y + mChunkSize, z + mChunkSize)))
-							{
-								list.Add(new BlockGlobal(x, y, z));
-							}
-
-							progressBar.Report(i++ / (float)max);
-						}
-					}
-				}
-				//for (int i = 0; i < mCountSize; i++)
-				//{
-				//	int x = i % mWidth;
-				//	int y = (i / mWidth) % mHeight;
-				//	int z = i / (mWidth * mHeight);
-				//	if (HasBlockInRegion(new Vector3(x * mChunkSize, y * mChunkSize, z * mChunkSize), new Vector3(x * mChunkSize + mChunkSize, y * mChunkSize + mChunkSize, z * mChunkSize + mChunkSize)))
-				//	{
-				//		list.Add(new BlockGlobal(x * mChunkSize, y * mChunkSize, z * mChunkSize));
-				//	}
-
-				//	progressBar.Report(i / (float)mCountSize);
-				//}
-			}
-
-			Console.WriteLine("[LOG] Done.");
 			return list;
 		}
 
@@ -306,10 +227,10 @@ namespace FileToVox.Vox
 
 			if (mSchematic.BlockDict.Count > 0)
 			{
-				BlockGlobal firstBlock = mFirstBlockInEachRegion[index];
-
+				Region firstBlock = mFirstBlockInEachRegion[index];
+				blocks = mSchematic.GetVoxelInRegion(firstBlock.VoxelIndexUsed);
 				//blocks = _schematic.Blocks.Where(block => block.X >= firstBlock.X && block.Y >= firstBlock.Y && block.Z >= firstBlock.Z && block.X < firstBlock.X + CHUNK_SIZE && block.Y < firstBlock.Y + CHUNK_SIZE && block.Z < firstBlock.Z + CHUNK_SIZE);
-				blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
+				//blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
 			}
 			writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
 			writer.Write(0); //Child chunk size (constant)
@@ -520,22 +441,26 @@ namespace FileToVox.Vox
 		}
 	}
 
-	struct BlockGlobal
+	public class Region
 	{
-		public readonly int X;
-		public readonly int Y;
-		public readonly int Z;
+		public int X;
+		public int Y;
+		public int Z;
+		public int UsageCount;
+		public HashSet<ulong> VoxelIndexUsed;
 
-		public BlockGlobal(int x, int y, int z)
+		public Region(int x, int y, int z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
+			UsageCount = 0;
+			VoxelIndexUsed = new HashSet<ulong>();
 		}
 
 		public override string ToString()
 		{
-			return $"{X} {Y} {Z}";
+			return $"{X} {Y} {Z} {UsageCount}";
 		}
 	}
 }

@@ -1,123 +1,144 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using FileToVox.Vox;
 using SchematicToVoxCore.Extensions;
+using Region = FileToVox.Vox.Region;
 
 namespace FileToVox.Schematics
 {
 	public class Schematic
-    {
-	    public const int MAX_WORLD_WIDTH = 2000;
-	    public const int MAX_WORLD_HEIGHT = 1000;
-	    public const int MAX_WORLD_LENGTH = 2000;
+	{
+		#region ConstStatic
 
-	    private ushort mWidth;
-
-	    public ushort Width
-	    {
-		    get
-		    {
-			    if (mWidth == 0)
-			    {
-				    mWidth = (ushort) (BlockDict.Values.Max(v => v.X) - BlockDict.Values.Min(v => v.X) + 1);
-			    }
-
-			    return mWidth;
-		    }
-	    }
-
-	    private ushort mHeight;
-
-	    public ushort Height
-	    {
-		    get
-		    {
-			    if (mHeight == 0)
-			    {
-				    mHeight = (ushort) (BlockDict.Values.Max(v => v.Y) - BlockDict.Values.Min(v => v.Y) + 1);
-			    }
-
-			    return mHeight;
-		    }
-	    }
-
-	    private ushort mLength;
-
-	    public ushort Length
-	    {
-		    get
-		    {
-			    if (mLength == 0)
-			    {
-				    mLength = (ushort) (BlockDict.Values.Max(v => v.Z) - BlockDict.Values.Min(v => v.Z) + 1);
-			    }
-
-			    return mLength;
-		    }
-	    }
-
-	    /// <summary>Contains all usual blocks</summary>
-        //public HashSet<Voxel> Blocks { get; set; }
-
-		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
-
-        public Schematic()
-        {
-            //Blocks = new HashSet<Voxel>();
-            BlockDict = new Dictionary<ulong, Voxel>(); //TODO
-        }
-
-        public Schematic(Dictionary<ulong, Voxel> blocks)
-        {
-	        BlockDict = blocks;
-        }
-
-        public List<uint> Colors
-        {
-	        get
-	        {
-                List<uint> colors = new List<uint>();
-                foreach (Voxel block in BlockDict.Values.Where(block => !colors.Contains(block.Color)))
-                {
-	                colors.Add(block.Color);
-                }
-
-                return colors;
-	        }
-        }
+		public const int MAX_WORLD_WIDTH = 2000;
+		public const int MAX_WORLD_HEIGHT = 1000;
+		public const int MAX_WORLD_LENGTH = 2000;
 
 		public static ulong GetVoxelIndex(int x, int y, int z)
 		{
-			return (ulong) ((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
+			return (ulong)((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
 		}
+
+		#endregion
+
+		#region Fields
+
+		private ushort mWidth;
+
+		public ushort Width
+		{
+			get
+			{
+				if (mWidth == 0)
+				{
+					mWidth = (ushort)(BlockDict.Values.Max(v => v.X) - BlockDict.Values.Min(v => v.X) + 1);
+				}
+
+				return mWidth;
+			}
+		}
+
+		private ushort mHeight;
+
+		public ushort Height
+		{
+			get
+			{
+				if (mHeight == 0)
+				{
+					mHeight = (ushort)(BlockDict.Values.Max(v => v.Y) - BlockDict.Values.Min(v => v.Y) + 1);
+				}
+
+				return mHeight;
+			}
+		}
+
+		private ushort mLength;
+
+		public ushort Length
+		{
+			get
+			{
+				if (mLength == 0)
+				{
+					mLength = (ushort)(BlockDict.Values.Max(v => v.Z) - BlockDict.Values.Min(v => v.Z) + 1);
+				}
+
+				return mLength;
+			}
+		}
+
+		/// <summary>Contains all usual blocks</summary>
+		//public HashSet<Voxel> Blocks { get; set; }
+
+		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
+
+		public Dictionary<ulong, Region> RegionDict { get; private set; }
+		public Schematic()
+		{
+			//Blocks = new HashSet<Voxel>();
+			BlockDict = new Dictionary<ulong, Voxel>();
+			CreateAllRegions();
+		}
+
+		public Schematic(Dictionary<ulong, Voxel> voxels)
+		{
+			BlockDict = new Dictionary<ulong, Voxel>();
+			CreateAllRegions();
+			foreach (KeyValuePair<ulong, Voxel> voxel in voxels)
+			{
+				AddVoxel(voxel.Value);
+			}
+		}
+
+		public List<uint> Colors
+		{
+			get
+			{
+				List<uint> colors = new List<uint>();
+				foreach (Voxel block in BlockDict.Values.Where(block => !colors.Contains(block.Color)))
+				{
+					colors.Add(block.Color);
+				}
+
+				return colors;
+			}
+		}
+
+
+		#endregion
+
+		#region PublicMethods
 
 		public void AddVoxel(Voxel voxel)
 		{
-			BlockDict[GetVoxelIndex(voxel.X, voxel.Y, voxel.Z)] = voxel;
+			AddVoxel(voxel.X, voxel.Y, voxel.Z, voxel.Color);
 		}
 
 		public void AddVoxel(int x, int y, int z, Color color)
 		{
-			BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort) x, (ushort) y, (ushort) z, color.ColorToUInt());
+			AddVoxel(x, y, z, color.ColorToUInt());
 		}
 
 		public void AddVoxel(int x, int y, int z, uint color)
 		{
-			if (color != 0)
-			{
-				BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color);
-			}
+			AddVoxel(x, y, z, color, -1);
 		}
 
 		public void AddVoxel(int x, int y, int z, uint color, int palettePosition)
 		{
-			BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
+			if (color != 0)
+			{
+				BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
+				AddUsageForRegion(x, y, z);
+			}
 		}
 
 		public void ReplaceVoxel(int x, int y, int z, uint color)
 		{
-			Voxel voxel = BlockDict[GetVoxelIndex(x, y, z)];
-			voxel.Color = color;
+			BlockDict[GetVoxelIndex(x, y, z)].Color = color;
 		}
 
 		public void RemoveVoxel(int x, int y, int z)
@@ -126,6 +147,7 @@ namespace FileToVox.Schematics
 			if (BlockDict.ContainsKey(index))
 			{
 				BlockDict.Remove(index);
+				RemoveUsageForRegion(x, y, z);
 			}
 		}
 
@@ -152,5 +174,66 @@ namespace FileToVox.Schematics
 			ulong voxelIndex = GetVoxelIndex(x, y, z);
 			return BlockDict.TryGetValue(voxelIndex, out _);
 		}
+
+		public List<Region> GetAllRegions()
+		{
+			return RegionDict.Values.Where(region => region.UsageCount > 0).ToList();
+		}
+
+		public List<Voxel> GetVoxelInRegion(HashSet<ulong> voxelIndex)
+		{
+			return voxelIndex.Select(vi => BlockDict[vi]).ToList();
+		}
+		#endregion
+
+		#region PrivateMethods
+
+		private void CreateAllRegions()
+		{
+			RegionDict = new Dictionary<ulong, Region>();
+
+			int worldRegionX = (int)Math.Ceiling(((decimal)MAX_WORLD_WIDTH / Program.CHUNK_SIZE));
+			int worldRegionY = (int)Math.Ceiling(((decimal)MAX_WORLD_HEIGHT / Program.CHUNK_SIZE));
+			int worldRegionZ =(int)Math.Ceiling(((decimal)MAX_WORLD_LENGTH / Program.CHUNK_SIZE));
+
+			int countSize = worldRegionX * worldRegionY * worldRegionZ;
+
+			for (int i = 0; i < countSize; i++)
+			{
+				int x = i % worldRegionX;
+				int y = (i / worldRegionX) % worldRegionY;
+				int z = i / (worldRegionX * worldRegionY);
+
+				RegionDict[GetVoxelIndex(x, y, z)] = new Region(x * Program.CHUNK_SIZE, y * Program.CHUNK_SIZE, z * Program.CHUNK_SIZE);
+			}
+
+		}
+
+		private void AddUsageForRegion(int x, int y, int z)
+		{
+			int chunkX = x / Program.CHUNK_SIZE;
+			int chunkY = y / Program.CHUNK_SIZE;
+			int chunkZ = z / Program.CHUNK_SIZE;
+			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			ulong voxelIndex = GetVoxelIndex(x, y, z);
+
+			RegionDict[chunkIndex].UsageCount++;
+			RegionDict[chunkIndex].VoxelIndexUsed.Add(voxelIndex);
+		}
+
+		private void RemoveUsageForRegion(int x, int y, int z)
+		{
+			int chunkX = x / Program.CHUNK_SIZE;
+			int chunkY = y / Program.CHUNK_SIZE;
+			int chunkZ = z / Program.CHUNK_SIZE;
+			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			ulong voxelIndex = GetVoxelIndex(x, y, z);
+
+			RegionDict[chunkIndex].UsageCount--;
+			RegionDict[chunkIndex].VoxelIndexUsed.Remove(voxelIndex);
+
+		}
+
+		#endregion
 	}
 }
