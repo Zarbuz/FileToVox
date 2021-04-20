@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Schematics.Tools;
 using FileToVox.Vox;
 using SchematicToVoxCore.Extensions;
 using Region = FileToVox.Vox.Region;
@@ -26,6 +28,20 @@ namespace FileToVox.Schematics
 			return x + MAX_WORLD_WIDTH * z;
 		}
 
+		public static int GetVoxelIndex2DFromRotation(int x, int y, int z, RotationMode rotationMode)
+		{
+			switch (rotationMode)
+			{
+				case RotationMode.X:
+					return GetVoxelIndex2D(z, y);
+				case RotationMode.Y:
+					return GetVoxelIndex2D(x, z);
+				case RotationMode.Z:
+					return GetVoxelIndex2D(x, y);
+			}
+			return GetVoxelIndex2D(x, z);
+		}
+
 		#endregion
 
 		#region Fields
@@ -36,6 +52,12 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
+				if (BlockDict.Count == 0)
+				{
+					mWidth = 0;
+					return mWidth;
+				}
+
 				if (mWidth == 0)
 				{
 					mWidth = (ushort)(BlockDict.Values.Max(v => v.X) - BlockDict.Values.Min(v => v.X) + 1);
@@ -51,6 +73,12 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
+				if (BlockDict.Count == 0)
+				{
+					mHeight = 0;
+					return mHeight;
+				}
+
 				if (mHeight == 0)
 				{
 					mHeight = (ushort)(BlockDict.Values.Max(v => v.Y) - BlockDict.Values.Min(v => v.Y) + 1);
@@ -66,6 +94,12 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
+				if (BlockDict.Count == 0)
+				{
+					mLength = 0;
+					return mLength;
+				}
+
 				if (mLength == 0)
 				{
 					mLength = (ushort)(BlockDict.Values.Max(v => v.Z) - BlockDict.Values.Min(v => v.Z) + 1);
@@ -139,7 +173,7 @@ namespace FileToVox.Schematics
 
 		public void AddVoxel(int x, int y, int z, uint color, int palettePosition)
 		{
-			if (color != 0)
+			if (color != 0 && x < MAX_WORLD_WIDTH && y < MAX_WORLD_HEIGHT && z < MAX_WORLD_LENGTH)
 			{
 				BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
 				AddUsageForRegion(x, y, z);
@@ -161,14 +195,16 @@ namespace FileToVox.Schematics
 			}
 		}
 
+		public uint GetColorAtVoxelIndex(Vector3Int pos)
+		{
+			ulong voxelIndex = GetVoxelIndex(pos.X, pos.Y, pos.Z);
+			BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
+			return foundVoxel?.Color ?? 0;
+		}
+
 		public uint GetColorAtVoxelIndex(int x, int y, int z)
 		{
 			ulong voxelIndex = GetVoxelIndex(x, y, z);
-			//if (BlockDict.ContainsKey(voxelIndex))
-			//{
-			//	return BlockDict[voxelIndex].Color;
-			//}
-			//return 0;
 			BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
 			return foundVoxel?.Color ?? 0;
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Schematics.Tools;
 using FileToVox.Utils;
 
 namespace FileToVox.Schematics
@@ -80,16 +81,16 @@ namespace FileToVox.Schematics
 					{
 						resultSchematic.RemoveVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z);
 					}
-					progressbar.Report(index++/ (float)schematicB.BlockDict.Count);
+					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
 
 				}
 			}
-		
+
 			Console.WriteLine("[INFO] Done");
 			return resultSchematic;
 		}
 
-		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB, HeightmapStep heightmapStep)
+		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB, HeightmapStep step)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
 
@@ -107,15 +108,46 @@ namespace FileToVox.Schematics
 					int y = voxel.Value.Y;
 					int z = voxel.Value.Z;
 
-					if (schematicA.GetColorAtVoxelIndex(x, y + 1, z) == 0)
+					if (x == 0 || y == 0 || z == 0)
+						continue;
+
+					Vector3Int position;
+					int index2d = Schematic.GetVoxelIndex2DFromRotation(x, y, z,step.RotationMode);
+
+					switch (step.RotationMode)
 					{
-						int index2d = Schematic.GetVoxelIndex2D(x, z);
+						case RotationMode.X:
+							position = new Vector3Int(x + 1, y, z);
+							break;
+						case RotationMode.Y:
+							position = new Vector3Int(x, y + 1, z);
+							break;
+						case RotationMode.Z:
+							position = new Vector3Int(x, y, z + 1);
+							break;
+						default:
+							position = new Vector3Int(x, y + 1, z);
+							break;
+					}
+					if (schematicA.GetColorAtVoxelIndex(position) == 0)
+					{
 						if (!tops.ContainsKey(index2d))
 						{
 							tops[index2d] = new List<int>();
 						}
 
-						tops[index2d].Add(y);
+						if (step.RotationMode == RotationMode.Y)
+						{
+							tops[index2d].Add(y);
+						}
+						else if (step.RotationMode == RotationMode.X)
+						{
+							tops[index2d].Add(x);
+						}
+						else if (step.RotationMode == RotationMode.Z)
+						{
+							tops[index2d].Add(z);
+						}
 					}
 
 					progressbar.Report(index++ / (double)max);
@@ -127,11 +159,27 @@ namespace FileToVox.Schematics
 					int y = voxel.Value.Y;
 					int z = voxel.Value.Z;
 
-					int index2d = Schematic.GetVoxelIndex2D(x, z);
-					foreach (int maxHeight in tops[index2d])
+					int index2d = Schematic.GetVoxelIndex2DFromRotation(x, y, z, step.RotationMode);
+
+					if (tops.ContainsKey(index2d))
 					{
-						resultSchematic.AddVoxel(x, y + maxHeight + heightmapStep.OffsetMerge, z, voxel.Value.Color);
+						foreach (int maxHeight in tops[index2d])
+						{
+							switch (step.RotationMode)
+							{
+								case RotationMode.X:
+									resultSchematic.AddVoxel(x + maxHeight + step.OffsetMerge, y, z, voxel.Value.Color);
+									break;
+								case RotationMode.Y:
+									resultSchematic.AddVoxel(x, y + maxHeight + step.OffsetMerge, z, voxel.Value.Color);
+									break;
+								case RotationMode.Z:
+									resultSchematic.AddVoxel(x, y, z + maxHeight + step.OffsetMerge, voxel.Value.Color);
+									break;
+							}
+						}
 					}
+					
 					progressbar.Report(index++ / (double)max);
 
 				}
