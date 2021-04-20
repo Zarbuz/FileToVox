@@ -62,9 +62,9 @@ namespace FileToVox.Utils
 			Schematic schematic = new Schematic();
 
 			Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
-			DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack);
-			DirectBitmap directBitmap = new DirectBitmap(bitmap);
-			DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor);
+			DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack, heightmapStep.Height);
+			DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
+			DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor, 1);
 			if (bitmap.Width > Schematic.MAX_WORLD_WIDTH || bitmap.Height > Schematic.MAX_WORLD_LENGTH)
 			{
 				throw new ArgumentException($"Image is too big (max size ${Schematic.MAX_WORLD_WIDTH}x${Schematic.MAX_WORLD_LENGTH} px)");
@@ -96,7 +96,7 @@ namespace FileToVox.Utils
 								}
 								else
 								{
-									int computeHeight = GetHeight(directBitmapBlack.GetPixel(x, y), heightmapStep.Height) + heightmapStep.Offset;
+									int computeHeight = directBitmapBlack.GetHeight(x, y) + heightmapStep.Offset;
 									AddMultipleBlocks(ref schematic, heightmapStep.Offset, computeHeight, x, y, finalColor, heightmapStep.RotationMode);
 								}
 							}
@@ -176,39 +176,20 @@ namespace FileToVox.Utils
 
 		public static void AddBlock(ref Schematic schematic, Voxel voxel)
 		{
-			try
-			{
-				schematic.AddVoxel(voxel);
-			}
-			catch (OutOfMemoryException)
-			{
-				Console.WriteLine($"[ERROR] OutOfMemoryException. Block: {voxel.ToString()}");
-			}
-		}
-
-		public static int GetHeight(Color color, int height)
-		{
-			int intensity = (int)(color.R + color.G + color.B);
-			float position = intensity / (float)765;
-			return (int)(position * height);
+			schematic.AddVoxel(voxel);
 		}
 
 		public static void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y, int height, int offset, RotationMode rotationMode, bool reverse)
 		{
-			int computeHeight = GetHeight(blackBitmap.GetPixel(x, y), height) + offset;
+			int computeHeight = blackBitmap.GetHeight(x, y) + offset;
 			try
 			{
 				if (x - 1 >= 0 && x + 1 < w && y - 1 >= 0 && y + 1 < h)
 				{
-					Color colorLeft = blackBitmap.GetPixel(x - 1, y);
-					Color colorTop = blackBitmap.GetPixel(x, y - 1);
-					Color colorRight = blackBitmap.GetPixel(x + 1, y);
-					Color colorBottom = blackBitmap.GetPixel(x, y + 1);
-
-					int heightLeft = GetHeight(colorLeft, height) + offset;
-					int heightTop = GetHeight(colorTop, height) + offset;
-					int heightRight = GetHeight(colorRight, height) + offset;
-					int heightBottom = GetHeight(colorBottom, height) + offset;
+					int heightLeft = blackBitmap.GetHeight(x - 1, y) + offset;
+					int heightTop = blackBitmap.GetHeight(x, y - 1) + offset;
+					int heightRight = blackBitmap.GetHeight(x + 1, y) + offset;
+					int heightBottom = blackBitmap.GetHeight(x, y + 1) + offset;
 
 					var list = new List<int>
 						{
