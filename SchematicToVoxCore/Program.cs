@@ -28,11 +28,10 @@ namespace FileToVox
 		private static bool HOLES;
 		private static bool LONELY;
 		private static bool SLICE;
+		private static bool SHADER_CASE;
 
 		private static float SLOW;
 
-		private static int IGNORE_MIN_Y = -1;
-		private static int IGNORE_MAX_Y = 256;
 		private static float SCALE = 1;
 		private static int HEIGHT_MAP = 1;
 		private static int GRID_SIZE = 128;
@@ -56,8 +55,6 @@ namespace FileToVox
 				{"gs|grid-size=", "set the grid size", (int v) => GRID_SIZE = v },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
-				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => IGNORE_MIN_Y = v},
-				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => IGNORE_MAX_Y = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
@@ -140,10 +137,6 @@ namespace FileToVox
 				throw new ArgumentNullException("[ERROR] Missing required option: --i");
 			if (OUTPUT_PATH == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --o");
-			if (IGNORE_MIN_Y < -1)
-				throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
-			if (IGNORE_MAX_Y > 256)
-				throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
 			if (SCALE <= 0)
 				throw new ArgumentException("[ERROR] --scale argument must be positive");
 			if (HEIGHT_MAP < 1)
@@ -166,10 +159,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified input color file: " + INPUT_COLOR_FILE);
 			if (INPUT_PALETTE_FILE != null)
 				Console.WriteLine("[INFO] Specified palette file: " + INPUT_PALETTE_FILE);
-			if (IGNORE_MIN_Y != -1)
-				Console.WriteLine("[INFO] Specified min Y layer : " + IGNORE_MIN_Y);
-			if (IGNORE_MAX_Y != 256)
-				Console.WriteLine("[INFO] Specified max Y layer : " + IGNORE_MAX_Y);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
@@ -284,7 +273,7 @@ namespace FileToVox
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
-					return new SchematicToSchematic(path, IGNORE_MIN_Y, IGNORE_MAX_Y, EXCAVATE, SCALE);
+					return new SchematicToSchematic(path, EXCAVATE, SCALE);
 				case ".tif":
 					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":

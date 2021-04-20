@@ -11,17 +11,13 @@ namespace FileToVox.Converter
 {
 	public class SchematicToSchematic : AbstractToSchematic
 	{
-		private readonly int mIgnoreMinY;
-		private readonly int mIgnoreMaxY;
 		private readonly int mScale;
 
 		private readonly bool mExcavate;
 		private readonly Dictionary<Tuple<int, int>, Color> mColors = new Dictionary<Tuple<int, int>, Color>();
 
-		public SchematicToSchematic(string path, int min, int max, bool excavate, float scale) : base(path)
+		public SchematicToSchematic(string path, bool excavate, float scale) : base(path)
 		{
-			mIgnoreMinY = min;
-			mIgnoreMaxY = max;
 			mScale = (int)scale;
 			mExcavate = excavate;
 			LoadBlocks();
@@ -129,15 +125,11 @@ namespace FileToVox.Converter
 			//Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
 			Schematic schematic = new Schematic();
 
-
-			int minY = Math.Max(mIgnoreMinY, 0);
-			int maxY = rawSchematic.Heigth <= mIgnoreMaxY ? Math.Min(mIgnoreMaxY, rawSchematic.Heigth) : rawSchematic.Heigth;
-
-			int total = (maxY * mScale) * (rawSchematic.Length * mScale) * (rawSchematic.Width * mScale);
+			int total = (rawSchematic.Heigth * mScale) * (rawSchematic.Length * mScale) * (rawSchematic.Width * mScale);
 			int indexProgress = 0;
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				for (int y = minY; y < (maxY * mScale); y++)
+				for (int y = 0; y < (rawSchematic.Heigth * mScale); y++)
 				{
 					for (int z = 0; z < (rawSchematic.Length * mScale); z++)
 					{
@@ -151,7 +143,7 @@ namespace FileToVox.Converter
 							if (blockId != 0)
 							{
 								Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z, GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]).ColorToUInt());
-								if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, minY, maxY) || !mExcavate))
+								if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, 0, rawSchematic.Heigth) || !mExcavate))
 								{
 									if (!schematic.ContainsVoxel(x, y, z))
 									{
