@@ -96,37 +96,44 @@ namespace FileToVox.Schematics
 			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				int max = schematicA.Length * schematicA.Width;
+				//int max = schematicA.Length * schematicA.Width;
+				int max = schematicA.BlockDict.Count + schematicB.BlockDict.Count;
 				int index = 0;
-				for (int z = 0; z < schematicA.Length; z++)
+
+				Dictionary<int, List<int>> tops = new Dictionary<int, List<int>>();
+				foreach (KeyValuePair<ulong, Voxel> voxel in schematicA.BlockDict)
 				{
-					for (int x = 0; x < schematicA.Width; x++)
+					int x = voxel.Value.X;
+					int y = voxel.Value.Y;
+					int z = voxel.Value.Z;
+
+					if (schematicA.GetColorAtVoxelIndex(x, y + 1, z) == 0)
 					{
-						int maxHeight = 0;
-						for (int y = schematicA.Height - 1; y >= 0; y--)
+						int index2d = Schematic.GetVoxelIndex2D(x, z);
+						if (!tops.ContainsKey(index2d))
 						{
-							if (schematicA.GetColorAtVoxelIndex(x, y, z) != 0)
-							{
-								maxHeight = y;
-								break;
-							}
+							tops[index2d] = new List<int>();
 						}
 
-						if (maxHeight != 0)
-						{
-							for (int y = 0; y < schematicB.Height; y++)
-							{
-								uint color = schematicB.GetColorAtVoxelIndex(x, y, z);
-								if (color != 0)
-								{
-									resultSchematic.AddVoxel(x, y + maxHeight + heightmapStep.OffsetMerge, z, color);
-								}
-							}
-						}
-
-						progressbar.Report(index++ / (double)max);
-
+						tops[index2d].Add(y);
 					}
+
+					progressbar.Report(index++ / (double)max);
+				}
+
+				foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
+				{
+					int x = voxel.Value.X;
+					int y = voxel.Value.Y;
+					int z = voxel.Value.Z;
+
+					int index2d = Schematic.GetVoxelIndex2D(x, z);
+					foreach (int maxHeight in tops[index2d])
+					{
+						resultSchematic.AddVoxel(x, y + maxHeight + heightmapStep.OffsetMerge, z, voxel.Value.Color);
+					}
+					progressbar.Report(index++ / (double)max);
+
 				}
 			}
 
