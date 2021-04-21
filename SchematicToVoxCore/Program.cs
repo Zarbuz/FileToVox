@@ -29,7 +29,7 @@ namespace FileToVox
 
 		private static bool SHADER_FIX_HOLES;
 		private static bool SHADER_FIX_LONELY;
-		private static bool SHADER_CASE;
+		private static int SHADER_CASE;
 
 		private static float SLOW;
 
@@ -59,7 +59,7 @@ namespace FileToVox
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"shader-fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
 				{"shader-fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
-				{"shader-case", "shader case", v => SHADER_CASE = v != null },
+				{"shader-case=", "shader case",(int v) => SHADER_CASE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
@@ -145,12 +145,12 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --scale argument must be positive");
 			if (HEIGHT_MAP < 1)
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
-			if (COLOR_LIMIT < 0)
-				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
-			if (COLOR_LIMIT > 256)
-				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
+			if (COLOR_LIMIT < 0 || COLOR_LIMIT > 256)
+				throw new ArgumentException("[ERROR] --color-limit argument must be between 1 and 256");
 			if (CHUNK_SIZE <= 10 || CHUNK_SIZE > 257)
-				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 257 and greater than 10");
+				throw new ArgumentException("[ERROR] --chunk-size argument must be between 10 and 256");
+			if (SHADER_CASE < 0)
+				throw new ArgumentException("[ERROR] --shader-case argument must be positive");
 		}
 
 		private static void DisplayArguments()
@@ -180,9 +180,11 @@ namespace FileToVox
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
 			if (SHADER_FIX_HOLES)
-				Console.WriteLine("[INFO] Enabled option: fix-holes");
+				Console.WriteLine("[INFO] Enabled shader: fix-holes");
 			if (SHADER_FIX_LONELY)
-				Console.WriteLine("[INFO] Enabled option: fix-lonely");
+				Console.WriteLine("[INFO] Enabled shader: fix-lonely");
+			if (SHADER_CASE != 0)
+				Console.WriteLine("[INFO] Enabled shader: case (" + SHADER_CASE + " iterations)");
 			if (SLICE)
 				Console.WriteLine("[INFO] Enabled option: slice");
 			if (DEBUG)
@@ -319,9 +321,9 @@ namespace FileToVox
 				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_FIX_LONELY_KEY);
 			}
 
-			if (SHADER_CASE)
+			if (SHADER_CASE != 0)
 			{
-				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_CASE_KEY);
+				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_CASE_KEY, SHADER_CASE);
 			}
 
 			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);

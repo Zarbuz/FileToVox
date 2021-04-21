@@ -17,7 +17,7 @@ namespace FileToVox.Utils
 
 		#region PublicMethods
 
-		public static Schematic ApplyShader(Schematic schematic, string shaderKey)
+		public static Schematic ApplyShader(Schematic schematic, string shaderKey, int iterations = 0)
 		{
 			switch (shaderKey)
 			{
@@ -26,7 +26,7 @@ namespace FileToVox.Utils
 				case SHADER_FIX_LONELY_KEY:
 					return ApplyShaderLonely(schematic);
 				case SHADER_CASE_KEY:
-					return ApplyShaderCase(schematic);
+					return ApplyShaderCase(schematic, iterations);
 			}
 
 			return schematic;
@@ -128,14 +128,26 @@ namespace FileToVox.Utils
 
 		#region ShaderCase
 
-		private static Schematic ApplyShaderCase(Schematic schematic)
+		private static Schematic ApplyShaderCase(Schematic schematic, int iterations)
+		{
+			Console.WriteLine("[LOG] Started to apply " + SHADER_CASE_KEY);
+			Schematic stepSchematic = schematic;
+			for (int i = 0; i < iterations; i++)
+			{
+				Console.WriteLine("[LOG] Process step: " + i);
+				stepSchematic = ProcessShaderCase(stepSchematic);
+			}
+			Console.WriteLine("[LOG] Done.");
+			return stepSchematic;
+		}
+
+		private static Schematic ProcessShaderCase(Schematic schematic)
 		{
 			Schematic resultSchematic = new Schematic(schematic.BlockDict);
 
-			Console.WriteLine("[LOG] Started to apply " + SHADER_CASE_KEY);
-			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
+				int index = 0;
 				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
 				{
 					int x = voxel.Value.X;
@@ -163,7 +175,6 @@ namespace FileToVox.Utils
 				}
 			}
 
-			Console.WriteLine("[LOG] Done.");
 			return resultSchematic;
 		}
 
