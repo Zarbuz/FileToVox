@@ -39,6 +39,9 @@ namespace FileToVox
 		private static int COLOR_LIMIT = 256;
 		public static int CHUNK_SIZE = 128;
 
+
+		
+
 		public static void Main(string[] args)
 		{
 			OptionSet options = new OptionSet()
@@ -50,12 +53,13 @@ namespace FileToVox
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
 				{"cs|chunk-size=", "set the chunk size", (int v) => CHUNK_SIZE = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
-				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
-				{"fh|fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
 				{"gs|grid-size=", "set the grid size", (int v) => GRID_SIZE = v },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
+				{"shader-fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
+				{"shader-fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
+				{"shader-case", "shader case", v => SHADER_CASE = v != null },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
@@ -307,12 +311,17 @@ namespace FileToVox
 
 			if (SHADER_FIX_HOLES)
 			{
-				schematic = ShaderUtils.FillHoles(schematic);
+				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_FIX_HOLES_KEY);
 			}
 
 			if (SHADER_FIX_LONELY)
 			{
-				schematic = ShaderUtils.FixLonelyVoxels(schematic);
+				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_FIX_LONELY_KEY);
+			}
+
+			if (SHADER_CASE)
+			{
+				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_CASE_KEY);
 			}
 
 			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);
