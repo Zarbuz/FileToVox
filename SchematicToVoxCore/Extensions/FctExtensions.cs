@@ -11,11 +11,6 @@ namespace SchematicToVoxCore.Extensions
 {
     public static class FctExtensions
     {
-        public static int GetColorIntensity(this Color color)
-        {
-            return color.R + color.G + color.B;
-        }
-
         public static int CountColor(this Bitmap bitmap)
         {
             Console.WriteLine("[LOG] Check total different colors...");
@@ -83,9 +78,6 @@ namespace SchematicToVoxCore.Extensions
             byte b = (byte)(color >> 0);
             return Color.FromArgb(a, r, g, b);
         }
-
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
-            => new HashSet<T>(source, comparer);
 
         public static List<Voxel> ApplyOffset(this List<Voxel> list, Vector3 vector)
         {

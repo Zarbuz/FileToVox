@@ -51,7 +51,7 @@ namespace FileToVox.Converter.PointCloud
 
 			return dataFile;
 	    }
-        public CSVToSchematic(string path, float scale, int colorLimit, bool holes, bool flood, bool lonely) : base(path, scale, colorLimit, holes, flood, lonely)
+        public CSVToSchematic(string path, float scale, int colorLimit) : base(path, scale, colorLimit)
         {
 	        BodyDataDTO data = ReadContentFile();
 			VoxelizeData(data);
