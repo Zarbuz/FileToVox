@@ -7,6 +7,7 @@ using FileToVox.Converter.Image;
 using FileToVox.Converter.Json;
 using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
+using FileToVox.Utils;
 using FileToVox.Vox;
 using NDesk.Options;
 
@@ -24,21 +25,19 @@ namespace FileToVox
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
-		private static bool TOP;
-		private static bool FLOOD;
-		private static bool HOLES;
-		private static bool LONELY;
 		private static bool SLICE;
+
+		private static bool SHADER_FIX_HOLES;
+		private static bool SHADER_FIX_LONELY;
+		private static bool SHADER_CASE;
 
 		private static float SLOW;
 
-		private static int IGNORE_MIN_Y = -1;
-		private static int IGNORE_MAX_Y = 256;
 		private static float SCALE = 1;
 		private static int HEIGHT_MAP = 1;
 		private static int GRID_SIZE = 128;
 		private static int COLOR_LIMIT = 256;
-		private static int CHUNK_SIZE = 128;
+		public static int CHUNK_SIZE = 128;
 
 		public static void Main(string[] args)
 		{
@@ -51,19 +50,15 @@ namespace FileToVox
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
 				{"cs|chunk-size=", "set the chunk size", (int v) => CHUNK_SIZE = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
-				{"fl|flood", "fill all invisible voxels", v => FLOOD = v != null },
-				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => LONELY = v != null },
-				{"fh|fix-holes", "fix holes", v => HOLES = v != null },
+				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
+				{"fh|fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
 				{"gs|grid-size=", "set the grid size", (int v) => GRID_SIZE = v },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
-				{"iminy|ignore-min-y=", "ignore voxels below the specified layer", (int v) => IGNORE_MIN_Y = v},
-				{"imaxy|ignore-max-y=", "ignore voxels above the specified layer", (int v) => IGNORE_MAX_Y = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
-				{"t|top", "create voxels only at the top of the heightmap", v => TOP = v != null},
 				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
 			};
 
@@ -142,10 +137,6 @@ namespace FileToVox
 				throw new ArgumentNullException("[ERROR] Missing required option: --i");
 			if (OUTPUT_PATH == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --o");
-			if (IGNORE_MIN_Y < -1)
-				throw new ArgumentException("[ERROR] --ignore-min-y argument must be positive");
-			if (IGNORE_MAX_Y > 256)
-				throw new ArgumentException("[ERROR] --ignore-max-y argument must be lower than 256");
 			if (SCALE <= 0)
 				throw new ArgumentException("[ERROR] --scale argument must be positive");
 			if (HEIGHT_MAP < 1)
@@ -168,10 +159,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified input color file: " + INPUT_COLOR_FILE);
 			if (INPUT_PALETTE_FILE != null)
 				Console.WriteLine("[INFO] Specified palette file: " + INPUT_PALETTE_FILE);
-			if (IGNORE_MIN_Y != -1)
-				Console.WriteLine("[INFO] Specified min Y layer : " + IGNORE_MIN_Y);
-			if (IGNORE_MAX_Y != 256)
-				Console.WriteLine("[INFO] Specified max Y layer : " + IGNORE_MAX_Y);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
@@ -188,13 +175,9 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (TOP)
-				Console.WriteLine("[INFO] Enabled option: top");
-			if (FLOOD)
-				Console.WriteLine("[INFO] Enabled option: flood");
-			if (HOLES)
+			if (SHADER_FIX_HOLES)
 				Console.WriteLine("[INFO] Enabled option: fix-holes");
-			if (LONELY)
+			if (SHADER_FIX_LONELY)
 				Console.WriteLine("[INFO] Enabled option: fix-lonely");
 			if (SLICE)
 				Console.WriteLine("[INFO] Enabled option: slice");
@@ -278,21 +261,21 @@ namespace FileToVox
 				case ".binvox":
 					return new BinvoxToSchematic(path);
 				case ".csv":
-					return new CSVToSchematic(path, SCALE, COLOR_LIMIT, HOLES, FLOOD, LONELY);
+					return new CSVToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".obj":
 					return new OBJToSchematic(path, GRID_SIZE, EXCAVATE, SLOW);
 				case ".ply":
-					return new PLYToSchematic(path, SCALE, COLOR_LIMIT, HOLES, FLOOD, LONELY);
+					return new PLYToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".png":
-					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, TOP, COLOR_LIMIT);
+					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
-					return new SchematicToSchematic(path, IGNORE_MIN_Y, IGNORE_MAX_Y, EXCAVATE, SCALE);
+					return new SchematicToSchematic(path, EXCAVATE, SCALE);
 				case ".tif":
-					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, TOP, COLOR_LIMIT);
+					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":
-					return new XYZToSchematic(path, SCALE, COLOR_LIMIT, HOLES, FLOOD, LONELY);
+					return new XYZToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".json":
 					return new JsonToSchematic(path);
 				default:
@@ -320,6 +303,16 @@ namespace FileToVox
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE, COLOR_LIMIT);
 				schematic = converterPalette.ConvertSchematic(schematic);
 				return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", converterPalette.GetPalette(), schematic);
+			}
+
+			if (SHADER_FIX_HOLES)
+			{
+				schematic = ShaderUtils.FillHoles(schematic);
+			}
+
+			if (SHADER_FIX_LONELY)
+			{
+				schematic = ShaderUtils.FixLonelyVoxels(schematic);
 			}
 
 			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);

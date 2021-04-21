@@ -1,0 +1,16 @@
+{
+  "generatorType": "Heightmap",
+  "steps": [
+    {
+      "texturePath": "",
+      "colorTexturePath": "",
+      "height": 200, 
+      "offset": 0,
+      "colorLimit": 256, 
+      "enableColor":  true, 
+      "excavate": true,
+      "placementMode": "ADDITIVE",
+      "rotationMode": "Y"
+    }
+  ]
+}

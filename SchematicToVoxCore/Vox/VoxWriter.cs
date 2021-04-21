@@ -25,10 +25,9 @@ namespace FileToVox.Vox
 		private int mChildrenChunkSize;
 		private Schematic mSchematic;
 		private readonly Rotation mRotation = Rotation._PZ_PX_P;
-		private List<BlockGlobal> mFirstBlockInEachRegion;
+		private List<Region> mFirstBlockInEachRegion;
 		private List<Color> mUsedColors;
 		private List<Color> mPalette;
-		private uint[,,] mBlocks;
 		private int mChunkSize;
 
 		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
@@ -37,7 +36,6 @@ namespace FileToVox.Vox
 			mWidth = mLength = mHeight = mCountSize = mTotalBlockCount = mCountRegionNonEmpty = 0;
 			mSchematic = schematic;
 			mPalette = palette;
-			mBlocks = mSchematic.Blocks.To3DArray(schematic);
 			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
 			{
 				writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -60,9 +58,9 @@ namespace FileToVox.Vox
 			mHeight = (int)Math.Ceiling(((decimal)mSchematic.Height / mChunkSize)) + 1;
 
 			mCountSize = mWidth * mLength * mHeight;
-			mFirstBlockInEachRegion = GetFirstBlockForEachRegion();
+			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
-			mTotalBlockCount = mSchematic.Blocks.Count;
+			mTotalBlockCount = mSchematic.BlockDict.Count;
 
 			Console.WriteLine("[INFO] Total blocks: " + mTotalBlockCount);
 
@@ -109,65 +107,14 @@ namespace FileToVox.Vox
 				{
 					for (int x = (int)min.X; x < max.X; x++)
 					{
-						if (y < mSchematic.Height && x < mSchematic.Width && z < mSchematic.Length && mBlocks[x, y, z] != 0)
+						if (mSchematic.GetVoxel(x, y, z, out Voxel voxel))
 						{
-							Voxel voxel = new Voxel((ushort)x, (ushort)y, (ushort)z, mBlocks[x, y, z]);
 							list.Add(voxel);
 						}
 					}
 				}
 			}
 
-			return list;
-		}
-
-		private bool HasBlockInRegion(Vector3 min, Vector3 max)
-		{
-			for (int y = (int)min.Y; y < max.Y; y++)
-			{
-				for (int z = (int)min.Z; z < max.Z; z++)
-				{
-					for (int x = (int)min.X; x < max.X; x++)
-					{
-						if (y < mSchematic.Height && x < mSchematic.Width && z < mSchematic.Length && (mBlocks[x, y, z] != 0))
-						{
-							return true;
-						}
-					}
-				}
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Get world coordinates of the first block in each region
-		/// </summary>
-		private List<BlockGlobal> GetFirstBlockForEachRegion()
-		{
-			List<BlockGlobal> list = new List<BlockGlobal>();
-
-			//x = Index % XSIZE;
-			//y = (Index / XSIZE) % YSIZE;
-			//z = Index / (XSIZE * YSIZE);
-			Console.WriteLine("[LOG] Started to compute the first block for each region");
-			using (ProgressBar progressBar = new ProgressBar())
-			{
-				for (int i = 0; i < mCountSize; i++)
-				{
-					int x = i % mWidth;
-					int y = (i / mWidth) % mHeight;
-					int z = i / (mWidth * mHeight);
-					if (HasBlockInRegion(new Vector3(x * mChunkSize, y * mChunkSize, z * mChunkSize), new Vector3(x * mChunkSize + mChunkSize, y * mChunkSize + mChunkSize, z * mChunkSize + mChunkSize)))
-					{
-						list.Add(new BlockGlobal(x * mChunkSize, y * mChunkSize, z * mChunkSize));
-					}
-
-					progressBar.Report(i / (float)mCountSize);
-				}
-			}
-
-			Console.WriteLine("[LOG] Done.");
 			return list;
 		}
 
@@ -224,7 +171,7 @@ namespace FileToVox.Vox
 				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
 				if (Program.DEBUG)
 				{
-					foreach (Voxel voxel in mSchematic.Blocks)
+					foreach (Voxel voxel in mSchematic.BlockDict.Values)
 					{
 						Console.WriteLine("Missed writing of the voxel: " + voxel);
 					}
@@ -278,12 +225,12 @@ namespace FileToVox.Vox
 			writer.Write(Encoding.UTF8.GetBytes(XYZI));
 			IEnumerable<Voxel> blocks = null;
 
-			if (mSchematic.Blocks.Count > 0)
+			if (mSchematic.BlockDict.Count > 0)
 			{
-				BlockGlobal firstBlock = mFirstBlockInEachRegion[index];
-
+				Region firstBlock = mFirstBlockInEachRegion[index];
+				blocks = mSchematic.GetVoxelInRegion(firstBlock.VoxelIndexUsed);
 				//blocks = _schematic.Blocks.Where(block => block.X >= firstBlock.X && block.Y >= firstBlock.Y && block.Z >= firstBlock.Z && block.X < firstBlock.X + CHUNK_SIZE && block.Y < firstBlock.Y + CHUNK_SIZE && block.Z < firstBlock.Z + CHUNK_SIZE);
-				blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
+				//blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
 			}
 			writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
 			writer.Write(0); //Child chunk size (constant)
@@ -305,11 +252,7 @@ namespace FileToVox.Vox
 					writer.Write((i != 0) ? (byte)i : (byte)1);
 				}
 
-				if (Program.DEBUG)
-				{
-					mSchematic.Blocks.Remove(block);
-				}
-
+				mSchematic.BlockDict.Remove(block.GetIndex());
 			}
 		}
 
@@ -403,7 +346,7 @@ namespace FileToVox.Vox
 			}
 			else
 			{
-				foreach (Voxel block in mSchematic.Blocks)
+				foreach (Voxel block in mSchematic.BlockDict.Values)
 				{
 					Color color = block.Color.UIntToColor();
 					if (mUsedColors.Count < 256 && !mUsedColors.Contains(color))
@@ -498,22 +441,26 @@ namespace FileToVox.Vox
 		}
 	}
 
-	struct BlockGlobal
+	public class Region
 	{
-		public readonly int X;
-		public readonly int Y;
-		public readonly int Z;
+		public int X;
+		public int Y;
+		public int Z;
+		public int UsageCount;
+		public HashSet<ulong> VoxelIndexUsed;
 
-		public BlockGlobal(int x, int y, int z)
+		public Region(int x, int y, int z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
+			UsageCount = 0;
+			VoxelIndexUsed = new HashSet<ulong>();
 		}
 
 		public override string ToString()
 		{
-			return $"{X} {Y} {Z}";
+			return $"{X} {Y} {Z} {UsageCount}";
 		}
 	}
 }

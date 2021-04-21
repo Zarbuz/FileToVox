@@ -18,11 +18,7 @@ namespace FileToVox.Schematics.Tools
         public Vector3(float x, float y) { this.X = x; this.Y = y; Z = 0F; }
 
         public static Vector3 zero { get; } = new Vector3(0F, 0F, 0F);
-        public static readonly Vector3 positiveInfinityVector = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-        public static readonly Vector3 negativeInfinityVector = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-        public float magnitude => (float)Math.Sqrt(X * X + Y * Y + Z * Z);
         public static float SqrMagnitude(Vector3 vector) { return vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z; }
-
 
         // Subtracts one vector from another.
         public static Vector3 operator -(Vector3 a, Vector3 b) { return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z); }

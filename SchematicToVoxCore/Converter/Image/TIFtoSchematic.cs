@@ -1,65 +1,60 @@
 ﻿using BitMiracle.LibTiff.Classic;
+using FileToVox.Generator.Heightmap.Data;
 using FileToVox.Schematics;
-using SchematicToVoxCore.Extensions;
+using FileToVox.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace FileToVox.Converter.Image
 {
-    public class TIFtoSchematic : ImageToSchematic
+	public class TIFtoSchematic : ImageToSchematic
     {
-        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit) : base(path, colorPath, height, excavate, color, top, colorLimit)
+        public TIFtoSchematic(string path, string colorPath, int height, bool excavate, bool color, int colorLimit) : base(path, colorPath, height, excavate, color, colorLimit)
         {
         }
 
         public override Schematic WriteSchematic()
         {
-            return WriteSchematicFromImage();
+	        return WriteSchematicMain();
         }
 
-        private Schematic WriteSchematicFromImage()
+        protected override Schematic WriteSchematicMain()
         {
-            Bitmap bitmap = ConvertTifToBitmap(_path);
-            Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-            using (Graphics gr = Graphics.FromImage(clone))
-            {
-	            gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
-            }
-            Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
-            Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
+	        if (!File.Exists(Path))
+	        {
+		        Console.WriteLine("[ERROR] The file path is invalid for path : " + Path);
+		        return null;
+	        }
 
-            if (ColorPath != null)
-            {
-                bitmapColor = ConvertTifToBitmap(ColorPath);
-                if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
-                {
-                    throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
-                }
+	        if (!string.IsNullOrEmpty(ColorPath) && !File.Exists(ColorPath))
+	        {
+		        Console.WriteLine("[ERROR] The color path is invalid");
+		        return null;
+	        }
 
-                clone = new Bitmap(bitmapColor.Width, bitmapColor.Height, PixelFormat.Format32bppArgb);
-                using (Graphics gr = Graphics.FromImage(clone))
-                {
-	                gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
-                }
+	        Bitmap bitmap = ConvertTifToBitmap(Path);
+	        Bitmap bitmapColor = null;
+	        if (!string.IsNullOrEmpty(ColorPath))
+	        {
+		        bitmapColor = ConvertTifToBitmap(ColorPath);
+	        }
 
-                if (ColorLimit != 256 || bitmapColor.CountColor() > 256)
-                {
-	                System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, ColorLimit);
-	                bitmapColor = new Bitmap(image);
-                }
-            }
-            else if (Color)
-            {
-	            if (ColorLimit != 256 || clone.CountColor() > 256)
-	            {
-		            System.Drawing.Image image = quantizer.QuantizeImage(bitmap, 10, 70, ColorLimit);
-		            bitmap = new Bitmap(image);
-	            }
-            }
+	        HeightmapStep heightmapStep = new HeightmapStep()
+	        {
+		        TexturePath = Path,
+		        ColorLimit = ColorLimit,
+		        ColorTexturePath = ColorPath,
+		        EnableColor = Color,
+		        Excavate = Excavate,
+		        Height = MaxHeight,
+		        Offset = 0,
+		        PlacementMode = PlacementMode.ADDITIVE,
+		        RotationMode = RotationMode.Y
+	        };
 
-            Schematic schematic = WriteSchematicIntern(bitmap, bitmapColor);
-            return schematic;
+            return ImageUtils.WriteSchematicFromImage(bitmap, bitmapColor, heightmapStep);
         }
 
         private Bitmap ConvertTifToBitmap(string path)

@@ -29,7 +29,7 @@ namespace FileToVox.Converter
         private List<VoxelDTO> LoadVoxels()
         {
             List<VoxelDTO> voxels = new List<VoxelDTO>();
-            using (FileStream fs = File.OpenRead(_path))
+            using (FileStream fs = File.OpenRead(Path))
             {
                 BinaryReader reader = new BinaryReader(fs);
                 uint version = reader.ReadUInt32();
@@ -171,7 +171,7 @@ namespace FileToVox.Converter
                     ushort y = (ushort) voxel.Y;
                     ushort z = (ushort) voxel.Z;
                     
-                    schematic.Blocks.Add(new Voxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1)));
+                    schematic.AddVoxel(x, y, z, FctExtensions.ByteArrayToUInt(voxel.R, voxel.G, voxel.B, 1));
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }

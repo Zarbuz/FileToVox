@@ -1,67 +1,61 @@
-﻿using FileToVox.Schematics;
-using SchematicToVoxCore.Extensions;
+﻿using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Schematics;
+using FileToVox.Utils;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace FileToVox.Converter.Image
 {
-    public class PNGToSchematic : ImageToSchematic
+	public class PNGToSchematic : ImageToSchematic
     {
-        public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, bool top, int colorLimit)
-            : base(path, colorPath, height, excavate, color, top, colorLimit)
+        public PNGToSchematic(string path, string colorPath, int height, bool excavate, bool color, int colorLimit)
+            : base(path, colorPath, height, excavate, color, colorLimit)
         {
+        }
+
+        protected override Schematic WriteSchematicMain()
+        {
+	        if (!File.Exists(Path))
+	        {
+		        Console.WriteLine("[ERROR] The file path is invalid for path : " + Path);
+		        return null;
+	        }
+
+	        if (!string.IsNullOrEmpty(ColorPath) && !File.Exists(ColorPath))
+	        {
+		        Console.WriteLine("[ERROR] The color path is invalid");
+		        return null;
+	        }
+
+			Bitmap bitmap = new Bitmap(new FileInfo(Path).FullName);
+			Bitmap bitmapColor = null;
+            if (!string.IsNullOrEmpty(ColorPath))
+			{
+				bitmapColor = new Bitmap(new FileInfo(ColorPath).FullName);
+			}
+
+            HeightmapStep heightmapStep = new HeightmapStep()
+            {
+	            TexturePath = Path,
+	            ColorLimit = ColorLimit,
+	            ColorTexturePath = ColorPath,
+	            EnableColor = Color,
+	            Excavate = Excavate,
+	            Height = MaxHeight,
+	            Offset = 0,
+				Reverse = false,
+	            PlacementMode = PlacementMode.ADDITIVE,
+	            RotationMode = RotationMode.Y
+            };
+
+            return ImageUtils.WriteSchematicFromImage(bitmap, bitmapColor, heightmapStep);
         }
 
         public override Schematic WriteSchematic()
         {
-            return WriteSchematicFromImage();
-        }
-
-        private Schematic WriteSchematicFromImage()
-        {
-            Bitmap bitmap = new Bitmap(new FileInfo(_path).FullName);
-            Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-            using (Graphics gr = Graphics.FromImage(clone))
-            {
-                gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
-            }
-            Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
-            Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
-
-            if (ColorPath != null)
-            {
-                bitmapColor = new Bitmap(new FileInfo(ColorPath).FullName);
-                if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
-                {
-                    throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
-                }
-
-                clone = new Bitmap(bitmapColor.Width, bitmapColor.Height, PixelFormat.Format32bppArgb);
-                using (Graphics gr = Graphics.FromImage(clone))
-                {
-                    gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
-                }
-
-                if (ColorLimit != 256 || bitmapColor.CountColor() > 256)
-                {
-                    System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, ColorLimit);
-                    bitmapColor = new Bitmap(image);
-                }
-
-            }
-            else if (Color)
-            {
-	            if (ColorLimit != 256 || clone.CountColor() > 256)
-	            {
-		            System.Drawing.Image image = quantizer.QuantizeImage(clone, 10, 70, ColorLimit);
-		            bitmap = new Bitmap(image);
-                }
-            }
-
-            Schematic schematic = WriteSchematicIntern(bitmap, bitmapColor);
-            return schematic;
+	        return WriteSchematicMain();
+            //return WriteSchematicFromImage(Path, ColorPath, ColorLimit, Color);
         }
     }
 }

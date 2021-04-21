@@ -6,6 +6,7 @@ Current files support:
 - .asc (Esri ASCII raster format)
 - .binvox
 - .csv
+- .json (House-made format)
 - .obj
 - .ply (Binary and ASCII)
 - .png
@@ -44,7 +45,7 @@ If you have this error : 'brew command not found'.
 
 Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 
-## Commands list
+## Commands list (for specific file type)
 
 ```
 --i        --input=VALUE              input mandatory file
@@ -54,22 +55,23 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --cm       --color-from-file=VALUE    load color from another file
 --cs       --chunk-size=VALUE         set the chunk size (default: 128, min: 11, max: 256)
 --e        --excavate                 delete all voxels which doesn't have at least one face connected with air
---fl       --flood                    fill all invisibles voxels
---flo      --fix-lonely               delete all voxels where all connected voxels are air
---fh       --fix-holes                fix holes
+
 --gs       --grid-size=VALUE          set the grid size
 --h        --help                     help informations
 --hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height
---iminy    --ignore-min-y=VALUE       ignore voxels below the specified layer
---imaxy    --ignore-max-y=VALUE       ignore voxels above the specified layer
 --p        --palette=VALUE            set the palette
 --si       --slice                    flag the current input folder as slice
 --sc       --scale=VALUE              set the scale
 --sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
---t,        --top                     create voxels only at the top of the heightmap
 --v,        -verbose                  enable the verbose mode
  ```
 
+ ## Shader Commands (compatible for all file type)
+
+ ```
+ --flo      --fix-lonely               delete all voxels where all connected voxels are air
+ --fh       --fix-holes                fix holes
+```
 ## Command compatibility 
 
 ### 1. General
@@ -81,18 +83,14 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--color-from-file` | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | `--chunk_size     ` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--excavate`        | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
-| `--flood`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| `--fix-lonely`      | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| `--fix-holes`       | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| `--fix-lonely`      | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `--fix-holes`       | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--grid-size`       | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| `--ignore-min-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| `--ignore-max-y`    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | `--palette`         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--slice`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| `--top`             | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 
 ### 2. Batching
 
@@ -103,9 +101,6 @@ Note : you can also add argument to the conversion but the argument will be appl
 ### 3. Slice
 
 You can process a folder of pictures (all must be .PNG). This is usefull when you import export slices of fractal from program like Mandelbulb3D. To indicate to FileToVox that each picture in your folder is a slice, add the argument `--slice`. 
-
-
-
 
 ## config.txt
 

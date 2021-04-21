@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SchematicToVoxCore": {
-      "commandName": "Project",
-      "commandLineArgs": "--i JsonPresets/terrainGenerator.json --o terrain"
-    }
-  }
-}

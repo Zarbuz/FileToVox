@@ -6,7 +6,8 @@ namespace FileToVox.Converter.Json
 	public enum GeneratorType
 	{
 		Terrain,
-		City
+		City,
+		Heightmap
 	}
 
 	[JsonConverter(typeof(JsonBaseImportDataConverter))]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -8,15 +9,18 @@ namespace FileToVox.Converter.Image
 	{
 		public int[] Bits { get; }
 		public bool Disposed { get; private set; }
-		public int Height { get; }
+		public int Length { get; }
 		public int Width { get; }
+		public int Height { get; private set; }
+		public Dictionary<int, int> Heights { get; private set; }
 
-
-		public DirectBitmap(Bitmap bitmap)
+		public DirectBitmap(Bitmap bitmap, int height)
 		{
 			Width = bitmap.Width;
-			Height = bitmap.Height;
-			Bits = new int[Width * Height];
+			Length = bitmap.Height;
+			Height = height;
+			Bits = new int[Width * Length];
+			Heights = new Dictionary<int, int>();
 			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
 				PixelFormat.Format32bppRgb);
 
@@ -59,6 +63,14 @@ namespace FileToVox.Converter.Image
 		{
 			int index = x + (y * Width);
 			Bits[index] = color;
+
+			if (Height != 1)
+			{
+				Color result = Color.FromArgb(color);
+				int intensity = result.R + result.G + result.B;
+				float position = intensity / (float)765;
+				Heights[index] = (int)(position * Height);
+			}
 		}
 
 		public Color GetPixel(int x, int y)
@@ -68,6 +80,12 @@ namespace FileToVox.Converter.Image
 			Color result = Color.FromArgb(col);
 
 			return result;
+		}
+
+		public int GetHeight(int x, int y)
+		{
+			int index = x + (y * Width);
+			return Heights[index];
 		}
 
 		public void Dispose()

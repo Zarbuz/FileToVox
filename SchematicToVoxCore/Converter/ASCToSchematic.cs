@@ -29,7 +29,7 @@ namespace FileToVox.Converter
             int nodata = -9999;
             float[,] points = new float[0,0]; //rows, cols
 
-            using (StreamReader file = new StreamReader(_path))
+            using (StreamReader file = new StreamReader(Path))
             {
                 string line;
                 int row = 0;
@@ -73,7 +73,7 @@ namespace FileToVox.Converter
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.Blocks.Add(new Voxel((ushort) i, (ushort) points[i, j], (ushort) j, Color.White.ColorToUInt()));
+                        schematic.AddVoxel(i, (int)points[i,j], j, Color.White);
                     }
                 }
             }

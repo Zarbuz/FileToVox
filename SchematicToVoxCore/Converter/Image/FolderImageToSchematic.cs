@@ -24,7 +24,7 @@ namespace FileToVox.Converter.Image
 
         public override Schematic WriteSchematic()
         {
-            int height = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
+            int height = Directory.GetFiles(Path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
             List<Voxel> blocks = new List<Voxel>();
@@ -40,15 +40,15 @@ namespace FileToVox.Converter.Image
 
             using (ProgressBar progressbar = new ProgressBar())
             {
-                string[] files = Directory.GetFiles(_path);
+                string[] files = Directory.GetFiles(Path);
                 for (int i = 0; i < files.Length; i++)
                 {
                     string file = files[i];
                     Bitmap bitmap = new Bitmap(file);
-                    DirectBitmap directBitmap = new DirectBitmap(bitmap);
+                    DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
                     for (int x = 0; x < directBitmap.Width; x++)
                     {
-                        for (int y = 0; y < directBitmap.Height; y++)
+                        for (int y = 0; y < directBitmap.Length; y++)
                         {
                             Color color = directBitmap.GetPixel(x, y);
                             if (color != Color.Empty && color != Color.Transparent && color != Color.Black && (color.R != 0 && color.G != 0 && color.B != 0))
@@ -77,10 +77,8 @@ namespace FileToVox.Converter.Image
                 }
             }
 
-            Schematic schematic = new Schematic();
             List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
-
-            schematic.Blocks = list.ToHashSet();
+            Schematic schematic = new Schematic(list.ToVoxelDictionary());
 
             Console.WriteLine("[LOG] Done.");
             return schematic;
@@ -88,7 +86,7 @@ namespace FileToVox.Converter.Image
 
         private void CheckNeighbor(ref List<Voxel> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
         {
-            if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
+            if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Length)
             {
                 Color left = bitmap.GetPixel(x - 1, y);
                 Color top = bitmap.GetPixel(x, y - 1);
