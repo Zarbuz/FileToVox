@@ -1,0 +1,7 @@
+{
+  "steps": [
+    {
+      "shaderType": "FIX_HOLES" 
+    }
+  ] 
+}

@@ -10,16 +10,16 @@ namespace FileToVox.Utils
 	{
 		#region PublicMethods
 
-		public static Schematic ApplyShader(Schematic schematic, ShaderType shaderType, int iterations = 0)
+		public static Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
 		{
-			switch (shaderType)
+			switch (shaderStep.ShaderType)
 			{
 				case ShaderType.FIX_HOLES:
 					return ApplyShaderFillHoles(schematic);
 				case ShaderType.FIX_LONELY:
 					return ApplyShaderLonely(schematic);
 				case ShaderType.CASE:
-					return ApplyShaderCase(schematic, iterations);
+					return ApplyShaderCase(schematic, shaderStep.Iterations);
 			}
 
 			return schematic;
@@ -69,7 +69,6 @@ namespace FileToVox.Utils
 		private static Schematic ApplyShaderFillHoles(Schematic schematic)
 		{
 			Schematic resultSchematic = new Schematic(schematic.BlockDict);
-			Console.WriteLine("[INFO] Started to apply " + SHADER_FIX_HOLES_KEY);
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{

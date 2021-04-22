@@ -27,7 +27,7 @@ namespace FileToVox.Generator.Shaders
 				ShaderStep step = mShaderData.Steps[index];
 				step.DisplayInfo();
 
-				Schematic schematicStep = ShaderUtils.ApplyShader(finalSchematic, )
+				finalSchematic = ShaderUtils.ApplyShader(finalSchematic, step);
 			}
 
 			return finalSchematic;

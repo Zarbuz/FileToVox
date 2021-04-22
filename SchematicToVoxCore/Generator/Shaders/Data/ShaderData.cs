@@ -12,7 +12,8 @@ namespace FileToVox.Generator.Shaders
 	{
 		FIX_HOLES,
 		FIX_LONELY,
-		CASE
+		CASE,
+		PATINA
 	}
 
 	public class ShaderStep
@@ -23,12 +24,14 @@ namespace FileToVox.Generator.Shaders
 		public void DisplayInfo()
 		{
 			Console.WriteLine("[INFO] ShaderType: " + ShaderType);
+			Console.WriteLine("[INFO] ###############################");
 			switch (ShaderType)
 			{
 				case ShaderType.CASE:
 					Console.WriteLine("[INFO] Iterations: " + Iterations);
 					break;
 			}
+			Console.WriteLine("[INFO] ###############################");
 		}
 	}
 }
