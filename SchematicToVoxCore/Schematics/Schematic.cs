@@ -132,21 +132,6 @@ namespace FileToVox.Schematics
 			AddVoxels(voxels.Values);
 		}
 
-		public List<uint> Colors
-		{
-			get
-			{
-				List<uint> colors = new List<uint>();
-				foreach (Voxel block in BlockDict.Values.Where(block => !colors.Contains(block.Color)))
-				{
-					colors.Add(block.Color);
-				}
-
-				return colors;
-			}
-		}
-
-
 		#endregion
 
 		#region PublicMethods

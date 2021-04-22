@@ -35,7 +35,7 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[INFO] Started to convert all colors of blocks to match the palette");
 			Schematic newSchematic = new Schematic();
-			List<uint> colors = schematic.Colors;
+			List<uint> colors = schematic.UsedColors;
 			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
 			foreach (uint color in colors)
 			{
