@@ -17,6 +17,7 @@ namespace FileToVox.Schematics
 		public const int MAX_WORLD_WIDTH = 2000;
 		public const int MAX_WORLD_HEIGHT = 1000;
 		public const int MAX_WORLD_LENGTH = 2000;
+		public const int MAX_COLORS_IN_PALETTE = 256;
 
 		public static ulong GetVoxelIndex(int x, int y, int z)
 		{
@@ -114,17 +115,19 @@ namespace FileToVox.Schematics
 
 		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
 		public Dictionary<ulong, Region> RegionDict { get; private set; }
-		
+		public List<uint> UsedColors { get; private set; }
 		public Schematic()
 		{
 			//Blocks = new HashSet<Voxel>();
 			BlockDict = new Dictionary<ulong, Voxel>();
+			UsedColors = new List<uint>();
 			CreateAllRegions();
 		}
 
 		public Schematic(Dictionary<ulong, Voxel> voxels)
 		{
 			BlockDict = new Dictionary<ulong, Voxel>();
+			UsedColors = new List<uint>();
 			CreateAllRegions();
 			AddVoxels(voxels.Values);
 		}
@@ -175,6 +178,11 @@ namespace FileToVox.Schematics
 		{
 			if (color != 0 && x < MAX_WORLD_WIDTH && y < MAX_WORLD_HEIGHT && z < MAX_WORLD_LENGTH)
 			{
+				AddColorInUsedColors(color);
+				if (palettePosition == -1)
+				{
+					palettePosition = GetPaletteIndex(color);
+				}
 				BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
 				AddUsageForRegion(x, y, z);
 			}
@@ -182,7 +190,12 @@ namespace FileToVox.Schematics
 
 		public void ReplaceVoxel(int x, int y, int z, uint color)
 		{
-			BlockDict[GetVoxelIndex(x, y, z)].Color = color;
+			ulong index = GetVoxelIndex(x, y, z);
+			if (BlockDict.ContainsKey(index))
+			{
+				BlockDict[index].Color = color;
+				AddColorInUsedColors(color);
+			}
 		}
 
 		public void RemoveVoxel(int x, int y, int z)
@@ -191,7 +204,6 @@ namespace FileToVox.Schematics
 			if (BlockDict.ContainsKey(index))
 			{
 				BlockDict.Remove(index);
-				RemoveUsageForRegion(x, y, z);
 			}
 		}
 
@@ -254,7 +266,6 @@ namespace FileToVox.Schematics
 
 				RegionDict[GetVoxelIndex(x, y, z)] = new Region(x * Program.CHUNK_SIZE, y * Program.CHUNK_SIZE, z * Program.CHUNK_SIZE);
 			}
-
 		}
 
 		private void AddUsageForRegion(int x, int y, int z)
@@ -282,8 +293,18 @@ namespace FileToVox.Schematics
 
 		}
 
-		
+		private void AddColorInUsedColors(uint color)
+		{
+			if (UsedColors.Count < MAX_COLORS_IN_PALETTE && !UsedColors.Contains(color))
+			{
+				UsedColors.Add(color);
+			}
+		}
 
+		private int GetPaletteIndex(uint color)
+		{
+			return UsedColors.IndexOf(color);
+		}
 		#endregion
 	}
 }

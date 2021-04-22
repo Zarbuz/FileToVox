@@ -288,13 +288,6 @@ namespace FileToVox
 				return false;
 			}
 
-			FileAttributes attributes = File.GetAttributes(outputPath);
-			if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
-			{
-				Console.WriteLine("[INFO] Output path doesn't contains a target file, will use `output.vox` as file target");
-				outputPath = Path.Combine(outputPath, "output.vox");
-			}
-
 			VoxWriter writer = new VoxWriter();
 
 			if (INPUT_PALETTE_FILE != null)
@@ -308,21 +301,6 @@ namespace FileToVox
 			{
 				JsonToSchematic jsonParser = new JsonToSchematic(INPUT_SHADER_FILE, schematic);
 				schematic = jsonParser.WriteSchematic();
-			}
-
-			if (SHADER_FIX_HOLES)
-			{
-				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_FIX_HOLES_KEY);
-			}
-
-			if (SHADER_FIX_LONELY)
-			{
-				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_FIX_LONELY_KEY);
-			}
-
-			if (SHADER_CASE != 0)
-			{
-				schematic = ShaderUtils.ApplyShader(schematic, ShaderUtils.SHADER_CASE_KEY, SHADER_CASE);
 			}
 
 			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);

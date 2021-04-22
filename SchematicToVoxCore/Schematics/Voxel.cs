@@ -17,15 +17,6 @@ namespace FileToVox.Schematics
 
 		}
 
-        public Voxel(ushort x, ushort y, ushort z)
-        {
-	        X = x;
-	        Y = y;
-	        Z = z;
-	        Color = 0;
-	        PalettePosition = 0;
-        }
-
         public Voxel(ushort x, ushort y, ushort z, uint color, int palettePosition = -1)
         {
             X = x;

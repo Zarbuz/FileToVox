@@ -26,7 +26,6 @@ namespace FileToVox.Vox
 		private Schematic mSchematic;
 		private readonly Rotation mRotation = Rotation._PZ_PX_P;
 		private List<Region> mFirstBlockInEachRegion;
-		private List<Color> mUsedColors;
 		private List<Color> mPalette;
 		private int mChunkSize;
 
@@ -248,8 +247,7 @@ namespace FileToVox.Vox
 				}
 				else
 				{
-					int i = mUsedColors.IndexOf(block.Color.UIntToColor()) + 1;
-					writer.Write((i != 0) ? (byte)i : (byte)1);
+					writer.Write((byte)1);
 				}
 
 				mSchematic.BlockDict.Remove(block.GetIndex());
@@ -332,11 +330,11 @@ namespace FileToVox.Vox
 			writer.Write(Encoding.UTF8.GetBytes(RGBA));
 			writer.Write(1024);
 			writer.Write(0);
-			mUsedColors = new List<Color>(256);
+			List<Color> usedColors = new List<Color>(256);
 			if (mPalette != null)
 			{
-				mUsedColors = mPalette;
-				foreach (Color color in mUsedColors)
+				usedColors = mPalette;
+				foreach (Color color in usedColors)
 				{
 					writer.Write(color.R);
 					writer.Write(color.G);
@@ -346,21 +344,18 @@ namespace FileToVox.Vox
 			}
 			else
 			{
-				foreach (Voxel block in mSchematic.BlockDict.Values)
+				foreach (uint voxelColor in mSchematic.UsedColors)
 				{
-					Color color = block.Color.UIntToColor();
-					if (mUsedColors.Count < 256 && !mUsedColors.Contains(color))
-					{
-						mUsedColors.Add(color);
-						writer.Write(color.R);
-						writer.Write(color.G);
-						writer.Write(color.B);
-						writer.Write(color.A);
-					}
+					Color color = voxelColor.UIntToColor();
+					usedColors.Add(color);
+					writer.Write(color.R);
+					writer.Write(color.G);
+					writer.Write(color.B);
+					writer.Write(color.A);
 				}
 			}
 
-			for (int i = (256 - mUsedColors.Count); i >= 1; i--)
+			for (int i = (256 - usedColors.Count); i >= 1; i--)
 			{
 				writer.Write((byte)0);
 				writer.Write((byte)0);
