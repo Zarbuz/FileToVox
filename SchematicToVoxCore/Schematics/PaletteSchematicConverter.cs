@@ -33,7 +33,7 @@ namespace FileToVox.Schematics
 
 		public Schematic ConvertSchematic(Schematic schematic)
 		{
-			Console.WriteLine("[LOG] Started to convert all colors of blocks to match the palette");
+			Console.WriteLine("[INFO] Started to convert all colors of blocks to match the palette");
 			Schematic newSchematic = new Schematic();
 			List<uint> colors = schematic.Colors;
 			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
@@ -53,7 +53,7 @@ namespace FileToVox.Schematics
 				}
 			}
 
-			Console.WriteLine("[LOG] Done.");
+			Console.WriteLine("[INFO] Done.");
 			return newSchematic;
 		}
 	}

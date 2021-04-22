@@ -155,7 +155,7 @@ namespace FileToVox.Converter
 
             Schematic schematic = new Schematic();
 
-            Console.WriteLine("[LOG] Started to write schematic from qb...");
+            Console.WriteLine("[INFO] Started to write schematic from qb...");
             Console.WriteLine("[INFO] Qb Width: " + schematic.Width);
             Console.WriteLine("[INFO] Qb Length: " + schematic.Length);
             Console.WriteLine("[INFO] Qb Height: " + schematic.Height);
@@ -175,7 +175,7 @@ namespace FileToVox.Converter
                     progressbar.Report((index / (float)voxels.Count));
                 }
             }
-            Console.WriteLine("[LOG] Done.");
+            Console.WriteLine("[INFO] Done.");
 
             return schematic;
         }

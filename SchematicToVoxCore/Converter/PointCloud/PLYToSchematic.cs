@@ -343,10 +343,10 @@ namespace FileToVox.Converter.PointCloud
             MemoryMappedViewStream mms = mmf.CreateViewStream();
 
             DataHeader header = ReadDataHeader(new StreamReader(mms));
-            Console.WriteLine("[LOG] Start reading PLY data...");
+            Console.WriteLine("[INFO] Start reading PLY data...");
             DataBody body = header.binary ? ReadDataBodyBinary(header, new BinaryReader(mms)) : ReadDataBodyAscii(header, new StreamReader(mms));
             mms.Close();
-            Console.WriteLine("[LOG] Done.");
+            Console.WriteLine("[INFO] Done.");
 
             VoxelizeData(new BodyDataDTO()
             {

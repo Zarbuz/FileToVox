@@ -147,7 +147,7 @@ namespace FileToVox.Vox
 
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				Console.WriteLine("[LOG] Started to write chunks ...");
+				Console.WriteLine("[INFO] Started to write chunks ...");
 				for (int i = 0; i < mCountRegionNonEmpty; i++)
 				{
 					WriteSizeChunk(writer);
@@ -155,7 +155,7 @@ namespace FileToVox.Vox
 					float progress = ((float)i / mCountRegionNonEmpty);
 					progressbar.Report(progress);
 				}
-				Console.WriteLine("[LOG] Done.");
+				Console.WriteLine("[INFO] Done.");
 			}
 
 			WriteMainTranformNode(writer);
@@ -165,7 +165,7 @@ namespace FileToVox.Vox
 				WriteTransformChunk(writer, i);
 				WriteShapeChunk(writer, i);
 			}
-			Console.WriteLine("[LOG] Check total blocks after conversion: " + mCountBlocks);
+			Console.WriteLine("[INFO] Check total blocks after conversion: " + mCountBlocks);
 			if (mTotalBlockCount != mCountBlocks)
 			{
 				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");

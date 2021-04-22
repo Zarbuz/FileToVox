@@ -21,15 +21,12 @@ namespace FileToVox
 		private static string OUTPUT_PATH;
 		private static string INPUT_COLOR_FILE;
 		private static string INPUT_PALETTE_FILE;
+		private static string INPUT_SHADER_FILE;
 
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
 		private static bool SLICE;
-
-		private static bool SHADER_FIX_HOLES;
-		private static bool SHADER_FIX_LONELY;
-		private static int SHADER_CASE;
 
 		private static float SLOW;
 
@@ -39,15 +36,13 @@ namespace FileToVox
 		private static int COLOR_LIMIT = 256;
 		public static int CHUNK_SIZE = 128;
 
-
-		
-
 		public static void Main(string[] args)
 		{
 			OptionSet options = new OptionSet()
 			{
 				{"i|input=", "input path", v => INPUT_PATH = v},
 				{"o|output=", "output path", v => OUTPUT_PATH = v},
+				{"s|shaders=", "input shader path", v => INPUT_SHADER_FILE = v},
 				{"c|color", "enable color when generating heightmap", v => COLOR = v != null},
 				{"cm|color-from-file=", "load colors from file", v => INPUT_COLOR_FILE = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
@@ -57,9 +52,6 @@ namespace FileToVox
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
-				{"shader-fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
-				{"shader-fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
-				{"shader-case=", "shader case",(int v) => SHADER_CASE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
@@ -84,7 +76,7 @@ namespace FileToVox
 					CheckVerbose();
 				}
 
-				Console.WriteLine("[LOG] Done.");
+				Console.WriteLine("[INFO] Done.");
 				if (DEBUG)
 				{
 					Console.ReadKey();
@@ -149,8 +141,6 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --color-limit argument must be between 1 and 256");
 			if (CHUNK_SIZE <= 10 || CHUNK_SIZE > 257)
 				throw new ArgumentException("[ERROR] --chunk-size argument must be between 10 and 256");
-			if (SHADER_CASE < 0)
-				throw new ArgumentException("[ERROR] --shader-case argument must be positive");
 		}
 
 		private static void DisplayArguments()
@@ -163,6 +153,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified input color file: " + INPUT_COLOR_FILE);
 			if (INPUT_PALETTE_FILE != null)
 				Console.WriteLine("[INFO] Specified palette file: " + INPUT_PALETTE_FILE);
+			if (INPUT_SHADER_FILE != null)
+				Console.WriteLine("[INFO] Specified shaders file: " + INPUT_SHADER_FILE);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
@@ -179,12 +171,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (SHADER_FIX_HOLES)
-				Console.WriteLine("[INFO] Enabled shader: fix-holes");
-			if (SHADER_FIX_LONELY)
-				Console.WriteLine("[INFO] Enabled shader: fix-lonely");
-			if (SHADER_CASE != 0)
-				Console.WriteLine("[INFO] Enabled shader: case (" + SHADER_CASE + " iterations)");
 			if (SLICE)
 				Console.WriteLine("[INFO] Enabled option: slice");
 			if (DEBUG)
@@ -302,6 +288,13 @@ namespace FileToVox
 				return false;
 			}
 
+			FileAttributes attributes = File.GetAttributes(outputPath);
+			if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
+			{
+				Console.WriteLine("[INFO] Output path doesn't contains a target file, will use `output.vox` as file target");
+				outputPath = Path.Combine(outputPath, "output.vox");
+			}
+
 			VoxWriter writer = new VoxWriter();
 
 			if (INPUT_PALETTE_FILE != null)
@@ -309,6 +302,12 @@ namespace FileToVox
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE, COLOR_LIMIT);
 				schematic = converterPalette.ConvertSchematic(schematic);
 				return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", converterPalette.GetPalette(), schematic);
+			}
+
+			if (INPUT_SHADER_FILE != null)
+			{
+				JsonToSchematic jsonParser = new JsonToSchematic(INPUT_SHADER_FILE, schematic);
+				schematic = jsonParser.WriteSchematic();
 			}
 
 			if (SHADER_FIX_HOLES)

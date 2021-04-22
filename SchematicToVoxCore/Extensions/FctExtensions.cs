@@ -13,7 +13,7 @@ namespace SchematicToVoxCore.Extensions
     {
         public static int CountColor(this Bitmap bitmap)
         {
-            Console.WriteLine("[LOG] Check total different colors...");
+            Console.WriteLine("[INFO] Check total different colors...");
             //Make a clone of the bitmap to avoid lock bitmaps in the rest of the code
             Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
             using (Graphics gr = Graphics.FromImage(clone))
@@ -55,7 +55,7 @@ namespace SchematicToVoxCore.Extensions
 	            }
             }
             
-            Console.WriteLine("[LOG] Done. (" + counts.Count + ")");
+            Console.WriteLine("[INFO] Done. (" + counts.Count + ")");
             return counts.Count;
         }
 

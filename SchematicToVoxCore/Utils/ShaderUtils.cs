@@ -1,31 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileToVox.Generator.Shaders;
 using FileToVox.Schematics;
 
 namespace FileToVox.Utils
 {
 	public static class ShaderUtils
 	{
-		#region ConstStatic
-
-		public const string SHADER_CASE_KEY = "SHADER_CASE";
-		public const string SHADER_FIX_HOLES_KEY = "SHADER_FIX_HOLES";
-		public const string SHADER_FIX_LONELY_KEY = "SHADER_FIX_LONELY";
-
-		#endregion
-
 		#region PublicMethods
 
-		public static Schematic ApplyShader(Schematic schematic, string shaderKey, int iterations = 0)
+		public static Schematic ApplyShader(Schematic schematic, ShaderType shaderType, int iterations = 0)
 		{
-			switch (shaderKey)
+			switch (shaderType)
 			{
-				case SHADER_FIX_HOLES_KEY:
+				case ShaderType.FIX_HOLES:
 					return ApplyShaderFillHoles(schematic);
-				case SHADER_FIX_LONELY_KEY:
+				case ShaderType.FIX_LONELY:
 					return ApplyShaderLonely(schematic);
-				case SHADER_CASE_KEY:
+				case ShaderType.CASE:
 					return ApplyShaderCase(schematic, iterations);
 			}
 
@@ -40,7 +33,6 @@ namespace FileToVox.Utils
 		{
 			Schematic resultSchematic = new Schematic(schematic.BlockDict);
 
-			Console.WriteLine("[LOG] Started to apply " + SHADER_FIX_LONELY_KEY);
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
@@ -67,7 +59,7 @@ namespace FileToVox.Utils
 
 				}
 			}
-			Console.WriteLine("[LOG] Done.");
+			Console.WriteLine("[INFO] Done.");
 			return resultSchematic;
 		}
 		#endregion
@@ -77,7 +69,7 @@ namespace FileToVox.Utils
 		private static Schematic ApplyShaderFillHoles(Schematic schematic)
 		{
 			Schematic resultSchematic = new Schematic(schematic.BlockDict);
-			Console.WriteLine("[LOG] Started to apply " + SHADER_FIX_HOLES_KEY);
+			Console.WriteLine("[INFO] Started to apply " + SHADER_FIX_HOLES_KEY);
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
@@ -119,7 +111,7 @@ namespace FileToVox.Utils
 				}
 			}
 
-			Console.WriteLine("[LOG] Done.");
+			Console.WriteLine("[INFO] Done.");
 			return schematic;
 		}
 
@@ -130,14 +122,13 @@ namespace FileToVox.Utils
 
 		private static Schematic ApplyShaderCase(Schematic schematic, int iterations)
 		{
-			Console.WriteLine("[LOG] Started to apply " + SHADER_CASE_KEY);
 			Schematic stepSchematic = schematic;
 			for (int i = 0; i < iterations; i++)
 			{
-				Console.WriteLine("[LOG] Process step: " + i);
+				Console.WriteLine("[INFO] Process iteration: " + i);
 				stepSchematic = ProcessShaderCase(stepSchematic);
 			}
-			Console.WriteLine("[LOG] Done.");
+			Console.WriteLine("[INFO] Done.");
 			return stepSchematic;
 		}
 

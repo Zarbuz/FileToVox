@@ -37,7 +37,7 @@ namespace FileToVox.Converter
 				int counter = 0;
 				// Read the file and display it line by line.  
 				StreamReader file = new StreamReader(@"schematics/config.txt");
-				Console.WriteLine("[LOG] Started to read config.txt for loading blocks colors");
+				Console.WriteLine("[INFO] Started to read config.txt for loading blocks colors");
 				while ((line = file.ReadLine()) != null)
 				{
 					if (line[0] == '#')
@@ -58,7 +58,7 @@ namespace FileToVox.Converter
 					counter++;
 				}
 				Console.WriteLine("[INFO] Loaded blocks: " + counter);
-				Console.WriteLine("[LOG] Done.");
+				Console.WriteLine("[INFO] Done.");
 				file.Close();
 			}
 			catch (Exception e)
@@ -120,7 +120,7 @@ namespace FileToVox.Converter
 				throw new Exception("Schematic is too big");
 			}
 
-			Console.WriteLine($"[LOG] Started to read all blocks of the schematic...");
+			Console.WriteLine($"[INFO] Started to read all blocks of the schematic...");
 
 			//Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
 			Schematic schematic = new Schematic();
@@ -158,7 +158,7 @@ namespace FileToVox.Converter
 				}
 			}
 
-			Console.WriteLine($"[LOG] Done.");
+			Console.WriteLine($"[INFO] Done.");
 			return schematic;
 		}
 
