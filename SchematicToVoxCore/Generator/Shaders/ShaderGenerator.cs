@@ -25,6 +25,7 @@ namespace FileToVox.Generator.Shaders
 			{
 				Console.WriteLine("[INFO] Start parse shader for step : " + index);
 				ShaderStep step = mShaderData.Steps[index];
+				step.ValidateSettings();
 				step.DisplayInfo();
 
 				finalSchematic = ShaderUtils.ApplyShader(finalSchematic, step);

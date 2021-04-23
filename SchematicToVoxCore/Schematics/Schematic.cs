@@ -173,10 +173,15 @@ namespace FileToVox.Schematics
 			}
 		}
 
+		public void ReplaceVoxel(Voxel voxel, uint color)
+		{
+			ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, color);
+		}
+
 		public void ReplaceVoxel(int x, int y, int z, uint color)
 		{
 			ulong index = GetVoxelIndex(x, y, z);
-			if (BlockDict.ContainsKey(index))
+			if (color != 0 && BlockDict.ContainsKey(index))
 			{
 				BlockDict[index].Color = color;
 				AddColorInUsedColors(color);
@@ -228,6 +233,14 @@ namespace FileToVox.Schematics
 		public List<Voxel> GetVoxelInRegion(HashSet<ulong> voxelIndex)
 		{
 			return voxelIndex.Select(vi => BlockDict[vi]).ToList();
+		}
+
+		public uint GetColorAtPaletteIndex(int index)
+		{
+			if (index > UsedColors.Count)
+				return UsedColors[index];
+
+			return 0;
 		}
 		#endregion
 
