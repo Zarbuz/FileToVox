@@ -21,16 +21,16 @@ namespace FileToVox.Generator.Shaders
 
 		private static Schematic ProcessShaderCase(Schematic schematic)
 		{
-			Schematic resultSchematic = new Schematic(schematic.BlockDict);
+			Schematic resultSchematic = new Schematic(schematic.GetAllVoxels());
 
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+				foreach (Voxel voxel in schematic.GetAllVoxels())
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					if (x == 0 || y == 0 || z == 0)
 						continue;
@@ -43,13 +43,13 @@ namespace FileToVox.Generator.Shaders
 							{
 								if (!schematic.GetVoxel(minX, minY, minZ, out _))
 								{
-									resultSchematic.AddVoxel(minX, minY, minZ, voxel.Value.Color);
+									resultSchematic.AddVoxel(minX, minY, minZ, voxel.Color);
 								}
 							}
 						}
 					}
 
-					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
+					progressBar.Report(index++ / (float)schematic.TotalVoxels);
 				}
 			}
 

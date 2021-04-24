@@ -46,10 +46,11 @@ namespace FileToVox.Schematics
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int i = 0;
-				foreach (Voxel block in schematic.BlockDict.Values)
+				List<Voxel> allVoxels = schematic.GetAllVoxels();
+				foreach (Voxel block in allVoxels)
 				{
 					newSchematic.AddVoxel(block.X, block.Y, block.Z, _colors[paletteDictionary[block.Color]].ColorToUInt(), paletteDictionary[block.Color]);
-					progressbar.Report(i++ / (float)schematic.BlockDict.Count);
+					progressbar.Report(i++ / (float)schematic.TotalVoxels);
 				}
 			}
 

@@ -10,15 +10,16 @@ namespace FileToVox.Generator.Shaders
 	{
 		private static Schematic ApplyShaderFillHoles(Schematic schematic)
 		{
-			Schematic resultSchematic = new Schematic(schematic.BlockDict);
+			List<Voxel> allVoxels = schematic.GetAllVoxels();
+			Schematic resultSchematic = new Schematic(allVoxels);
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+				foreach (Voxel voxel in allVoxels)
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					if (x == 0 || y == 0 || z == 0)
 						continue;
@@ -48,7 +49,7 @@ namespace FileToVox.Generator.Shaders
 						resultSchematic.AddVoxel(x, y, z, front);
 					}
 
-					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
+					progressBar.Report(index++ / (float)schematic.TotalVoxels);
 				}
 			}
 

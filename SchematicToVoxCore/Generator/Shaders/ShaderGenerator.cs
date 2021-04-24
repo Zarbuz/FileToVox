@@ -19,7 +19,7 @@ namespace FileToVox.Generator.Shaders
 
 		public Schematic WriteSchematic()
 		{
-			Schematic finalSchematic = new Schematic(mSchematic.BlockDict);
+			Schematic finalSchematic = new Schematic(mSchematic.GetAllVoxels());
 			Console.WriteLine("[INFO] Count steps: " + mShaderData.Steps.Length);
 			for (int index = 0; index < mShaderData.Steps.Length; index++)
 			{

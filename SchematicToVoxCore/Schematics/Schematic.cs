@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FileToVox.Generator.Heightmap.Data;
 using FileToVox.Schematics.Tools;
 using FileToVox.Vox;
@@ -19,11 +20,13 @@ namespace FileToVox.Schematics
 		public const int MAX_WORLD_LENGTH = 2000;
 		public const int MAX_COLORS_IN_PALETTE = 256;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong GetVoxelIndex(int x, int y, int z)
 		{
 			return (ulong)((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int GetVoxelIndex2D(int x, int z)
 		{
 			return x + MAX_WORLD_WIDTH * z;
@@ -53,7 +56,7 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
-				if (BlockDict.Count == 0)
+				if (UsedColors.Count == 0)
 				{
 					mWidth = 0;
 					return mWidth;
@@ -61,7 +64,7 @@ namespace FileToVox.Schematics
 
 				if (mWidth == 0)
 				{
-					mWidth = (ushort)(BlockDict.Values.Max(v => v.X) - BlockDict.Values.Min(v => v.X) + 1);
+					mWidth = (ushort)(mMaxX - mMinX + 1);
 				}
 
 				return mWidth;
@@ -74,7 +77,7 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
-				if (BlockDict.Count == 0)
+				if (UsedColors.Count == 0)
 				{
 					mHeight = 0;
 					return mHeight;
@@ -82,7 +85,7 @@ namespace FileToVox.Schematics
 
 				if (mHeight == 0)
 				{
-					mHeight = (ushort)(BlockDict.Values.Max(v => v.Y) - BlockDict.Values.Min(v => v.Y) + 1);
+					mHeight = (ushort)(mMaxY - mMinY + 1);
 				}
 
 				return mHeight;
@@ -95,7 +98,7 @@ namespace FileToVox.Schematics
 		{
 			get
 			{
-				if (BlockDict.Count == 0)
+				if (UsedColors.Count == 0)
 				{
 					mLength = 0;
 					return mLength;
@@ -103,29 +106,38 @@ namespace FileToVox.Schematics
 
 				if (mLength == 0)
 				{
-					mLength = (ushort)(BlockDict.Values.Max(v => v.Z) - BlockDict.Values.Min(v => v.Z) + 1);
+					mLength = (ushort)(mMaxZ - mMinZ + 1);
 				}
 
 				return mLength;
 			}
 		}
 
-		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
 		public Dictionary<ulong, Region> RegionDict { get; private set; }
 		public List<uint> UsedColors { get; private set; }
+
+		public int TotalVoxels => mCountTotalVoxels;
+		
+		private int mCountTotalVoxels;
+		private int mMinX;
+		private int mMinY;
+		private int mMinZ;
+
+		private int mMaxX;
+		private int mMaxY;
+		private int mMaxZ;
+
 		public Schematic()
 		{
-			BlockDict = new Dictionary<ulong, Voxel>();
 			UsedColors = new List<uint>();
 			CreateAllRegions();
 		}
 
-		public Schematic(Dictionary<ulong, Voxel> voxels)
+		public Schematic(List<Voxel> voxels)
 		{
-			BlockDict = new Dictionary<ulong, Voxel>(voxels.Count);
 			UsedColors = new List<uint>();
 			CreateAllRegions();
-			AddVoxels(voxels.Values);
+			AddVoxels(voxels);
 		}
 
 		#endregion
@@ -164,8 +176,17 @@ namespace FileToVox.Schematics
 				{
 					palettePosition = GetPaletteIndex(color);
 				}
-				BlockDict[GetVoxelIndex(x, y, z)] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
-				AddUsageForRegion(x, y, z);
+				AddUsageForRegion(x, y, z, color, palettePosition);
+
+				mMinX = Math.Min(x, mMinX);
+				mMinY = Math.Min(y, mMinY);
+				mMinZ = Math.Min(z, mMinZ);
+
+
+				mMaxX = Math.Max(x, mMaxX);
+				mMaxY = Math.Max(y, mMaxY);
+				mMaxZ = Math.Max(z, mMaxZ);
+				mCountTotalVoxels++;
 			}
 		}
 
@@ -176,22 +197,16 @@ namespace FileToVox.Schematics
 
 		public void ReplaceVoxel(int x, int y, int z, uint color)
 		{
-			ulong index = GetVoxelIndex(x, y, z);
-			if (color != 0 && BlockDict.ContainsKey(index))
+			if (color != 0)
 			{
-				BlockDict[index].Color = color;
+				ReplaceUsageForRegion(x, y, z, color);
 				AddColorInUsedColors(color);
 			}
 		}
 
 		public void RemoveVoxel(int x, int y, int z)
 		{
-			ulong index = GetVoxelIndex(x, y, z);
-			if (BlockDict.ContainsKey(index))
-			{
-				RemoveUsageForRegion(x, y, z);
-				BlockDict.Remove(index);
-			}
+			RemoveUsageForRegion(x, y, z);
 		}
 
 		public uint GetColorAtVoxelIndex(Vector3Int pos)
@@ -211,8 +226,12 @@ namespace FileToVox.Schematics
 
 		public bool GetVoxel(int x, int y, int z, out Voxel voxel)
 		{
+			int chunkX = x / Program.CHUNK_SIZE;
+			int chunkY = y / Program.CHUNK_SIZE;
+			int chunkZ = z / Program.CHUNK_SIZE;
+			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			ulong voxelIndex = GetVoxelIndex(x, y, z);
-			bool found =BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
+			bool found = RegionDict[chunkIndex].BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
 			voxel = foundVoxel;
 			return found;
 		}
@@ -222,15 +241,23 @@ namespace FileToVox.Schematics
 			return RegionDict.Values.Where(region => region.UsageCount > 0).ToList();
 		}
 
-		public List<Voxel> GetVoxelInRegion(HashSet<ulong> voxelIndex)
-		{
-			return voxelIndex.Select(vi => BlockDict[vi]).ToList();
-		}
-
 		public uint GetColorAtPaletteIndex(int index)
 		{
 			return index > UsedColors.Count ? UsedColors[index] : 0;
 		}
+
+		public List<Voxel> GetAllVoxels()
+		{
+			List<Voxel> voxels = new List<Voxel>();
+			foreach (KeyValuePair<ulong, Region> region in RegionDict)
+			{
+				voxels.AddRange(region.Value.BlockDict.Values);
+			}
+
+			return voxels;
+		}
+
+		
 		#endregion
 
 		#region PrivateMethods
@@ -255,7 +282,7 @@ namespace FileToVox.Schematics
 			}
 		}
 
-		private void AddUsageForRegion(int x, int y, int z)
+		private void AddUsageForRegion(int x, int y, int z, uint color, int palettePosition)
 		{
 			int chunkX = x / Program.CHUNK_SIZE;
 			int chunkY = y / Program.CHUNK_SIZE;
@@ -264,7 +291,21 @@ namespace FileToVox.Schematics
 			ulong voxelIndex = GetVoxelIndex(x, y, z);
 
 			RegionDict[chunkIndex].UsageCount++;
-			RegionDict[chunkIndex].VoxelIndexUsed.Add(voxelIndex);
+			RegionDict[chunkIndex].BlockDict[voxelIndex] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
+		}
+
+		private void ReplaceUsageForRegion(int x, int y, int z, uint color)
+		{
+			int chunkX = x / Program.CHUNK_SIZE;
+			int chunkY = y / Program.CHUNK_SIZE;
+			int chunkZ = z / Program.CHUNK_SIZE;
+			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			ulong voxelIndex = GetVoxelIndex(x, y, z);
+
+			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
+			{
+				RegionDict[chunkIndex].BlockDict[voxelIndex].Color = color;
+			}
 		}
 
 		private void RemoveUsageForRegion(int x, int y, int z)
@@ -276,8 +317,11 @@ namespace FileToVox.Schematics
 			ulong voxelIndex = GetVoxelIndex(x, y, z);
 
 			RegionDict[chunkIndex].UsageCount--;
-			RegionDict[chunkIndex].VoxelIndexUsed.Remove(voxelIndex);
-
+			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
+			{
+				RegionDict[chunkIndex].BlockDict.Remove(voxelIndex);
+				mCountTotalVoxels--;
+			}
 		}
 
 		private void AddColorInUsedColors(uint color)

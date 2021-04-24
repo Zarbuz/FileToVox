@@ -14,19 +14,20 @@ namespace FileToVox.Generator.Shaders
 		private static Schematic ApplyShaderPatina(Schematic schematic, ShaderStep shaderStep)
 		{
 			mShaderStep = shaderStep;
-			Schematic finalSchematic = new Schematic(schematic.BlockDict);
+			List<Voxel> allVoxels = schematic.GetAllVoxels();
+			Schematic finalSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				int index = 0;
 
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+				foreach (Voxel voxel in allVoxels)
 				{
-					if (CanGrow(schematic, voxel.Value))
+					if (CanGrow(schematic, voxel))
 					{
-						finalSchematic.ReplaceVoxel(voxel.Value, GetCrowColor(schematic, voxel.Value));
+						finalSchematic.ReplaceVoxel(voxel, GetCrowColor(schematic, voxel));
 					}
 
-					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
+					progressBar.Report(index++ / (float)schematic.TotalVoxels);
 				}
 			}
 

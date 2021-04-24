@@ -83,7 +83,7 @@ namespace FileToVox.Converter.PointCloud
 			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
 			list.ApplyOffset(new Vector3(minX, minY, minZ));
 
-			Schematic schematic = new Schematic(list.ToVoxelDictionary());
+			Schematic schematic = new Schematic(list);
 			return schematic;
 		}
 
