@@ -1,7 +1,16 @@
 {
+  "generatorType": "Shader",
   "steps": [
+    //{
+    //  "shaderType": "CASE",
+    //  "iterations": 3
+    //},
     {
-      "shaderType": "FIX_HOLES" 
+      "shaderType": "PATINA",
+      "seed": 123,
+      "density": 0.3,
+      "Thickness": 4,
+      "TargetColorIndex": 10
     }
-  ] 
+  ]
 }

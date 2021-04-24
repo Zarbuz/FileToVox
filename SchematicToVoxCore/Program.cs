@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using FileToVox.Converter;
+﻿using FileToVox.Converter;
 using FileToVox.Converter.Image;
 using FileToVox.Converter.Json;
 using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
-using FileToVox.Utils;
 using FileToVox.Vox;
 using NDesk.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace FileToVox
 {

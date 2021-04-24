@@ -10,29 +10,37 @@ namespace FileToVox.Generator.Shaders
 	public static partial class ShaderUtils
 	{
 		private static ShaderStep mShaderStep;
+
 		private static Schematic ApplyShaderPatina(Schematic schematic, ShaderStep shaderStep)
 		{
 			mShaderStep = shaderStep;
 			Schematic finalSchematic = new Schematic(schematic.BlockDict);
-
-			foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+			using (ProgressBar progressBar = new ProgressBar())
 			{
-				if (CanGrow(schematic, voxel.Value))
+				int index = 0;
+
+				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
 				{
-					finalSchematic.ReplaceVoxel(voxel.Value, GetCrowColor(schematic, voxel.Value));
+					if (CanGrow(schematic, voxel.Value))
+					{
+						finalSchematic.ReplaceVoxel(voxel.Value, GetCrowColor(schematic, voxel.Value));
+					}
+
+					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
 				}
 			}
 
+			Console.WriteLine("[INFO] Done.");
 			return finalSchematic;
 		}
 
 		private static uint GetCrowColor(Schematic schematic, Voxel voxel)
 		{
 			float distance = MinDistanceToWall(schematic, voxel, mShaderStep.Thickness);
-			return schematic.GetColorAtPaletteIndex((int) (mShaderStep.TargetColorIndex +
-			                                               mShaderStep.AdditionalColorRange *
-			                                               (distance / MathF.Sqrt(MathF.Pow(mShaderStep.Thickness, 2) *
-				                                               3))));
+			return schematic.GetColorAtPaletteIndex((int)(mShaderStep.TargetColorIndex +
+														   mShaderStep.AdditionalColorRange *
+														   (distance / MathF.Sqrt(MathF.Pow(mShaderStep.Thickness, 2) *
+															   3))));
 		}
 
 		private static bool CanGrow(Schematic schematic, Voxel voxel)
@@ -82,10 +90,10 @@ namespace FileToVox.Generator.Shaders
 				}
 
 				if (r < mShaderStep.Density -
-				    (MinDistanceToWall(schematic, voxel, mShaderStep.Thickness) / mShaderStep.Thickness) *
-				    (mShaderStep.Density / 2)
-				    && HasWallNextToIt(schematic, voxel, mShaderStep.Thickness) && neighbors > 0 &&
-				    (GrowsDown(schematic, voxel) || Random(voxel, mShaderStep.Seed + 5.567f) < 0.3f))
+					(MinDistanceToWall(schematic, voxel, mShaderStep.Thickness) / mShaderStep.Thickness) *
+					(mShaderStep.Density / 2)
+					&& HasWallNextToIt(schematic, voxel, mShaderStep.Thickness) && neighbors > 0 &&
+					(GrowsDown(schematic, voxel) || Random(voxel, mShaderStep.Seed + 5.567f) < 0.3f))
 				{
 					return true;
 				}
@@ -117,17 +125,17 @@ namespace FileToVox.Generator.Shaders
 			return false;
 		}
 
-		private static float MinDistanceToWall(Schematic schematic, Voxel voxel, float distance)
+		private static float MinDistanceToWall(Schematic schematic, Voxel voxel, int distance)
 		{
 			float minDistance = distance + 1;
 
-			for (float x = -distance; x <= distance; x++)
+			for (int x = -distance; x <= distance; x++)
 			{
-				for (float y = -distance; y <= distance; y++)
+				for (int y = -distance; y <= distance; y++)
 				{
-					for (float z = -distance; z <= distance; z++)
+					for (int z = -distance; z <= distance; z++)
 					{
-						if (schematic.GetVoxel((int) (voxel.X + x), (int) (voxel.Y + y), (int) (voxel.Z + z), out Voxel foundVoxel))
+						if (schematic.GetVoxel(voxel.X + x, voxel.Y + y, voxel.Z + z, out Voxel foundVoxel))
 						{
 							if (!IsGrowColor(foundVoxel))
 							{
@@ -147,8 +155,7 @@ namespace FileToVox.Generator.Shaders
 
 		private static bool GrowsDown(Schematic schematic, Voxel voxel)
 		{
-			Voxel foundVoxel;
-			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
 				{

@@ -110,15 +110,11 @@ namespace FileToVox.Schematics
 			}
 		}
 
-		/// <summary>Contains all usual blocks</summary>
-		//public HashSet<Voxel> Blocks { get; set; }
-
 		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
 		public Dictionary<ulong, Region> RegionDict { get; private set; }
 		public List<uint> UsedColors { get; private set; }
 		public Schematic()
 		{
-			//Blocks = new HashSet<Voxel>();
 			BlockDict = new Dictionary<ulong, Voxel>();
 			UsedColors = new List<uint>();
 			CreateAllRegions();
@@ -126,7 +122,7 @@ namespace FileToVox.Schematics
 
 		public Schematic(Dictionary<ulong, Voxel> voxels)
 		{
-			BlockDict = new Dictionary<ulong, Voxel>();
+			BlockDict = new Dictionary<ulong, Voxel>(voxels.Count);
 			UsedColors = new List<uint>();
 			CreateAllRegions();
 			AddVoxels(voxels.Values);
@@ -193,22 +189,24 @@ namespace FileToVox.Schematics
 			ulong index = GetVoxelIndex(x, y, z);
 			if (BlockDict.ContainsKey(index))
 			{
+				RemoveUsageForRegion(x, y, z);
 				BlockDict.Remove(index);
 			}
 		}
 
 		public uint GetColorAtVoxelIndex(Vector3Int pos)
 		{
-			ulong voxelIndex = GetVoxelIndex(pos.X, pos.Y, pos.Z);
-			BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
-			return foundVoxel?.Color ?? 0;
+			return GetVoxel(pos.X, pos.Y, pos.Z, out Voxel voxel) ? voxel.Color : 0;
 		}
 
 		public uint GetColorAtVoxelIndex(int x, int y, int z)
 		{
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
-			BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
-			return foundVoxel?.Color ?? 0;
+			return GetVoxel(x, y, z, out Voxel voxel) ? voxel.Color : 0;
+		}
+
+		public bool ContainsVoxel(int x, int y, int z)
+		{
+			return GetVoxel(x, y, z, out _);
 		}
 
 		public bool GetVoxel(int x, int y, int z, out Voxel voxel)
@@ -217,12 +215,6 @@ namespace FileToVox.Schematics
 			bool found =BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
 			voxel = foundVoxel;
 			return found;
-		}
-
-		public bool ContainsVoxel(int x, int y, int z)
-		{
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
-			return BlockDict.TryGetValue(voxelIndex, out _);
 		}
 
 		public List<Region> GetAllRegions()
@@ -237,10 +229,7 @@ namespace FileToVox.Schematics
 
 		public uint GetColorAtPaletteIndex(int index)
 		{
-			if (index > UsedColors.Count)
-				return UsedColors[index];
-
-			return 0;
+			return index > UsedColors.Count ? UsedColors[index] : 0;
 		}
 		#endregion
 
