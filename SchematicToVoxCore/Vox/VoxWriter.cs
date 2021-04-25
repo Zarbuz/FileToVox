@@ -59,7 +59,7 @@ namespace FileToVox.Vox
 			mCountSize = mWidth * mLength * mHeight;
 			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
-			mTotalBlockCount = mSchematic.TotalVoxels;
+			mTotalBlockCount = mSchematic.GetAllVoxels().Count;
 
 			Console.WriteLine("[INFO] Total blocks: " + mTotalBlockCount);
 
@@ -246,7 +246,7 @@ namespace FileToVox.Vox
 					writer.Write((byte)1);
 				}
 
-				mSchematic.RemoveVoxel(block.X, block.Y, block.Z);
+				//mSchematic.RemoveVoxel(block.X, block.Y, block.Z);
 				//firstBlock.BlockDict.Remove(block.GetIndex());
 			}
 		}
@@ -438,7 +438,6 @@ namespace FileToVox.Vox
 		public int X;
 		public int Y;
 		public int Z;
-		public int UsageCount;
 		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
 
 		public Region(int x, int y, int z)
@@ -446,13 +445,12 @@ namespace FileToVox.Vox
 			X = x;
 			Y = y;
 			Z = z;
-			UsageCount = 0;
 			BlockDict = new Dictionary<ulong, Voxel>();
 		}
 
 		public override string ToString()
 		{
-			return $"{X} {Y} {Z} {UsageCount}";
+			return $"{X} {Y} {Z}";
 		}
 	}
 }

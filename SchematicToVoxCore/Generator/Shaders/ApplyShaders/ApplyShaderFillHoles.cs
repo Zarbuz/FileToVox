@@ -49,7 +49,7 @@ namespace FileToVox.Generator.Shaders
 						resultSchematic.AddVoxel(x, y, z, front);
 					}
 
-					progressBar.Report(index++ / (float)schematic.TotalVoxels);
+					progressBar.Report(index++ / (float)allVoxels.Count);
 				}
 			}
 

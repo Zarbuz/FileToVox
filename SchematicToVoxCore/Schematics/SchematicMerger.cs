@@ -38,7 +38,7 @@ namespace FileToVox.Schematics
 				foreach (var voxel in allVoxelsB)
 				{
 					resultSchematic.AddVoxel(voxel);
-					progressbar.Report(index++ / (float)schematicB.TotalVoxels);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
@@ -62,7 +62,7 @@ namespace FileToVox.Schematics
 					{
 						resultSchematic.ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, voxel.Color);
 					}
-					progressbar.Report(index++ / (float)schematicB.TotalVoxels);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
@@ -86,7 +86,7 @@ namespace FileToVox.Schematics
 					{
 						resultSchematic.RemoveVoxel(voxel.X, voxel.Y, voxel.Z);
 					}
-					progressbar.Report(index++ / (float)schematicB.TotalVoxels);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 
 				}
 			}
@@ -99,11 +99,12 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
 			List<Voxel> allVoxels = schematicA.GetAllVoxels();
+			List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
 			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				//int max = schematicA.Length * schematicA.Width;
-				int max = schematicA.TotalVoxels + schematicB.TotalVoxels;
+				int max = allVoxels.Count + allVoxelsB.Count;
 				int index = 0;
 
 				Dictionary<int, List<int>> tops = new Dictionary<int, List<int>>();
@@ -159,7 +160,6 @@ namespace FileToVox.Schematics
 					progressbar.Report(index++ / (double)max);
 				}
 
-				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
 				foreach (Voxel voxel in allVoxelsB)
 				{
 					int x = voxel.X;

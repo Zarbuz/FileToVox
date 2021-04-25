@@ -50,7 +50,7 @@ namespace FileToVox.Schematics
 				foreach (Voxel block in allVoxels)
 				{
 					newSchematic.AddVoxel(block.X, block.Y, block.Z, _colors[paletteDictionary[block.Color]].ColorToUInt(), paletteDictionary[block.Color]);
-					progressbar.Report(i++ / (float)schematic.TotalVoxels);
+					progressbar.Report(i++ / (float)allVoxels.Count);
 				}
 			}
 

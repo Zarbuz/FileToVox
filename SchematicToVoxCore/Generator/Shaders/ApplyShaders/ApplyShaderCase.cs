@@ -21,12 +21,13 @@ namespace FileToVox.Generator.Shaders
 
 		private static Schematic ProcessShaderCase(Schematic schematic)
 		{
-			Schematic resultSchematic = new Schematic(schematic.GetAllVoxels());
+			List<Voxel> allVoxels = schematic.GetAllVoxels(); 
+			Schematic resultSchematic = new Schematic(allVoxels);
 
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (Voxel voxel in schematic.GetAllVoxels())
+				foreach (Voxel voxel in allVoxels)
 				{
 					int x = voxel.X;
 					int y = voxel.Y;
@@ -41,7 +42,7 @@ namespace FileToVox.Generator.Shaders
 						{
 							for (int minZ = z - 1; minZ < z + 1; minZ++)
 							{
-								if (!schematic.GetVoxel(minX, minY, minZ, out _))
+								if (!schematic.ContainsVoxel(minX, minY, minZ))
 								{
 									resultSchematic.AddVoxel(minX, minY, minZ, voxel.Color);
 								}
@@ -49,7 +50,7 @@ namespace FileToVox.Generator.Shaders
 						}
 					}
 
-					progressBar.Report(index++ / (float)schematic.TotalVoxels);
+					progressBar.Report(index++ / (float)allVoxels.Count);
 				}
 			}
 

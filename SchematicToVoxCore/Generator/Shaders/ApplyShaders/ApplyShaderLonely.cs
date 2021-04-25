@@ -35,7 +35,7 @@ namespace FileToVox.Generator.Shaders
 						resultSchematic.RemoveVoxel(x, y, z);
 					}
 
-					progressBar.Report(index++ / (float)schematic.TotalVoxels);
+					progressBar.Report(index++ / (float)allVoxels.Count);
 
 				}
 			}

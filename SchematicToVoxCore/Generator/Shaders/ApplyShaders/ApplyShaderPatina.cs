@@ -27,7 +27,7 @@ namespace FileToVox.Generator.Shaders
 						finalSchematic.ReplaceVoxel(voxel, GetCrowColor(schematic, voxel));
 					}
 
-					progressBar.Report(index++ / (float)schematic.TotalVoxels);
+					progressBar.Report(index++ / (float)allVoxels.Count);
 				}
 			}
 
@@ -159,41 +159,41 @@ namespace FileToVox.Generator.Shaders
 			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
-				{
-					return true;
-				}
+			{
+				return true;
+			}
 			}
 
 			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
-				{
-					return true;
-				}
+			{
+				return true;
+			}
 			}
 
 			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
-				{
-					return true;
-				}
+			{
+				return true;
+			}
 			}
 
 			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
-				{
-					return true;
-				}
+			{
+				return true;
+			}
 			}
 
 			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel))
 			{
 				if (IsGrowColor(foundVoxel))
-				{
-					return true;
-				}
+			{
+				return true;
+			}
 			}
 
 			return false;
