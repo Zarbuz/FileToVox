@@ -251,7 +251,7 @@ namespace FileToVox.Schematics
 
 		public uint GetColorAtPaletteIndex(int index)
 		{
-			return index > UsedColors.Count ? UsedColors[index] : 0;
+			return index < UsedColors.Count ? UsedColors[index] : 0;
 		}
 
 		public List<Voxel> GetAllVoxels()

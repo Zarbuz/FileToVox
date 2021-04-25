@@ -7,10 +7,10 @@ namespace FileToVox.Generator.Shaders
 {
 	public static partial class ShaderUtils
 	{
-		private static Schematic ApplyShaderCase(Schematic schematic, int iterations)
+		private static Schematic ApplyShaderCase(Schematic schematic, ShaderStep shaderStep)
 		{
-			Schematic stepSchematic = schematic;
-			for (int i = 0; i < iterations; i++)
+			Schematic stepSchematic = new Schematic(schematic.GetAllVoxels());
+			for (int i = 0; i < shaderStep.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
 				stepSchematic = ProcessShaderCase(stepSchematic);

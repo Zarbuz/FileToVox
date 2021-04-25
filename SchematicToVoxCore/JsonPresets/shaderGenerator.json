@@ -3,14 +3,16 @@
   "steps": [
     {
       "shaderType": "CASE",
-      "iterations": 1
+      "iterations": 4
     },
     {
       "shaderType": "PATINA",
+      "iterations": 2,
       "seed": 123,
       "density": 0.3,
       "Thickness": 4,
-      "TargetColorIndex": 10
+      "TargetColorIndex": 1,
+      "AdditionalColorRange": 0
     }
   ]
 }

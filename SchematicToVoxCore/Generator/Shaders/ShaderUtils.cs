@@ -15,7 +15,7 @@ namespace FileToVox.Generator.Shaders
 				case ShaderType.FIX_LONELY:
 					return ApplyShaderLonely(schematic);
 				case ShaderType.CASE:
-					return ApplyShaderCase(schematic, shaderStep.Iterations);
+					return ApplyShaderCase(schematic, shaderStep);
 				case ShaderType.PATINA:
 					return ApplyShaderPatina(schematic, shaderStep);
 			}

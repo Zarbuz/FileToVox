@@ -19,6 +19,7 @@ namespace FileToVox.Generator.Shaders
 
 		public Schematic WriteSchematic()
 		{
+			Schematic finalSchematic = new Schematic(mSchematic.GetAllVoxels());
 			Console.WriteLine("[INFO] Count steps: " + mShaderData.Steps.Length);
 			for (int index = 0; index < mShaderData.Steps.Length; index++)
 			{
@@ -27,10 +28,10 @@ namespace FileToVox.Generator.Shaders
 				step.ValidateSettings();
 				step.DisplayInfo();
 
-				mSchematic = ShaderUtils.ApplyShader(mSchematic, step);
+				finalSchematic = ShaderUtils.ApplyShader(finalSchematic, step);
 			}
 
-			return mSchematic;
+			return finalSchematic;
 		}
 	}
 }

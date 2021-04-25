@@ -38,6 +38,7 @@ namespace FileToVox.Generator.Shaders
 					Console.WriteLine("[INFO] Iterations: " + Iterations);
 					break;
 				case ShaderType.PATINA:
+					Console.WriteLine("[INFO] Iterations: " + Iterations);
 					Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
 					Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);
 					Console.WriteLine("[INFO] Seed: " + Seed);
@@ -78,6 +79,12 @@ namespace FileToVox.Generator.Shaders
 
 		private void ValidatePatinaSettings()
 		{
+			if (Iterations < 0)
+			{
+				Console.WriteLine("[WARNING] Negative value found for Iterations, replace to 1...");
+				Iterations = 1;
+			}
+
 			if (TargetColorIndex < 0)
 			{
 				Console.WriteLine("[WARNING] Negative value found for TargetColorIndex, replace to 0...");
