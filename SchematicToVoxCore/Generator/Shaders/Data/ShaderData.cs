@@ -21,7 +21,7 @@ namespace FileToVox.Generator.Shaders
 	{
 		public ShaderType ShaderType { get; set; }
 		public int Iterations { get; set; }
-		public int TargetColorIndex { get; set; }
+		public int TargetColorIndex { get; set; } = -1;
 		public int AdditionalColorRange { get; set; }
 		public int Seed { get; set; }
 		public float Density { get; set; }
@@ -36,6 +36,8 @@ namespace FileToVox.Generator.Shaders
 			{
 				case ShaderType.CASE:
 					Console.WriteLine("[INFO] Iterations: " + Iterations);
+					Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
+					Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);
 					break;
 				case ShaderType.PATINA:
 					Console.WriteLine("[INFO] Iterations: " + Iterations);

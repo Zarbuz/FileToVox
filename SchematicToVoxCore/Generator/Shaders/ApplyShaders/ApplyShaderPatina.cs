@@ -7,11 +7,8 @@ namespace FileToVox.Generator.Shaders
 {
 	public static partial class ShaderUtils
 	{
-		private static ShaderStep mShaderStep;
-
 		private static Schematic ApplyShaderPatina(Schematic schematic, ShaderStep shaderStep)
 		{
-			mShaderStep = shaderStep;
 			Schematic stepSchematic = schematic;
 			for (int i = 0; i < shaderStep.Iterations; i++)
 			{

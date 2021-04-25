@@ -3,7 +3,8 @@
   "steps": [
     {
       "shaderType": "CASE",
-      "iterations": 4
+      "iterations": 4,
+      "TargetColorIndex": -1
     },
     {
       "shaderType": "PATINA",

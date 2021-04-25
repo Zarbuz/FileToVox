@@ -44,7 +44,10 @@ namespace FileToVox.Generator.Shaders
 							{
 								if (!schematic.ContainsVoxel(minX, minY, minZ))
 								{
-									schematic.AddVoxel(minX, minY, minZ, voxel.Color);
+									if (mShaderStep.TargetColorIndex != -1 && voxel.PalettePosition == mShaderStep.TargetColorIndex || mShaderStep.TargetColorIndex == -1)
+									{
+										schematic.AddVoxel(minX, minY, minZ, voxel.Color);
+									}
 								}
 							}
 						}
