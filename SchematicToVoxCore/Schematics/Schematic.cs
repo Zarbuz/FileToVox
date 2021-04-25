@@ -4,13 +4,34 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using FileToVox.Vox;
 using SchematicToVoxCore.Extensions;
-using Region = FileToVox.Vox.Region;
 
 namespace FileToVox.Schematics
 {
+	public class Region
+	{
+		public int X;
+		public int Y;
+		public int Z;
+		public Dictionary<long, Voxel> BlockDict { get; private set; }
+
+		public Region(int x, int y, int z)
+		{
+			X = x;
+			Y = y;
+			Z = z;
+			BlockDict = new Dictionary<long, Voxel>();
+		}
+
+		public override string ToString()
+		{
+			return $"{X} {Y} {Z}";
+		}
+	}
+
 	public class Schematic
 	{
 		#region ConstStatic
@@ -21,9 +42,9 @@ namespace FileToVox.Schematics
 		public const int MAX_COLORS_IN_PALETTE = 256;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ulong GetVoxelIndex(int x, int y, int z)
+		public static long GetVoxelIndex(int x, int y, int z)
 		{
-			return (ulong)((y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x);
+			return (y * MAX_WORLD_LENGTH + z) * MAX_WORLD_WIDTH + x;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -113,7 +134,7 @@ namespace FileToVox.Schematics
 			}
 		}
 
-		public Dictionary<ulong, Region> RegionDict { get; private set; }
+		public Dictionary<long, Region> RegionDict { get; private set; }
 		public List<uint> UsedColors { get; private set; }
 
 		private int mMinX;
@@ -214,11 +235,10 @@ namespace FileToVox.Schematics
 
 		public bool GetVoxel(int x, int y, int z, out Voxel voxel)
 		{
-			int chunkX = x / Program.CHUNK_SIZE;
-			int chunkY = y / Program.CHUNK_SIZE;
-			int chunkZ = z / Program.CHUNK_SIZE;
-			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
+
+			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			long voxelIndex = GetVoxelIndex(x, y, z);
 			bool found = RegionDict[chunkIndex].BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
 			voxel = foundVoxel;
 			return found;
@@ -237,7 +257,7 @@ namespace FileToVox.Schematics
 		public List<Voxel> GetAllVoxels()
 		{
 			List<Voxel> voxels = new List<Voxel>();
-			foreach (KeyValuePair<ulong, Region> region in RegionDict)
+			foreach (KeyValuePair<long, Region> region in RegionDict)
 			{
 				voxels.AddRange(region.Value.BlockDict.Values);
 			}
@@ -252,7 +272,7 @@ namespace FileToVox.Schematics
 
 		private void CreateAllRegions()
 		{
-			RegionDict = new Dictionary<ulong, Region>();
+			RegionDict = new Dictionary<long, Region>();
 
 			int worldRegionX = (int)Math.Ceiling(((decimal)MAX_WORLD_WIDTH / Program.CHUNK_SIZE));
 			int worldRegionY = (int)Math.Ceiling(((decimal)MAX_WORLD_HEIGHT / Program.CHUNK_SIZE));
@@ -272,13 +292,11 @@ namespace FileToVox.Schematics
 
 		private void AddUsageForRegion(int x, int y, int z, uint color, int palettePosition)
 		{
-			int chunkX = x / Program.CHUNK_SIZE;
-			int chunkY = y / Program.CHUNK_SIZE;
-			int chunkZ = z / Program.CHUNK_SIZE;
-			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
-			RegionDict[chunkIndex].UsageCount++;
+			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			long voxelIndex = GetVoxelIndex(x, y, z);
+
 			RegionDict[chunkIndex].BlockDict[voxelIndex] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
 		}
 
@@ -287,8 +305,8 @@ namespace FileToVox.Schematics
 			int chunkX = x / Program.CHUNK_SIZE;
 			int chunkY = y / Program.CHUNK_SIZE;
 			int chunkZ = z / Program.CHUNK_SIZE;
-			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			long voxelIndex = GetVoxelIndex(x, y, z);
 
 			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
 			{
@@ -301,8 +319,8 @@ namespace FileToVox.Schematics
 			int chunkX = x / Program.CHUNK_SIZE;
 			int chunkY = y / Program.CHUNK_SIZE;
 			int chunkZ = z / Program.CHUNK_SIZE;
-			ulong chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
-			ulong voxelIndex = GetVoxelIndex(x, y, z);
+			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
+			long voxelIndex = GetVoxelIndex(x, y, z);
 
 			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
 			{

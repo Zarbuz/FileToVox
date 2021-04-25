@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Region = FileToVox.Schematics.Region;
 
 namespace FileToVox.Vox
 {
@@ -433,24 +434,5 @@ namespace FileToVox.Vox
 		}
 	}
 
-	public class Region
-	{
-		public int X;
-		public int Y;
-		public int Z;
-		public Dictionary<ulong, Voxel> BlockDict { get; private set; }
-
-		public Region(int x, int y, int z)
-		{
-			X = x;
-			Y = y;
-			Z = z;
-			BlockDict = new Dictionary<ulong, Voxel>();
-		}
-
-		public override string ToString()
-		{
-			return $"{X} {Y} {Z}";
-		}
-	}
+	
 }

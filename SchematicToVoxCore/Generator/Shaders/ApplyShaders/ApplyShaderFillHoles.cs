@@ -11,7 +11,6 @@ namespace FileToVox.Generator.Shaders
 		private static Schematic ApplyShaderFillHoles(Schematic schematic)
 		{
 			List<Voxel> allVoxels = schematic.GetAllVoxels();
-			Schematic resultSchematic = new Schematic(allVoxels);
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
@@ -36,17 +35,17 @@ namespace FileToVox.Generator.Shaders
 
 					if (left != 0 && right != 0 && front != 0 && back != 0)
 					{
-						resultSchematic.AddVoxel(x, y, z, left);
+						schematic.AddVoxel(x, y, z, left);
 					}
 
 					if (top != 0 && bottom != 0 && left != 0 && right != 0)
 					{
-						resultSchematic.AddVoxel(x, y, z, top);
+						schematic.AddVoxel(x, y, z, top);
 					}
 
 					if (front != 0 && back != 0 && top != 0 && bottom != 0)
 					{
-						resultSchematic.AddVoxel(x, y, z, front);
+						schematic.AddVoxel(x, y, z, front);
 					}
 
 					progressBar.Report(index++ / (float)allVoxels.Count);
