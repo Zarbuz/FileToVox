@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using FileToVox.Generator.Heightmap.Data;
 using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using FileToVox.Vox;
+using MoreLinq;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Schematics
@@ -83,11 +85,7 @@ namespace FileToVox.Schematics
 					return mWidth;
 				}
 
-				if (mWidth == 0)
-				{
-					mWidth = (ushort)(mMaxX - mMinX + 1);
-				}
-
+				mWidth = (ushort)(mMaxX - mMinX + 1);
 				return mWidth;
 			}
 		}
@@ -104,10 +102,7 @@ namespace FileToVox.Schematics
 					return mHeight;
 				}
 
-				if (mHeight == 0)
-				{
-					mHeight = (ushort)(mMaxY - mMinY + 1);
-				}
+				mHeight = (ushort)(mMaxY - mMinY + 1);
 
 				return mHeight;
 			}
@@ -125,10 +120,7 @@ namespace FileToVox.Schematics
 					return mLength;
 				}
 
-				if (mLength == 0)
-				{
-					mLength = (ushort)(mMaxZ - mMinZ + 1);
-				}
+				mLength = (ushort)(mMaxZ - mMinZ + 1);
 
 				return mLength;
 			}
@@ -201,6 +193,7 @@ namespace FileToVox.Schematics
 
 		public void ReplaceVoxel(Voxel voxel, uint color)
 		{
+			AddColorInUsedColors(color);
 			ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, color);
 		}
 
@@ -208,9 +201,14 @@ namespace FileToVox.Schematics
 		{
 			if (color != 0)
 			{
-				ReplaceUsageForRegion(x, y, z, color);
 				AddColorInUsedColors(color);
+				ReplaceUsageForRegion(x, y, z, color);
 			}
+		}
+
+		public void RemoveVoxel(Voxel voxel)
+		{
+			RemoveUsageForRegion(voxel.X, voxel.Y, voxel.Z);
 		}
 
 		public void RemoveVoxel(int x, int y, int z)
@@ -265,6 +263,17 @@ namespace FileToVox.Schematics
 			return voxels;
 		}
 
+		public IEnumerable<Voxel> EnumerateVoxels()
+		{
+			IEnumerable<Voxel> result = Enumerable.Empty<Voxel>();
+			foreach (KeyValuePair<long, Region> region in RegionDict)
+			{
+				result = result.Concat(region.Value.BlockDict.Values);
+			}
+
+			return result;
+		}
+
 		
 		#endregion
 
@@ -311,6 +320,7 @@ namespace FileToVox.Schematics
 			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
 			{
 				RegionDict[chunkIndex].BlockDict[voxelIndex].Color = color;
+				RegionDict[chunkIndex].BlockDict[voxelIndex].PalettePosition = UsedColors.IndexOf(color);
 			}
 		}
 

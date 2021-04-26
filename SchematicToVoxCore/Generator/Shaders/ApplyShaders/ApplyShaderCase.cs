@@ -9,14 +9,13 @@ namespace FileToVox.Generator.Shaders
 	{
 		private static Schematic ApplyShaderCase(Schematic schematic, ShaderStep shaderStep)
 		{
-			Schematic stepSchematic = new Schematic(schematic.GetAllVoxels());
 			for (int i = 0; i < shaderStep.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
-				stepSchematic = ProcessShaderCase(stepSchematic);
+				schematic = ProcessShaderCase(schematic);
 			}
 			Console.WriteLine("[INFO] Done.");
-			return stepSchematic;
+			return schematic;
 		}
 
 		private static Schematic ProcessShaderCase(Schematic schematic)
@@ -26,9 +25,8 @@ namespace FileToVox.Generator.Shaders
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				int index = 0;
-				for (int i = 0; i < allVoxels.Count; i++)
+				foreach (Voxel voxel in allVoxels)
 				{
-					Voxel voxel = allVoxels[i];
 					int x = voxel.X;
 					int y = voxel.Y;
 					int z = voxel.Z;
