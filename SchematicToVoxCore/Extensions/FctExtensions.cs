@@ -89,18 +89,6 @@ namespace SchematicToVoxCore.Extensions
             return list;
         }
 
-		public static Dictionary<ulong, Voxel> ToVoxelDictionary(this List<Voxel> voxels)
-		{
-			Dictionary<ulong, Voxel> dictionary = new Dictionary<ulong, Voxel>();
-			foreach (Voxel voxel in voxels)
-			{
-				ulong index = Schematic.GetVoxelIndex(voxel.X, voxel.Y, voxel.Z);
-				dictionary[index] = voxel;
-			}
-
-			return dictionary;
-		}
-      
     }
 
 	

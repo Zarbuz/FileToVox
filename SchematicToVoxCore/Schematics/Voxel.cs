@@ -11,7 +11,7 @@ namespace FileToVox.Schematics
         public readonly ushort X;
         public readonly ushort Y;
         public readonly ushort Z;
-        public readonly int PalettePosition;
+        public int PalettePosition;
         public uint Color;
 
         public Voxel()

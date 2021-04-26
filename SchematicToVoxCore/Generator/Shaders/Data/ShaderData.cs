@@ -21,7 +21,7 @@ namespace FileToVox.Generator.Shaders
 	{
 		public ShaderType ShaderType { get; set; }
 		public int Iterations { get; set; }
-		public int TargetColorIndex { get; set; }
+		public int TargetColorIndex { get; set; } = -1;
 		public int AdditionalColorRange { get; set; }
 		public int Seed { get; set; }
 		public float Density { get; set; }
@@ -36,8 +36,11 @@ namespace FileToVox.Generator.Shaders
 			{
 				case ShaderType.CASE:
 					Console.WriteLine("[INFO] Iterations: " + Iterations);
+					Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
+					Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);
 					break;
 				case ShaderType.PATINA:
+					Console.WriteLine("[INFO] Iterations: " + Iterations);
 					Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
 					Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);
 					Console.WriteLine("[INFO] Seed: " + Seed);
@@ -69,15 +72,16 @@ namespace FileToVox.Generator.Shaders
 				Iterations = 1;
 			}
 
-			if (Iterations > 10)
-			{
-				Console.WriteLine("[WARNING] Replace maximal value of Iterations to 10");
-				Iterations = 10;
-			}
 		}
 
 		private void ValidatePatinaSettings()
 		{
+			if (Iterations < 0)
+			{
+				Console.WriteLine("[WARNING] Negative value found for Iterations, replace to 1...");
+				Iterations = 1;
+			}
+
 			if (TargetColorIndex < 0)
 			{
 				Console.WriteLine("[WARNING] Negative value found for TargetColorIndex, replace to 0...");
@@ -108,9 +112,9 @@ namespace FileToVox.Generator.Shaders
 				Seed = 123;
 			}
 
-			if (Thickness < 0)
+			if (Thickness < 0 || Thickness > 100)
 			{
-				Console.WriteLine("[WARNING] Negative value found for Thickness, replace to 4...");
+				Console.WriteLine("[WARNING] Thickness value must be between 0 and 100");
 				Thickness = 4;
 			}
 

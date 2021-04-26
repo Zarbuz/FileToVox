@@ -1,16 +1,19 @@
 {
   "generatorType": "Shader",
   "steps": [
-    //{
-    //  "shaderType": "CASE",
-    //  "iterations": 3
-    //},
+    {
+      "shaderType": "CASE",
+      "iterations": 30,
+      "TargetColorIndex": 1
+    },
     {
       "shaderType": "PATINA",
+      "iterations": 1,
       "seed": 123,
       "density": 0.3,
       "Thickness": 4,
-      "TargetColorIndex": 10
+      "TargetColorIndex": 1,
+      "AdditionalColorRange": 0
     }
   ]
 }

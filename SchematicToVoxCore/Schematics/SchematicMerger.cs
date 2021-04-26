@@ -29,14 +29,16 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with additive mode");
 
-			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
+			List<Voxel> allVoxels = schematicA.GetAllVoxels();
+			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (var voxel in schematicB.BlockDict)
+				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
+				foreach (var voxel in allVoxelsB)
 				{
-					resultSchematic.AddVoxel(voxel.Value);
-					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
+					resultSchematic.AddVoxel(voxel);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
@@ -48,18 +50,19 @@ namespace FileToVox.Schematics
 		private static Schematic MergeReplace(Schematic schematicA, Schematic schematicB)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with replace mode");
-
-			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
+			List<Voxel> allVoxels = schematicA.GetAllVoxels();
+			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (var voxel in schematicB.BlockDict)
+				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
+				foreach (var voxel in allVoxelsB)
 				{
-					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+					if (resultSchematic.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
 					{
-						resultSchematic.ReplaceVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z, voxel.Value.Color);
+						resultSchematic.ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, voxel.Color);
 					}
-					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
@@ -71,17 +74,19 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with subtract mode");
 
-			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
+			List<Voxel> allVoxels = schematicA.GetAllVoxels();
+			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (var voxel in schematicB.BlockDict)
+				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
+				foreach (var voxel in allVoxelsB)
 				{
-					if (resultSchematic.GetColorAtVoxelIndex(voxel.Value.X, voxel.Value.Y, voxel.Value.Z) != 0)
+					if (resultSchematic.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
 					{
-						resultSchematic.RemoveVoxel(voxel.Value.X, voxel.Value.Y, voxel.Value.Z);
+						resultSchematic.RemoveVoxel(voxel.X, voxel.Y, voxel.Z);
 					}
-					progressbar.Report(index++ / (float)schematicB.BlockDict.Count);
+					progressbar.Report(index++ / (float)allVoxelsB.Count);
 
 				}
 			}
@@ -93,20 +98,22 @@ namespace FileToVox.Schematics
 		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB, HeightmapStep step)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
-
-			Schematic resultSchematic = new Schematic(schematicA.BlockDict);
+			List<Voxel> allVoxels = schematicA.GetAllVoxels();
+			List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
+			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				//int max = schematicA.Length * schematicA.Width;
-				int max = schematicA.BlockDict.Count + schematicB.BlockDict.Count;
+				int max = allVoxels.Count + allVoxelsB.Count;
 				int index = 0;
 
 				Dictionary<int, List<int>> tops = new Dictionary<int, List<int>>();
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematicA.BlockDict)
+
+				foreach (Voxel voxel in allVoxels)
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					if (x == 0 || y == 0 || z == 0)
 						continue;
@@ -153,11 +160,11 @@ namespace FileToVox.Schematics
 					progressbar.Report(index++ / (double)max);
 				}
 
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematicB.BlockDict)
+				foreach (Voxel voxel in allVoxelsB)
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					int index2d = Schematic.GetVoxelIndex2DFromRotation(x, y, z, step.RotationMode);
 
@@ -168,13 +175,13 @@ namespace FileToVox.Schematics
 							switch (step.RotationMode)
 							{
 								case RotationMode.X:
-									resultSchematic.AddVoxel(x + maxHeight + step.OffsetMerge, y, z, voxel.Value.Color);
+									resultSchematic.AddVoxel(x + maxHeight + step.OffsetMerge, y, z, voxel.Color);
 									break;
 								case RotationMode.Y:
-									resultSchematic.AddVoxel(x, y + maxHeight + step.OffsetMerge, z, voxel.Value.Color);
+									resultSchematic.AddVoxel(x, y + maxHeight + step.OffsetMerge, z, voxel.Color);
 									break;
 								case RotationMode.Z:
-									resultSchematic.AddVoxel(x, y, z + maxHeight + step.OffsetMerge, voxel.Value.Color);
+									resultSchematic.AddVoxel(x, y, z + maxHeight + step.OffsetMerge, voxel.Color);
 									break;
 							}
 						}

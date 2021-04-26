@@ -7,30 +7,29 @@ namespace FileToVox.Generator.Shaders
 {
 	public static partial class ShaderUtils
 	{
-		private static Schematic ApplyShaderCase(Schematic schematic, int iterations)
+		private static Schematic ApplyShaderCase(Schematic schematic, ShaderStep shaderStep)
 		{
-			Schematic stepSchematic = schematic;
-			for (int i = 0; i < iterations; i++)
+			for (int i = 0; i < shaderStep.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
-				stepSchematic = ProcessShaderCase(stepSchematic);
+				schematic = ProcessShaderCase(schematic);
 			}
 			Console.WriteLine("[INFO] Done.");
-			return stepSchematic;
+			return schematic;
 		}
 
 		private static Schematic ProcessShaderCase(Schematic schematic)
 		{
-			Schematic resultSchematic = new Schematic(schematic.BlockDict);
+			List<Voxel> allVoxels = schematic.GetAllVoxels(); 
 
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				int index = 0;
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+				foreach (Voxel voxel in allVoxels)
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					if (x == 0 || y == 0 || z == 0)
 						continue;
@@ -41,19 +40,22 @@ namespace FileToVox.Generator.Shaders
 						{
 							for (int minZ = z - 1; minZ < z + 1; minZ++)
 							{
-								if (!schematic.GetVoxel(minX, minY, minZ, out _))
+								if (!schematic.ContainsVoxel(minX, minY, minZ))
 								{
-									resultSchematic.AddVoxel(minX, minY, minZ, voxel.Value.Color);
+									if (mShaderStep.TargetColorIndex != -1 && voxel.PalettePosition == mShaderStep.TargetColorIndex || mShaderStep.TargetColorIndex == -1)
+									{
+										schematic.AddVoxel(minX, minY, minZ, voxel.Color);
+									}
 								}
 							}
 						}
 					}
 
-					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
+					progressBar.Report(index++ / (float) allVoxels.Count);
 				}
 			}
 
-			return resultSchematic;
+			return schematic;
 		}
 	}
 }

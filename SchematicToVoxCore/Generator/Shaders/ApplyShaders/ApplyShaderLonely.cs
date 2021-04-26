@@ -10,16 +10,16 @@ namespace FileToVox.Generator.Shaders
 	{
 		private static Schematic ApplyShaderLonely(Schematic schematic)
 		{
-			Schematic resultSchematic = new Schematic(schematic.BlockDict);
+			List<Voxel> allVoxels = schematic.GetAllVoxels();
 
 			int index = 0;
 			using (ProgressBar progressBar = new ProgressBar())
 			{
-				foreach (KeyValuePair<ulong, Voxel> voxel in schematic.BlockDict)
+				foreach (Voxel voxel in allVoxels)
 				{
-					int x = voxel.Value.X;
-					int y = voxel.Value.Y;
-					int z = voxel.Value.Z;
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
 
 					if (x == 0 || y == 0 || z == 0)
 						continue;
@@ -31,15 +31,15 @@ namespace FileToVox.Generator.Shaders
 					    && schematic.GetColorAtVoxelIndex(x, y, z - 1) == 0
 					    && schematic.GetColorAtVoxelIndex(x, y, z + 1) == 0)
 					{
-						resultSchematic.RemoveVoxel(x, y, z);
+						schematic.RemoveVoxel(x, y, z);
 					}
 
-					progressBar.Report(index++ / (float)schematic.BlockDict.Count);
+					progressBar.Report(index++ / (float)allVoxels.Count);
 
 				}
 			}
 			Console.WriteLine("[INFO] Done.");
-			return resultSchematic;
+			return schematic;
 		}
 	}
 }

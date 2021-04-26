@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Region = FileToVox.Schematics.Region;
 
 namespace FileToVox.Vox
 {
@@ -59,7 +60,7 @@ namespace FileToVox.Vox
 			mCountSize = mWidth * mLength * mHeight;
 			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
-			mTotalBlockCount = mSchematic.BlockDict.Count;
+			mTotalBlockCount = mSchematic.GetAllVoxels().Count;
 
 			Console.WriteLine("[INFO] Total blocks: " + mTotalBlockCount);
 
@@ -170,7 +171,7 @@ namespace FileToVox.Vox
 				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
 				if (Program.DEBUG)
 				{
-					foreach (Voxel voxel in mSchematic.BlockDict.Values)
+					foreach (Voxel voxel in mSchematic.GetAllVoxels())
 					{
 						Console.WriteLine("Missed writing of the voxel: " + voxel);
 					}
@@ -222,15 +223,11 @@ namespace FileToVox.Vox
 		private void WriteXyziChunk(BinaryWriter writer, int index)
 		{
 			writer.Write(Encoding.UTF8.GetBytes(XYZI));
-			IEnumerable<Voxel> blocks = null;
 
-			if (mSchematic.BlockDict.Count > 0)
-			{
-				Region firstBlock = mFirstBlockInEachRegion[index];
-				blocks = mSchematic.GetVoxelInRegion(firstBlock.VoxelIndexUsed);
-				//blocks = _schematic.Blocks.Where(block => block.X >= firstBlock.X && block.Y >= firstBlock.Y && block.Z >= firstBlock.Z && block.X < firstBlock.X + CHUNK_SIZE && block.Y < firstBlock.Y + CHUNK_SIZE && block.Z < firstBlock.Z + CHUNK_SIZE);
-				//blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
-			}
+			Region firstBlock = mFirstBlockInEachRegion[index];
+			IEnumerable<Voxel> blocks = firstBlock.BlockDict.Values;
+			//blocks = _schematic.Blocks.Where(block => block.X >= firstBlock.X && block.Y >= firstBlock.Y && block.Z >= firstBlock.Z && block.X < firstBlock.X + CHUNK_SIZE && block.Y < firstBlock.Y + CHUNK_SIZE && block.Z < firstBlock.Z + CHUNK_SIZE);
+			//blocks = GetBlocksInRegion(new Vector3(firstBlock.X, firstBlock.Y, firstBlock.Z), new Vector3(firstBlock.X + mChunkSize, firstBlock.Y + mChunkSize, firstBlock.Z + mChunkSize));
 			writer.Write((blocks.Count() * 4) + 4); //XYZI chunk size
 			writer.Write(0); //Child chunk size (constant)
 			writer.Write(blocks.Count()); //Blocks count
@@ -250,7 +247,8 @@ namespace FileToVox.Vox
 					writer.Write((byte)1);
 				}
 
-				mSchematic.BlockDict.Remove(block.GetIndex());
+				//mSchematic.RemoveVoxel(block.X, block.Y, block.Z);
+				//firstBlock.BlockDict.Remove(block.GetIndex());
 			}
 		}
 
@@ -436,26 +434,5 @@ namespace FileToVox.Vox
 		}
 	}
 
-	public class Region
-	{
-		public int X;
-		public int Y;
-		public int Z;
-		public int UsageCount;
-		public HashSet<ulong> VoxelIndexUsed;
-
-		public Region(int x, int y, int z)
-		{
-			X = x;
-			Y = y;
-			Z = z;
-			UsageCount = 0;
-			VoxelIndexUsed = new HashSet<ulong>();
-		}
-
-		public override string ToString()
-		{
-			return $"{X} {Y} {Z} {UsageCount}";
-		}
-	}
+	
 }

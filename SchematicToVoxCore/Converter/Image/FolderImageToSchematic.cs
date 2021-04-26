@@ -78,7 +78,7 @@ namespace FileToVox.Converter.Image
             }
 
             List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
-            Schematic schematic = new Schematic(list.ToVoxelDictionary());
+            Schematic schematic = new Schematic(list);
 
             Console.WriteLine("[INFO] Done.");
             return schematic;
