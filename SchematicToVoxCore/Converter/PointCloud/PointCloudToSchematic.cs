@@ -13,13 +13,13 @@ namespace FileToVox.Converter.PointCloud
 {
 	public abstract class PointCloudToSchematic : AbstractToSchematic
 	{
-		protected readonly List<Voxel> _blocks = new List<Voxel>();
-		protected readonly float _scale;
-		protected readonly int _colorLimit;
+		protected readonly float Scale;
+		protected readonly int ColorLimit;
+		private Schematic mSchematic;
 		protected PointCloudToSchematic(string path, float scale, int colorLimit) : base(path)
 		{
-			_scale = scale;
-			_colorLimit = colorLimit;
+			Scale = scale;
+			ColorLimit = colorLimit;
 		}
 
 		protected abstract BodyDataDTO ReadContentFile();
@@ -30,59 +30,64 @@ namespace FileToVox.Converter.PointCloud
 			Vector3 minY = data.BodyVertices.MinBy(t => t.Y);
 			Vector3 minZ = data.BodyVertices.MinBy(t => t.Z);
 
+			Vector3 maxX = data.BodyVertices.MaxBy(t => t.X);
+			Vector3 maxY = data.BodyVertices.MaxBy(t => t.Y);
+			Vector3 maxZ = data.BodyVertices.MaxBy(t => t.Z);
+
 			float min = Math.Abs(Math.Min(minX.X, Math.Min(minY.Y, minZ.Z)));
+
 			for (int i = 0; i < data.BodyVertices.Count; i++)
 			{
 				data.BodyVertices[i] += new Vector3(min, min, min);
-				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * _scale), (float)Math.Truncate(data.BodyVertices[i].Y * _scale), (float)Math.Truncate(data.BodyVertices[i].Z * _scale));
+				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * Scale), (float)Math.Truncate(data.BodyVertices[i].Y * Scale), (float)Math.Truncate(data.BodyVertices[i].Z * Scale));
 			}
 
-			HashSet<Vector3> set = new HashSet<Vector3>();
-			List<Vector3> vertices = new List<Vector3>();
-			List<Color> colors = new List<Color>();
+			mSchematic = new Schematic();
+			//HashSet<Vector3> set = new HashSet<Vector3>();
+			
+			min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
 
 			Console.WriteLine("[INFO] Started to voxelize data...");
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				for (int i = 0; i < data.BodyVertices.Count; i++)
 				{
-					if (!set.Contains(data.BodyVertices[i]))
+					float max = Math.Max(data.BodyVertices[i].X, Math.Max(data.BodyVertices[i].Y, data.BodyVertices[i].Z));
+					if (max - min >= 0)
 					{
-						set.Add(data.BodyVertices[i]);
-						vertices.Add(data.BodyVertices[i]);
-						colors.Add(data.BodyColors[i]);
+						data.BodyVertices[i] -= new Vector3(min, min, min);
+						mSchematic.AddVoxel((int)(data.BodyVertices[i].X - minX.X), (int)(data.BodyVertices[i].Y - minY.Y), (int)(data.BodyVertices[i].Z - minZ.Z), data.BodyColors[i].ColorToUInt());
 					}
+					//if (!set.Contains(data.BodyVertices[i]))
+					//{
+					//	set.Add(data.BodyVertices[i]);
+					//	//vertices.Add(data.BodyVertices[i]);
+					//	//colors.Add(data.BodyColors[i]);
+					//}
 					progressbar.Report(i / (float)data.BodyVertices.Count);
 				}
 			}
 			Console.WriteLine("[INFO] Done.");
 
-			minX = vertices.MinBy(t => t.X);
-			minY = vertices.MinBy(t => t.Y);
-			minZ = vertices.MinBy(t => t.Z);
+			//minX = vertices.MinBy(t => t.X);
+			//minY = vertices.MinBy(t => t.Y);
+			//minZ = vertices.MinBy(t => t.Z);
 
-			min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
-			for (int i = 0; i < vertices.Count; i++)
-			{
-				float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
-				if (/*max - min < 8000 && */max - min >= 0)
-				{
-					vertices[i] -= new Vector3(min, min, min);
-					_blocks.Add(new Voxel((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
-				}
-			}
+			//for (int i = 0; i < vertices.Count; i++)
+			//{
+			//	float max = Math.Max(vertices[i].X, Math.Max(vertices[i].Y, vertices[i].Z));
+			//	if (/*max - min < 8000 && */max - min >= 0)
+			//	{
+			//		vertices[i] -= new Vector3(min, min, min);
+			//		_blocks.Add(new Voxel((ushort)vertices[i].X, (ushort)vertices[i].Y, (ushort)vertices[i].Z, colors[i].ColorToUInt()));
+			//	}
+			//}
 		}
 		
 
 		public override Schematic WriteSchematic()
 		{
-			float minX = _blocks.MinBy(t => t.X).X;
-			float minY = _blocks.MinBy(t => t.Y).Y;
-			float minZ = _blocks.MinBy(t => t.Z).Z;
-
-			List<Voxel> list = Quantization.ApplyQuantization(_blocks, _colorLimit);
-			list.ApplyOffset(new Vector3(minX, minY, minZ));
-
+			List<Voxel> list = Quantization.ApplyQuantization(mSchematic.GetAllVoxels(), ColorLimit);
 			Schematic schematic = new Schematic(list);
 			return schematic;
 		}
