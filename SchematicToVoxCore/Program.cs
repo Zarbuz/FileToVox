@@ -193,6 +193,15 @@ namespace FileToVox
 			{
 				isFolder = true;
 			}
+
+			if (!string.IsNullOrEmpty(INPUT_SHADER_FILE))
+			{
+				string pathShaders = Path.GetFullPath(INPUT_SHADER_FILE);
+				if (!File.Exists(pathShaders))
+				{
+					throw new FileNotFoundException("[ERROR] Input shaders file not found at: ", pathShaders);
+				}
+			}
 			try
 			{
 				AbstractToSchematic converter;
