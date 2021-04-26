@@ -30,10 +30,6 @@ namespace FileToVox.Converter.PointCloud
 			Vector3 minY = data.BodyVertices.MinBy(t => t.Y);
 			Vector3 minZ = data.BodyVertices.MinBy(t => t.Z);
 
-			Vector3 maxX = data.BodyVertices.MaxBy(t => t.X);
-			Vector3 maxY = data.BodyVertices.MaxBy(t => t.Y);
-			Vector3 maxZ = data.BodyVertices.MaxBy(t => t.Z);
-
 			float min = Math.Abs(Math.Min(minX.X, Math.Min(minY.Y, minZ.Z)));
 
 			for (int i = 0; i < data.BodyVertices.Count; i++)
@@ -44,7 +40,11 @@ namespace FileToVox.Converter.PointCloud
 
 			mSchematic = new Schematic();
 			//HashSet<Vector3> set = new HashSet<Vector3>();
-			
+
+			minX = data.BodyVertices.MinBy(t => t.X);
+			minY = data.BodyVertices.MinBy(t => t.Y);
+			minZ = data.BodyVertices.MinBy(t => t.Z);
+
 			min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
 
 			Console.WriteLine("[INFO] Started to voxelize data...");
