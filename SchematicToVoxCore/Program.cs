@@ -186,7 +186,7 @@ namespace FileToVox
 			{
 				if (!File.Exists(path))
 				{
-					throw new FileNotFoundException("[ERROR] Input file not found", INPUT_PATH);
+					throw new FileNotFoundException("[ERROR] Input file not found at: ", path);
 				}
 			}
 			else
