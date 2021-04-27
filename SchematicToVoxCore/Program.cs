@@ -27,11 +27,8 @@ namespace FileToVox
 		private static bool COLOR;
 		private static bool SLICE;
 
-		private static float SLOW;
-
 		private static float SCALE = 1;
 		private static int HEIGHT_MAP = 1;
-		private static int GRID_SIZE = 128;
 		private static int COLOR_LIMIT = 256;
 		public static int CHUNK_SIZE = 128;
 
@@ -47,13 +44,11 @@ namespace FileToVox
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
 				{"cs|chunk-size=", "set the chunk size", (int v) => CHUNK_SIZE = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
-				{"gs|grid-size=", "set the grid size", (int v) => GRID_SIZE = v },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
-				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
 				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
 			};
 
@@ -158,12 +153,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
 				Console.WriteLine("[INFO] Specified increase size: " + SCALE);
-			if (GRID_SIZE != 128)
-				Console.WriteLine("[INFO] Specified grid size: " + GRID_SIZE);
 			if (CHUNK_SIZE != 128)
 				Console.WriteLine("[INFO] Specified chunk size: " + CHUNK_SIZE);
-			if (SLOW != 0)
-				Console.WriteLine("[INFO] Specified winding_number: " + SLOW);
 			if (EXCAVATE)
 				Console.WriteLine("[INFO] Enabled option: excavate");
 			if (COLOR)
@@ -262,8 +253,6 @@ namespace FileToVox
 					return new BinvoxToSchematic(path);
 				case ".csv":
 					return new CSVToSchematic(path, SCALE, COLOR_LIMIT);
-				case ".obj":
-					return new OBJToSchematic(path, GRID_SIZE, EXCAVATE, SLOW);
 				case ".ply":
 					return new PLYToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".png":
