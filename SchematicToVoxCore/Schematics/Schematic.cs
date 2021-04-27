@@ -263,18 +263,6 @@ namespace FileToVox.Schematics
 			return voxels;
 		}
 
-		public IEnumerable<Voxel> EnumerateVoxels()
-		{
-			IEnumerable<Voxel> result = Enumerable.Empty<Voxel>();
-			foreach (KeyValuePair<long, Region> region in RegionDict)
-			{
-				result = result.Concat(region.Value.BlockDict.Values);
-			}
-
-			return result;
-		}
-
-		
 		#endregion
 
 		#region PrivateMethods
@@ -311,9 +299,8 @@ namespace FileToVox.Schematics
 
 		private void ReplaceUsageForRegion(int x, int y, int z, uint color)
 		{
-			int chunkX = x / Program.CHUNK_SIZE;
-			int chunkY = y / Program.CHUNK_SIZE;
-			int chunkZ = z / Program.CHUNK_SIZE;
+			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
+
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
 

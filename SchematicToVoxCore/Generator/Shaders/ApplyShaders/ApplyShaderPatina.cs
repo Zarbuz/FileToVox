@@ -2,19 +2,22 @@
 using FileToVox.Utils;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Generator.Shaders
 {
 	public static partial class ShaderUtils
 	{
+		private static bool mShouldBreak;
 		private static Schematic ApplyShaderPatina(Schematic schematic, ShaderStep shaderStep)
 		{
 			for (int i = 0; i < shaderStep.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
 				schematic = ProcessShaderPatina(schematic);
+				if (mShouldBreak)
+				{
+					break;
+				}
 			}
 
 			Console.WriteLine("[INFO] Done.");
@@ -33,13 +36,22 @@ namespace FileToVox.Generator.Shaders
 					if (Grows(schematic, voxel))
 					{
 						uint newColor = GetCrowColor(schematic, voxel);
-						schematic.ReplaceVoxel(voxel, newColor);
-						colorChanged++;
+						if (voxel.Color != newColor)
+						{
+							schematic.ReplaceVoxel(voxel, newColor);
+							colorChanged++;
+						}
 					}
 
 					progressBar.Report(index++ / (float)(allVoxels.Count));
 				}
 				Console.WriteLine("COLOR CHANGED: " + colorChanged);
+
+				if (colorChanged == 0)
+				{
+					mShouldBreak = true;
+					Console.WriteLine("NO COLORS CHANGED, BREAK");
+				}
 			}
 
 			return schematic;
@@ -52,9 +64,9 @@ namespace FileToVox.Generator.Shaders
 
 		private static float Random(Voxel voxel, float seed)
 		{
-			int x = voxel.X / Program.CHUNK_SIZE ;
-			int y = voxel.Y / Program.CHUNK_SIZE ;
-			int z = voxel.Z / Program.CHUNK_SIZE ;
+			int x = voxel.X + 1;
+			int y = voxel.Y + 1;
+			int z = voxel.Z + 1;
 			float n = x * y * z + seed;
 			return MathF.Abs(Fract(MathF.Sin((1 / MathF.Tan(n) + seed * 1235.342f))));
 		}
@@ -125,22 +137,22 @@ namespace FileToVox.Generator.Shaders
 		{
 			int neighbors = 0;
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z + 1, out Voxel foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y + 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
@@ -155,12 +167,12 @@ namespace FileToVox.Generator.Shaders
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
 			{
 				neighbors++;
 			}
@@ -242,8 +254,8 @@ namespace FileToVox.Generator.Shaders
 
 			if (HasWallNextToIt(schematic, voxel, 1))
 			{
-				int x = voxel.X / Program.CHUNK_SIZE;
-				int z = voxel.Z / Program.CHUNK_SIZE;
+				int x = voxel.X + 1;
+				int z = voxel.Z + 1;
 				if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(foundVoxel) && (x + z) % 13 == 0)
 				{
 					return true;

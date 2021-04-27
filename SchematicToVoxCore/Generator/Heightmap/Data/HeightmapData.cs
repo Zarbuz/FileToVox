@@ -51,14 +51,19 @@ namespace FileToVox.Generator.Heightmap.Data
 				throw new ArgumentException("[ERROR] Missing TexturePath");
 			}
 
+			TexturePath = Path.GetFullPath(TexturePath);
 			if (!string.IsNullOrEmpty(TexturePath) && !File.Exists(TexturePath))
 			{
 				throw new ArgumentException("[ERROR] The TexturePath is invalid: " + TexturePath);
 			}
 
-			if (!string.IsNullOrEmpty(ColorTexturePath) && !File.Exists(ColorTexturePath))
+			if (!string.IsNullOrEmpty(ColorTexturePath))
 			{
-				throw new ArgumentException("[ERROR] The TexturePath is invalid: " + ColorTexturePath);
+				ColorTexturePath = Path.GetFullPath(ColorTexturePath);
+				if (!File.Exists(ColorTexturePath))
+				{
+					throw new ArgumentException("[ERROR] The TexturePath is invalid: " + ColorTexturePath);
+				}
 			}
 
 			if (Offset < 0)

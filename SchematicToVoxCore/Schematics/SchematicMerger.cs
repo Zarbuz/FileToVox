@@ -29,62 +29,56 @@ namespace FileToVox.Schematics
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with additive mode");
 
-			List<Voxel> allVoxels = schematicA.GetAllVoxels();
-			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
 				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
-				foreach (var voxel in allVoxelsB)
+				foreach (Voxel voxel in allVoxelsB)
 				{
-					resultSchematic.AddVoxel(voxel);
+					schematicA.AddVoxel(voxel);
 					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
 			Console.WriteLine("[INFO] Done");
 
-			return resultSchematic;
+			return schematicA;
 		}
 
 		private static Schematic MergeReplace(Schematic schematicA, Schematic schematicB)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with replace mode");
-			List<Voxel> allVoxels = schematicA.GetAllVoxels();
-			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
 				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
 				foreach (var voxel in allVoxelsB)
 				{
-					if (resultSchematic.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
+					if (schematicA.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
 					{
-						resultSchematic.ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, voxel.Color);
+						schematicA.ReplaceVoxel(voxel.X, voxel.Y, voxel.Z, voxel.Color);
 					}
 					progressbar.Report(index++ / (float)allVoxelsB.Count);
 				}
 			}
 
 			Console.WriteLine("[INFO] Done");
-			return resultSchematic;
+			return schematicA;
 		}
 
 		private static Schematic MergeSubstract(Schematic schematicA, Schematic schematicB)
 		{
 			Console.WriteLine("[INFO] Start to merge schematic with subtract mode");
 
-			List<Voxel> allVoxels = schematicA.GetAllVoxels();
-			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int index = 0;
 				List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
 				foreach (var voxel in allVoxelsB)
 				{
-					if (resultSchematic.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
+					if (schematicA.GetColorAtVoxelIndex(voxel.X, voxel.Y, voxel.Z) != 0)
 					{
-						resultSchematic.RemoveVoxel(voxel.X, voxel.Y, voxel.Z);
+						schematicA.RemoveVoxel(voxel.X, voxel.Y, voxel.Z);
 					}
 					progressbar.Report(index++ / (float)allVoxelsB.Count);
 
@@ -92,7 +86,7 @@ namespace FileToVox.Schematics
 			}
 
 			Console.WriteLine("[INFO] Done");
-			return resultSchematic;
+			return schematicA;
 		}
 
 		private static Schematic MergeTopOnly(Schematic schematicA, Schematic schematicB, HeightmapStep step)
@@ -100,7 +94,6 @@ namespace FileToVox.Schematics
 			Console.WriteLine("[INFO] Start to merge schematic with top only mode");
 			List<Voxel> allVoxels = schematicA.GetAllVoxels();
 			List<Voxel> allVoxelsB = schematicB.GetAllVoxels();
-			Schematic resultSchematic = new Schematic(allVoxels);
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				//int max = schematicA.Length * schematicA.Width;
@@ -175,13 +168,13 @@ namespace FileToVox.Schematics
 							switch (step.RotationMode)
 							{
 								case RotationMode.X:
-									resultSchematic.AddVoxel(x + maxHeight + step.OffsetMerge, y, z, voxel.Color);
+									schematicA.AddVoxel(x + maxHeight + step.OffsetMerge, y, z, voxel.Color);
 									break;
 								case RotationMode.Y:
-									resultSchematic.AddVoxel(x, y + maxHeight + step.OffsetMerge, z, voxel.Color);
+									schematicA.AddVoxel(x, y + maxHeight + step.OffsetMerge, z, voxel.Color);
 									break;
 								case RotationMode.Z:
-									resultSchematic.AddVoxel(x, y, z + maxHeight + step.OffsetMerge, voxel.Color);
+									schematicA.AddVoxel(x, y, z + maxHeight + step.OffsetMerge, voxel.Color);
 									break;
 							}
 						}
@@ -193,7 +186,7 @@ namespace FileToVox.Schematics
 			}
 
 			Console.WriteLine("[INFO] Done");
-			return resultSchematic;
+			return schematicA;
 		}
 	}
 }
