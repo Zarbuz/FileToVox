@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace FileToVox
 {
@@ -55,6 +56,7 @@ namespace FileToVox
 			try
 			{
 				List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
+				DisplayInformations();
 				CheckHelp(options);
 				CheckArguments();
 				DisplayArguments();
@@ -83,6 +85,12 @@ namespace FileToVox
 				Console.WriteLine("Try `FileToVox --help` for more informations.");
 				Console.ReadLine();
 			}
+		}
+
+		private static void DisplayInformations()
+		{
+			Console.WriteLine("[INFO] FileToVox v" + Assembly.GetExecutingAssembly().GetName().Version);
+			Console.WriteLine("[INFO] Author: @Zarbuz. Contact : https://twitter.com/Zarbuz");
 		}
 
 		private static string[] CheckArgumentsFile()
