@@ -2,11 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>FileToVox.Program</StartupObject>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <ApplicationIcon />
+    <Authors>Zarbuz</Authors>
+    <Version>1.12</Version>
+    <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,7 +35,6 @@
   <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.633" />
     <PackageReference Include="fNbt" Version="0.6.4" />
-    <PackageReference Include="geometry3Sharp" Version="1.0.324" />
     <PackageReference Include="NDesk.Options.Core" Version="1.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
     <PackageReference Include="nQuant" Version="1.0.3" />
@@ -56,6 +59,9 @@
     </None>
     <None Update="JsonPresets\noise\NoiseMoisture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JsonPresets\shaderGenerator.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="JsonPresets\terrainGenerator.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

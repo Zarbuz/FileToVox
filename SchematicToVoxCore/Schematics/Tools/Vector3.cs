@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using FileToVox.Utils;
 
 namespace FileToVox.Schematics.Tools
 {

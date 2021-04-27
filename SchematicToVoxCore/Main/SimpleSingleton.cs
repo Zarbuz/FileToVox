@@ -1,9 +1,14 @@
-﻿namespace FileToVox.Utils
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FileToVox.Main
 {
 	public abstract class SimpleSingleton<T> where T : class, new()
 	{
-		private static T mInstance;
+		#region ConstStatic
 
+		private static T mInstance;
 		public static T Instance
 		{
 			get
@@ -16,5 +21,7 @@
 				return mInstance;
 			}
 		}
+
+		#endregion
 	}
 }

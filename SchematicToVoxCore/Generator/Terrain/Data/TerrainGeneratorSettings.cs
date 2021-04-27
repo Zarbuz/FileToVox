@@ -382,7 +382,13 @@ namespace FileToVox.Generator.Terrain.Data
 						}
 						else
 						{
+							//float moisture = mHeightChunkData[arrayIndex].Moisture;
+							//Color colorTop = biome.VoxelTop;
+							//Color newColor = Color.FromArgb((int) (colorTop.R * moisture), (int)(colorTop.G * moisture), (int)(colorTop.B * moisture));
+							//voxels[voxelIndex].Color = newColor.ColorToUInt();
+
 							voxels[voxelIndex].Color = biome.VoxelTop.ColorToUInt();
+
 							if (pos.Y > waterLevel)
 							{
 								float rdn = WorldRandom.GetValue(pos);

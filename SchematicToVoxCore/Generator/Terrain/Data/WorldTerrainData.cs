@@ -5,6 +5,9 @@ namespace FileToVox.Generator.Terrain.Data
 {
 	public class WorldTerrainData : JsonBaseImportData
 	{
+		public int Width { get; set; }
+		public int Length { get; set; }
+
 		public int Seed { get; set; }
 		public BiomeSettings[] Biomes { get; set; }
 

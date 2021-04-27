@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Generator.Shaders;
 
 namespace FileToVox.Converter.Json
 {
@@ -36,9 +37,8 @@ namespace FileToVox.Converter.Json
 					return JsonConvert.DeserializeObject<WorldTerrainData>(jo.ToString(), SpecifiedSubclassConversion);
 				case GeneratorType.Heightmap:
 					return JsonConvert.DeserializeObject<HeightmapData>(jo.ToString(), SpecifiedSubclassConversion);
-				case GeneratorType.City:
-					//TODO
-					break;
+				case GeneratorType.Shader:
+					return JsonConvert.DeserializeObject<ShaderData>(jo.ToString(), SpecifiedSubclassConversion);
 				default:
 					throw new Exception();
 			}

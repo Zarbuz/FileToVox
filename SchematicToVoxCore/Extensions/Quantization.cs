@@ -13,6 +13,12 @@ namespace FileToVox.Extensions
             Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
             try
             {
+	            if (blocks.Count == 0)
+	            {
+					Console.WriteLine("[WARNING] No voxels to quantize, skipping this part...");
+					return blocks;
+	            }
+
                 using (Bitmap bitmap = CreateBitmapFromColors(blocks))
                 {
                     using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))

@@ -7,7 +7,6 @@ Current files support:
 - .binvox
 - .csv
 - .json (House-made format)
-- .obj
 - .ply (Binary and ASCII)
 - .png
 - .schematic
@@ -56,13 +55,11 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 --cs       --chunk-size=VALUE         set the chunk size (default: 128, min: 11, max: 256)
 --e        --excavate                 delete all voxels which doesn't have at least one face connected with air
 
---gs       --grid-size=VALUE          set the grid size
 --h        --help                     help informations
 --hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height
 --p        --palette=VALUE            set the palette
 --si       --slice                    flag the current input folder as slice
 --sc       --scale=VALUE              set the scale
---sl       --slow=VALUE               use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)
 --v,        -verbose                  enable the verbose mode
  ```
 
@@ -85,12 +82,10 @@ Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.co
 | `--excavate`        | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
 | `--fix-lonely`      | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--fix-holes`       | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `--grid-size`       | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | `--palette`         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `--slice`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
-| `--slow`            | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ### 2. Batching
 

@@ -72,7 +72,7 @@ namespace FileToVox.Utils
 
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				Console.WriteLine("[LOG] Started to write schematic from picture...");
+				Console.WriteLine("[INFO] Started to write schematic from picture...");
 				Console.WriteLine("[INFO] Picture Width: " + bitmap.Width);
 				Console.WriteLine("[INFO] Picture Height: " + bitmap.Height);
 
@@ -110,7 +110,7 @@ namespace FileToVox.Utils
 				}
 			}
 
-			Console.WriteLine("[LOG] Done.");
+			Console.WriteLine("[INFO] Done.");
 			return schematic;
 		}
 

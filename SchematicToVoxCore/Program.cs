@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using FileToVox.Converter;
+﻿using FileToVox.Converter;
 using FileToVox.Converter.Image;
 using FileToVox.Converter.Json;
 using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
-using FileToVox.Utils;
 using FileToVox.Vox;
 using NDesk.Options;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace FileToVox
 {
@@ -21,21 +21,15 @@ namespace FileToVox
 		private static string OUTPUT_PATH;
 		private static string INPUT_COLOR_FILE;
 		private static string INPUT_PALETTE_FILE;
+		private static string INPUT_SHADER_FILE;
 
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
 		private static bool SLICE;
 
-		private static bool SHADER_FIX_HOLES;
-		private static bool SHADER_FIX_LONELY;
-		private static bool SHADER_CASE;
-
-		private static float SLOW;
-
 		private static float SCALE = 1;
 		private static int HEIGHT_MAP = 1;
-		private static int GRID_SIZE = 128;
 		private static int COLOR_LIMIT = 256;
 		public static int CHUNK_SIZE = 128;
 
@@ -45,26 +39,24 @@ namespace FileToVox
 			{
 				{"i|input=", "input path", v => INPUT_PATH = v},
 				{"o|output=", "output path", v => OUTPUT_PATH = v},
+				{"s|shaders=", "input shader path", v => INPUT_SHADER_FILE = v},
 				{"c|color", "enable color when generating heightmap", v => COLOR = v != null},
 				{"cm|color-from-file=", "load colors from file", v => INPUT_COLOR_FILE = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
 				{"cs|chunk-size=", "set the chunk size", (int v) => CHUNK_SIZE = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
-				{"flo|fix-lonely", "delete all voxels where all connected voxels are air", v => SHADER_FIX_LONELY = v != null },
-				{"fh|fix-holes", "fix holes", v => SHADER_FIX_HOLES = v != null },
-				{"gs|grid-size=", "set the grid size", (int v) => GRID_SIZE = v },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
-				{"sl|slow=", "use a slower algorithm (use all cores) to generate voxels from OBJ but best result (value should be enter 0.0 and 1.0 (0.5 is recommended)", (float v) => SLOW = v },
 				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
 			};
 
 			try
 			{
 				List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
+				DisplayInformations();
 				CheckHelp(options);
 				CheckArguments();
 				DisplayArguments();
@@ -80,7 +72,7 @@ namespace FileToVox
 					CheckVerbose();
 				}
 
-				Console.WriteLine("[LOG] Done.");
+				Console.WriteLine("[INFO] Done.");
 				if (DEBUG)
 				{
 					Console.ReadKey();
@@ -93,6 +85,12 @@ namespace FileToVox
 				Console.WriteLine("Try `FileToVox --help` for more informations.");
 				Console.ReadLine();
 			}
+		}
+
+		private static void DisplayInformations()
+		{
+			Console.WriteLine("[INFO] FileToVox v" + Assembly.GetExecutingAssembly().GetName().Version);
+			Console.WriteLine("[INFO] Author: @Zarbuz. Contact : https://twitter.com/Zarbuz");
 		}
 
 		private static string[] CheckArgumentsFile()
@@ -141,12 +139,10 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --scale argument must be positive");
 			if (HEIGHT_MAP < 1)
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
-			if (COLOR_LIMIT < 0)
-				throw new ArgumentException("[ERROR] --color-limit argument must be positive");
-			if (COLOR_LIMIT > 256)
-				throw new ArgumentException("[ERROR] --color-limit argument must be lower than 256");
+			if (COLOR_LIMIT < 0 || COLOR_LIMIT > 256)
+				throw new ArgumentException("[ERROR] --color-limit argument must be between 1 and 256");
 			if (CHUNK_SIZE <= 10 || CHUNK_SIZE > 257)
-				throw new ArgumentException("[ERROR] --chunk-size argument must be lower than 257 and greater than 10");
+				throw new ArgumentException("[ERROR] --chunk-size argument must be between 10 and 256");
 		}
 
 		private static void DisplayArguments()
@@ -159,26 +155,20 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified input color file: " + INPUT_COLOR_FILE);
 			if (INPUT_PALETTE_FILE != null)
 				Console.WriteLine("[INFO] Specified palette file: " + INPUT_PALETTE_FILE);
+			if (INPUT_SHADER_FILE != null)
+				Console.WriteLine("[INFO] Specified shaders file: " + INPUT_SHADER_FILE);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
 				Console.WriteLine("[INFO] Specified increase size: " + SCALE);
-			if (GRID_SIZE != 128)
-				Console.WriteLine("[INFO] Specified grid size: " + GRID_SIZE);
 			if (CHUNK_SIZE != 128)
 				Console.WriteLine("[INFO] Specified chunk size: " + CHUNK_SIZE);
-			if (SLOW != 0)
-				Console.WriteLine("[INFO] Specified winding_number: " + SLOW);
 			if (EXCAVATE)
 				Console.WriteLine("[INFO] Enabled option: excavate");
 			if (COLOR)
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (SHADER_FIX_HOLES)
-				Console.WriteLine("[INFO] Enabled option: fix-holes");
-			if (SHADER_FIX_LONELY)
-				Console.WriteLine("[INFO] Enabled option: fix-lonely");
 			if (SLICE)
 				Console.WriteLine("[INFO] Enabled option: slice");
 			if (DEBUG)
@@ -195,12 +185,21 @@ namespace FileToVox
 			{
 				if (!File.Exists(path))
 				{
-					throw new FileNotFoundException("[ERROR] Input file not found", INPUT_PATH);
+					throw new FileNotFoundException("[ERROR] Input file not found at: ", path);
 				}
 			}
 			else
 			{
 				isFolder = true;
+			}
+
+			if (!string.IsNullOrEmpty(INPUT_SHADER_FILE))
+			{
+				string pathShaders = Path.GetFullPath(INPUT_SHADER_FILE);
+				if (!File.Exists(pathShaders))
+				{
+					throw new FileNotFoundException("[ERROR] Input shaders file not found at: ", pathShaders);
+				}
 			}
 			try
 			{
@@ -262,8 +261,6 @@ namespace FileToVox
 					return new BinvoxToSchematic(path);
 				case ".csv":
 					return new CSVToSchematic(path, SCALE, COLOR_LIMIT);
-				case ".obj":
-					return new OBJToSchematic(path, GRID_SIZE, EXCAVATE, SLOW);
 				case ".ply":
 					return new PLYToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".png":
@@ -305,14 +302,10 @@ namespace FileToVox
 				return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", converterPalette.GetPalette(), schematic);
 			}
 
-			if (SHADER_FIX_HOLES)
+			if (INPUT_SHADER_FILE != null)
 			{
-				schematic = ShaderUtils.FillHoles(schematic);
-			}
-
-			if (SHADER_FIX_LONELY)
-			{
-				schematic = ShaderUtils.FixLonelyVoxels(schematic);
+				JsonToSchematic jsonParser = new JsonToSchematic(INPUT_SHADER_FILE, schematic);
+				schematic = jsonParser.WriteSchematic();
 			}
 
 			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);

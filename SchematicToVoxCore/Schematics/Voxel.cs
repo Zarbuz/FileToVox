@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using FileToVox.Utils;
 
 namespace FileToVox.Schematics
 {
@@ -9,22 +11,13 @@ namespace FileToVox.Schematics
         public readonly ushort X;
         public readonly ushort Y;
         public readonly ushort Z;
-        public readonly int PalettePosition;
+        public int PalettePosition;
         public uint Color;
 
         public Voxel()
 		{
 
 		}
-
-        public Voxel(ushort x, ushort y, ushort z)
-        {
-	        X = x;
-	        Y = y;
-	        Z = z;
-	        Color = 0;
-	        PalettePosition = 0;
-        }
 
         public Voxel(ushort x, ushort y, ushort z, uint color, int palettePosition = -1)
         {
