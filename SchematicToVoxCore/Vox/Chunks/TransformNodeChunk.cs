@@ -33,5 +33,11 @@ namespace FileToVox.Vox.Chunks
                 return kv.Key != null ? kv.Value != "0" : false;
             }
         }
+
+        public override string ToString()
+        {
+	        Vector3 position = TranslationAt();
+	        return $"{position.X} {position.Y} {position.Z}";
+        }
     }
 }
