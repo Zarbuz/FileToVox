@@ -33,11 +33,6 @@ namespace FileToVox.Generator.Heightmap
 				step.ValidateSettings();
 				step.DisplayInfo();
 
-				if (step.PlacementMode == PlacementMode.TOP_ONLY && index == 0)
-				{
-					Console.WriteLine("[ERROR] PlacementMode TOP_ONLY shouldn't be at the first step");
-				}
-
 				Bitmap bitmap = new Bitmap(new FileInfo(step.TexturePath).FullName);
 				Bitmap bitmapColor = null;
 				if (!string.IsNullOrEmpty(step.ColorTexturePath))

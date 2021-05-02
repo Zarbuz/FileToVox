@@ -6,9 +6,9 @@ using FileToVox.Utils;
 
 namespace FileToVox.Generator.Shaders
 {
-	public static partial class ShaderUtils
+	public class ApplyShaderFixLonely : IShaderGenerator
 	{
-		private static Schematic ApplyShaderLonely(Schematic schematic)
+		public Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
 		{
 			List<Voxel> allVoxels = schematic.GetAllVoxels();
 
@@ -41,5 +41,6 @@ namespace FileToVox.Generator.Shaders
 			Console.WriteLine("[INFO] Done.");
 			return schematic;
 		}
+		
 	}
 }

@@ -4,11 +4,13 @@
     {
       "texturePath": "",
       "colorTexturePath": "",
-      "height": 200, 
+      "height": 200,
       "offset": 0,
-      "colorLimit": 256, 
-      "enableColor":  true, 
+      "offsetMerge": 0,
+      "colorLimit": 256,
+      "enableColor": true,
       "excavate": true,
+      "reverse": false,
       "placementMode": "ADDITIVE",
       "rotationMode": "Y"
     }

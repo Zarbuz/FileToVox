@@ -44,7 +44,7 @@ namespace FileToVox.Converter.Json
 							break;
 						case GeneratorType.Heightmap:
 							HeightmapData heightmapData = data as HeightmapData;
-							mGenerator = new HeightmapGenerator(heightmapData);
+							mGenerator = new HeightmapGenerator(heightmapData, mSchematic);
 							break;
 						case GeneratorType.Shader:
 							ShaderData shaderData = data as ShaderData;

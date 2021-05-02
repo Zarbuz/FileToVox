@@ -2,23 +2,27 @@
 using FileToVox.Utils;
 using System;
 using System.Collections.Generic;
+using FileToVox.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders
 {
-	public static partial class ShaderUtils
+	public class ApplyShaderCase : IShaderGenerator
 	{
-		private static Schematic ApplyShaderCase(Schematic schematic, ShaderStep shaderStep)
+		private ShaderCase mShaderCase;
+
+		public Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
 		{
-			for (int i = 0; i < shaderStep.Iterations; i++)
+			mShaderCase = shaderStep as ShaderCase;
+			for (int i = 0; i < mShaderCase.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
-				schematic = ProcessShaderCase(schematic);
+				schematic = ProcessShaderCase(schematic, mShaderCase);
 			}
 			Console.WriteLine("[INFO] Done.");
 			return schematic;
 		}
 
-		private static Schematic ProcessShaderCase(Schematic schematic)
+		private Schematic ProcessShaderCase(Schematic schematic, ShaderCase shaderCase)
 		{
 			List<Voxel> allVoxels = schematic.GetAllVoxels(); 
 
@@ -42,7 +46,7 @@ namespace FileToVox.Generator.Shaders
 							{
 								if (!schematic.ContainsVoxel(minX, minY, minZ))
 								{
-									if (mShaderStep.TargetColorIndex != -1 && voxel.PalettePosition == mShaderStep.TargetColorIndex || mShaderStep.TargetColorIndex == -1)
+									if (shaderCase.TargetColorIndex != -1 && voxel.PalettePosition == shaderCase.TargetColorIndex || shaderCase.TargetColorIndex == -1)
 									{
 										schematic.AddVoxel(minX, minY, minZ, voxel.Color);
 									}
@@ -57,5 +61,7 @@ namespace FileToVox.Generator.Shaders
 
 			return schematic;
 		}
+
+		
 	}
 }
