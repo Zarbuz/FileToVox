@@ -53,7 +53,7 @@ namespace FileToVox.Vox
                 g = (byte)((source >> 8) & 0xff);
                 b = (byte)((source >> 16) & 0xff);
                 a = (byte)((source >> 26) & 0xff);
-                result[i] = Color.FromArgb(r, g, b, a);
+                result[i] = Color.FromArgb(a, r, g, b);
             }
             return result;
         }
@@ -68,7 +68,11 @@ namespace FileToVox.Vox
             var result = new Color[256];
             for (int i = 1; i < 256; i++)
             {
-                result[i] = Color.FromArgb(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+	            byte r = reader.ReadByte();
+	            byte g = reader.ReadByte();
+	            byte b = reader.ReadByte();
+	            byte a = reader.ReadByte();
+                result[i] = Color.FromArgb(a, r, g, b);
             }
             return result;
         }

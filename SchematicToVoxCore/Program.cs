@@ -275,6 +275,8 @@ namespace FileToVox
 					return new XYZToSchematic(path, SCALE, COLOR_LIMIT);
 				case ".json":
 					return new JsonToSchematic(path);
+				case ".vox":
+					return new VoxToSchematic(path);
 				default:
 					return null;
 			}

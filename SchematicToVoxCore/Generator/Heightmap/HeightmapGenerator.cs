@@ -10,14 +10,21 @@ namespace FileToVox.Generator.Heightmap
 	public class HeightmapGenerator : IGenerator
 	{
 		private HeightmapData mHeightmapData;
-		public HeightmapGenerator(HeightmapData heightmapData)
+		private Schematic mSchematic;
+		public HeightmapGenerator(HeightmapData heightmapData, Schematic schematic)
 		{
 			mHeightmapData = heightmapData;
+			mSchematic = schematic;
 		}
 
 		public Schematic WriteSchematic()
 		{
 			Schematic finalSchematic = new Schematic();
+			if (mSchematic != null)
+			{
+				finalSchematic = new Schematic(mSchematic.GetAllVoxels());
+			}
+			
 			Console.WriteLine("[INFO] Count steps: " + mHeightmapData.Steps.Length);
 			for (int index = 0; index < mHeightmapData.Steps.Length; index++)
 			{
@@ -25,11 +32,6 @@ namespace FileToVox.Generator.Heightmap
 				HeightmapStep step = mHeightmapData.Steps[index];
 				step.ValidateSettings();
 				step.DisplayInfo();
-
-				if (step.PlacementMode == PlacementMode.TOP_ONLY && index == 0)
-				{
-					Console.WriteLine("[ERROR] PlacementMode TOP_ONLY shouldn't be at the first step");
-				}
 
 				Bitmap bitmap = new Bitmap(new FileInfo(step.TexturePath).FullName);
 				Bitmap bitmapColor = null;

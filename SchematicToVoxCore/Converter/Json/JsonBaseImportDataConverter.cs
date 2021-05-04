@@ -8,7 +8,7 @@ using FileToVox.Generator.Shaders;
 
 namespace FileToVox.Converter.Json
 {
-	public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
+	public class JsonBaseImportConcreteClassConverter : DefaultContractResolver
 	{
 		protected override JsonConverter ResolveContractConverter(Type objectType)
 		{
@@ -20,7 +20,7 @@ namespace FileToVox.Converter.Json
 
 	public class JsonBaseImportDataConverter : JsonConverter
 	{
-		static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new BaseSpecifiedConcreteClassConverter() };
+		static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new JsonBaseImportConcreteClassConverter() };
 
 		public override bool CanConvert(Type objectType)
 		{
@@ -42,7 +42,6 @@ namespace FileToVox.Converter.Json
 				default:
 					throw new Exception();
 			}
-			throw new NotImplementedException();
 		}
 
 		public override bool CanWrite

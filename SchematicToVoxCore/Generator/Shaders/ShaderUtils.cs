@@ -1,29 +1,35 @@
 ﻿using FileToVox.Schematics;
+using System;
 
 namespace FileToVox.Generator.Shaders
 {
-	public static partial class ShaderUtils
+	public static class ShaderUtils
 	{
-		private static ShaderStep mShaderStep;
-
 		#region PublicMethods
 
 		public static Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
 		{
-			mShaderStep = shaderStep;
+			IShaderGenerator shaderGenerator;
+
 			switch (shaderStep.ShaderType)
 			{
 				case ShaderType.FIX_HOLES:
-					return ApplyShaderFillHoles(schematic);
+					shaderGenerator = new ApplyShaderFixHoles();
+					break;
 				case ShaderType.FIX_LONELY:
-					return ApplyShaderLonely(schematic);
+					shaderGenerator = new ApplyShaderFixLonely();
+					break;
 				case ShaderType.CASE:
-					return ApplyShaderCase(schematic, shaderStep);
+					shaderGenerator = new ApplyShaderCase();
+					break;
 				case ShaderType.PATINA:
-					return ApplyShaderPatina(schematic, shaderStep);
+					shaderGenerator = new ApplyShaderPatina();
+					break;
+				default:
+					throw new NotImplementedException();
 			}
 
-			return schematic;
+			return shaderGenerator.ApplyShader(schematic, shaderStep);
 		}
 
 		

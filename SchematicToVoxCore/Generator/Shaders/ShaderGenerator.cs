@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FileToVox.Schematics;
-using FileToVox.Utils;
+﻿using FileToVox.Schematics;
+using System;
 
 namespace FileToVox.Generator.Shaders
 {
@@ -19,6 +16,12 @@ namespace FileToVox.Generator.Shaders
 
 		public Schematic WriteSchematic()
 		{
+			if (mSchematic == null)
+			{
+				Console.WriteLine("[WARNING] Current schematic is null");
+				mSchematic = new Schematic();
+			}
+
 			Console.WriteLine("[INFO] Count steps: " + mShaderData.Steps.Length);
 			for (int index = 0; index < mShaderData.Steps.Length; index++)
 			{
