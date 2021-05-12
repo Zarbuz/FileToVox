@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using FileToVox.Schematics;
 using FileToVox.Utils;
 
@@ -12,46 +13,178 @@ namespace FileToVox.Generator.Shaders
 		{
 			List<Voxel> allVoxels = schematic.GetAllVoxels();
 			int index = 0;
+			int fixedHoles = 0;
+			int total = (int)(schematic.RegionDict.Values.Count(region => region.BlockDict.Count > 0) * MathF.Pow(Program.CHUNK_SIZE, 3));
+			Console.WriteLine("[INFO] Count voxel before: " + allVoxels.Count);
 			using (ProgressBar progressBar = new ProgressBar())
 			{
-				foreach (Voxel voxel in allVoxels)
+				foreach (Region region in schematic.RegionDict.Values.Where(region => region.BlockDict.Count > 0))
 				{
-					int x = voxel.X;
-					int y = voxel.Y;
-					int z = voxel.Z;
-
-					if (x == 0 || y == 0 || z == 0)
-						continue;
-
-					uint left = schematic.GetColorAtVoxelIndex(x-1, y, z);
-					uint right = schematic.GetColorAtVoxelIndex(x+1, y, z);
-
-					uint front = schematic.GetColorAtVoxelIndex(x, z - 1, x);
-					uint back = schematic.GetColorAtVoxelIndex(x, y, z + 1);
-
-					uint top = schematic.GetColorAtVoxelIndex(x, y +1, z);
-					uint bottom = schematic.GetColorAtVoxelIndex(x, y - 1, z);
-
-
-					if (left != 0 && right != 0 && front != 0 && back != 0)
+					for (int x = region.X; x < region.X + Program.CHUNK_SIZE; x++)
 					{
-						schematic.AddVoxel(x, y, z, left);
-					}
+						for (int y = region.Y; y < region.Y + Program.CHUNK_SIZE; y++)
+						{
+							for (int z = region.Z; z < region.Z + Program.CHUNK_SIZE; z++)
+							{
+								if (!region.GetVoxel(x, y, z, out Voxel voxel))
+								{
+									uint left = region.GetColorAtVoxelIndex(x - 1, y, z);
+									uint right = region.GetColorAtVoxelIndex(x + 1, y, z);
 
-					if (top != 0 && bottom != 0 && left != 0 && right != 0)
-					{
-						schematic.AddVoxel(x, y, z, top);
-					}
+									uint top = region.GetColorAtVoxelIndex(x, y + 1, z);
+									uint bottom = region.GetColorAtVoxelIndex(x, y - 1, z);
 
-					if (front != 0 && back != 0 && top != 0 && bottom != 0)
-					{
-						schematic.AddVoxel(x, y, z, front);
-					}
+									uint front = region.GetColorAtVoxelIndex(x, y, z + 1);
+									uint back = region.GetColorAtVoxelIndex(x, y, z - 1);
 
-					progressBar.Report(index++ / (float)allVoxels.Count);
+									//1x1
+									if (left != 0 && right != 0 && front != 0 && back != 0)
+									{
+										schematic.AddVoxel(x, y, z, left);
+										fixedHoles++;
+										continue;
+									}
+
+									if (left != 0 && right != 0 && top != 0 && bottom != 0)
+									{
+										schematic.AddVoxel(x, y, z, top);
+										fixedHoles++;
+										continue;
+									}
+
+									if (front != 0 && back != 0 && top != 0 && bottom != 0)
+									{
+										schematic.AddVoxel(x, y, z, front);
+										fixedHoles++;
+										continue;
+									}
+
+									//Edges horizontal bottom
+									if (left != 0 && right != 0 && bottom != 0 && front != 0)
+									{
+										schematic.AddVoxel(x, y, z, front);
+										fixedHoles++;
+										continue;
+									}
+
+									if (left != 0 && right != 0 && bottom != 0 && back != 0)
+									{
+										schematic.AddVoxel(x, y, z, back);
+										fixedHoles++;
+										continue;
+									}
+
+									if (front != 0 && back != 0 && bottom != 0 && left != 0)
+									{
+										schematic.AddVoxel(x, y, z, front);
+										fixedHoles++;
+										continue;
+									}
+
+									if (front != 0 && back != 0 && bottom != 0 && right != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+									//Edges horizontal top
+									if (left != 0 && right != 0 && top != 0 && front != 0)
+									{
+										schematic.AddVoxel(x, y, z, front);
+										fixedHoles++;
+										continue;
+									}
+
+									if (left != 0 && right != 0 && top != 0 && back != 0)
+									{
+										schematic.AddVoxel(x, y, z, back);
+										fixedHoles++;
+										continue;
+									}
+
+									if (front != 0 && back != 0 && top != 0 && left != 0)
+									{
+										schematic.AddVoxel(x, y, z, front);
+										fixedHoles++;
+										continue;
+									}
+
+									if (front != 0 && back != 0 && top != 0 && right != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+
+									//Edges vertical (4)
+									if (left != 0 && top != 0 && bottom != 0 && front != 0)
+									{
+										schematic.AddVoxel(x, y, z, left);
+										fixedHoles++;
+										continue;
+									}
+
+									if (left != 0 && top != 0 && bottom != 0 && back != 0)
+									{
+										schematic.AddVoxel(x, y, z, back);
+										fixedHoles++;
+										continue;
+									}
+
+									if (right != 0 && top != 0 && bottom != 0 && front != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+									if (right != 0 && top != 0 && bottom != 0 && back != 0)
+									{
+										schematic.AddVoxel(x, y, z, back);
+										fixedHoles++;
+										continue;
+									}
+
+									////Edges bottom (3)
+									//if (left != 0 && front != 0 && bottom != 0)
+									//{
+									//	schematic.AddVoxel(x, y, z, left);
+									//	fixedHoles++;
+									//	continue;
+									//}
+
+									//if (right != 0 && front != 0 && bottom != 0)
+									//{
+									//	schematic.AddVoxel(x, y, z, right);
+									//	fixedHoles++;
+									//	continue;
+									//}
+
+									//if (left != 0 && back != 0 && bottom != 0)
+									//{
+									//	schematic.AddVoxel(x, y, z, left);
+									//	fixedHoles++;
+									//	continue;
+									//}
+
+									//if (right != 0 && back != 0 && bottom != 0)
+									//{
+									//	schematic.AddVoxel(x, y, z, right);
+									//	fixedHoles++;
+									//	continue;
+									//}
+
+								}
+								progressBar.Report(index++ / (float)total);
+							}
+						}
+					}
 				}
 			}
-
+			
+			Console.WriteLine("[INFO] Fixed holes: " + fixedHoles);
 			Console.WriteLine("[INFO] Done.");
 			return schematic;
 		}

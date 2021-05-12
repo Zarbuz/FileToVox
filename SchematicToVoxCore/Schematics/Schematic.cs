@@ -1,15 +1,12 @@
-﻿using System;
+﻿using FileToVox.Generator.Heightmap.Data;
+using FileToVox.Generator.Terrain.Utility;
+using FileToVox.Schematics.Tools;
+using SchematicToVoxCore.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using FileToVox.Generator.Heightmap.Data;
-using FileToVox.Generator.Terrain.Utility;
-using FileToVox.Schematics.Tools;
-using FileToVox.Vox;
-using MoreLinq;
-using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Schematics
 {
@@ -31,6 +28,20 @@ namespace FileToVox.Schematics
 		public override string ToString()
 		{
 			return $"{X} {Y} {Z}";
+		}
+
+		public uint GetColorAtVoxelIndex(int x, int y, int z)
+		{
+			return GetVoxel(x, y, z, out Voxel voxel) ? voxel.Color : 0;
+		}
+
+		public bool GetVoxel(int x, int y, int z, out Voxel voxel)
+		{
+			long voxelIndex = Schematic.GetVoxelIndex(x, y, z);
+
+			bool found = BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
+			voxel = foundVoxel;
+			return found;
 		}
 	}
 
@@ -237,9 +248,17 @@ namespace FileToVox.Schematics
 
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
-			bool found = RegionDict[chunkIndex].BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
-			voxel = foundVoxel;
-			return found;
+			if (RegionDict.ContainsKey(chunkIndex))
+			{
+				bool found = RegionDict[chunkIndex].BlockDict.TryGetValue(voxelIndex, out Voxel foundVoxel);
+				voxel = foundVoxel;
+				return found;
+			}
+			else
+			{
+				voxel = null;
+				return false;
+			}
 		}
 
 		public List<Region> GetAllRegions()
@@ -271,9 +290,9 @@ namespace FileToVox.Schematics
 		{
 			RegionDict = new Dictionary<long, Region>();
 
-			int worldRegionX = (int)Math.Ceiling(((decimal)MAX_WORLD_WIDTH / Program.CHUNK_SIZE));
-			int worldRegionY = (int)Math.Ceiling(((decimal)MAX_WORLD_HEIGHT / Program.CHUNK_SIZE));
-			int worldRegionZ =(int)Math.Ceiling(((decimal)MAX_WORLD_LENGTH / Program.CHUNK_SIZE));
+			int worldRegionX = (int)Math.Ceiling((decimal)MAX_WORLD_WIDTH / Program.CHUNK_SIZE);
+			int worldRegionY = (int)Math.Ceiling((decimal)MAX_WORLD_HEIGHT / Program.CHUNK_SIZE);
+			int worldRegionZ =(int)Math.Ceiling((decimal)MAX_WORLD_LENGTH / Program.CHUNK_SIZE);
 
 			int countSize = worldRegionX * worldRegionY * worldRegionZ;
 

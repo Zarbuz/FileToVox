@@ -3,6 +3,7 @@ using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using FileToVox.Utils;
 
 namespace FileToVox.Extensions
 {
@@ -19,23 +20,30 @@ namespace FileToVox.Extensions
 					return blocks;
 	            }
 
-                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
+                Console.WriteLine("[INFO] Started quantization of all colors ...");
+                using (ProgressBar progressBar = new ProgressBar())
                 {
-                    using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
-                    {
-                        Bitmap reducedBitmap = (Bitmap) quantized;
-                        //Console.WriteLine(quantized.PixelFormat);
-                        //Bitmap reducedBitmap = new Bitmap(quantized);
-                        int width = reducedBitmap.Size.Width;
-                        for (int i = 0; i < blocks.Count; i++)
-                        {
-                            int x = i % width;
-                            int y = i / width;
-                            blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z,
-                                reducedBitmap.GetPixel(x, y).ColorToUInt());
+	                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
+	                {
+		                using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
+		                {
+			                Bitmap reducedBitmap = (Bitmap) quantized;
+			                //Console.WriteLine(quantized.PixelFormat);
+			                //Bitmap reducedBitmap = new Bitmap(quantized);
+			                int width = reducedBitmap.Size.Width;
+			                for (int i = 0; i < blocks.Count; i++)
+			                {
+				                int x = i % width;
+				                int y = i / width;
+				                blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z, reducedBitmap.GetPixel(x, y).ColorToUInt());
+				                progressBar.Report(i / (float)blocks.Count);
+                            }
                         }
-                    }
+	                }
+
                 }
+
+                Console.WriteLine("[INFO] Done.");
             }
             catch (Exception e)
             {
