@@ -26,6 +26,8 @@ namespace FileToVox.Generator.Shaders
 						{
 							for (int z = region.Z; z < region.Z + Program.CHUNK_SIZE; z++)
 							{
+								progressBar.Report(index++ / (float)total);
+
 								if (!region.GetVoxel(x, y, z, out Voxel voxel))
 								{
 									uint left = region.GetColorAtVoxelIndex(x - 1, y, z);
@@ -177,7 +179,6 @@ namespace FileToVox.Generator.Shaders
 									//}
 
 								}
-								progressBar.Report(index++ / (float)total);
 							}
 						}
 					}

@@ -14,6 +14,7 @@ namespace FileToVox.Generator.Shaders.Data
 		public override ShaderType ShaderType { get; set; }= ShaderType.PATINA;
 		public override void DisplayInfo()
 		{
+			base.DisplayInfo();
 			Console.WriteLine("[INFO] Iterations: " + Iterations);
 			Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
 			Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);

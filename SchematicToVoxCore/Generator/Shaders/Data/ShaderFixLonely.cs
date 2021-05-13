@@ -2,11 +2,7 @@
 {
 	public class ShaderFixLonely : ShaderStep
 	{
-		public override ShaderType ShaderType { get; set; }
-		public override void DisplayInfo()
-		{
-			
-		}
+		public override ShaderType ShaderType { get; set; } = ShaderType.FIX_LONELY;
 
 		public override void ValidateSettings()
 		{

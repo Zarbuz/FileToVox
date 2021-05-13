@@ -2,6 +2,20 @@
   "generatorType": "Shader",
   "steps": [
     {
+      "shaderType": "FIX_HOLES"
+    },
+    {
+      "shaderType": "FIX_LONELY"
+    },
+    {
+      "shaderType": "COLOR_DENOISER"
+    },
+    {
+      "shaderType": "CASE",
+      "iterations": 30,
+      "TargetColorIndex": 1
+    },
+    {
       "shaderType": "CASE",
       "iterations": 30,
       "TargetColorIndex": 1

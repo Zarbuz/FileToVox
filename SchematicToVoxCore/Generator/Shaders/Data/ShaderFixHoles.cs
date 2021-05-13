@@ -2,11 +2,7 @@
 {
 	public class ShaderFixHoles :ShaderStep
 	{
-		public override ShaderType ShaderType { get; set; }
-		public override void DisplayInfo()
-		{
-			
-		}
+		public override ShaderType ShaderType { get; set; } = ShaderType.FIX_HOLES;
 
 		public override void ValidateSettings()
 		{

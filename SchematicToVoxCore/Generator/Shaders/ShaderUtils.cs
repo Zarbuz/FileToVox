@@ -1,5 +1,6 @@
 ﻿using FileToVox.Schematics;
 using System;
+using FileToVox.Generator.Shaders.ApplyShaders;
 
 namespace FileToVox.Generator.Shaders
 {
@@ -24,6 +25,9 @@ namespace FileToVox.Generator.Shaders
 					break;
 				case ShaderType.PATINA:
 					shaderGenerator = new ApplyShaderPatina();
+					break;
+				case ShaderType.COLOR_DENOISER:
+					shaderGenerator = new ApplyShaderColorDenoiser();
 					break;
 				default:
 					throw new NotImplementedException();
