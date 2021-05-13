@@ -2,12 +2,30 @@
 using FileToVox.Schematics;
 using FileToVox.Utils;
 using System.Collections.Generic;
+using FileToVox.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders.ApplyShaders
 {
 	public class ApplyShaderColorDenoiser : IShaderGenerator
 	{
+		private bool mShouldBreak;
 		public Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
+		{
+			ShaderColorDenoiser shaderColorDenoiser = shaderStep as ShaderColorDenoiser;
+			for (int i = 0; i < shaderColorDenoiser.Iterations; i++)
+			{
+				Console.WriteLine("[INFO] Process iteration: " + i);
+				schematic = ProcessShaderColorDenoiser(schematic);
+				if (mShouldBreak)
+				{
+					break;
+				}
+			}
+
+			return schematic;
+		}
+
+		private Schematic ProcessShaderColorDenoiser(Schematic schematic)
 		{
 			int colorChanged = 0;
 			int index = 0;
@@ -52,6 +70,12 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 						continue;
 					}
 				}
+			}
+
+			if (colorChanged == 0)
+			{
+				mShouldBreak = true;
+				Console.WriteLine("[INFO] NO COLORS CHANGED, BREAK");
 			}
 
 			Console.WriteLine("[INFO] Color changed: " + colorChanged);

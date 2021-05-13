@@ -4,7 +4,7 @@ namespace FileToVox.Generator.Shaders.Data
 {
 	public class ShaderPatina : ShaderStep
 	{
-		public int Iterations { get; set; }
+		public int Iterations { get; set; } = 1;
 		public int TargetColorIndex { get; set; } = -1;
 		public int AdditionalColorRange { get; set; }
 		public int Seed { get; set; }
