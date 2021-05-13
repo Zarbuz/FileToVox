@@ -2,6 +2,7 @@
 using FileToVox.Schematics;
 using FileToVox.Utils;
 using System.Collections.Generic;
+using System.Linq;
 using FileToVox.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders.ApplyShaders
@@ -15,7 +16,14 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 			for (int i = 0; i < shaderColorDenoiser.Iterations; i++)
 			{
 				Console.WriteLine("[INFO] Process iteration: " + i);
-				schematic = ProcessShaderColorDenoiser(schematic);
+				if (shaderColorDenoiser.StrictMode)
+				{
+					schematic = ProcessShaderColorDenoiserWithStrictMode(schematic);
+				}
+				else
+				{
+					schematic = ProcessShaderColorDenoiserWithColorRange(schematic, shaderColorDenoiser.ColorRange);
+				}
 				if (mShouldBreak)
 				{
 					break;
@@ -25,7 +33,7 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 			return schematic;
 		}
 
-		private Schematic ProcessShaderColorDenoiser(Schematic schematic)
+		private Schematic ProcessShaderColorDenoiserWithStrictMode(Schematic schematic)
 		{
 			int colorChanged = 0;
 			int index = 0;
@@ -81,6 +89,108 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 			Console.WriteLine("[INFO] Color changed: " + colorChanged);
 			Console.WriteLine("[INFO] Done.");
 			return schematic;
+		}
+
+		private Schematic ProcessShaderColorDenoiserWithColorRange(Schematic schematic, int colorRange)
+		{
+			int colorChanged = 0;
+			int index = 0;
+			using (ProgressBar progressBar = new ProgressBar())
+			{
+				List<Voxel> voxels = schematic.GetAllVoxels();
+				foreach (Voxel voxel in voxels)
+				{
+					progressBar.Report(index++ / (float)voxels.Count);
+
+					int x = voxel.X;
+					int y = voxel.Y;
+					int z = voxel.Z;
+
+					Voxel left = null;
+					Voxel right= null;
+					Voxel top = null;
+					Voxel bottom= null;
+					Voxel front= null;
+					Voxel back= null;
+
+					if (schematic.GetVoxel(x - 1, y, z, out Voxel v))
+					{
+						left = v;
+					}
+
+					if (schematic.GetVoxel(x + 1, y, z, out v))
+					{
+						right = v;
+					}
+
+					if (schematic.GetVoxel(x, y + 1, z, out v))
+					{
+						top = v;
+					}
+
+					if (schematic.GetVoxel(x, y - 1, z, out v))
+					{
+						bottom = v;
+					}
+
+					if (schematic.GetVoxel(x, y, z + 1, out v))
+					{
+						front = v;
+					}
+
+					if (schematic.GetVoxel(x, y, z - 1, out v))
+					{
+						back = v;
+					}
+
+					List<Voxel> list = new List<Voxel>() {right, left, top, bottom, front, back};
+					list = list.Where(v => v != null).ToList();
+					if (DistanceAverage(voxel, list) <= colorRange)
+					{
+						schematic.ReplaceVoxel(voxel, GetDominantColor(list));
+						colorChanged++;
+					}
+
+					
+				}
+			}
+
+			if (colorChanged == 0)
+			{
+				mShouldBreak = true;
+				Console.WriteLine("[INFO] NO COLORS CHANGED, BREAK");
+			}
+
+			Console.WriteLine("[INFO] Color changed: " + colorChanged);
+			Console.WriteLine("[INFO] Done.");
+			return schematic;
+		}
+
+		private uint GetDominantColor(List<Voxel> voxels)
+		{
+			Dictionary<uint, int> mostUsedColors = new Dictionary<uint, int>();
+			foreach (Voxel voxel in voxels)
+			{
+				if (!mostUsedColors.ContainsKey(voxel.Color))
+				{
+					mostUsedColors.Add(voxel.Color, 0);
+				}
+				mostUsedColors[voxel.Color]++;
+			}
+
+			return mostUsedColors.OrderByDescending(t => t.Value).First().Key;
+		}
+
+		private float DistanceAverage(Voxel currentVoxel, List<Voxel> voxels)
+		{
+			float sum = voxels.Where(v => v != null).Aggregate<Voxel, float>(0, (current, voxel) => current + Distance(currentVoxel.PalettePosition, voxel.PalettePosition));
+			sum /= voxels.Count(v => v != null);
+			return sum;
+		}
+
+		private int Distance(int currentVoxelColorIndex, int targetVoxelColorIndex)
+		{
+			return Math.Abs(currentVoxelColorIndex - targetVoxelColorIndex);
 		}
 	}
 }
