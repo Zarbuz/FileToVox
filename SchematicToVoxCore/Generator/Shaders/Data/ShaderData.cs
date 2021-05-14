@@ -1,4 +1,5 @@
-﻿using FileToVox.Converter.Json;
+﻿using System;
+using FileToVox.Converter.Json;
 using FileToVox.Generator.Shaders.Json;
 using Newtonsoft.Json;
 
@@ -14,7 +15,8 @@ namespace FileToVox.Generator.Shaders
 		FIX_HOLES,
 		FIX_LONELY,
 		CASE,
-		PATINA
+		PATINA,
+		COLOR_DENOISER
 	}
 
 	[JsonConverter(typeof(ShaderStepDataConverter))]
@@ -23,7 +25,10 @@ namespace FileToVox.Generator.Shaders
 	{
 		public abstract ShaderType ShaderType { get; set; }
 
-		public abstract void DisplayInfo();
+		public virtual void DisplayInfo()
+		{
+			Console.WriteLine("[INFO] ShaderType: " + ShaderType);
+		}
 
 		public abstract void ValidateSettings();
 	

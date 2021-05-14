@@ -349,6 +349,7 @@ namespace FileToVox.Schematics
 			if (UsedColors.Count < MAX_COLORS_IN_PALETTE && !UsedColors.Contains(color))
 			{
 				UsedColors.Add(color);
+				UsedColors = UsedColors.OrderByDescending(c => c).ToList();
 			}
 		}
 

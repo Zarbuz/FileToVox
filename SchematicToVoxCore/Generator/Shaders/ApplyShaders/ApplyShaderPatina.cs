@@ -56,7 +56,7 @@ namespace FileToVox.Generator.Shaders
 				if (colorChanged == 0)
 				{
 					mShouldBreak = true;
-					Console.WriteLine("NO COLORS CHANGED, BREAK");
+					Console.WriteLine("[INFO] NO COLORS CHANGED, BREAK");
 				}
 			}
 

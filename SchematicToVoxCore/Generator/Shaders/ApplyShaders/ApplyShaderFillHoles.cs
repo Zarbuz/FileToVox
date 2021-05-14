@@ -1,15 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using FileToVox.Generator.Shaders.Data;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FileToVox.Generator.Shaders
 {
 	public class ApplyShaderFixHoles : IShaderGenerator
 	{
+		private bool mShouldBreak;
 		public Schematic ApplyShader(Schematic schematic, ShaderStep shaderStep)
+		{
+			ShaderFixHoles shaderFixHoles = shaderStep as ShaderFixHoles;
+			for (int i = 0; i < shaderFixHoles.Iterations; i++)
+			{
+				Console.WriteLine("[INFO] Process iteration: " + i);
+				schematic = ProcessShaderFixHoles(schematic);
+				if (mShouldBreak)
+				{
+					break;
+				}
+			}
+
+			return schematic;
+		}
+
+		private Schematic ProcessShaderFixHoles(Schematic schematic)
 		{
 			List<Voxel> allVoxels = schematic.GetAllVoxels();
 			int index = 0;
@@ -26,6 +43,8 @@ namespace FileToVox.Generator.Shaders
 						{
 							for (int z = region.Z; z < region.Z + Program.CHUNK_SIZE; z++)
 							{
+								progressBar.Report(index++ / (float)total);
+
 								if (!region.GetVoxel(x, y, z, out Voxel voxel))
 								{
 									uint left = region.GetColorAtVoxelIndex(x - 1, y, z);
@@ -177,13 +196,18 @@ namespace FileToVox.Generator.Shaders
 									//}
 
 								}
-								progressBar.Report(index++ / (float)total);
 							}
 						}
 					}
 				}
 			}
-			
+
+			if (fixedHoles == 0)
+			{
+				mShouldBreak = true;
+				Console.WriteLine("[INFO] NO VOXEL CHANGED, BREAK");
+			}
+
 			Console.WriteLine("[INFO] Fixed holes: " + fixedHoles);
 			Console.WriteLine("[INFO] Done.");
 			return schematic;

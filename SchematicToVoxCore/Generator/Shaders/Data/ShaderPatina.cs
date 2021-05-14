@@ -4,7 +4,7 @@ namespace FileToVox.Generator.Shaders.Data
 {
 	public class ShaderPatina : ShaderStep
 	{
-		public int Iterations { get; set; }
+		public int Iterations { get; set; } = 1;
 		public int TargetColorIndex { get; set; } = -1;
 		public int AdditionalColorRange { get; set; }
 		public int Seed { get; set; }
@@ -14,6 +14,7 @@ namespace FileToVox.Generator.Shaders.Data
 		public override ShaderType ShaderType { get; set; }= ShaderType.PATINA;
 		public override void DisplayInfo()
 		{
+			base.DisplayInfo();
 			Console.WriteLine("[INFO] Iterations: " + Iterations);
 			Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
 			Console.WriteLine("[INFO] AdditionalColorRange: " + AdditionalColorRange);
