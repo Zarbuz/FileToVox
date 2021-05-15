@@ -21,7 +21,7 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 
 # Wiki
 
-Please read the documentation of FileToVox here : https://github.com/Zarbuz/FileToVox/wiki
+Please read the documentation of FileToVox [here](https://github.com/Zarbuz/FileToVox/wiki/1.-Introduction)
 
 ## Video Tutorials
 
