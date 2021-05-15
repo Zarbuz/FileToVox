@@ -19,95 +19,9 @@ FileToVox can import a folder of images (.PNG) where each image is a layer. (Use
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
-# How use it ? 
+# Wiki
 
-- You need to open a console (like cmd or Powershell in Windows)
-- Go to the emplacement of FileToVox.exe
-- Launch the command : `./FileToVox.exe --i [INPUT] --o [OUTPUT]`
-- [INPUT] refer to a input filepath (mandatory)
-- [OUTPUT] refer to the destination path (mandatory)
-
-# Installation 
- 
-Go to the [release](https://github.com/Zarbuz/SchematicToVox/releases) page and download the lastest version of FileToVox. Be sure to download the binary and not the source code. 
-
-**You need to install the .NET Core Runtime Library : https://dotnet.microsoft.com/download/dotnet-core/current/runtime**
-Then extract the content of the zip file in the folder of your choice.
-
-## MacOS or Linux
-
-You should install .NET Core Runtime : https://docs.microsoft.com/en-us/dotnet/core/install/macos
-
-If you have an error like 'Unable to load DLL 'libgdiplus', try this command : `brew install mono-libgdiplus`
-
-If you have this error : 'brew command not found'.
-
-Install first : `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-
-## Commands list (for specific file type)
-
-```
---i        --input=VALUE              input mandatory file
---o        --output=VALUE             output mandatory file
---c        --color                    enable color when generating heightmap
---cl       --color-limit=VALUE        set the maximal number of colors for the palette
---cm       --color-from-file=VALUE    load color from another file
---cs       --chunk-size=VALUE         set the chunk size (default: 128, min: 11, max: 256)
---e        --excavate                 delete all voxels which doesn't have at least one face connected with air
-
---h        --help                     help informations
---hm       --heightmap=VALUE          create voxels terrain from heightmap with the specified height
---p        --palette=VALUE            set the palette
---si       --slice                    flag the current input folder as slice
---sc       --scale=VALUE              set the scale
---v,        -verbose                  enable the verbose mode
- ```
-
- ## Shader Commands (compatible for all file type)
-
- ```
- --flo      --fix-lonely               delete all voxels where all connected voxels are air
- --fh       --fix-holes                fix holes
-```
-## Command compatibility 
-
-### 1. General
-
-| Command | .asc | .binvox | .csv | .obj | .ply | .png | .qb | .schematic | .tif | .xyz |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-| `--color`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| `--color-limit`     | ❌ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `--color-from-file` | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| `--chunk_size     ` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `--excavate`        | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ |
-| `--fix-lonely`      | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `--fix-holes`       | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `--heightmap`       | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| `--palette`         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `--slice`           | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| `--scale`           | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
-
-### 2. Batching
-
-You can process multiple files at once. To do such operation, all your files must be in a folder: `./FileToVox.exe --i folder --o converted`
-
-Note : you can also add argument to the conversion but the argument will be applied to all files.
-
-### 3. Slice
-
-You can process a folder of pictures (all must be .PNG). This is usefull when you import export slices of fractal from program like Mandelbulb3D. To indicate to FileToVox that each picture in your folder is a slice, add the argument `--slice`. 
-
-## config.txt
-
-You can edit the colors of the palette used when generating from schematic file in `schematics/config.txt`
-
-# Examples
-
-```
-./FileToVox.exe --i heightmap.png --o heightmap --hm 100
-./FileToVox.exe --i heightmap.png --o heightmap --hm 100 --e --cm colors.png
-./FileToVox.exe --i cloud.ply --o cloud --scale 20
-```
+Please read the documentation of FileToVox here : https://github.com/Zarbuz/FileToVox/wiki
 
 ## Video Tutorials
 
