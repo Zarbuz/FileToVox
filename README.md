@@ -28,19 +28,8 @@ Please read the documentation of FileToVox here : https://github.com/Zarbuz/File
 - https://www.youtube.com/watch?v=sg3z2GaMJzM
 - https://www.youtube.com/watch?v=fSo1iV1DE2U
 
-## Notes
-
-For PNG files, you can't load pictures bigger than 2000x2000 px
-
-## Input file
-![](img/heightmap.png)
-
-## Ouput file
-![](img/output.jpg)
-
 ## Renders
 ![](img/render.png)
-
 
 ![](img/EKGGrQaX0AAxg56.jfif)
 
