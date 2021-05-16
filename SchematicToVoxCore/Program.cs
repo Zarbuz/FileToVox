@@ -279,7 +279,7 @@ namespace FileToVox
 					return new VoxToSchematic(path);
 				case ".obj":
 				case ".fbx":
-					return new MeshToSchematic(path);
+					return new MeshToSchematic(path, SCALE, COLOR_LIMIT);
 				default:
 					return null;
 			}
