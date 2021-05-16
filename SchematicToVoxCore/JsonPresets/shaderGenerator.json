@@ -10,7 +10,9 @@
     },
     {
       "shaderType": "COLOR_DENOISER",
-      "iterations": 1
+      "iterations": 2,
+      "strictMode": false,
+      "colorRange": 8
     },
     {
       "shaderType": "CASE",

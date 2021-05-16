@@ -277,6 +277,9 @@ namespace FileToVox
 					return new JsonToSchematic(path);
 				case ".vox":
 					return new VoxToSchematic(path);
+				case ".obj":
+				case ".fbx":
+					return new MeshToSchematic(path);
 				default:
 					return null;
 			}
