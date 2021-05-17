@@ -5,8 +5,10 @@ FileToVox is a console program which allow you to convert a file into a vox file
 Current files support: 
 - .asc (Esri ASCII raster format)
 - .binvox
+- .fbx
 - .csv
 - .json (House-made format)
+- .obj
 - .ply (Binary and ASCII)
 - .png
 - .schematic
