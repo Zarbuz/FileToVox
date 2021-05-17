@@ -27,10 +27,15 @@ namespace FileToVox
 		private static bool EXCAVATE;
 		private static bool COLOR;
 		private static bool SLICE;
+		private static bool MESH_SKIP_CAPTURE;
 
 		private static float SCALE = 1;
 		private static int HEIGHT_MAP = 1;
 		private static int COLOR_LIMIT = 256;
+		private static int MESH_SEGMENT_X = 4;
+		private static int MESH_SEGMENT_Y = 4;
+		private static int MESH_SUBSAMPLE = 0;
+
 		public static int CHUNK_SIZE = 128;
 
 		public static void Main(string[] args)
@@ -47,6 +52,10 @@ namespace FileToVox
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
+				{"msx|mesh-segment-x=", "set the number of segment in X axis (for MeshSampler)", (int v) => MESH_SEGMENT_X = v},
+				{"msy|mesh-segment-y=", "set the number of segment in Y axis (for MeshSampler)", (int v) => MESH_SEGMENT_Y = v},
+				{"msub|mesh-subsample=", "set the number of subsample (for MeshSampler)", (int v) => MESH_SUBSAMPLE = v},
+				{"mskip", "skip the capturing points part and load the previous PLY (for MeshSampler)", v => MESH_SKIP_CAPTURE = v != null},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
 				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
@@ -173,6 +182,14 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: slice");
 			if (DEBUG)
 				Console.WriteLine("[INFO] Enabled option: debug");
+			if (MESH_SEGMENT_X != 4)
+				Console.WriteLine("[INFO] Specified segment X (for MeshSampler): " + MESH_SEGMENT_X);
+			if (MESH_SEGMENT_Y != 4)
+				Console.WriteLine("[INFO] Specified segment Y (for MeshSampler): " + MESH_SEGMENT_Y);
+			if (MESH_SUBSAMPLE != 0)
+				Console.WriteLine("[INFO] Specified subsample (for MeshSampler): " + MESH_SUBSAMPLE);
+			if (MESH_SKIP_CAPTURE)
+				Console.WriteLine("[INFO] Enabled option: mesh skip capture (for MeshSampler)");
 
 			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(OUTPUT_PATH));
 		}
@@ -279,7 +296,7 @@ namespace FileToVox
 					return new VoxToSchematic(path);
 				case ".obj":
 				case ".fbx":
-					return new MeshToSchematic(path, SCALE, COLOR_LIMIT);
+					return new MeshToSchematic(path, SCALE, COLOR_LIMIT, MESH_SEGMENT_X, MESH_SEGMENT_Y, MESH_SUBSAMPLE, MESH_SKIP_CAPTURE);
 				default:
 					return null;
 			}
