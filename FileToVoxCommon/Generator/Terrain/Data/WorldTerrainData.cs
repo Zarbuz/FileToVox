@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using FileToVoxCommon.Json;
+﻿using FileToVoxCommon.Json;
+using Newtonsoft.Json;
 
 namespace FileToVoxCommon.Generator.Terrain.Data
 {
