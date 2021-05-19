@@ -1,11 +1,10 @@
-﻿using FileToVox.Converter.Json;
-using FileToVox.Generator.Shaders.Data;
+﻿using System;
+using FileToVoxCommon.Generator.Shaders.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using Newtonsoft.Json.Serialization;
 
-namespace FileToVox.Generator.Shaders.Json
+namespace FileToVoxCommon.Generator.Shaders.Json
 {
 	public class ShaderStepConcreteClassConverter : DefaultContractResolver
 	{

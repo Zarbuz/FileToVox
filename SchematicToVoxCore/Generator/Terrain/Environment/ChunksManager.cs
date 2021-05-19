@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FileToVox.Generator.Terrain.Data;
 using FileToVox.Generator.Terrain.Entities;
 using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
+using FileToVoxCommon.Generator.Terrain.Data;
 
 namespace FileToVox.Generator.Terrain
 {
@@ -70,12 +70,12 @@ namespace FileToVox.Generator.Terrain
 
 			if (WorldTerrainData != null)
 			{
-				if (WorldTerrainData.TerrainGeneratorSettings == null)
+				if (WorldTerrainData.TerrainGeneratorDataSettings == null)
 				{
-					WorldTerrainData.TerrainGeneratorSettings = new TerrainGeneratorSettings(); //TODO
+					WorldTerrainData.TerrainGeneratorDataSettings = new TerrainGeneratorDataSettings(); //TODO
 				}
 
-				WorldTerrainData.TerrainGeneratorSettings.Initialize();
+				(WorldTerrainData.TerrainGeneratorDataSettings as TerrainGeneratorSettings).Initialize();
 			}
 		}
 
@@ -116,14 +116,14 @@ namespace FileToVox.Generator.Terrain
 			int ix = FastMath.FloorToInt(x);
 			int iz = FastMath.FloorToInt(z);
 
-			TerrainGeneratorSettings tg = WorldTerrainData.TerrainGeneratorSettings;
+			TerrainGeneratorDataSettings tg = WorldTerrainData.TerrainGeneratorDataSettings;
 			for (int zz = 0; zz < CHUNK_SIZE; zz++)
 			{
 				for (int xx = 0; xx < CHUNK_SIZE; xx++)
 				{
 					if (!mHeightMapCache.TryGetValue(ix + xx, iz + zz, out HeightMapInfo[] heights, out int heightsIndex))
 					{
-						tg.GetHeightAndMoisture(ix + xx, iz + zz, out float altitude, out float moisture);
+						(tg as TerrainGeneratorSettings).GetHeightAndMoisture(ix + xx, iz + zz, out float altitude, out float moisture);
 						if (altitude > 1f)
 							altitude = 1f;
 						else if (altitude < 0f)

@@ -1,11 +1,10 @@
 ﻿using FileToVox.Generator.Terrain.Chunk;
-using FileToVox.Generator.Terrain.Data;
 using FileToVox.Generator.Terrain.Utility;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using System;
 using FileToVox.Main;
 using FileToVox.Schematics;
+using FileToVox.Schematics.Tools;
+using FileToVoxCommon.Generator.Terrain.Data;
+using System;
 
 namespace FileToVox.Generator.Terrain
 {

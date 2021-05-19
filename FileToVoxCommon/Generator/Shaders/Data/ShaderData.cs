@@ -1,9 +1,9 @@
 ﻿using System;
-using FileToVox.Converter.Json;
-using FileToVox.Generator.Shaders.Json;
+using FileToVoxCommon.Generator.Shaders.Json;
+using FileToVoxCommon.Json;
 using Newtonsoft.Json;
 
-namespace FileToVox.Generator.Shaders
+namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderData : JsonBaseImportData
 	{

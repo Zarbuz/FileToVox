@@ -1,5 +1,4 @@
-﻿using FileToVox.Generator.Heightmap.Data;
-using FileToVox.Generator.Terrain.Utility;
+﻿using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics.Tools;
 using SchematicToVoxCore.Extensions;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using FileToVoxCommon.Generator.Heightmap.Data;
 
 namespace FileToVox.Schematics
 {

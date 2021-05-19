@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using FileToVox.Converter.Json;
+using FileToVoxCommon.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FileToVox.Generator.Heightmap.Data
+namespace FileToVoxCommon.Generator.Heightmap.Data
 {
 	public class HeightmapData : JsonBaseImportData
 	{

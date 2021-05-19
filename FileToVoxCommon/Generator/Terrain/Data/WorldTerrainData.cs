@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using FileToVox.Converter.Json;
+using FileToVoxCommon.Json;
 
-namespace FileToVox.Generator.Terrain.Data
+namespace FileToVoxCommon.Generator.Terrain.Data
 {
 	public class WorldTerrainData : JsonBaseImportData
 	{
@@ -13,7 +13,7 @@ namespace FileToVox.Generator.Terrain.Data
 
 		public BiomeSettings DefaultBiome { get; set; }
 
-		public TerrainGeneratorSettings TerrainGeneratorSettings { get; set; }
+		public TerrainGeneratorDataSettings TerrainGeneratorDataSettings { get; set; }
 
 		[JsonIgnore] public string DirectoryPath { get; set; }
 	}

@@ -1,11 +1,11 @@
 ﻿using BitMiracle.LibTiff.Classic;
-using FileToVox.Generator.Heightmap.Data;
 using FileToVox.Schematics;
 using FileToVox.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using FileToVoxCommon.Generator.Heightmap.Data;
 
 namespace FileToVox.Converter.Image
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileToVox.Generator.Shaders.Data
+namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderColorDenoiser : ShaderStep
 	{

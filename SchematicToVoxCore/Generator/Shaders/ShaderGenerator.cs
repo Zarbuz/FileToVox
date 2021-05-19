@@ -1,5 +1,6 @@
 ﻿using FileToVox.Schematics;
 using System;
+using FileToVoxCommon.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders
 {

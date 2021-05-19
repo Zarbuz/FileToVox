@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FileToVox.Converter.Json
+namespace FileToVoxCommon.Json
 {
 	public enum GeneratorType
 	{
