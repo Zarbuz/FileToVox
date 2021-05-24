@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.0.2</Version>
+    <Authors>Zarbuz</Authors>
   </PropertyGroup>
 
   <ItemGroup>
