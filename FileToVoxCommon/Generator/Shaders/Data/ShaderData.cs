@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using FileToVoxCommon.Generator.Shaders.Json;
 using FileToVoxCommon.Json;
 using Newtonsoft.Json;
@@ -12,11 +13,16 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 	public enum ShaderType
 	{
-		FIX_HOLES,
-		FIX_LONELY,
-		CASE,
-		PATINA,
-		COLOR_DENOISER
+		[Description("Case")]
+		CASE = 0,
+		[Description("Color Denoiser")]
+		COLOR_DENOISER = 1,
+		[Description("Fix Holes")]
+		FIX_HOLES = 2,
+		[Description("Fix Lonely")]
+		FIX_LONELY = 3,
+		[Description("Patina")]
+		PATINA = 4,
 	}
 
 	[JsonConverter(typeof(ShaderStepDataConverter))]
