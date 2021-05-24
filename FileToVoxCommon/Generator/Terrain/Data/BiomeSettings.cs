@@ -30,7 +30,7 @@ namespace FileToVoxCommon.Generator.Terrain.Data
 	}
 
 	[Serializable]
-	public class BiomeSettings
+	public class BiomeSettings : Generator.StepData.StepData
 	{
 		public BiomeZone[] Zones { get; set; }
 		public Color VoxelTop { get; set; }

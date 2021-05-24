@@ -21,7 +21,7 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 	[JsonConverter(typeof(ShaderStepDataConverter))]
 
-	public abstract class ShaderStep
+	public abstract class ShaderStep : StepData.StepData
 	{
 		public abstract ShaderType ShaderType { get; set; }
 

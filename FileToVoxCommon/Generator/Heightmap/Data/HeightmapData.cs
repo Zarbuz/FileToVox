@@ -26,7 +26,7 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 		Z,
 	}
 
-	public class HeightmapStep
+	public class HeightmapStep : StepData.StepData
 	{
 		public string TexturePath { get; set; }
 		public string ColorTexturePath { get; set; }
