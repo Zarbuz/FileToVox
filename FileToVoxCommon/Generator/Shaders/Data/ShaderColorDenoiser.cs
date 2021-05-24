@@ -1,10 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderColorDenoiser : ShaderStep
 	{
 		public override ShaderType ShaderType { get; set; } = ShaderType.COLOR_DENOISER;
+
+		[Description("Iterations: Set the number of times the shader will be applied for this step")]
 		public int Iterations { get; set; } = 1;
 		public bool StrictMode { get; set; } = true;
 		public int ColorRange { get; set; }

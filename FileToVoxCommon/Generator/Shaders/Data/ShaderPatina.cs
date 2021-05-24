@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderPatina : ShaderStep
 	{
+		[Description("Iterations: Set the number of times the shader will be applied for this step")]
 		public int Iterations { get; set; } = 1;
 		public int TargetColorIndex { get; set; } = -1;
 		public int AdditionalColorRange { get; set; }

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderCase : ShaderStep
 	{
+		[Description("Iterations: Set the number of times the shader will be applied for this step")]
+		[Range(1, 10)]
 		public int Iterations { get; set; } = 1;
 		public int TargetColorIndex { get; set; } = -1;
 
