@@ -19,6 +19,8 @@ namespace FileToVoxCommon.Generator.Shaders.Json
 	class ShaderStepDataConverter : JsonConverter
 	{
 		static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new ShaderStepConcreteClassConverter() };
+		public override bool CanWrite => false;
+
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		{
 			throw new NotImplementedException();

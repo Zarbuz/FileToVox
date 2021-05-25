@@ -4,12 +4,14 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json.Converters;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderData : JsonBaseImportData
 	{
 		public ShaderStep[] Steps { get; set; }
+		public override GeneratorType GeneratorType { get; set; } = GeneratorType.Shader;
 	}
 
 	public enum ShaderType
@@ -35,6 +37,7 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 	public abstract class ShaderStep : StepData.StepData
 	{
 		[Browsable(false)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public abstract ShaderType ShaderType { get; set; }
 
 		public virtual void DisplayInfo()

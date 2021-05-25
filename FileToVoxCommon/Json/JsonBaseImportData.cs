@@ -14,6 +14,6 @@ namespace FileToVoxCommon.Json
 	public abstract class JsonBaseImportData
 	{
 		[JsonConverter(typeof(StringEnumConverter))]
-		public GeneratorType GeneratorType { get; set; }
+		public abstract GeneratorType GeneratorType { get; set; }
 	}
 }

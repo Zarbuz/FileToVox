@@ -9,6 +9,7 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 	public class HeightmapData : JsonBaseImportData
 	{
 		public HeightmapStep[] Steps { get; set; }
+		public override GeneratorType GeneratorType { get; set; } = GeneratorType.Heightmap;
 	}
 
 	public enum PlacementMode

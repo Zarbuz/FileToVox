@@ -5,6 +5,7 @@ namespace FileToVoxCommon.Generator.Terrain.Data
 {
 	public class WorldTerrainData : JsonBaseImportData
 	{
+		public override GeneratorType GeneratorType { get; set; } = GeneratorType.Terrain;
 		public int Width { get; set; }
 		public int Length { get; set; }
 
