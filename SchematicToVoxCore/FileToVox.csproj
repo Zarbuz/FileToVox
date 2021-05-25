@@ -42,7 +42,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileToVoxCommon\FileToVoxCommon.csproj" />
+    <ProjectReference Include="..\FileToVoxCommon\FileToVoxCommon.csproj">
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
