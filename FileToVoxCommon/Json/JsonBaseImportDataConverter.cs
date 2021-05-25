@@ -30,7 +30,7 @@ namespace FileToVoxCommon.Json
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			JObject jo = JObject.Load(reader);
-			Enum.TryParse(jo["generatorType"].ToString(), out GeneratorType generatorType);
+			Enum.TryParse(jo["GeneratorType"].ToString(), out GeneratorType generatorType);
 			switch (generatorType)
 			{
 				case GeneratorType.Terrain:

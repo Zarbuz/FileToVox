@@ -1,34 +1,34 @@
 {
-  "generatorType": "Shader",
-  "steps": [
+  "GeneratorType": "Shader",
+  "Steps": [
     {
-      "shaderType": "FIX_HOLES",
-      "iterations": 1
+      "ShaderType": "FIX_HOLES",
+      "Iterations": 1
     },
     {
-      "shaderType": "FIX_LONELY"
+      "ShaderType": "FIX_LONELY"
     },
     {
-      "shaderType": "COLOR_DENOISER",
-      "iterations": 2,
-      "strictMode": false,
-      "colorRange": 8
+      "ShaderType": "COLOR_DENOISER",
+      "Iterations": 2,
+      "StrictMode": false,
+      "ColorRange": 8
     },
     {
-      "shaderType": "CASE",
-      "iterations": 30,
+      "ShaderType": "CASE",
+      "Iterations": 30,
       "TargetColorIndex": 1
     },
     {
-      "shaderType": "CASE",
-      "iterations": 30,
+      "ShaderType": "CASE",
+      "Iterations": 30,
       "TargetColorIndex": 1
     },
     {
-      "shaderType": "PATINA",
-      "iterations": 1,
-      "seed": 123,
-      "density": 0.3,
+      "ShaderType": "PATINA",
+      "Iterations": 1,
+      "Seed": 123,
+      "Density": 0.3,
       "Thickness": 4,
       "TargetColorIndex": 1,
       "AdditionalColorRange": 0

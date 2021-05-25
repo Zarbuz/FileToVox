@@ -29,7 +29,7 @@ namespace FileToVoxCommon.Generator.Shaders.Json
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			JObject jo = JObject.Load(reader);
-			Enum.TryParse(jo["shaderType"].ToString(), out ShaderType shaderType);
+			Enum.TryParse(jo["ShaderType"].ToString(), out ShaderType shaderType);
 			switch (shaderType)
 			{
 				case ShaderType.PATINA:
