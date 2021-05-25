@@ -2,6 +2,7 @@
 using FileToVoxCommon.Json;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
@@ -33,6 +34,7 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 	public abstract class ShaderStep : StepData.StepData
 	{
+		[Browsable(false)]
 		public abstract ShaderType ShaderType { get; set; }
 
 		public virtual void DisplayInfo()
