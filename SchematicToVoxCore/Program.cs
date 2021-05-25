@@ -26,7 +26,6 @@ namespace FileToVox
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
-		private static bool SLICE;
 		private static bool MESH_SKIP_CAPTURE;
 
 		private static float SCALE = 1;
@@ -58,7 +57,6 @@ namespace FileToVox
 				{"mskip", "skip the capturing points part and load the previous PLY (for MeshSampler)", v => MESH_SKIP_CAPTURE = v != null},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
-				{"si|slice", "indicate that each picture is a slice", v => SLICE = v != null},
 				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
 			};
 
@@ -178,8 +176,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (SLICE)
-				Console.WriteLine("[INFO] Enabled option: slice");
 			if (DEBUG)
 				Console.WriteLine("[INFO] Enabled option: debug");
 			if (MESH_SEGMENT_X != 4)
@@ -223,39 +219,17 @@ namespace FileToVox
 				AbstractToSchematic converter;
 				if (isFolder)
 				{
-					if (SLICE)
-					{
-						converter = new FolderImageToSchematic(path, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
-						return SchematicToVox(converter, OUTPUT_PATH);
-					}
-
-					string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(t => Path.GetExtension(t).ToLower() != ".vox").ToArray();
-					Console.WriteLine("[INFO] Processing folder " + files.Length + " files");
-					for (int i = 0; i < files.Length; i++)
-					{
-						string file = files[i];
-						Console.WriteLine("[INFO] Processing file: " + file);
-						converter = GetConverter(file);
-						if (converter != null)
-						{
-							SchematicToVox(converter, Path.Combine(OUTPUT_PATH, Path.GetFileNameWithoutExtension(file)));
-						}
-						else
-						{
-							Console.WriteLine("[ERROR] Unsupported file extension !");
-						}
-					}
+					converter = new FolderImageToSchematic(path, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
+					return SchematicToVox(converter, OUTPUT_PATH);
 				}
-				else
+
+				converter = GetConverter(path);
+				if (converter != null)
 				{
-					converter = GetConverter(path);
-					if (converter != null)
-					{
-						return SchematicToVox(converter, OUTPUT_PATH);
-					}
-
-					Console.WriteLine("[ERROR] Unsupported file extension !");
+					return SchematicToVox(converter, OUTPUT_PATH);
 				}
+
+				Console.WriteLine("[ERROR] Unsupported file extension !");
 			}
 			catch (Exception e)
 			{
