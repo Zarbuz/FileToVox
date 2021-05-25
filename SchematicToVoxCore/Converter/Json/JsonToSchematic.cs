@@ -1,13 +1,15 @@
 ﻿using FileToVox.Generator;
-using FileToVox.Generator.Terrain;
-using FileToVox.Generator.Terrain.Data;
+using FileToVox.Generator.Heightmap;
+using FileToVox.Generator.Shaders;
 using FileToVox.Schematics;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using FileToVox.Generator.Heightmap;
-using FileToVox.Generator.Heightmap.Data;
-using FileToVox.Generator.Shaders;
+using FileToVox.Generator.Terrain;
+using FileToVoxCommon.Generator.Heightmap.Data;
+using FileToVoxCommon.Generator.Shaders.Data;
+using FileToVoxCommon.Generator.Terrain.Data;
+using FileToVoxCommon.Json;
 
 namespace FileToVox.Converter.Json
 {

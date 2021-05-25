@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
-using FileToVox.Converter.Json;
+using FileToVoxCommon.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FileToVox.Generator.Heightmap.Data
+namespace FileToVoxCommon.Generator.Heightmap.Data
 {
 	public class HeightmapData : JsonBaseImportData
 	{
 		public HeightmapStep[] Steps { get; set; }
+		public override GeneratorType GeneratorType { get; set; } = GeneratorType.Heightmap;
 	}
 
 	public enum PlacementMode
@@ -26,7 +27,7 @@ namespace FileToVox.Generator.Heightmap.Data
 		Z,
 	}
 
-	public class HeightmapStep
+	public class HeightmapStep : StepData.StepData
 	{
 		public string TexturePath { get; set; }
 		public string ColorTexturePath { get; set; }

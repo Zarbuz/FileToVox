@@ -2,7 +2,7 @@
 using FileToVox.Utils;
 using System;
 using System.Collections.Generic;
-using FileToVox.Generator.Shaders.Data;
+using FileToVoxCommon.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders
 {

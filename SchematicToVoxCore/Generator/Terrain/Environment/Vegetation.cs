@@ -1,7 +1,7 @@
-﻿using FileToVox.Generator.Terrain.Data;
-using System.Drawing;
+﻿using System.Drawing;
 using FileToVox.Generator.Terrain.Chunk;
 using FileToVox.Schematics.Tools;
+using FileToVoxCommon.Generator.Terrain.Data;
 using SchematicToVoxCore.Extensions;
 
 namespace FileToVox.Generator.Terrain

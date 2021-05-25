@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FileToVox.Converter.Json
+namespace FileToVoxCommon.Json
 {
 	public enum GeneratorType
 	{
@@ -14,6 +14,6 @@ namespace FileToVox.Converter.Json
 	public abstract class JsonBaseImportData
 	{
 		[JsonConverter(typeof(StringEnumConverter))]
-		public GeneratorType GeneratorType { get; set; }
+		public abstract GeneratorType GeneratorType { get; set; }
 	}
 }

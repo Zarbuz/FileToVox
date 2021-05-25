@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FileToVox.Schematics;
 using FileToVox.Utils;
+using FileToVoxCommon.Generator.Shaders.Data;
 
 namespace FileToVox.Generator.Shaders
 {

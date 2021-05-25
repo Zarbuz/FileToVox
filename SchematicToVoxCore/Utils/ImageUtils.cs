@@ -8,7 +8,7 @@ using System.Linq;
 using System.Xml.Linq;
 using FileToVox.Converter.Image;
 using FileToVox.Extensions;
-using FileToVox.Generator.Heightmap.Data;
+using FileToVoxCommon.Generator.Heightmap.Data;
 
 namespace FileToVox.Utils
 {

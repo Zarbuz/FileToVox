@@ -1,11 +1,10 @@
-﻿using FileToVox.Converter.Json;
-using FileToVox.Generator.Shaders.Data;
+﻿using System;
+using FileToVoxCommon.Generator.Shaders.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using Newtonsoft.Json.Serialization;
 
-namespace FileToVox.Generator.Shaders.Json
+namespace FileToVoxCommon.Generator.Shaders.Json
 {
 	public class ShaderStepConcreteClassConverter : DefaultContractResolver
 	{
@@ -20,6 +19,8 @@ namespace FileToVox.Generator.Shaders.Json
 	class ShaderStepDataConverter : JsonConverter
 	{
 		static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new ShaderStepConcreteClassConverter() };
+		public override bool CanWrite => false;
+
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		{
 			throw new NotImplementedException();
@@ -28,7 +29,7 @@ namespace FileToVox.Generator.Shaders.Json
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			JObject jo = JObject.Load(reader);
-			Enum.TryParse(jo["shaderType"].ToString(), out ShaderType shaderType);
+			Enum.TryParse(jo["ShaderType"].ToString(), out ShaderType shaderType);
 			switch (shaderType)
 			{
 				case ShaderType.PATINA:

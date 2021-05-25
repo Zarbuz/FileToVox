@@ -31,7 +31,7 @@ namespace FileToVox.Generator.Terrain
 
 			chunk.Position = position;
 
-			WorldTerrainData.TerrainGeneratorSettings.PaintChunk(chunk);
+			(WorldTerrainData.TerrainGeneratorDataSettings as TerrainGeneratorSettings).PaintChunk(chunk);
 			cachedChunk.Chunk = chunk;
 			return chunk;
 		}

@@ -1,18 +1,21 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace FileToVox.Generator.Shaders.Data
+namespace FileToVoxCommon.Generator.Shaders.Data
 {
-	public class ShaderCase : ShaderStep
+	public class ShaderFixHoles :ShaderStep
 	{
-		public int Iterations { get; set; } = 1;
-		public int TargetColorIndex { get; set; } = -1;
+		public override ShaderType ShaderType { get; set; } = ShaderType.FIX_HOLES;
 
-		public override ShaderType ShaderType { get; set; } = ShaderType.CASE;
+		[Description("Iterations: Set the number of times the shader will be applied for this step")]
+		[Range(1, 10)]
+		public int Iterations { get; set; } = 1;
+
 		public override void DisplayInfo()
 		{
 			base.DisplayInfo();
 			Console.WriteLine("[INFO] Iterations: " + Iterations);
-			Console.WriteLine("[INFO] TargetColorIndex: " + TargetColorIndex);
 		}
 
 		public override void ValidateSettings()

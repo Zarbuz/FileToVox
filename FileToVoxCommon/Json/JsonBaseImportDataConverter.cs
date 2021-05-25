@@ -1,12 +1,12 @@
-﻿using FileToVox.Generator.Terrain.Data;
+﻿using System;
+using FileToVoxCommon.Generator.Heightmap.Data;
+using FileToVoxCommon.Generator.Shaders.Data;
+using FileToVoxCommon.Generator.Terrain.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using System;
-using FileToVox.Generator.Heightmap.Data;
-using FileToVox.Generator.Shaders;
 
-namespace FileToVox.Converter.Json
+namespace FileToVoxCommon.Json
 {
 	public class JsonBaseImportConcreteClassConverter : DefaultContractResolver
 	{
@@ -30,7 +30,7 @@ namespace FileToVox.Converter.Json
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			JObject jo = JObject.Load(reader);
-			Enum.TryParse(jo["generatorType"].ToString(), out GeneratorType generatorType);
+			Enum.TryParse(jo["GeneratorType"].ToString(), out GeneratorType generatorType);
 			switch (generatorType)
 			{
 				case GeneratorType.Terrain:

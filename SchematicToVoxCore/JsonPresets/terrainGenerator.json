@@ -1,90 +1,90 @@
 {
-  "generatorType": "Terrain",
-	"width": 200,
-	"length": 200,
-	"seed": 12,
-	"biomes": [
+  "GeneratorType": "Terrain",
+	"Width": 200,
+	"Length": 200,
+	"Seed": 12,
+	"Biomes": [
 		{
-			"zones": [
+			"Zones": [
 				{
-					"altitudeMin": 0,
-					"altitudeMax": "63.75",
-					"moistureMin": "0.2",
-					"moistureMax": "0.35"
+					"AltitudeMin": 0,
+					"AltitudeMax": "63.75",
+					"MoistureMin": "0.2",
+					"MoistureMax": "0.35"
 				},
 				{
-					"altitudeMin": "63.75",
-					"altitudeMax": "127.5",
-					"moistureMin": "0.25",
-					"moistureMax": "0.65"
+					"AltitudeMin": "63.75",
+					"AltitudeMax": "127.5",
+					"MoistureMin": "0.25",
+					"MoistureMax": "0.65"
 				}
 			],
-			"voxelTop": "101, 187, 77",
-			"voxelDirt": "153, 102, 51",
-			"treeDensity": "0.001",
-			"trees": [
+			"VoxelTop": "101, 187, 77",
+			"VoxelDirt": "153, 102, 51",
+			"TreeDensity": "0.001",
+			"Trees": [
 			],
-			"vegetationDensity": "0.3",
-			"vegetation": [
+			"VegetationDensity": "0.3",
+			"Vegetation": [
 				{
-					"color": "255, 80, 80",
-					"probability": "0.1"
+					"Color": "255, 80, 80",
+					"Probability": "0.1"
 				}
 			]
 		},
 		{
-			"zones": [
+			"Zones": [
 				{
-					"altitudeMin": "191.25",
-					"altitudeMax": "255",
-					"moistureMin": "0",
-					"moistureMax": "0.35"
+					"AltitudeMin": "191.25",
+					"AltitudeMax": "255",
+					"MoistureMin": "0",
+					"MoistureMax": "0.35"
 				},
 				{
-					"altitudeMin": "127.5",
-					"altitudeMax": "255",
-					"moistureMin": "0",
-					"moistureMax": "0.15"
+					"AltitudeMin": "127.5",
+					"AltitudeMax": "255",
+					"MoistureMin": "0",
+					"MoistureMax": "0.15"
 				}
 			],
-			"voxelTop": "183, 117, 102",
-			"voxelDirt": "227, 159, 144",
-			"treeDensity": "0.001",
-			"trees": [
+			"VoxelTop": "183, 117, 102",
+			"VoxelDirt": "227, 159, 144",
+			"TreeDensity": "0.001",
+			"Trees": [
 			],
-			"vegetationDensity": "0.3",
-			"vegetation": [
+			"VegetationDensity": "0.3",
+			"Vegetation": [
 				{
-					"color": "255, 80, 80",
-					"probability": "0.1"
+					"Color": "255, 80, 80",
+					"Probability": "0.1"
 				}
 			]
 		},
 		{
-			"zones": [
+			"Zones": [
 				{
-					"altitudeMin": "0",
-					"altitudeMax": "127.5",
-					"moistureMin": "0",
-					"moistureMax": "0.15"
+					"AltitudeMin": "0",
+					"AltitudeMax": "127.5",
+					"MoistureMin": "0",
+					"MoistureMax": "0.15"
 				},
 				{
-					"altitudeMin": "127.5",
-					"altitudeMax": "191.25",
-					"moistureMin": "0.15",
-					"moistureMax": "0.35"
+					"AltitudeMin": "127.5",
+					"AltitudeMax": "191.25",
+					"MoistureMin": "0.15",
+					"MoistureMax": "0.35"
 				}
 			],
-			"voxelTop": "227, 227, 144",
-			"voxelDirt": "225, 225, 100",
-			"treeDensity": "0.001",
-			"trees": [
+			"VoxelTop": "227, 227, 144",
+			"VoxelDirt": "225, 225, 100",
+			"TreeDensity": "0.001",
+			"Trees": [
 			],
-			"vegetationDensity": "0.3",
-			"vegetation": [
+			"VegetationDensity": "0.3",
+			"Vegetation": [
 				{
-					"color": "255, 80, 80",
-					"probability": "0.1"
+					"Color": "255, 80, 80",
+					"Probability": "0.1"
 				}
 			]
 		},
@@ -103,90 +103,90 @@
 					"moistureMax": "0.85"
 				}
 			],
-			"voxelTop": "107, 207, 67",
-			"voxelDirt": "83, 157, 54",
-			"treeDensity": "0.001",
-			"trees": [
+			"VoxelTop": "107, 207, 67",
+			"VoxelDirt": "83, 157, 54",
+			"TreeDensity": "0.001",
+			"Trees": [
 			],
-			"vegetationDensity": "0.3",
-			"vegetation": [
+			"VegetationDensity": "0.3",
+			"Vegetation": [
 				{
-					"color": "255, 80, 80",
-					"probability": "0.1"
+					"Color": "255, 80, 80",
+					"Probability": "0.1"
 				}
 			]
 		}
 	],
-	"terrainGeneratorSettings": {
-		"maxHeight": 255,
-		"minHeight": -16,
-		"waterLevel": 25,
-		"steps": [
+	"TerrainGeneratorSettings": {
+		"MaxHeight": 255,
+		"MinHeight": -16,
+		"WaterLevel": 25,
+		"Steps": [
 			{
-				"enabled": true,
-				"operationType": "SampleHeightMapTexture",
-				"noiseTexturePath": "noise/NoiseBase.png",
-				"frequency": "0.1",
-				"noiseRangeMin": "0",
-				"noiseRangeMax": "0.3"
+				"Enabled": true,
+				"OperationType": "SampleHeightMapTexture",
+				"NoiseTexturePath": "noise/NoiseBase.png",
+				"Frequency": "0.1",
+				"NoiseRangeMin": "0",
+				"NoiseRangeMax": "0.3"
 			},
 			{
-				"enabled": true,
-				"operationType": "BlendAdditive",
+				"Enabled": true,
+				"OperationType": "BlendAdditive",
 				"inputIndex0": 0,
 				"inputIndex1": 0,
 				"weight0": 1,
 				"weight1": "-0.3"
 			},
 			{
-				"enabled": true,
-				"operationType": "Shift",
+				"Enabled": true,
+				"OperationType": "Shift",
 				"param": "0.6"
 			},
 			{
-				"enabled": true,
-				"operationType": "Exponential",
+				"Enabled": true,
+				"OperationType": "Exponential",
 				"param": "3.8"
 			},
 			{
-				"enabled": true,
-				"operationType": "Shift",
+				"Enabled": true,
+				"OperationType": "Shift",
 				"param": "0.065"
 			},
 			{
-				"enabled": true,
-				"operationType": "FlattenOrRaise",
+				"Enabled": true,
+				"OperationType": "FlattenOrRaise",
 				"threshold": "0.105",
 				"thresholdParam": "0.1"
 			},
 			{
-				"enabled": true,
-				"operationType": "SampleHeightMapTexture",
-				"noiseTexturePath": "noise/NoiseDetail.png",
-				"frequency": "0.3",
-				"noiseRangeMin": "0",
-				"noiseRangeMax": "0.4"
+				"Enabled": true,
+				"OperationType": "SampleHeightMapTexture",
+				"NoiseTexturePath": "noise/NoiseDetail.png",
+				"Frequency": "0.3",
+				"NoiseRangeMin": "0",
+				"NoiseRangeMax": "0.4"
 			},
 			{
-				"enabled": true,
-				"operationType": "Shift",
+				"Enabled": true,
+				"OperationType": "Shift",
 				"param": "0.8"
 			},
 			{
-				"enabled": true,
-				"operationType": "BlendMultiply",
+				"Enabled": true,
+				"OperationType": "BlendMultiply",
 				"inputIndex1": "7",
 				"inputIndex2": "5"
 			},
 			{
-				"enabled": true,
-				"operationType": "FlattenOrRaise",
+				"Enabled": true,
+				"OperationType": "FlattenOrRaise",
 				"threshold": "0.11",
 				"thresholdParam": "5"
 			},
 			{
-				"enabled": true,
-				"operationType": "BeachMask",
+				"Enabled": true,
+				"OperationType": "BeachMask",
 				"inputIndex0": "0",
 				"threshold": "0.14"
 			}

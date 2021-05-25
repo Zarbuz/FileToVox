@@ -1,4 +1,4 @@
-﻿namespace FileToVox.Generator.Shaders.Data
+﻿namespace FileToVoxCommon.Generator.Shaders.Data
 {
 	public class ShaderFixLonely : ShaderStep
 	{
