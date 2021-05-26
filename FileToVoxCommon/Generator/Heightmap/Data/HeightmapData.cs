@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using FileToVoxCommon.Json;
 using Newtonsoft.Json;
@@ -14,9 +16,13 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 
 	public enum PlacementMode
 	{
-		ADDITIVE,
-		REPLACE,
-		SUBSTRACT,
+		[Display(Name = "Additive", Description = "Adds the result of the heightmap generation to the final result")]
+		ADDITIVE = 0,
+		[Display(Name = "Replace", Description = "Replaces the color of the voxels that matches the previous generation step")]
+		REPLACE = 1,
+		[Display(Name = "Substract", Description = "Removes voxels that match with the previous generation step")]
+		SUBSTRACT = 2,
+		[Display(Name = "TopOnly", Description = "Add voxels only if there are voxels from the previous step")]
 		TOP_ONLY
 	}
 
@@ -31,12 +37,30 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 	{
 		public string TexturePath { get; set; }
 		public string ColorTexturePath { get; set; }
+
+		[Description("Height: The desired height")]
+		[Range(1, 1000)]
 		public int Height { get; set; }
+
+		[Description("Offset: Offset to shift the base of the generation")]
+		[Range(1, 1000)]
 		public int Offset { get; set; }
+
+		[Description("OffsetMerge: Offset to offset the base of the generation with respect to the previous step. Only valid for a placementMode at 'TOP_ONLY'")]
+		[Range(1, 1000)]
 		public int OffsetMerge { get; set; }
+
+		[Description("EnableColor: Activate yes or no colors. If ColorTexturePath is not specified, then the rendering will only be shades of gray")]
 		public bool EnableColor { get; set; }
+
+		[Description("ColorLimit: Limit the number of colors imported")]
+		[Range(1, 2556)]
 		public int ColorLimit { get; set; } = 256;
+
+		[Description("Excavate: Removes all voxels which are not visible (all voxels which do not have at least one empty voxel as a neighbor)")]
 		public bool Excavate { get; set; }
+
+		[Description("Reverse: Reverse the direction of generation")]
 		public bool Reverse { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
