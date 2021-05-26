@@ -54,7 +54,7 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 		public bool EnableColor { get; set; }
 
 		[Description("ColorLimit: Limit the number of colors imported")]
-		[Range(1, 2556)]
+		[Range(1, 256)]
 		public int ColorLimit { get; set; } = 256;
 
 		[Description("Excavate: Removes all voxels which are not visible (all voxels which do not have at least one empty voxel as a neighbor)")]
