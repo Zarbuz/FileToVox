@@ -295,7 +295,7 @@ namespace FileToVox
 			{
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE, COLOR_LIMIT);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", converterPalette.GetPalette(), schematic);
+				return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(outputPath), converterPalette.GetPalette(), schematic);
 			}
 
 			if (INPUT_SHADER_FILE != null)
@@ -304,7 +304,14 @@ namespace FileToVox
 				schematic = jsonParser.WriteSchematic();
 			}
 
-			return writer.WriteModel(CHUNK_SIZE, outputPath + ".vox", null, schematic);
+			return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(outputPath), null, schematic);
+		}
+
+		private static string FormatOutputDestination(string outputPath)
+		{
+			outputPath = outputPath.Replace(".vox", "");
+			outputPath += ".vox";
+			return outputPath;
 		}
 
 		private static void ShowHelp(OptionSet p)
