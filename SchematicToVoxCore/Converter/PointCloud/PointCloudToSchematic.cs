@@ -26,6 +26,13 @@ namespace FileToVox.Converter.PointCloud
 
 		protected void VoxelizeData(BodyDataDTO data)
 		{
+			mSchematic = new Schematic();
+
+			if (data.BodyVertices.Count == 0)
+			{
+				return;
+			}
+
 			Vector3 minX = data.BodyVertices.MinBy(t => t.X);
 			Vector3 minY = data.BodyVertices.MinBy(t => t.Y);
 			Vector3 minZ = data.BodyVertices.MinBy(t => t.Z);
@@ -38,7 +45,6 @@ namespace FileToVox.Converter.PointCloud
 				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * Scale), (float)Math.Truncate(data.BodyVertices[i].Y * Scale), (float)Math.Truncate(data.BodyVertices[i].Z * Scale));
 			}
 
-			mSchematic = new Schematic();
 			//HashSet<Vector3> set = new HashSet<Vector3>();
 
 			minX = data.BodyVertices.MinBy(t => t.X);
