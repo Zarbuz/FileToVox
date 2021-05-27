@@ -8,7 +8,7 @@
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <Authors>Zarbuz</Authors>
-    <Version>1.12</Version>
+    <Version>1.12.0.1</Version>
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
   </PropertyGroup>
