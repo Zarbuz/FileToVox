@@ -4,11 +4,11 @@ namespace FileToVox.Converter
 {
 	public abstract class AbstractToSchematic
     {
-        protected string Path;
+        protected string PathFile;
 
         protected AbstractToSchematic(string path)
         {
-            Path = path;
+            PathFile = path;
         }
 
         public abstract Schematic WriteSchematic();

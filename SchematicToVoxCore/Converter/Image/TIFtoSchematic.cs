@@ -22,9 +22,9 @@ namespace FileToVox.Converter.Image
 
         protected override Schematic WriteSchematicMain()
         {
-	        if (!File.Exists(Path))
+	        if (!File.Exists(PathFile))
 	        {
-		        Console.WriteLine("[ERROR] The file path is invalid for path : " + Path);
+		        Console.WriteLine("[ERROR] The file path is invalid for path : " + PathFile);
 		        return null;
 	        }
 
@@ -34,7 +34,7 @@ namespace FileToVox.Converter.Image
 		        return null;
 	        }
 
-	        Bitmap bitmap = ConvertTifToBitmap(Path);
+	        Bitmap bitmap = ConvertTifToBitmap(PathFile);
 	        Bitmap bitmapColor = null;
 	        if (!string.IsNullOrEmpty(ColorPath))
 	        {
@@ -43,7 +43,7 @@ namespace FileToVox.Converter.Image
 
 	        HeightmapStep heightmapStep = new HeightmapStep()
 	        {
-		        TexturePath = Path,
+		        TexturePath = PathFile,
 		        ColorLimit = ColorLimit,
 		        ColorTexturePath = ColorPath,
 		        EnableColor = Color,

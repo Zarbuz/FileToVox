@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using FileToVox.Converter.PointCloud;
 using FileToVox.Schematics;
 
@@ -13,10 +14,13 @@ namespace FileToVox.Converter
 		public MeshToSchematic(string path, float scale, int colorLimit, int segmentX, int segmentY, int subsample, bool skipCapture) : base(path)
 		{
 			Console.WriteLine("[INFO] External program 'MeshSampler' needed! Check location of the program ...");
-			if (File.Exists("MeshSampler/MeshSampler.exe"))
+			string appRoot = AppDomain.CurrentDomain.BaseDirectory;
+			string fullPath = Path.Combine(appRoot, "MeshSampler/MeshSampler.exe");
+			Console.WriteLine("[INFO] Check at: " + fullPath);
+			if (File.Exists(fullPath))
 			{
 				Console.WriteLine("[INFO] MeshSampler/MeshSampler.exe found!");
-				FileInfo fileInfo = new FileInfo("MeshSampler/MeshSampler.exe");
+				FileInfo fileInfo = new FileInfo(fullPath);
 				// Prepare the process to run
 				ProcessStartInfo start = new ProcessStartInfo();
 				// Enter in the command line arguments, everything you would enter after the executable name itself
@@ -52,13 +56,14 @@ namespace FileToVox.Converter
 			}
 			else
 			{
-				throw new FileNotFoundException("[ERROR] MeshSampler/MeshSampler.exe not found!");
+				throw new FileNotFoundException("[ERROR] MeshSampler/MeshSampler.exe not found!" + fullPath);
 			}
 		}
 
 		private void LoadPointCloud(float scale, int colorLimit)
 		{
-			string resultFile = "MeshSampler/PMesh.ply";
+			string appRoot = AppDomain.CurrentDomain.BaseDirectory;
+			string resultFile = Path.Combine(appRoot, "MeshSampler/PMesh.ply");
 			FileInfo fileResultInfo = new FileInfo(resultFile);
 
 			if (File.Exists(resultFile))

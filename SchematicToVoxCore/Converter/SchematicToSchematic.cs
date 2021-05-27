@@ -25,7 +25,7 @@ namespace FileToVox.Converter
 
 		public override Schematic WriteSchematic()
 		{
-			NbtFile file = new NbtFile(Path);
+			NbtFile file = new NbtFile(PathFile);
 			return LoadSchematic(file);
 		}
 

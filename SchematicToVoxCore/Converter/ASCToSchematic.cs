@@ -29,7 +29,7 @@ namespace FileToVox.Converter
             int nodata = -9999;
             float[,] points = new float[0,0]; //rows, cols
 
-            using (StreamReader file = new StreamReader(Path))
+            using (StreamReader file = new StreamReader(PathFile))
             {
                 string line;
                 int row = 0;

@@ -24,7 +24,7 @@ namespace FileToVox.Converter.Image
 
         public override Schematic WriteSchematic()
         {
-            int height = Directory.GetFiles(Path, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
+            int height = Directory.GetFiles(PathFile, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
             Console.WriteLine("[INFO] Count files in the folder : " + height);
 
             List<Voxel> blocks = new List<Voxel>();
@@ -40,7 +40,7 @@ namespace FileToVox.Converter.Image
 
             using (ProgressBar progressbar = new ProgressBar())
             {
-                string[] files = Directory.GetFiles(Path);
+                string[] files = Directory.GetFiles(PathFile);
                 for (int i = 0; i < files.Length; i++)
                 {
                     string file = files[i];

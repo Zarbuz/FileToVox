@@ -32,14 +32,14 @@ namespace FileToVox.Converter.Json
 		{
 			try
 			{
-				JsonBaseImportData data = JsonConvert.DeserializeObject<JsonBaseImportData>(File.ReadAllText(Path));
+				JsonBaseImportData data = JsonConvert.DeserializeObject<JsonBaseImportData>(File.ReadAllText(PathFile));
 				if (data != null)
 				{
 					Console.WriteLine("[INFO] GeneratorType: " + data.GeneratorType);
 					switch (data.GeneratorType)
 					{
 						case GeneratorType.Terrain:
-							string directoryName = System.IO.Path.GetDirectoryName(Path);
+							string directoryName = System.IO.Path.GetDirectoryName(PathFile);
 							WorldTerrainData worldTerrainData = data as WorldTerrainData;
 							worldTerrainData.DirectoryPath = directoryName;
 							mGenerator = new TerrainGenerator(worldTerrainData);
