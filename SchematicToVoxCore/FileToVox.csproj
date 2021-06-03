@@ -8,13 +8,14 @@
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <Authors>Zarbuz</Authors>
-    <Version>1.12.0.1</Version>
+    <Version>1.12.2</Version>
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningLevel>1</WarningLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

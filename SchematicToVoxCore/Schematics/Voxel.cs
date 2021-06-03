@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using FileToVox.Utils;
 
 namespace FileToVox.Schematics
 {
-    [StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
     public class Voxel : IEquatable<Voxel>
     {
         public readonly ushort X;
         public readonly ushort Y;
         public readonly ushort Z;
-        public int PalettePosition;
+
         public uint Color;
 
         public Voxel()
@@ -19,13 +17,12 @@ namespace FileToVox.Schematics
 
 		}
 
-        public Voxel(ushort x, ushort y, ushort z, uint color, int palettePosition = -1)
+        public Voxel(ushort x, ushort y, ushort z, uint color)
         {
             X = x;
             Y = y;
             Z = z;
             Color = color;
-            PalettePosition = palettePosition;
         }
 
         public override int GetHashCode()
@@ -42,11 +39,6 @@ namespace FileToVox.Schematics
         public override string ToString()
         {
             return $"X: {X}, Y: {Y}, Z: {Z}, Color: {Color.ToString()}";
-        }
-
-		public ulong GetIndex()
-		{
-			return (ulong) ((Y * Schematic.MAX_WORLD_LENGTH + Z) * Schematic.MAX_WORLD_WIDTH + X);
         }
 
     }

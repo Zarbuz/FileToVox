@@ -49,7 +49,7 @@ namespace FileToVox.Schematics
 				List<Voxel> allVoxels = schematic.GetAllVoxels();
 				foreach (Voxel block in allVoxels)
 				{
-					newSchematic.AddVoxel(block.X, block.Y, block.Z, _colors[paletteDictionary[block.Color]].ColorToUInt(), paletteDictionary[block.Color]);
+					newSchematic.AddVoxel(block.X, block.Y, block.Z, _colors[paletteDictionary[block.Color]].ColorToUInt());
 					progressbar.Report(i++ / (float)allVoxels.Count);
 				}
 			}

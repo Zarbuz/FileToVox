@@ -145,7 +145,7 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 
 					List<Voxel> list = new List<Voxel>() {right, left, top, bottom, front, back};
 					list = list.Where(v => v != null).ToList();
-					if (DistanceAverage(voxel, list) <= colorRange)
+					if (DistanceAverage(schematic, voxel, list) <= colorRange)
 					{
 						schematic.ReplaceVoxel(voxel, GetDominantColor(list));
 						colorChanged++;
@@ -181,9 +181,9 @@ namespace FileToVox.Generator.Shaders.ApplyShaders
 			return mostUsedColors.OrderByDescending(t => t.Value).First().Key;
 		}
 
-		private float DistanceAverage(Voxel currentVoxel, List<Voxel> voxels)
+		private float DistanceAverage(Schematic schematic, Voxel currentVoxel, List<Voxel> voxels)
 		{
-			float sum = voxels.Where(v => v != null).Aggregate<Voxel, float>(0, (current, voxel) => current + Distance(currentVoxel.PalettePosition, voxel.PalettePosition));
+			float sum = voxels.Where(v => v != null).Aggregate<Voxel, float>(0, (current, voxel) => current + Distance(schematic.GetPaletteIndex(currentVoxel.Color), schematic.GetPaletteIndex(voxel.Color)));
 			sum /= voxels.Count(v => v != null);
 			return sum;
 		}
