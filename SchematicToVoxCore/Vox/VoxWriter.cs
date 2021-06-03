@@ -18,7 +18,6 @@ namespace FileToVox.Vox
 		private int mWidth;
 		private int mLength;
 		private int mHeight;
-		private int mCountSize;
 		private int mCountRegionNonEmpty;
 		private int mTotalBlockCount;
 
@@ -33,7 +32,7 @@ namespace FileToVox.Vox
 		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
 		{
 			mChunkSize = chunkSize;
-			mWidth = mLength = mHeight = mCountSize = mTotalBlockCount = mCountRegionNonEmpty = 0;
+			mWidth = mLength = mHeight = mTotalBlockCount = mCountRegionNonEmpty = 0;
 			mSchematic = schematic;
 			mPalette = palette;
 			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
@@ -57,7 +56,6 @@ namespace FileToVox.Vox
 			mLength = (int)Math.Ceiling(((decimal)mSchematic.Length / mChunkSize)) + 1;
 			mHeight = (int)Math.Ceiling(((decimal)mSchematic.Height / mChunkSize)) + 1;
 
-			mCountSize = mWidth * mLength * mHeight;
 			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
 			mTotalBlockCount = mSchematic.GetAllVoxels().Count;
@@ -91,32 +89,6 @@ namespace FileToVox.Vox
 			return mChildrenChunkSize;
 		}
 
-		/// <summary>
-		/// Get all blocks in the specified coordinates
-		/// </summary>
-		/// <param name="min"></param>
-		/// <param name="max"></param>
-		/// <returns></returns>
-		private List<Voxel> GetBlocksInRegion(Vector3 min, Vector3 max)
-		{
-			List<Voxel> list = new List<Voxel>();
-
-			for (int y = (int)min.Y; y < max.Y; y++)
-			{
-				for (int z = (int)min.Z; z < max.Z; z++)
-				{
-					for (int x = (int)min.X; x < max.X; x++)
-					{
-						if (mSchematic.GetVoxel(x, y, z, out Voxel voxel))
-						{
-							list.Add(voxel);
-						}
-					}
-				}
-			}
-
-			return list;
-		}
 
 		/// <summary>
 		/// Convert the coordinates of the first block in each region into string
@@ -238,9 +210,10 @@ namespace FileToVox.Vox
 				writer.Write((byte)(block.X % mChunkSize));
 				writer.Write((byte)(block.Y % mChunkSize));
 				writer.Write((byte)(block.Z % mChunkSize));
-				if (block.PalettePosition != -1)
+				int paletteIndex = mSchematic.GetPaletteIndex(block.Color);
+				if (paletteIndex != -1)
 				{
-					writer.Write((byte)(block.PalettePosition + 1));
+					writer.Write((byte)(paletteIndex + 1));
 				}
 				else
 				{

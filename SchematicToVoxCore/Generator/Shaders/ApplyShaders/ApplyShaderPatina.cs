@@ -63,9 +63,10 @@ namespace FileToVox.Generator.Shaders
 			return schematic;
 		}
 
-		private bool IsGrowColor(Voxel voxel)
+		private bool IsGrowColor(Schematic schematic, Voxel voxel)
 		{
-			return voxel.PalettePosition >= MathF.Min(mShaderPatina.TargetColorIndex, mShaderPatina.TargetColorIndex + mShaderPatina.AdditionalColorRange) && voxel.PalettePosition <= MathF.Max(mShaderPatina.TargetColorIndex, mShaderPatina.TargetColorIndex + mShaderPatina.AdditionalColorRange);
+			int paletteIndex = schematic.GetPaletteIndex(voxel.Color);
+			return paletteIndex >= MathF.Min(mShaderPatina.TargetColorIndex, mShaderPatina.TargetColorIndex + mShaderPatina.AdditionalColorRange) && paletteIndex <= MathF.Max(mShaderPatina.TargetColorIndex, mShaderPatina.TargetColorIndex + mShaderPatina.AdditionalColorRange);
 		}
 
 		private float Random(Voxel voxel, float seed)
@@ -95,7 +96,7 @@ namespace FileToVox.Generator.Shaders
 					{
 						if (schematic.GetVoxel(voxel.X + x, voxel.Y + y, voxel.Z + z, out Voxel foundVoxel))
 						{
-							if (!IsGrowColor(foundVoxel))
+							if (!IsGrowColor(schematic, foundVoxel))
 							{
 								float d = MathF.Sqrt(MathF.Pow(x, 2) + MathF.Pow(y, 2) + MathF.Pow(z, 2));
 								if (minDistance > d)
@@ -127,7 +128,7 @@ namespace FileToVox.Generator.Shaders
 					{
 						if (schematic.GetVoxel(voxel.X + x, voxel.Y + y, voxel.Z + z, out Voxel foundVoxel))
 						{
-							if (!IsGrowColor(foundVoxel))
+							if (!IsGrowColor(schematic, foundVoxel))
 							{
 								return true;
 							}
@@ -143,42 +144,42 @@ namespace FileToVox.Generator.Shaders
 		{
 			int neighbors = 0;
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z + 1, out Voxel foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z + 1, out Voxel foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
@@ -190,32 +191,32 @@ namespace FileToVox.Generator.Shaders
 		{
 			int neighbors = 0;
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				neighbors++;
 			}
@@ -225,27 +226,27 @@ namespace FileToVox.Generator.Shaders
 
 		private bool GrowsDown(Schematic schematic, Voxel voxel)
 		{
-			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				return true;
 			}
 
-			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X + 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				return true;
 			}
 
-			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X - 1, voxel.Y, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				return true;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z - 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				return true;
 			}
 
-			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(foundVoxel))
+			if (schematic.GetVoxel(voxel.X, voxel.Y, voxel.Z + 1, out foundVoxel) && IsGrowColor(schematic, foundVoxel))
 			{
 				return true;
 			}
@@ -262,22 +263,22 @@ namespace FileToVox.Generator.Shaders
 			{
 				int x = voxel.X + 1;
 				int z = voxel.Z + 1;
-				if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(foundVoxel) && (x + z) % 13 == 0)
+				if (schematic.GetVoxel(voxel.X, voxel.Y - 1, voxel.Z, out Voxel foundVoxel) && IsGrowColor(schematic, foundVoxel) && (x + z) % 13 == 0)
 				{
 					return true;
 				}
 
-				if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel) && (x + z) % 27 == 0)
+				if (schematic.GetVoxel(voxel.X, voxel.Y + 1, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel) && (x + z) % 27 == 0)
 				{
 					return true;
 				}
 
-				if (schematic.GetVoxel(voxel.X, voxel.Y - 2, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel) && (x + z) % 13 == 0)
+				if (schematic.GetVoxel(voxel.X, voxel.Y - 2, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel) && (x + z) % 13 == 0)
 				{
 					return true;
 				}
 
-				if (schematic.GetVoxel(voxel.X, voxel.Y + 2, voxel.Z, out foundVoxel) && IsGrowColor(foundVoxel) && (x + z) % 27 == 0)
+				if (schematic.GetVoxel(voxel.X, voxel.Y + 2, voxel.Z, out foundVoxel) && IsGrowColor(schematic, foundVoxel) && (x + z) % 27 == 0)
 				{
 					return true;
 				}

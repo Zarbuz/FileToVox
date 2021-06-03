@@ -185,19 +185,10 @@ namespace FileToVox.Schematics
 
 		public void AddVoxel(int x, int y, int z, uint color)
 		{
-			AddVoxel(x, y, z, color, -1);
-		}
-
-		public void AddVoxel(int x, int y, int z, uint color, int palettePosition)
-		{
 			if (color != 0 && x < MAX_WORLD_WIDTH && y < MAX_WORLD_HEIGHT && z < MAX_WORLD_LENGTH)
 			{
 				AddColorInUsedColors(color);
-				if (palettePosition == -1)
-				{
-					palettePosition = GetPaletteIndex(color);
-				}
-				AddUsageForRegion(x, y, z, color, palettePosition);
+				AddUsageForRegion(x, y, z, color);
 				ComputeMinMax(x, y, z);
 			}
 		}
@@ -281,6 +272,10 @@ namespace FileToVox.Schematics
 
 			return voxels;
 		}
+		public int GetPaletteIndex(uint color)
+		{
+			return UsedColors.IndexOf(color);
+		}
 
 		#endregion
 
@@ -306,14 +301,14 @@ namespace FileToVox.Schematics
 			}
 		}
 
-		private void AddUsageForRegion(int x, int y, int z, uint color, int palettePosition)
+		private void AddUsageForRegion(int x, int y, int z, uint color)
 		{
 			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
 
-			RegionDict[chunkIndex].BlockDict[voxelIndex] = new Voxel((ushort)x, (ushort)y, (ushort)z, color, palettePosition);
+			RegionDict[chunkIndex].BlockDict[voxelIndex] = new Voxel((ushort)x, (ushort)y, (ushort)z, color);
 		}
 
 		private void ReplaceUsageForRegion(int x, int y, int z, uint color)
@@ -326,7 +321,6 @@ namespace FileToVox.Schematics
 			if (RegionDict[chunkIndex].BlockDict.ContainsKey(voxelIndex))
 			{
 				RegionDict[chunkIndex].BlockDict[voxelIndex].Color = color;
-				RegionDict[chunkIndex].BlockDict[voxelIndex].PalettePosition = UsedColors.IndexOf(color);
 			}
 		}
 
@@ -353,10 +347,7 @@ namespace FileToVox.Schematics
 			}
 		}
 
-		private int GetPaletteIndex(uint color)
-		{
-			return UsedColors.IndexOf(color);
-		}
+		
 
 		private void ComputeMinMax(int x, int y, int z)
 		{
