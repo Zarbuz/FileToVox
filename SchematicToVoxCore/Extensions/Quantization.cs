@@ -25,7 +25,7 @@ namespace FileToVox.Extensions
                 {
 	                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
 	                {
-		                using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
+		                using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit + 1))
 		                {
 			                Bitmap reducedBitmap = (Bitmap) quantized;
 			                //Console.WriteLine(quantized.PixelFormat);
