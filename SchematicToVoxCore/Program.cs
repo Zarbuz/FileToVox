@@ -76,7 +76,7 @@ namespace FileToVox
 
 				if (success)
 				{
-					CheckVerbose();
+					CheckDebug();
 				}
 
 				Console.WriteLine("[INFO] Done.");
@@ -220,13 +220,13 @@ namespace FileToVox
 				if (isFolder)
 				{
 					converter = new FolderImageToSchematic(path, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
-					return SchematicToVox(converter, OUTPUT_PATH);
+					return SchematicToVox(converter);
 				}
 
 				converter = GetConverter(path);
 				if (converter != null)
 				{
-					return SchematicToVox(converter, OUTPUT_PATH);
+					return SchematicToVox(converter);
 				}
 
 				Console.WriteLine("[ERROR] Unsupported file extension !");
@@ -276,7 +276,7 @@ namespace FileToVox
 			}
 		}
 
-		private static bool SchematicToVox(AbstractToSchematic converter, string outputPath)
+		private static bool SchematicToVox(AbstractToSchematic converter)
 		{
 			Schematic schematic = converter.WriteSchematic();
 			Console.WriteLine($"[INFO] Vox Width: {schematic.Width}");
@@ -295,7 +295,7 @@ namespace FileToVox
 			{
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE, COLOR_LIMIT);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(outputPath), converterPalette.GetPalette(), schematic);
+				return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
 			}
 
 			if (INPUT_SHADER_FILE != null)
@@ -304,7 +304,7 @@ namespace FileToVox
 				schematic = jsonParser.WriteSchematic();
 			}
 
-			return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(outputPath), null, schematic);
+			return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), null, schematic);
 		}
 
 		private static string FormatOutputDestination(string outputPath)
@@ -321,12 +321,12 @@ namespace FileToVox
 			p.WriteOptionDescriptions(Console.Out);
 		}
 
-		private static void CheckVerbose()
+		private static void CheckDebug()
 		{
 			if (DEBUG)
 			{
 				VoxReader reader = new VoxReader();
-				reader.LoadModel(OUTPUT_PATH + ".vox");
+				reader.LoadModel(FormatOutputDestination(OUTPUT_PATH));
 			}
 		}
 	}

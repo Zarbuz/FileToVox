@@ -11,6 +11,7 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 		public int Iterations { get; set; } = 1;
 
 		[Description("TargetColorIndex: The index of the color target. If value is set to -1, then the shader is applied to all colors")]
+		[Range(-1, 256)]
 		public int TargetColorIndex { get; set; } = -1;
 
 		public override ShaderType ShaderType { get; set; } = ShaderType.CASE;
