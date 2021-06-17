@@ -188,11 +188,6 @@ namespace FileToVox.Schematics
 			AddVoxel(x, y, z, color, true);
 		}
 
-		public void AddVoxelWithoutReplace(int x, int y, int z, uint color)
-		{
-			AddVoxel(x, y, z, color, false);
-		}
-
 		public void AddVoxel(int x, int y, int z, uint color, bool replaceIfExist)
 		{
 			if (color != 0 && x < MAX_WORLD_WIDTH && y < MAX_WORLD_HEIGHT && z < MAX_WORLD_LENGTH)

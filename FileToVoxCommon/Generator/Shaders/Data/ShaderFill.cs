@@ -22,9 +22,9 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 	public class ShaderFill : ShaderStep
 	{
-		[Description("TargetColorIndex: The index of the color target to fill all voxels")]
-		[Range(0, 256)]
-		public int TargetColorIndex { get; set; } = 0;
+		[Description("TargetColorIndex: The index of the color target to fill all voxels. If value is -1, then it will delete voxels")]
+		[Range(-1, 256)]
+		public int TargetColorIndex { get; set; } = -1;
 
 		[Range(1, 2000)]
 		public int Limit { get; set; } = 1;
@@ -34,6 +34,9 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 		[Description("RotationMode: The way voxels should be filled")]
 		public RotationMode RotationMode { get; set; } = RotationMode.Y;
+
+		[Description("Replace: Should replace or not voxels already present during fill ?")]
+		public bool Replace { get; set; }
 
 		public override ShaderType ShaderType { get; set; } = ShaderType.FILL;
 		public override void ValidateSettings()
