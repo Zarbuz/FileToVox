@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FileToVoxCommon.Generator.Shaders.Data
 {
@@ -30,9 +32,11 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 		public int Limit { get; set; } = 1;
 
 		[Description("FillWay: The way voxels should be filled")]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public FillDirection FillDirection { get; set; } = FillDirection.MINUS;
 
 		[Description("RotationMode: The way voxels should be filled")]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public RotationMode RotationMode { get; set; } = RotationMode.Y;
 
 		[Description("Replace: Should replace or not voxels already present during fill ?")]
