@@ -2,7 +2,7 @@
 using System.Drawing;
 using Newtonsoft.Json;
 
-namespace FileToVoxCommon.Generator.Terrain.Data
+namespace FileToVox.Generator.Terrain.Data
 {
 	[Serializable]
 	public struct BiomeZone
@@ -30,7 +30,7 @@ namespace FileToVoxCommon.Generator.Terrain.Data
 	}
 
 	[Serializable]
-	public class BiomeSettings : Generator.StepData.StepData
+	public class BiomeSettings : FileToVoxCommon.Generator.StepData.StepData
 	{
 		public BiomeZone[] Zones { get; set; }
 		public Color VoxelTop { get; set; }

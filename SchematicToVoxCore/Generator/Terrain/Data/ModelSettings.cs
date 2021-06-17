@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace FileToVoxCommon.Generator.Terrain.Data
+namespace FileToVox.Generator.Terrain.Data
 {
 	public class ModelSettings
 	{

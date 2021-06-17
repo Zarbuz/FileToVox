@@ -1,8 +1,8 @@
-﻿using System.Drawing;
-using FileToVox.Generator.Terrain.Chunk;
+﻿using FileToVox.Generator.Terrain.Chunk;
 using FileToVox.Schematics.Tools;
-using FileToVoxCommon.Generator.Terrain.Data;
 using SchematicToVoxCore.Extensions;
+using System.Drawing;
+using BiomeSettings = FileToVox.Generator.Terrain.Data.BiomeSettings;
 
 namespace FileToVox.Generator.Terrain
 {

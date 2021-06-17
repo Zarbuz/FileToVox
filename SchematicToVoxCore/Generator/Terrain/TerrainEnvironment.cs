@@ -3,8 +3,8 @@ using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Main;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
-using FileToVoxCommon.Generator.Terrain.Data;
 using System;
+using WorldTerrainData = FileToVox.Generator.Terrain.Data.WorldTerrainData;
 
 namespace FileToVox.Generator.Terrain
 {

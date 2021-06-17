@@ -1,10 +1,9 @@
-﻿using System;
-using FileToVoxCommon.Generator.Heightmap.Data;
+﻿using FileToVoxCommon.Generator.Heightmap.Data;
 using FileToVoxCommon.Generator.Shaders.Data;
-using FileToVoxCommon.Generator.Terrain.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System;
 
 namespace FileToVoxCommon.Json
 {
@@ -33,8 +32,8 @@ namespace FileToVoxCommon.Json
 			Enum.TryParse(jo["GeneratorType"].ToString(), out GeneratorType generatorType);
 			switch (generatorType)
 			{
-				case GeneratorType.Terrain:
-					return JsonConvert.DeserializeObject<WorldTerrainData>(jo.ToString(), SpecifiedSubclassConversion);
+				//case GeneratorType.Terrain:
+				//	return JsonConvert.DeserializeObject<WorldTerrainData>(jo.ToString(), SpecifiedSubclassConversion);
 				case GeneratorType.Heightmap:
 					return JsonConvert.DeserializeObject<HeightmapData>(jo.ToString(), SpecifiedSubclassConversion);
 				case GeneratorType.Shader:

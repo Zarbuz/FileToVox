@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FileToVox.Schematics;
+﻿using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
-using FileToVoxCommon.Generator.Terrain.Data;
+using System;
+using WorldTerrainData = FileToVox.Generator.Terrain.Data.WorldTerrainData;
 
 namespace FileToVox.Generator.Terrain
 {
