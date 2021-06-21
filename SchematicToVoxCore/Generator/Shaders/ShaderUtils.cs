@@ -30,6 +30,9 @@ namespace FileToVox.Generator.Shaders
 				case ShaderType.COLOR_DENOISER:
 					shaderGenerator = new ApplyShaderColorDenoiser();
 					break;
+				case ShaderType.FILL:
+					shaderGenerator = new ApplyShaderFill();
+					break;
 				default:
 					throw new NotImplementedException();
 			}

@@ -1,7 +1,7 @@
 ﻿using FileToVoxCommon.Json;
 using Newtonsoft.Json;
 
-namespace FileToVoxCommon.Generator.Terrain.Data
+namespace FileToVox.Generator.Terrain.Data
 {
 	public class WorldTerrainData : JsonBaseImportData
 	{

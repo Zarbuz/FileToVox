@@ -1,9 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FileToVoxCommon.Generator.Terrain.Data
+namespace FileToVox.Generator.Terrain.Data
 {
 	public enum TerrainStepType
 	{

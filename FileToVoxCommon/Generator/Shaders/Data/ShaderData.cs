@@ -22,14 +22,20 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 		[Display(Name = "Color Denoiser", Description = "This shader allows you to replace the color of a voxel according to the adjacent voxels")]
 		COLOR_DENOISER = 1,
 
-		[Display(Name = "Fix Holes", Description = "This shader is used to fill the holes. A hole is an \"empty\" voxel of which at least 4 adjacent voxels are not empty.")]
+		[Display(Name = "Fix Holes", Description = "This shader is used to fill the holes. A hole is an \"empty\" voxel of which at least 4 adjacent voxels are not empty")]
 		FIX_HOLES = 2,
 
-		[Display(Name = "Fix Lonely", Description = "This shader removes all voxels that have no adjacent voxels.")]
+		[Display(Name = "Fix Lonely", Description = "This shader removes all voxels that have no adjacent voxels")]
 		FIX_LONELY = 3,
 
 		[Display(Name = "Patina", Description = "This shader will grow a patina on your voxels. It won't create new voxels, just change the color. This voxel is based on the patStar shader")]
 		PATINA = 4,
+
+		[Display(Name = "Fill", Description = "This shader will fill all voxels in function of some conditions")]
+		FILL = 5,
+
+		[Display(Name = "Replace", Description = "This shader will replace all voxels in function of some conditions")]
+		REPLACE = 6
 	}
 
 	[JsonConverter(typeof(ShaderStepDataConverter))]

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using FileToVox.Generator.Terrain.Entities;
+﻿using FileToVox.Generator.Terrain.Entities;
 using FileToVox.Generator.Terrain.Utility;
 using FileToVox.Schematics;
 using FileToVox.Schematics.Tools;
-using FileToVoxCommon.Generator.Terrain.Data;
+using System;
+using System.Collections.Generic;
+using BiomeSettings = FileToVox.Generator.Terrain.Data.BiomeSettings;
+using BiomeZone = FileToVox.Generator.Terrain.Data.BiomeZone;
+using TerrainGeneratorDataSettings = FileToVox.Generator.Terrain.Data.TerrainGeneratorDataSettings;
 
 namespace FileToVox.Generator.Terrain
 {

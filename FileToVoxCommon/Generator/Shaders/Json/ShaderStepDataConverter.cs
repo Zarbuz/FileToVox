@@ -42,6 +42,8 @@ namespace FileToVoxCommon.Generator.Shaders.Json
 					return JsonConvert.DeserializeObject<ShaderFixLonely>(jo.ToString(), SpecifiedSubclassConversion);
 				case ShaderType.COLOR_DENOISER:
 					return JsonConvert.DeserializeObject<ShaderColorDenoiser>(jo.ToString(), SpecifiedSubclassConversion);
+				case ShaderType.FILL:
+					return JsonConvert.DeserializeObject<ShaderFill>(jo.ToString(), SpecifiedSubclassConversion);
 				default:
 					throw new Exception();
 			}

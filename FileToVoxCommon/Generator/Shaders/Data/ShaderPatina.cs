@@ -12,7 +12,7 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 		[Description("TargetColorIndex: The index of the color target")]
 		[Range(0, 256)]
-		public int TargetColorIndex { get; set; } = -1;
+		public int TargetColorIndex { get; set; } = 0;
 
 		[Description("AdditionalColorRange: The additional index range")]
 		[Range(0, 256)]
