@@ -147,6 +147,7 @@ namespace FileToVox.Schematics
 		private int mMaxX;
 		private int mMaxY;
 		private int mMaxZ;
+		private readonly bool mCanReorderPalette = true;
 
 		public Schematic()
 		{
@@ -154,10 +155,14 @@ namespace FileToVox.Schematics
 			CreateAllRegions();
 		}
 
-		public Schematic(List<Voxel> voxels)
+		public Schematic(List<uint> palette) : this()
 		{
-			UsedColors = new List<uint>();
-			CreateAllRegions();
+			UsedColors = palette;
+			mCanReorderPalette = false;
+		}
+
+		public Schematic(List<Voxel> voxels) : this()
+		{
 			AddVoxels(voxels);
 		}
 
@@ -352,7 +357,10 @@ namespace FileToVox.Schematics
 			if (UsedColors.Count < MAX_COLORS_IN_PALETTE && !UsedColors.Contains(color))
 			{
 				UsedColors.Add(color);
-				UsedColors = UsedColors.OrderByDescending(c => c).ToList();
+				if (mCanReorderPalette)
+				{
+					UsedColors = UsedColors.OrderByDescending(c => c).ToList();
+				}
 			}
 		}
 

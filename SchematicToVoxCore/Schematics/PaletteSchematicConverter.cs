@@ -31,10 +31,16 @@ namespace FileToVox.Schematics
 			return _colors;
 		}
 
+		public List<uint> GetPaletteUint()
+		{
+			List<uint> palette = _colors.Select(color => color.ColorToUInt()).ToList();
+			return palette;
+		}
+
 		public Schematic ConvertSchematic(Schematic schematic)
 		{
 			Console.WriteLine("[INFO] Started to convert all colors of blocks to match the palette");
-			Schematic newSchematic = new Schematic();
+			Schematic newSchematic = new Schematic(GetPaletteUint());
 			List<uint> colors = schematic.UsedColors;
 			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
 			foreach (uint color in colors)
