@@ -16,7 +16,8 @@ namespace FileToVox.Quantizer
 		public Image QuantizeImage(Bitmap image, int alphaThreshold, int alphaFader, int maxColorCount)
 		{
 			mMaxColor = maxColorCount + 1;
-			int colorCount = maxColorCount + 1;
+			mMaxColor = Math.Min(mMaxColor, 256);
+			int colorCount = mMaxColor;
 			ColorData moments = QuantizerBase.CalculateMoments(QuantizerBase.BuildHistogram(image, alphaThreshold, alphaFader));
 			IEnumerable<Box> cubes = this.SplitData(ref colorCount, moments);
 			QuantizedPalette quantizedPalette = this.GetQuantizedPalette(colorCount, moments, cubes, alphaThreshold);
