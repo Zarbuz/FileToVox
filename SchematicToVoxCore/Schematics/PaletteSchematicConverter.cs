@@ -10,7 +10,7 @@ namespace FileToVox.Schematics
 	public class PaletteSchematicConverter
 	{
 		private List<Color> _colors;
-		public PaletteSchematicConverter(string palettePath, int colorLimit)
+		public PaletteSchematicConverter(string palettePath)
 		{
 			_colors = new List<Color>();
 			Bitmap bitmap = new Bitmap(palettePath);
@@ -18,7 +18,7 @@ namespace FileToVox.Schematics
 			{
 				for (int y = 0; y < bitmap.Height; y++)
 				{
-					if (_colors.Count < colorLimit)
+					if (_colors.Count < 256)
 					{
 						_colors.Add(bitmap.GetPixel(x, y));
 					}
@@ -31,10 +31,16 @@ namespace FileToVox.Schematics
 			return _colors;
 		}
 
+		public List<uint> GetPaletteUint()
+		{
+			List<uint> palette = _colors.Select(color => color.ColorToUInt()).ToList();
+			return palette;
+		}
+
 		public Schematic ConvertSchematic(Schematic schematic)
 		{
 			Console.WriteLine("[INFO] Started to convert all colors of blocks to match the palette");
-			Schematic newSchematic = new Schematic();
+			Schematic newSchematic = new Schematic(GetPaletteUint());
 			List<uint> colors = schematic.UsedColors;
 			Dictionary<uint, int> paletteDictionary = new Dictionary<uint, int>();
 			foreach (uint color in colors)
