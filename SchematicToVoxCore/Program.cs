@@ -293,7 +293,7 @@ namespace FileToVox
 
 			if (INPUT_PALETTE_FILE != null)
 			{
-				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE, COLOR_LIMIT);
+				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE);
 				schematic = converterPalette.ConvertSchematic(schematic);
 				return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
 			}

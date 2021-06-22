@@ -10,7 +10,7 @@ namespace FileToVox.Schematics
 	public class PaletteSchematicConverter
 	{
 		private List<Color> _colors;
-		public PaletteSchematicConverter(string palettePath, int colorLimit)
+		public PaletteSchematicConverter(string palettePath)
 		{
 			_colors = new List<Color>();
 			Bitmap bitmap = new Bitmap(palettePath);
@@ -18,7 +18,7 @@ namespace FileToVox.Schematics
 			{
 				for (int y = 0; y < bitmap.Height; y++)
 				{
-					if (_colors.Count < colorLimit)
+					if (_colors.Count < 256)
 					{
 						_colors.Add(bitmap.GetPixel(x, y));
 					}
