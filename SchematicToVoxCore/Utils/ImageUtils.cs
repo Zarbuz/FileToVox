@@ -1,59 +1,55 @@
-﻿using FileToVox.Schematics;
+﻿using FileToVox.Converter.Image;
+using FileToVox.Extensions;
+using FileToVox.Schematics;
+using FileToVoxCommon.Generator.Heightmap.Data;
 using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Xml.Linq;
-using FileToVox.Converter.Image;
-using FileToVox.Extensions;
-using FileToVoxCommon.Generator.Heightmap.Data;
 
 namespace FileToVox.Utils
 {
 	public static class ImageUtils
 	{
-		public static Schematic WriteSchematicFromImage(Bitmap bitmap, Bitmap colorBitmap, HeightmapStep heightmapStep)
+		public static Bitmap ConvertToFormat32(this Bitmap bitmap)
 		{
 			Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
 			using (Graphics gr = Graphics.FromImage(clone))
 			{
 				gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
 			}
-			Bitmap bitmapColor = new Bitmap(bitmap.Width, bitmap.Height); //default initialization
-			Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
 
+			return clone;
+		}
+
+		public static Schematic WriteSchematicFromImage(Bitmap bitmap, Bitmap colorBitmap, HeightmapStep heightmapStep)
+		{
 			if (colorBitmap != null)
 			{
-				if (bitmap.Height != bitmapColor.Height || bitmap.Width != bitmapColor.Width)
+				if (bitmap.Height != colorBitmap.Height || bitmap.Width != colorBitmap.Width)
 				{
 					throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
 				}
 
-				clone = new Bitmap(bitmapColor.Width, bitmapColor.Height, PixelFormat.Format32bppArgb);
-				using (Graphics gr = Graphics.FromImage(clone))
+				if (heightmapStep.ColorLimit != 256 || colorBitmap.CountColor() > 256)
 				{
-					gr.DrawImage(bitmapColor, new Rectangle(0, 0, clone.Width, clone.Height));
-				}
-
-				if (heightmapStep.ColorLimit != 256 || bitmapColor.CountColor() > 256)
-				{
-					Image image = quantizer.QuantizeImage(clone, 10, 70, heightmapStep.ColorLimit);
-					bitmapColor = new Bitmap(image);
+					Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
+					colorBitmap = quantizer.QuantizeImage(colorBitmap, 10, 70, heightmapStep.ColorLimit);
 				}
 
 			}
 			else if (heightmapStep.EnableColor)
 			{
-				if (heightmapStep.ColorLimit != 256 || clone.CountColor() > 256)
+				if (heightmapStep.ColorLimit != 256 || colorBitmap.CountColor() > 256)
 				{
-					Image image = quantizer.QuantizeImage(clone, 10, 70, heightmapStep.ColorLimit);
-					bitmap = new Bitmap(image);
+					Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
+					colorBitmap = quantizer.QuantizeImage(colorBitmap, 10, 70, heightmapStep.ColorLimit);
 				}
 			}
 
-			Schematic schematic = WriteSchematicIntern(bitmap, bitmapColor, heightmapStep);
+			Schematic schematic = WriteSchematicIntern(bitmap, colorBitmap, heightmapStep);
 			return schematic;
 		}
 
@@ -65,6 +61,8 @@ namespace FileToVox.Utils
 			DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack, heightmapStep.Height);
 			DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
 			DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor, 1);
+
+
 			if (bitmap.Width > Schematic.MAX_WORLD_WIDTH || bitmap.Height > Schematic.MAX_WORLD_LENGTH)
 			{
 				throw new ArgumentException($"Image is too big (max size ${Schematic.MAX_WORLD_WIDTH}x${Schematic.MAX_WORLD_LENGTH} px)");

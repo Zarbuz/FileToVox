@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using FileToVox.Utils;
 using nQuant;
 
 namespace FileToVox.Quantizer
@@ -13,15 +14,20 @@ namespace FileToVox.Quantizer
 	{
 		private int mMaxColor = 256;
 
-		public Image QuantizeImage(Bitmap image, int alphaThreshold, int alphaFader, int maxColorCount)
+		public Bitmap QuantizeImage(Bitmap image, int alphaThreshold, int alphaFader, int maxColorCount)
 		{
+			if (image.PixelFormat != PixelFormat.Format32bppArgb)
+			{
+				image = image.ConvertToFormat32();
+			}
+
 			mMaxColor = maxColorCount + 1;
 			mMaxColor = Math.Min(mMaxColor, 256);
 			int colorCount = mMaxColor;
 			ColorData moments = QuantizerBase.CalculateMoments(QuantizerBase.BuildHistogram(image, alphaThreshold, alphaFader));
 			IEnumerable<Box> cubes = this.SplitData(ref colorCount, moments);
 			QuantizedPalette quantizedPalette = this.GetQuantizedPalette(colorCount, moments, cubes, alphaThreshold);
-			return (Image)QuantizerBase.ProcessImagePixels((Image)image, quantizedPalette);
+			return ProcessImagePixels((Image)image, quantizedPalette);
 		}
 
 		private static Bitmap ProcessImagePixels(Image sourceImage, QuantizedPalette palette)

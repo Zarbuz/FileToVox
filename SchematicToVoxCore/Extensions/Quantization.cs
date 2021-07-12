@@ -25,17 +25,16 @@ namespace FileToVox.Extensions
                 {
 	                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
 	                {
-		                using (Image quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
+		                using (Bitmap quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
 		                {
-			                Bitmap reducedBitmap = (Bitmap) quantized;
 			                //Console.WriteLine(quantized.PixelFormat);
 			                //Bitmap reducedBitmap = new Bitmap(quantized);
-			                int width = reducedBitmap.Size.Width;
+			                int width = quantized.Size.Width;
 			                for (int i = 0; i < blocks.Count; i++)
 			                {
 				                int x = i % width;
 				                int y = i / width;
-				                blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z, reducedBitmap.GetPixel(x, y).ColorToUInt());
+				                blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z, quantized.GetPixel(x, y).ColorToUInt());
 				                progressBar.Report(i / (float)blocks.Count);
                             }
                         }
