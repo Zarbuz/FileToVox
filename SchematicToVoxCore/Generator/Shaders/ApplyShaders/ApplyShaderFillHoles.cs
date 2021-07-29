@@ -48,13 +48,19 @@ namespace FileToVox.Generator.Shaders
 								if (!region.GetVoxel(x, y, z, out Voxel voxel))
 								{
 									uint left = region.GetColorAtVoxelIndex(x - 1, y, z);
+									uint left2 = region.GetColorAtVoxelIndex(x - 2, y, z);
+
 									uint right = region.GetColorAtVoxelIndex(x + 1, y, z);
+									uint right2 = region.GetColorAtVoxelIndex(x + 1, y, z);
 
 									uint top = region.GetColorAtVoxelIndex(x, y + 1, z);
 									uint bottom = region.GetColorAtVoxelIndex(x, y - 1, z);
 
 									uint front = region.GetColorAtVoxelIndex(x, y, z + 1);
+									uint front2 = region.GetColorAtVoxelIndex(x, y, z + 2);
+
 									uint back = region.GetColorAtVoxelIndex(x, y, z - 1);
+									uint back2 = region.GetColorAtVoxelIndex(x, y, z - 2);
 
 									//1x1
 									if (left != 0 && right != 0 && front != 0 && back != 0)
@@ -166,35 +172,116 @@ namespace FileToVox.Generator.Shaders
 										continue;
 									}
 
-									////Edges bottom (3)
-									//if (left != 0 && front != 0 && bottom != 0)
-									//{
-									//	schematic.AddVoxel(x, y, z, left);
-									//	fixedHoles++;
-									//	continue;
-									//}
+									/*
+									 
+									 **
+									*10*
+									 **
+									 
+									 */
 
-									//if (right != 0 && front != 0 && bottom != 0)
-									//{
-									//	schematic.AddVoxel(x, y, z, right);
-									//	fixedHoles++;
-									//	continue;
-									//}
+									uint frontRight = region.GetColorAtVoxelIndex(x + 1, y, z + 1);
+									uint backRight = region.GetColorAtVoxelIndex(x + 1, y, z - 1);
 
-									//if (left != 0 && back != 0 && bottom != 0)
-									//{
-									//	schematic.AddVoxel(x, y, z, left);
-									//	fixedHoles++;
-									//	continue;
-									//}
 
-									//if (right != 0 && back != 0 && bottom != 0)
-									//{
-									//	schematic.AddVoxel(x, y, z, right);
-									//	fixedHoles++;
-									//	continue;
-									//}
+									if (left != 0 && front != 0 && right == 0 && right2 != 0 && back != 0 && frontRight != 0 && backRight != 0)
+									{
+										schematic.AddVoxel(x, y, z, left);
+										fixedHoles++;
+										continue;
+									}
 
+									/*
+									 
+									 **
+									*01*
+									 **
+									 
+									*/
+									uint frontLeft = region.GetColorAtVoxelIndex(x - 1, y, z + 1);
+									uint backLeft = region.GetColorAtVoxelIndex(x - 1, y, z - 1);
+
+									if (right != 0 && front != 0 && back != 0 && left == 0 && frontLeft != 0 && left2 != 0 && backLeft != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+									/*
+									 
+									*
+								   *1*
+								   *0*
+								    *
+									 
+									*/
+
+									if (left != 0 && right != 0 && front != 0 && back == 0 && backLeft != 0 && backRight != 0 && back2 != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+									/*
+									 
+									*
+								   *0*
+								   *1*
+								    *
+									 
+									*/
+
+									if (left != 0 && right != 0 && front == 0 && back != 0 && frontLeft != 0 && frontRight != 0 && front2 != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
+
+									/*
+									 
+									 **
+									*10*
+									*00*
+									 **
+									 
+									*/
+
+									uint backRight2 = region.GetColorAtVoxelIndex(x + 2, y, z - 1);
+									uint back2Right = region.GetColorAtVoxelIndex(x + 1, y, z - 2);
+
+
+									if (left != 0 && front != 0 && right == 0 && frontRight != 0 && right2 != 0 &&
+									    back == 0 && backLeft != 0 && backRight == 0 && back2 != 0 && backRight2 != 0 &&
+									    back2Right != 0)
+									{
+										schematic.AddVoxel(x, y, z, left);
+										fixedHoles++;
+										continue;
+									}
+
+									/*
+									 
+									 **
+									*01*
+									*00*
+									 **
+									 
+									*/
+
+									uint backLeft2 = region.GetColorAtVoxelIndex(x - 2, y, z - 1);
+									uint back2Left = region.GetColorAtVoxelIndex(x - 1, y, z - 2);
+
+									if (right != 0 && front != 0 && left == 0 && left2 != 0 && frontLeft != 0 &&
+									    back == 0 && backRight != 0 && backLeft == 0 && backLeft2 != 0 && back2 != 0 &&
+									    back2Left != 0)
+									{
+										schematic.AddVoxel(x, y, z, right);
+										fixedHoles++;
+										continue;
+									}
 								}
 							}
 						}
