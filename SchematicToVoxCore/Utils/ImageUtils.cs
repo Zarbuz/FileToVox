@@ -42,10 +42,10 @@ namespace FileToVox.Utils
 			}
 			else if (heightmapStep.EnableColor)
 			{
-				if (heightmapStep.ColorLimit != 256 || colorBitmap.CountColor() > 256)
+				if (heightmapStep.ColorLimit != 256 || bitmap.CountColor() > 256)
 				{
 					Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
-					colorBitmap = quantizer.QuantizeImage(colorBitmap, 10, 70, heightmapStep.ColorLimit);
+					bitmap = quantizer.QuantizeImage(bitmap, 10, 70, heightmapStep.ColorLimit);
 				}
 			}
 

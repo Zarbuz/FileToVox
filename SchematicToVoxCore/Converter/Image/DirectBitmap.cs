@@ -7,6 +7,8 @@ namespace FileToVox.Converter.Image
 {
 	public class DirectBitmap : IDisposable
 	{
+		#region Fields
+
 		public int[] Bits { get; }
 		public bool Disposed { get; private set; }
 		public int Length { get; }
@@ -14,8 +16,16 @@ namespace FileToVox.Converter.Image
 		public int Height { get; private set; }
 		public Dictionary<int, int> Heights { get; private set; }
 
+
+		#endregion
+
 		public DirectBitmap(Bitmap bitmap, int height)
 		{
+			if (bitmap == null)
+			{
+				return;
+			}
+
 			Width = bitmap.Width;
 			Length = bitmap.Height;
 			Height = height;
@@ -91,6 +101,7 @@ namespace FileToVox.Converter.Image
 		public void Dispose()
 		{
 			if (Disposed) return;
+			
 			Disposed = true;
 		}
 	}
