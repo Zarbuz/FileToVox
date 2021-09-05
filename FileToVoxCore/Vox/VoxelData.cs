@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVoxCore.Vox
 {
@@ -99,6 +100,9 @@ namespace FileToVoxCore.Vox
 
         public byte GetSafe(int x, int y, int z)
             => Contains(x, y, z) ? mColors[GetGridPos(x, y, z)] : (byte)0;
+
+        public Vector3 GetVolumeSize()
+	        => new Vector3(VoxelsWide, VoxelsTall, VoxelsDeep);
 
         public VoxelData ToSmaller()
         {

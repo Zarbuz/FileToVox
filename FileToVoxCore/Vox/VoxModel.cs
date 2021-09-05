@@ -9,6 +9,7 @@ namespace FileToVoxCore.Vox
     public class VoxModel
     {
         public Color[] Palette;
+        public HashSet<int> ColorUsed = new HashSet<int>();
         public List<VoxelData> VoxelFrames = new List<VoxelData>();
         public List<MaterialChunk> MaterialChunks = new List<MaterialChunk>();
         public List<TransformNodeChunk> TransformNodeChunks = new List<TransformNodeChunk>();

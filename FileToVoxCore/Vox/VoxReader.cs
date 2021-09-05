@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace FileToVoxCore.Vox
     {
         private int mVoxelCountLastXyziChunk = 0;
         protected string LogOutputFile;
-
-        public VoxModel LoadModel(string absolutePath)
+        private bool mWriteLog;
+        public VoxModel LoadModel(string absolutePath, bool writeLog = false, bool debug = false)
         {
             VoxModel output = new VoxModel();
-            string? name = Path.GetFileNameWithoutExtension(absolutePath);
+            var name = Path.GetFileNameWithoutExtension(absolutePath);
+            mVoxelCountLastXyziChunk = 0;
             LogOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
+            mWriteLog = writeLog;
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
@@ -31,24 +34,83 @@ namespace FileToVoxCore.Vox
                     Console.WriteLine("Version number: " + version + " Was designed for version: " + VERSION);
                 }
                 ResetModel(output);
-                ChildCount = 0;
-                ChunkCount = 0;
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                     ReadChunk(reader, output);
             }
+
+            if (debug)
+            {
+                CheckDuplicateIds(output);
+                CheckDuplicateChildGroupIds(output);
+                CheckTransformIdNotInGroup(output);
+                Console.ReadKey();
+            }
+
+
             if (output.Palette == null)
                 output.Palette = LoadDefaultPalette();
             return output;
         }
 
+        private void CheckDuplicateIds(VoxModel output)
+        {
+            List<int> allIds = output.GroupNodeChunks.Select(t => t.Id).ToList();
+            allIds.AddRange(output.TransformNodeChunks.Select(t => t.Id));
+            allIds.AddRange(output.ShapeNodeChunks.Select(t => t.Id));
+
+            List<int> duplicates = allIds.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .Select(y => y.Key)
+                .ToList();
+
+            foreach (int Id in duplicates)
+            {
+                Console.WriteLine("[ERROR] Duplicate Id: " + Id);
+            }
+        }
+
+        private void CheckDuplicateChildGroupIds(VoxModel output)
+        {
+            List<int> ChildIds = output.GroupNodeChunks.SelectMany(t => t.ChildIds).ToList();
+            List<int> duplicates = ChildIds.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .Select(y => y.Key)
+                .ToList();
+
+            foreach (int Id in duplicates)
+            {
+                Console.WriteLine("[ERROR] Duplicate child group Id: " + Id);
+            }
+        }
+
+        private void CheckTransformIdNotInGroup(VoxModel output)
+        {
+            List<int> Ids = output.TransformNodeChunks.Select(t => t.Id).ToList();
+            List<int> ChildIds = output.GroupNodeChunks.SelectMany(t => t.ChildIds).ToList();
+
+            List<int> empty = new List<int>();
+            foreach (int Id in Ids)
+            {
+                if (ChildIds.IndexOf(Id) == -1 && Id != 0)
+                {
+                    empty.Add(Id);
+                }
+            }
+
+            foreach (int Id in empty)
+            {
+                Console.WriteLine("[ERROR] Transform Id never called in any group: " + Id);
+            }
+        }
+
         private Color[] LoadDefaultPalette()
         {
-            int colorCount = default_palette.Length;
-            Color[] result = new Color[256];
+            var colorCount = default_palette.Length;
+            var result = new Color[256];
             byte r, g, b, a;
             for (int i = 0; i < colorCount; i++)
             {
-                uint source = default_palette[i];
+                var source = default_palette[i];
                 r = (byte)(source & 0xff);
                 g = (byte)((source >> 8) & 0xff);
                 b = (byte)((source >> 16) & 0xff);
@@ -59,7 +121,7 @@ namespace FileToVoxCore.Vox
         }
 
         /// <summary>
-        /// Load the palette color. Plattes are offset by 1
+        /// Load the Palette color. Plattes are offset by 1
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -68,10 +130,10 @@ namespace FileToVoxCore.Vox
             var result = new Color[256];
             for (int i = 1; i < 256; i++)
             {
-	            byte r = reader.ReadByte();
-	            byte g = reader.ReadByte();
-	            byte b = reader.ReadByte();
-	            byte a = reader.ReadByte();
+                byte r = reader.ReadByte();
+                byte g = reader.ReadByte();
+                byte b = reader.ReadByte();
+                byte a = reader.ReadByte();
                 result[i] = Color.FromArgb(a, r, g, b);
             }
             return result;
@@ -79,11 +141,11 @@ namespace FileToVoxCore.Vox
 
         private void ReadChunk(BinaryReader reader, VoxModel output)
         {
-            string chunkName = new string(reader.ReadChars(4));
-            int chunkSize = reader.ReadInt32();
-            int childChunkSize = reader.ReadInt32();
-            byte[] chunk = reader.ReadBytes(chunkSize);
-            byte[] children = reader.ReadBytes(childChunkSize);
+            var chunkName = new string(reader.ReadChars(4));
+            var chunkSize = reader.ReadInt32();
+            var childChunkSize = reader.ReadInt32();
+            var chunk = reader.ReadBytes(chunkSize);
+            var children = reader.ReadBytes(childChunkSize);
             ChunkCount++;
 
             using (var chunkReader = new BinaryReader(new MemoryStream(chunk)))
@@ -98,7 +160,7 @@ namespace FileToVoxCore.Vox
                         int d = chunkReader.ReadInt32();
                         if (ChildCount >= output.VoxelFrames.Count)
                             output.VoxelFrames.Add(new VoxelData());
-                        output.VoxelFrames[ChildCount].Resize(w, d, h);
+                        output.VoxelFrames[ChildCount].Resize(w, h, d);
                         ChildCount++;
                         break;
                     case XYZI:
@@ -112,6 +174,7 @@ namespace FileToVoxCore.Vox
                             z = chunkReader.ReadByte();
                             color = chunkReader.ReadByte();
                             frame.Set(x, y, z, color);
+                            output.ColorUsed.Add(color);
                         }
                         break;
                     case RGBA:
@@ -149,7 +212,11 @@ namespace FileToVoxCore.Vox
                         break;
                 }
             }
-            WriteLogs(chunkName, chunkSize, childChunkSize, output);
+
+            if (mWriteLog)
+            {
+                WriteLogs(chunkName, chunkSize, childChunkSize, output);
+            }
 
             //read child chunks
             using (var childReader = new BinaryReader(new MemoryStream(children)))
@@ -185,16 +252,16 @@ namespace FileToVoxCore.Vox
                     case nTRN:
                         var transform = output.TransformNodeChunks.Last();
                         writer.WriteLine("-> TRANSFORM NODE: " + transform.Id);
-                        writer.WriteLine("--> CHILD ID: " + transform.ChildId);
-                        writer.WriteLine("--> RESERVED ID: " + transform.ReservedId);
-                        writer.WriteLine("--> LAYER ID: " + transform.LayerId);
+                        writer.WriteLine("--> CHILD Id: " + transform.ChildId);
+                        writer.WriteLine("--> RESERVED Id: " + transform.ReservedId);
+                        writer.WriteLine("--> LAYER Id: " + transform.LayerId);
                         DisplayAttributes(transform.Attributes, writer);
                         DisplayFrameAttributes(transform.FrameAttributes, writer);
                         break;
                     case nGRP:
                         var group = output.GroupNodeChunks.Last();
                         writer.WriteLine("-> GROUP NODE: " + group.Id);
-                        group.ChildIds.ToList().ForEach(t => writer.WriteLine("--> CHILD ID: " + t));
+                        group.ChildIds.ToList().ForEach(t => writer.WriteLine("--> CHILD Id: " + t));
                         DisplayAttributes(group.Attributes, writer);
                         break;
                     case nSHP:
@@ -230,24 +297,24 @@ namespace FileToVoxCore.Vox
             }
         }
 
-        private void DisplayAttributes(KeyValue[] attributes, StreamWriter writer)
+        private void DisplayAttributes(KeyValue[] Attributes, StreamWriter writer)
         {
-            attributes.ToList().ForEach(t => writer.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
+            Attributes.ToList().ForEach(t => writer.WriteLine("--> ATTRIBUTE: Key=" + t.Key + " Value=" + t.Value));
         }
 
-        private void DisplayFrameAttributes(DICT[] frameAttributes, StreamWriter writer)
+        private void DisplayFrameAttributes(DICT[] FrameAttributes, StreamWriter writer)
         {
-            var list = frameAttributes.ToList();
-            foreach (var item in list )
+            var list = FrameAttributes.ToList();
+            foreach (var item in list)
             {
                 writer.WriteLine("--> FRAME ATTRIBUTE: " + item._r + " " + item._t.ToString());
             }
         }
 
-        private void DisplayModelAttributes(ShapeModel[] models, StreamWriter writer)
+        private void DisplayModelAttributes(ShapeModel[] Models, StreamWriter writer)
         {
-            models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.ModelId));
-            models.ToList().ForEach(t => DisplayAttributes(t.Attributes, writer));
+            Models.ToList().ForEach(t => writer.WriteLine("--> MODEL ATTRIBUTE: " + t.ModelId));
+            Models.ToList().ForEach(t => DisplayAttributes(t.Attributes, writer));
         }
 
         private static string ReadSTRING(BinaryReader reader)
