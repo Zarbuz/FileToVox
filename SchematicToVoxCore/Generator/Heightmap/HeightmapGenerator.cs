@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using FileToVox.Schematics;
 using FileToVox.Utils;
 using FileToVoxCommon.Generator.Heightmap.Data;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Generator.Heightmap
 {

@@ -1,23 +1,19 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using FileToVox.Vox.Chunks;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Region = FileToVox.Schematics.Region;
+using FileToVoxCore.Extensions;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
+using FileToVoxCore.Vox.Chunks;
+using Region = FileToVoxCore.Schematics.Region;
 
-namespace FileToVox.Vox
+namespace FileToVoxCore.Vox
 {
 	public class VoxWriter : VoxParser
 	{
-		private int mWidth;
-		private int mLength;
-		private int mHeight;
 		private int mCountRegionNonEmpty;
 		private int mTotalBlockCount;
 
@@ -32,7 +28,7 @@ namespace FileToVox.Vox
 		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
 		{
 			mChunkSize = chunkSize;
-			mWidth = mLength = mHeight = mTotalBlockCount = mCountRegionNonEmpty = 0;
+			mTotalBlockCount = mCountRegionNonEmpty = 0;
 			mSchematic = schematic;
 			mPalette = palette;
 			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
@@ -52,10 +48,6 @@ namespace FileToVox.Vox
 		/// <returns></returns>
 		private int CountChildrenSize()
 		{
-			mWidth = (int)Math.Ceiling(((decimal)mSchematic.Width / mChunkSize)) + 1;
-			mLength = (int)Math.Ceiling(((decimal)mSchematic.Length / mChunkSize)) + 1;
-			mHeight = (int)Math.Ceiling(((decimal)mSchematic.Height / mChunkSize)) + 1;
-
 			mFirstBlockInEachRegion = mSchematic.GetAllRegions();
 			mCountRegionNonEmpty = mFirstBlockInEachRegion.Count;
 			mTotalBlockCount = mSchematic.GetAllVoxels().Count;
@@ -141,7 +133,7 @@ namespace FileToVox.Vox
 			if (mTotalBlockCount != mCountBlocks)
 			{
 				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
-				if (Program.DEBUG)
+				if (Schematic.DEBUG)
 				{
 					foreach (Voxel voxel in mSchematic.GetAllVoxels())
 					{

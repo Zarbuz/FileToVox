@@ -1,12 +1,11 @@
-﻿using System;
+﻿using FileToVox.Utils;
+using nQuant;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using FileToVox.Utils;
-using nQuant;
 
 namespace FileToVox.Quantizer
 {

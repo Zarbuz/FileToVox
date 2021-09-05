@@ -1,9 +1,9 @@
 ﻿using FileToVox.Generator.Terrain.Chunk;
 using FileToVox.Generator.Terrain.Utility;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using SchematicToVoxCore.Extensions;
 using System;
+using FileToVoxCore.Extensions;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
 using BiomeSettings = FileToVox.Generator.Terrain.Data.BiomeSettings;
 using TerrainGeneratorDataSettings = FileToVox.Generator.Terrain.Data.TerrainGeneratorDataSettings;
 using TerrainStepType = FileToVox.Generator.Terrain.Data.TerrainStepType;

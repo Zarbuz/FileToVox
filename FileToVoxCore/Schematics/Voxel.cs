@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace FileToVox.Schematics
+namespace FileToVoxCore.Schematics
 {
 	[StructLayout(LayoutKind.Sequential)]
     public class Voxel : IEquatable<Voxel>

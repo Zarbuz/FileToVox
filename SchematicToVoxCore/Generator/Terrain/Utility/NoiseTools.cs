@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
-using FileToVox.Schematics.Tools;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVox.Generator.Terrain.Utility
 {

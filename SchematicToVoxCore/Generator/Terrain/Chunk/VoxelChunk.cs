@@ -1,5 +1,5 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
+﻿using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVox.Generator.Terrain.Chunk
 {

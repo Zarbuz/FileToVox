@@ -1,6 +1,6 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using System;
+﻿using System;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
 using WorldTerrainData = FileToVox.Generator.Terrain.Data.WorldTerrainData;
 
 namespace FileToVox.Generator.Terrain

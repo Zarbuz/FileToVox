@@ -1,13 +1,10 @@
 ﻿using FileToVox.Extensions;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
+using FileToVoxCore.Utils;
 using MoreLinq;
-using SchematicToVoxCore.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 
 namespace FileToVox.Converter.PointCloud
 {

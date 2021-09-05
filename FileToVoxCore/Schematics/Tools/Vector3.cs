@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using FileToVox.Utils;
 
-namespace FileToVox.Schematics.Tools
+namespace FileToVoxCore.Schematics.Tools
 {
     public struct Vector3 : IEquatable<Vector3>
     {

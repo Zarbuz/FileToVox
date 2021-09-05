@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using FileToVox.Utils;
-using SchematicToVoxCore.Extensions;
+using FileToVoxCore.Extensions;
+using FileToVoxCore.Utils;
 
-namespace FileToVox.Schematics
+namespace FileToVoxCore.Schematics
 {
 	public class PaletteSchematicConverter
 	{

@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using FileToVox.Generator.Terrain.Chunk;
 using FileToVox.Generator.Terrain.Entities;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVox.Generator.Terrain
 {

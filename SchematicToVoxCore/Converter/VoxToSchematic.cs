@@ -1,13 +1,10 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Vox;
-using System;
-using System.Drawing;
-using System.Linq;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using FileToVox.Vox.Chunks;
+﻿using FileToVoxCore.Extensions;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
+using FileToVoxCore.Utils;
+using FileToVoxCore.Vox;
 using MoreLinq;
-using SchematicToVoxCore.Extensions;
+using System.Drawing;
 
 namespace FileToVox.Converter
 {

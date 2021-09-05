@@ -1,13 +1,12 @@
-﻿using FileToVox.Converter.Image;
-using FileToVox.Extensions;
-using FileToVox.Schematics;
-using FileToVoxCommon.Generator.Heightmap.Data;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using FileToVox.Converter.Image;
+using FileToVox.Extensions;
+using FileToVoxCommon.Generator.Heightmap.Data;
+using FileToVoxCore.Schematics;
 
 namespace FileToVox.Utils
 {
@@ -68,7 +67,7 @@ namespace FileToVox.Utils
 				throw new ArgumentException($"Image is too big (max size ${Schematic.MAX_WORLD_WIDTH}x${Schematic.MAX_WORLD_LENGTH} px)");
 			}
 
-			using (ProgressBar progressbar = new ProgressBar())
+			using (FileToVoxCore.Utils.ProgressBar progressbar = new FileToVoxCore.Utils.ProgressBar())
 			{
 				Console.WriteLine("[INFO] Started to write schematic from picture...");
 				Console.WriteLine("[INFO] Picture Width: " + bitmap.Width);

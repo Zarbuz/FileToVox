@@ -1,11 +1,11 @@
-﻿using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
+using FileToVoxCore.Schematics.Tools;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Converter.PointCloud
 {

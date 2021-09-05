@@ -1,5 +1,5 @@
-﻿using FileToVox.Schematics.Tools;
-using System;
+﻿using System;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVox.Generator.Terrain.Utility
 {

@@ -1,14 +1,14 @@
-﻿using FileToVox.Generator.Terrain.Utility;
-using FileToVox.Schematics.Tools;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using FileToVoxCommon.Generator.Heightmap.Data;
+using FileToVoxCore.Extensions;
+using FileToVoxCore.Schematics.Tools;
+using FileToVoxCore.Utils;
 
-namespace FileToVox.Schematics
+namespace FileToVoxCore.Schematics
 {
 	public class Region
 	{
@@ -53,6 +53,8 @@ namespace FileToVox.Schematics
 		public const int MAX_WORLD_HEIGHT = 1000;
 		public const int MAX_WORLD_LENGTH = 2000;
 		public const int MAX_COLORS_IN_PALETTE = 256;
+		public static int CHUNK_SIZE = 128;
+		public static bool DEBUG;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static long GetVoxelIndex(int x, int y, int z)
@@ -249,7 +251,7 @@ namespace FileToVox.Schematics
 
 		public bool GetVoxel(int x, int y, int z, out Voxel voxel)
 		{
-			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
+			FastMath.FloorToInt(x / CHUNK_SIZE, y / CHUNK_SIZE, z / CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
@@ -299,9 +301,9 @@ namespace FileToVox.Schematics
 		{
 			RegionDict = new Dictionary<long, Region>();
 
-			int worldRegionX = (int)Math.Ceiling((decimal)MAX_WORLD_WIDTH / Program.CHUNK_SIZE);
-			int worldRegionY = (int)Math.Ceiling((decimal)MAX_WORLD_HEIGHT / Program.CHUNK_SIZE);
-			int worldRegionZ =(int)Math.Ceiling((decimal)MAX_WORLD_LENGTH / Program.CHUNK_SIZE);
+			int worldRegionX = (int)Math.Ceiling((decimal)MAX_WORLD_WIDTH / CHUNK_SIZE);
+			int worldRegionY = (int)Math.Ceiling((decimal)MAX_WORLD_HEIGHT / CHUNK_SIZE);
+			int worldRegionZ =(int)Math.Ceiling((decimal)MAX_WORLD_LENGTH / CHUNK_SIZE);
 
 			int countSize = worldRegionX * worldRegionY * worldRegionZ;
 
@@ -311,13 +313,13 @@ namespace FileToVox.Schematics
 				int y = (i / worldRegionX) % worldRegionY;
 				int z = i / (worldRegionX * worldRegionY);
 
-				RegionDict[GetVoxelIndex(x, y, z)] = new Region(x * Program.CHUNK_SIZE, y * Program.CHUNK_SIZE, z * Program.CHUNK_SIZE);
+				RegionDict[GetVoxelIndex(x, y, z)] = new Region(x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE);
 			}
 		}
 
 		private void AddUsageForRegion(int x, int y, int z, uint color)
 		{
-			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
+			FastMath.FloorToInt(x / CHUNK_SIZE, y / CHUNK_SIZE, z / CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
@@ -327,7 +329,7 @@ namespace FileToVox.Schematics
 
 		private void ReplaceUsageForRegion(int x, int y, int z, uint color)
 		{
-			FastMath.FloorToInt(x / Program.CHUNK_SIZE, y / Program.CHUNK_SIZE, z / Program.CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
+			FastMath.FloorToInt(x / CHUNK_SIZE, y / CHUNK_SIZE, z / CHUNK_SIZE, out int chunkX, out int chunkY, out int chunkZ);
 
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
@@ -340,9 +342,9 @@ namespace FileToVox.Schematics
 
 		private void RemoveUsageForRegion(int x, int y, int z)
 		{
-			int chunkX = x / Program.CHUNK_SIZE;
-			int chunkY = y / Program.CHUNK_SIZE;
-			int chunkZ = z / Program.CHUNK_SIZE;
+			int chunkX = x / CHUNK_SIZE;
+			int chunkY = y / CHUNK_SIZE;
+			int chunkZ = z / CHUNK_SIZE;
 			long chunkIndex = GetVoxelIndex(chunkX, chunkY, chunkZ);
 			long voxelIndex = GetVoxelIndex(x, y, z);
 

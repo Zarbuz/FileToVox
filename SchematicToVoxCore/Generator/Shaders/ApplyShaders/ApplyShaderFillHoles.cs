@@ -1,9 +1,9 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using FileToVoxCommon.Generator.Shaders.Data;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Generator.Shaders
 {
@@ -31,17 +31,17 @@ namespace FileToVox.Generator.Shaders
 			List<Voxel> allVoxels = schematic.GetAllVoxels();
 			int index = 0;
 			int fixedHoles = 0;
-			int total = (int)(schematic.RegionDict.Values.Count(region => region.BlockDict.Count > 0) * MathF.Pow(Program.CHUNK_SIZE, 3));
+			int total = (int)(schematic.RegionDict.Values.Count(region => region.BlockDict.Count > 0) * MathF.Pow(Schematic.CHUNK_SIZE, 3));
 			Console.WriteLine("[INFO] Count voxel before: " + allVoxels.Count);
 			using (ProgressBar progressBar = new ProgressBar())
 			{
 				foreach (Region region in schematic.RegionDict.Values.Where(region => region.BlockDict.Count > 0))
 				{
-					for (int x = region.X; x < region.X + Program.CHUNK_SIZE; x++)
+					for (int x = region.X; x < region.X + Schematic.CHUNK_SIZE; x++)
 					{
-						for (int y = region.Y; y < region.Y + Program.CHUNK_SIZE; y++)
+						for (int y = region.Y; y < region.Y + Schematic.CHUNK_SIZE; y++)
 						{
-							for (int z = region.Z; z < region.Z + Program.CHUNK_SIZE; z++)
+							for (int z = region.Z; z < region.Z + Schematic.CHUNK_SIZE; z++)
 							{
 								progressBar.Report(index++ / (float)total);
 

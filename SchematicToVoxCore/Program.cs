@@ -2,21 +2,18 @@
 using FileToVox.Converter.Image;
 using FileToVox.Converter.Json;
 using FileToVox.Converter.PointCloud;
-using FileToVox.Schematics;
-using FileToVox.Vox;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Vox;
 using NDesk.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace FileToVox
 {
 	class Program
 	{
-		public static bool DEBUG;
-
 		private static string INPUT_PATH;
 		private static string OUTPUT_PATH;
 		private static string INPUT_COLOR_FILE;
@@ -35,7 +32,6 @@ namespace FileToVox
 		private static int MESH_SEGMENT_Y = 4;
 		private static int MESH_SUBSAMPLE = 0;
 
-		public static int CHUNK_SIZE = 128;
 
 		public static void Main(string[] args)
 		{
@@ -47,7 +43,7 @@ namespace FileToVox
 				{"c|color", "enable color when generating heightmap", v => COLOR = v != null},
 				{"cm|color-from-file=", "load colors from file", v => INPUT_COLOR_FILE = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
-				{"cs|chunk-size=", "set the chunk size", (int v) => CHUNK_SIZE = v},
+				{"cs|chunk-size=", "set the chunk size", (int v) => Schematic.CHUNK_SIZE = v},
 				{"e|excavate", "delete all voxels which doesn't have at least one face connected with air",  v => EXCAVATE = v != null },
 				{"h|help", "help informations", v => SHOW_HELP = v != null},
 				{"hm|heightmap=", "create voxels terrain from heightmap (only for PNG file)", (int v) => HEIGHT_MAP = v},
@@ -57,7 +53,7 @@ namespace FileToVox
 				{"mskip", "skip the capturing points part and load the previous PLY (for MeshSampler)", v => MESH_SKIP_CAPTURE = v != null},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"sc|scale=", "set the scale", (float v) => SCALE = v},
-				{"d|debug", "enable the debug mode", v => DEBUG = v != null},
+				{"d|debug", "enable the debug mode", v => Schematic.DEBUG = v != null},
 			};
 
 			try
@@ -80,7 +76,7 @@ namespace FileToVox
 				}
 
 				Console.WriteLine("[INFO] Done.");
-				if (DEBUG)
+				if (Schematic.DEBUG)
 				{
 					Console.ReadKey();
 				}
@@ -148,7 +144,7 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
 			if (COLOR_LIMIT < 0 || COLOR_LIMIT > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be between 1 and 256");
-			if (CHUNK_SIZE <= 10 || CHUNK_SIZE > 257)
+			if (Schematic.CHUNK_SIZE <= 10 || Schematic.CHUNK_SIZE > 257)
 				throw new ArgumentException("[ERROR] --chunk-size argument must be between 10 and 256");
 		}
 
@@ -168,15 +164,15 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (SCALE != 1)
 				Console.WriteLine("[INFO] Specified increase size: " + SCALE);
-			if (CHUNK_SIZE != 128)
-				Console.WriteLine("[INFO] Specified chunk size: " + CHUNK_SIZE);
+			if (Schematic.CHUNK_SIZE != 128)
+				Console.WriteLine("[INFO] Specified chunk size: " + Schematic.CHUNK_SIZE);
 			if (EXCAVATE)
 				Console.WriteLine("[INFO] Enabled option: excavate");
 			if (COLOR)
 				Console.WriteLine("[INFO] Enabled option: color");
 			if (HEIGHT_MAP != 1)
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
-			if (DEBUG)
+			if (Schematic.DEBUG)
 				Console.WriteLine("[INFO] Enabled option: debug");
 			if (MESH_SEGMENT_X != 4)
 				Console.WriteLine("[INFO] Specified segment X (for MeshSampler): " + MESH_SEGMENT_X);
@@ -295,7 +291,7 @@ namespace FileToVox
 			{
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
+				return writer.WriteModel(Schematic.CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
 			}
 
 			if (INPUT_SHADER_FILE != null)
@@ -304,7 +300,7 @@ namespace FileToVox
 				schematic = jsonParser.WriteSchematic();
 			}
 
-			return writer.WriteModel(CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), null, schematic);
+			return writer.WriteModel(Schematic.CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), null, schematic);
 		}
 
 		private static string FormatOutputDestination(string outputPath)
@@ -323,7 +319,7 @@ namespace FileToVox
 
 		private static void CheckDebug()
 		{
-			if (DEBUG)
+			if (Schematic.DEBUG)
 			{
 				VoxReader reader = new VoxReader();
 				reader.LoadModel(FormatOutputDestination(OUTPUT_PATH));
