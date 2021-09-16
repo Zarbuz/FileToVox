@@ -18,6 +18,7 @@ namespace FileToVoxCore.Vox
         protected const string LAYR = "LAYR";
         protected const string MATL = "MATL";
         protected const string rOBJ = "rOBJ";
+        protected const string IMAP = "IMAP";
 
         protected const int VERSION = 150;
 
