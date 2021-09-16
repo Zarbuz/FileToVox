@@ -1,5 +1,5 @@
-﻿using FileToVox.Schematics;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using FileToVoxCore.Schematics;
 
 namespace FileToVox.Converter.Image
 {

@@ -10,3 +10,5 @@ SchematicToVoxCore/Properties/launchSettings.json
 FileToVoxCommon/bin/
 FileToVoxCommon/obj/
 OldBuild/
+FileToVoxCore/obj/
+FileToVoxCore/bin/

@@ -1,13 +1,13 @@
-﻿using FileToVox.Converter.Image;
-using FileToVox.Schematics;
-using FileToVox.Schematics.Tools;
-using FileToVox.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using FileToVox.Converter.Image;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Schematics.Tools;
+using FileToVoxCore.Utils;
 
-namespace SchematicToVoxCore.Extensions
+namespace FileToVox.Extensions
 {
     public static class FctExtensions
     {

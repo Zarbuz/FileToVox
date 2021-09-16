@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using FileToVox.Schematics.Tools;
+using FileToVoxCore.Schematics.Tools;
 
 namespace FileToVox.Converter.PointCloud
 {

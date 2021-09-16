@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using FileToVox.Converter.PointCloud;
-using FileToVox.Schematics;
+using FileToVoxCore.Schematics;
 
 namespace FileToVox.Converter
 {

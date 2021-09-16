@@ -1,4 +1,4 @@
-﻿using FileToVox.Schematics;
+﻿using FileToVoxCore.Schematics;
 
 namespace FileToVox.Generator
 {

@@ -1,8 +1,8 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FileToVoxCommon.Generator.Shaders.Data;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Generator.Shaders
 {

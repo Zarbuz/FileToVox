@@ -1,9 +1,9 @@
-﻿using FileToVox.Schematics;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using FileToVox.Utils;
+using FileToVoxCore.Extensions;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Extensions
 {

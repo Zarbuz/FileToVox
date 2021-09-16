@@ -3,8 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using FileToVox.Schematics;
-using SchematicToVoxCore.Extensions;
+using FileToVoxCore.Schematics;
 
 namespace FileToVox.Converter
 {

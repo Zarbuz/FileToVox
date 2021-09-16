@@ -1,12 +1,11 @@
-﻿using FileToVox.Schematics;
-using FileToVox.Utils;
-using SchematicToVoxCore.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using FileToVox.Extensions;
+using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
 
 namespace FileToVox.Converter.Image
 {
