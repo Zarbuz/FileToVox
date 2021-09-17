@@ -162,7 +162,7 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified shaders file: " + INPUT_SHADER_FILE);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
-			if (GRID_SIZE != 1)
+			if (GRID_SIZE != 10)
 				Console.WriteLine("[INFO] Specified grid size: " + GRID_SIZE);
 			if (Schematic.CHUNK_SIZE != 128)
 				Console.WriteLine("[INFO] Specified chunk size: " + Schematic.CHUNK_SIZE);
@@ -255,7 +255,7 @@ namespace FileToVox
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
-					return new SchematicToSchematic(path, EXCAVATE, GRID_SIZE);
+					return new SchematicToSchematic(path, EXCAVATE);
 				case ".tif":
 					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":
