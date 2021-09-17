@@ -11,14 +11,11 @@ namespace FileToVox.Converter
 {
 	public class SchematicToSchematic : AbstractToSchematic
 	{
-		private readonly int mScale;
-
 		private readonly bool mExcavate;
 		private readonly Dictionary<Tuple<int, int>, Color> mColors = new Dictionary<Tuple<int, int>, Color>();
 
-		public SchematicToSchematic(string path, bool excavate, float scale) : base(path)
+		public SchematicToSchematic(string path, bool excavate) : base(path)
 		{
-			mScale = (int)scale;
 			mExcavate = excavate;
 			LoadBlocks();
 		}
@@ -125,20 +122,17 @@ namespace FileToVox.Converter
 			//Sorted by height (bottom to top) then length then width -- the index of the block at X,Y,Z is (Y×length + Z)×width + X.
 			Schematic schematic = new Schematic();
 
-			int total = (rawSchematic.Heigth * mScale) * (rawSchematic.Length * mScale) * (rawSchematic.Width * mScale);
+			int total = (rawSchematic.Heigth) * (rawSchematic.Length) * (rawSchematic.Width);
 			int indexProgress = 0;
 			using (ProgressBar progressbar = new ProgressBar())
 			{
-				for (int y = 0; y < (rawSchematic.Heigth * mScale); y++)
+				for (int y = 0; y < (rawSchematic.Heigth); y++)
 				{
-					for (int z = 0; z < (rawSchematic.Length * mScale); z++)
+					for (int z = 0; z < (rawSchematic.Length); z++)
 					{
-						for (int x = 0; x < (rawSchematic.Width * mScale); x++)
+						for (int x = 0; x < (rawSchematic.Width); x++)
 						{
-							int yProgress = (y / mScale);
-							int zProgress = (z / mScale);
-							int xProgress = (x / mScale);
-							int index = (yProgress * rawSchematic.Length + zProgress) * rawSchematic.Width + xProgress;
+							int index = (y * rawSchematic.Length + z) * rawSchematic.Width + x;
 							int blockId = rawSchematic.Blocks[index];
 							if (blockId != 0)
 							{
