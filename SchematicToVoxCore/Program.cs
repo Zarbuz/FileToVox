@@ -25,7 +25,7 @@ namespace FileToVox
 		private static bool COLOR;
 		private static bool MESH_SKIP_CAPTURE;
 
-		private static float SCALE = 1;
+		private static float GRID_SIZE = 10;
 		private static int HEIGHT_MAP = 1;
 		private static int COLOR_LIMIT = 256;
 		private static int MESH_SEGMENT_X = 4;
@@ -52,7 +52,7 @@ namespace FileToVox
 				{"msub|mesh-subsample=", "set the number of subsample (for MeshSampler)", (int v) => MESH_SUBSAMPLE = v},
 				{"mskip", "skip the capturing points part and load the previous PLY (for MeshSampler)", v => MESH_SKIP_CAPTURE = v != null},
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
-				{"sc|scale=", "set the scale", (float v) => SCALE = v},
+				{"gs|grid-size=", "set the grid-size", (float v) => GRID_SIZE = v},
 				{"d|debug", "enable the debug mode", v => Schematic.DEBUG = v != null},
 			};
 
@@ -138,8 +138,8 @@ namespace FileToVox
 				throw new ArgumentNullException("[ERROR] Missing required option: --i");
 			if (OUTPUT_PATH == null)
 				throw new ArgumentNullException("[ERROR] Missing required option: --o");
-			if (SCALE <= 0)
-				throw new ArgumentException("[ERROR] --scale argument must be positive");
+			if (GRID_SIZE < 10 || GRID_SIZE > Schematic.MAX_WORLD_LENGTH)
+				throw new ArgumentException("[ERROR] --grid-size argument must be greater than 10 and smaller than " + Schematic.MAX_WORLD_LENGTH);
 			if (HEIGHT_MAP < 1)
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
 			if (COLOR_LIMIT < 0 || COLOR_LIMIT > 256)
@@ -162,8 +162,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified shaders file: " + INPUT_SHADER_FILE);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
-			if (SCALE != 1)
-				Console.WriteLine("[INFO] Specified increase size: " + SCALE);
+			if (GRID_SIZE != 1)
+				Console.WriteLine("[INFO] Specified grid size: " + GRID_SIZE);
 			if (Schematic.CHUNK_SIZE != 128)
 				Console.WriteLine("[INFO] Specified chunk size: " + Schematic.CHUNK_SIZE);
 			if (EXCAVATE)
@@ -247,26 +247,26 @@ namespace FileToVox
 				case ".binvox":
 					return new BinvoxToSchematic(path);
 				case ".csv":
-					return new CSVToSchematic(path, SCALE, COLOR_LIMIT);
+					return new CSVToSchematic(path, GRID_SIZE, COLOR_LIMIT);
 				case ".ply":
-					return new PLYToSchematic(path, SCALE, COLOR_LIMIT);
+					return new PLYToSchematic(path, GRID_SIZE, COLOR_LIMIT);
 				case ".png":
 					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
-					return new SchematicToSchematic(path, EXCAVATE, SCALE);
+					return new SchematicToSchematic(path, EXCAVATE, GRID_SIZE);
 				case ".tif":
 					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":
-					return new XYZToSchematic(path, SCALE, COLOR_LIMIT);
+					return new XYZToSchematic(path, GRID_SIZE, COLOR_LIMIT);
 				case ".json":
 					return new JsonToSchematic(path);
 				case ".vox":
 					return new VoxToSchematic(path);
 				case ".obj":
 				case ".fbx":
-					return new MeshToSchematic(path, SCALE, COLOR_LIMIT, MESH_SEGMENT_X, MESH_SEGMENT_Y, MESH_SUBSAMPLE, MESH_SKIP_CAPTURE);
+					return new MeshToSchematic(path, GRID_SIZE, COLOR_LIMIT, MESH_SEGMENT_X, MESH_SEGMENT_Y, MESH_SUBSAMPLE, MESH_SKIP_CAPTURE);
 				default:
 					return null;
 			}

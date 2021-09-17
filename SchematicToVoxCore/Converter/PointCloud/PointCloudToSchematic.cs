@@ -5,6 +5,7 @@ using FileToVoxCore.Utils;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FileToVox.Converter.PointCloud
 {
@@ -39,14 +40,38 @@ namespace FileToVox.Converter.PointCloud
 			for (int i = 0; i < data.BodyVertices.Count; i++)
 			{
 				data.BodyVertices[i] += new Vector3(min, min, min);
-				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * Scale), (float)Math.Truncate(data.BodyVertices[i].Y * Scale), (float)Math.Truncate(data.BodyVertices[i].Z * Scale));
+				//data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * Scale), (float)Math.Truncate(data.BodyVertices[i].Y * Scale), (float)Math.Truncate(data.BodyVertices[i].Z * Scale));
 			}
 
-			//HashSet<Vector3> set = new HashSet<Vector3>();
+			Vector3 maxX = data.BodyVertices.MaxBy(t => t.X);
+			Vector3 maxY = data.BodyVertices.MaxBy(t => t.Y);
+			Vector3 maxZ = data.BodyVertices.MaxBy(t => t.Z);
+
+			Console.WriteLine("[INFO] Max X: " + maxX.X + ", Y: " + maxY.Y + ", " + maxZ.Z);
 
 			minX = data.BodyVertices.MinBy(t => t.X);
 			minY = data.BodyVertices.MinBy(t => t.Y);
 			minZ = data.BodyVertices.MinBy(t => t.Z);
+
+			Console.WriteLine("[INFO] Min X: " + minX.X + ", Y: " + minY.Y + ", " + minZ.Z);
+
+			Vector3 size = new Vector3(maxX.X - minX.X, maxY.Y - minY.Y, maxZ.Z - minZ.Z);
+
+			Console.WriteLine("[INFO] Size X: " + size.X + ", Y: " + size.Y + ", " + size.Z);
+
+			float max = Math.Max(size.X, Math.Max(size.Y, size.Z));
+			float factor = Scale / max;
+
+			for (int i = 0; i < data.BodyVertices.Count; i++)
+			{
+				data.BodyVertices[i] = new Vector3((float)Math.Truncate(data.BodyVertices[i].X * factor), (float)Math.Truncate(data.BodyVertices[i].Y * factor), (float)Math.Truncate(data.BodyVertices[i].Z * factor));
+			}
+
+			minX = data.BodyVertices.MinBy(t => t.X);
+			minY = data.BodyVertices.MinBy(t => t.Y);
+			minZ = data.BodyVertices.MinBy(t => t.Z);
+
+			//HashSet<Vector3> set = new HashSet<Vector3>();
 
 			min = Math.Min(minX.X, Math.Min(minY.Y, minZ.Z));
 
@@ -55,8 +80,8 @@ namespace FileToVox.Converter.PointCloud
 			{
 				for (int i = 0; i < data.BodyVertices.Count; i++)
 				{
-					float max = Math.Max(data.BodyVertices[i].X, Math.Max(data.BodyVertices[i].Y, data.BodyVertices[i].Z));
-					if (max - min >= 0)
+					float maxV = Math.Max(data.BodyVertices[i].X, Math.Max(data.BodyVertices[i].Y, data.BodyVertices[i].Z));
+					if (maxV - min >= 0)
 					{
 						data.BodyVertices[i] -= new Vector3(min, min, min);
 						mSchematic.AddVoxel((int)(data.BodyVertices[i].X - minX.X), (int)(data.BodyVertices[i].Y - minY.Y), (int)(data.BodyVertices[i].Z - minZ.Z), data.BodyColors[i].ColorToUInt());
@@ -86,7 +111,7 @@ namespace FileToVox.Converter.PointCloud
 			//	}
 			//}
 		}
-		
+
 
 		public override Schematic WriteSchematic()
 		{
@@ -95,6 +120,6 @@ namespace FileToVox.Converter.PointCloud
 			return schematic;
 		}
 
-	
+
 	}
 }
