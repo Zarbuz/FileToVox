@@ -207,14 +207,15 @@ namespace FileToVoxCore.Vox
                     case rOBJ:
                         output.RendererSettingChunks.Add(ReaddRObjectChunk(chunkReader));
                         break;
-                    case IMAP:
-	                    for (int i = 0; i < 256; i++)
-	                    {
-		                    int index = chunkReader.ReadInt32();
-                            output.PaletteColorIndex.Add(index);
-	                    }
-                        break;
-                    default:
+					case IMAP:
+						output.PaletteColorIndex = new int[256];
+						for (int i = 0; i < 256; i++)
+						{
+							int index = chunkReader.ReadByte();
+							output.PaletteColorIndex[i] = index;
+						}
+						break;
+					default:
                         Console.WriteLine($"Unknown chunk: \"{chunkName}\"");
                         break;
                 }
@@ -299,12 +300,14 @@ namespace FileToVoxCore.Vox
                         DisplayAttributes(material.Properties, writer);
 						break;
                     case IMAP:
-						List<int> list = output.PaletteColorIndex;
-						writer.WriteLine("-> IMAP NODE: ");
-                        foreach (int colorIndex in list)
-						{
-							writer.WriteLine("--> " + colorIndex);
-						}
+	                    if (output.PaletteColorIndex != null)
+	                    {
+		                    foreach (int colorIndex in output.PaletteColorIndex)
+		                    {
+			                    writer.WriteLine("--> " + colorIndex);
+		                    }
+                        }
+                        
                         break;
                 }
                 writer.WriteLine("");

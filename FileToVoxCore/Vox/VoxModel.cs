@@ -17,7 +17,7 @@ namespace FileToVoxCore.Vox
         public List<ShapeNodeChunk> ShapeNodeChunks = new List<ShapeNodeChunk>();
         public List<LayerChunk> LayerChunks = new List<LayerChunk>();
         public List<RendererSettingChunk> RendererSettingChunks = new List<RendererSettingChunk>();
-        public List<int> PaletteColorIndex = new List<int>();
+        public int[] PaletteColorIndex;
     }
 
     public enum MaterialType
