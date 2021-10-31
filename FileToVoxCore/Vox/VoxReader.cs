@@ -13,6 +13,8 @@ namespace FileToVoxCore.Vox
         private int mVoxelCountLastXyziChunk = 0;
         protected string LogOutputFile;
         private bool mWriteLog;
+
+        
         public VoxModel LoadModel(string absolutePath, bool writeLog = false, bool debug = false)
         {
             VoxModel output = new VoxModel();
@@ -20,6 +22,8 @@ namespace FileToVoxCore.Vox
             mVoxelCountLastXyziChunk = 0;
             LogOutputFile = name + "-" + DateTime.Now.ToString("y-MM-d_HH.m.s") + ".txt";
             mWriteLog = writeLog;
+            ChildCount = 0;
+            ChunkCount = 0;
             using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(absolutePath))))
             {
                 var head = new string(reader.ReadChars(4));
