@@ -98,7 +98,7 @@ namespace FileToVoxCore.Schematics
 					return mWidth;
 				}
 
-				mWidth = (ushort)(mMaxX - mMinX + 1);
+				mWidth = (ushort)(MaxX - MinX + 1);
 				return mWidth;
 			}
 		}
@@ -115,7 +115,7 @@ namespace FileToVoxCore.Schematics
 					return mHeight;
 				}
 
-				mHeight = (ushort)(mMaxY - mMinY + 1);
+				mHeight = (ushort)(MaxY - MinY + 1);
 
 				return mHeight;
 			}
@@ -133,7 +133,7 @@ namespace FileToVoxCore.Schematics
 					return mLength;
 				}
 
-				mLength = (ushort)(mMaxZ - mMinZ + 1);
+				mLength = (ushort)(MaxZ - MinZ + 1);
 
 				return mLength;
 			}
@@ -142,13 +142,13 @@ namespace FileToVoxCore.Schematics
 		public Dictionary<long, Region> RegionDict { get; private set; }
 		public List<uint> UsedColors { get; private set; }
 
-		private int mMinX;
-		private int mMinY;
-		private int mMinZ;
+		public int MinX { get; private set; }
+		public int MinY { get; private set; }
+		public int MinZ { get; private set; }
 
-		private int mMaxX;
-		private int mMaxY;
-		private int mMaxZ;
+		public int MaxX { get; private set; }
+		public int MaxY { get; private set; }
+		public int MaxZ { get; private set; }
 		private readonly bool mCanReorderPalette = true;
 
 		public Schematic()
@@ -370,14 +370,14 @@ namespace FileToVoxCore.Schematics
 
 		private void ComputeMinMax(int x, int y, int z)
 		{
-			mMinX = Math.Min(x, mMinX);
-			mMinY = Math.Min(y, mMinY);
-			mMinZ = Math.Min(z, mMinZ);
+			MinX = Math.Min(x, MinX);
+			MinY = Math.Min(y, MinY);
+			MinZ = Math.Min(z, MinZ);
 
 
-			mMaxX = Math.Max(x, mMaxX);
-			mMaxY = Math.Max(y, mMaxY);
-			mMaxZ = Math.Max(z, mMaxZ);
+			MaxX = Math.Max(x, MaxX);
+			MaxY = Math.Max(y, MaxY);
+			MaxZ = Math.Max(z, MaxZ);
 		}
 		#endregion
 	}

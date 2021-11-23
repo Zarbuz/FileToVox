@@ -20,17 +20,18 @@ namespace FileToVoxCore.Vox
 		private int mCountBlocks;
 		private int mChildrenChunkSize;
 		private Schematic mSchematic;
-		private readonly Rotation mRotation = Rotation._PZ_PX_P;
+		private Rotation mRotation = Rotation._PZ_PX_P;
 		private List<Region> mFirstBlockInEachRegion;
 		private List<Color> mPalette;
 		private int mChunkSize;
 
-		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
+		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic, Rotation rotation = Rotation._PZ_PX_P)
 		{
 			mChunkSize = chunkSize;
 			mTotalBlockCount = mCountRegionNonEmpty = mCountBlocks = 0;
 			mSchematic = schematic;
 			mPalette = palette;
+			mRotation = rotation;
 			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
 			{
 				writer.Write(Encoding.UTF8.GetBytes(HEADER));
@@ -89,9 +90,9 @@ namespace FileToVoxCore.Vox
 		/// <returns></returns>
 		private string GetWorldPosString(int index)
 		{
-			int worldPosX = mFirstBlockInEachRegion[index].X - 938;
-			int worldPosZ = mFirstBlockInEachRegion[index].Z - 938;
-			int worldPosY = mFirstBlockInEachRegion[index].Y + mChunkSize;
+			int worldPosX = mFirstBlockInEachRegion[index].X - mSchematic.Width / 2;
+			int worldPosZ = mFirstBlockInEachRegion[index].Z - mSchematic.Length / 2;
+			int worldPosY = mFirstBlockInEachRegion[index].Y + mSchematic.MinY;
 
 			string pos = worldPosZ + " " + worldPosX + " " + worldPosY;
 			return pos;
@@ -399,5 +400,5 @@ namespace FileToVoxCore.Vox
 		}
 	}
 
-	
+
 }
