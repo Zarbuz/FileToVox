@@ -132,7 +132,7 @@ namespace FileToVoxCore.Vox
         private Color[] LoadPalette(BinaryReader reader)
         {
             var result = new Color[256];
-            for (int i = 1; i < 256; i++)
+            for (int i = 0; i < 255; i++)
             {
                 byte r = reader.ReadByte();
                 byte g = reader.ReadByte();
