@@ -132,7 +132,7 @@ namespace FileToVoxCore.Vox
 			Console.WriteLine("[INFO] Check total blocks after conversion: " + mCountBlocks);
 			if (mTotalBlockCount != mCountBlocks)
 			{
-				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion.");
+				Console.WriteLine("[ERROR] There is a difference between total blocks before and after conversion: " + mTotalBlockCount);
 				if (Schematic.DEBUG)
 				{
 					foreach (Voxel voxel in mSchematic.GetAllVoxels())
@@ -202,7 +202,7 @@ namespace FileToVoxCore.Vox
 				writer.Write((byte)(block.X % mChunkSize));
 				writer.Write((byte)(block.Y % mChunkSize));
 				writer.Write((byte)(block.Z % mChunkSize));
-				int paletteIndex = mPalette?.IndexOf(block.Color.UIntToColor()) ?? mSchematic.GetPaletteIndex(block.Color);
+				int paletteIndex = mPalette?.IndexOf(block.Color.UIntToColor()) - 1 ?? mSchematic.GetPaletteIndex(block.Color);
 				if (paletteIndex != -1)
 				{
 					writer.Write((byte)(paletteIndex + 1));

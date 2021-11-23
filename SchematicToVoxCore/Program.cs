@@ -144,7 +144,7 @@ namespace FileToVox
 				throw new ArgumentException("[ERROR] --heightmap argument must be positive");
 			if (COLOR_LIMIT < 0 || COLOR_LIMIT > 256)
 				throw new ArgumentException("[ERROR] --color-limit argument must be between 1 and 256");
-			if (Schematic.CHUNK_SIZE <= 10 || Schematic.CHUNK_SIZE > 257)
+			if (Schematic.CHUNK_SIZE <= 10 || Schematic.CHUNK_SIZE > 256)
 				throw new ArgumentException("[ERROR] --chunk-size argument must be between 10 and 256");
 		}
 
