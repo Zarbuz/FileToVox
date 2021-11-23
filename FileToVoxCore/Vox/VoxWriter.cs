@@ -28,7 +28,7 @@ namespace FileToVoxCore.Vox
 		public bool WriteModel(int chunkSize, string absolutePath, List<Color> palette, Schematic schematic)
 		{
 			mChunkSize = chunkSize;
-			mTotalBlockCount = mCountRegionNonEmpty = 0;
+			mTotalBlockCount = mCountRegionNonEmpty = mCountBlocks = 0;
 			mSchematic = schematic;
 			mPalette = palette;
 			using (BinaryWriter writer = new BinaryWriter(File.Open(absolutePath, FileMode.Create)))
