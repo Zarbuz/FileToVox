@@ -202,7 +202,7 @@ namespace FileToVoxCore.Vox
 				writer.Write((byte)(block.X % mChunkSize));
 				writer.Write((byte)(block.Y % mChunkSize));
 				writer.Write((byte)(block.Z % mChunkSize));
-				int paletteIndex = mSchematic.GetPaletteIndex(block.Color);
+				int paletteIndex = mPalette?.IndexOf(block.Color.UIntToColor()) ?? mSchematic.GetPaletteIndex(block.Color);
 				if (paletteIndex != -1)
 				{
 					writer.Write((byte)(paletteIndex + 1));
