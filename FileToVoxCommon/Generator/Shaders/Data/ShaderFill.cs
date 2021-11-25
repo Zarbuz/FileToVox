@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FileToVoxCore.Schematics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -13,13 +14,6 @@ namespace FileToVoxCommon.Generator.Shaders.Data
 
 		[Display(Name = "Below", Description = "Will fill all voxels below the specific limit")]
 		MINUS = 1
-	}
-
-	public enum RotationMode
-	{
-		X,
-		Y,
-		Z
 	}
 
 	public class ShaderFill : ShaderStep

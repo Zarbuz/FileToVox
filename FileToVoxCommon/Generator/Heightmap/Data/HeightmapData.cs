@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using FileToVoxCommon.Json;
+using FileToVoxCore.Schematics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -26,12 +27,7 @@ namespace FileToVoxCommon.Generator.Heightmap.Data
 		TOP_ONLY
 	}
 
-	public enum RotationMode
-	{
-		X,
-		Y,
-		Z,
-	}
+
 
 	public class HeightmapStep : StepData.StepData
 	{
