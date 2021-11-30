@@ -1,8 +1,9 @@
-﻿using FileToVox.Generator.Terrain.Chunk;
-using System;
-using System.Collections.Generic;
+﻿using FileToVox.Extensions;
+using FileToVox.Generator.Terrain.Chunk;
 using FileToVoxCore.Extensions;
 using FileToVoxCore.Schematics.Tools;
+using System;
+using System.Collections.Generic;
 using BiomeTree = FileToVox.Generator.Terrain.Data.BiomeTree;
 using ModelSettings = FileToVox.Generator.Terrain.Data.ModelSettings;
 

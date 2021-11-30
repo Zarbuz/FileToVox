@@ -1,8 +1,9 @@
-﻿using FileToVox.Generator.Terrain.Chunk;
-using System.Drawing;
+﻿using FileToVox.Extensions;
+using FileToVox.Generator.Terrain.Chunk;
 using FileToVoxCore.Extensions;
 using FileToVoxCore.Schematics.Tools;
 using BiomeSettings = FileToVox.Generator.Terrain.Data.BiomeSettings;
+using Color = FileToVoxCore.Drawing.Color;
 
 namespace FileToVox.Generator.Terrain
 {
@@ -12,7 +13,7 @@ namespace FileToVox.Generator.Terrain
 		{
 			public VoxelChunk Chunk;
 			public int VoxelIndex;
-			public Color vd;
+			public FileToVoxCore.Drawing.Color vd;
 			public Vector3 ChunkOriginalPosition;
 		}
 
@@ -70,7 +71,7 @@ namespace FileToVox.Generator.Terrain
 			}
 		}
 
-		public Color GetVegetation(BiomeSettings biome, float random)
+		public FileToVoxCore.Drawing.Color GetVegetation(BiomeSettings biome, float random)
 		{
 			float acumProb = 0;
 			int index = 0;

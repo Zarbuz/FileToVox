@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using FileToVox.Extensions;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Schematics.Tools;
 
@@ -50,7 +51,7 @@ namespace FileToVox.Converter
                             int index = X * xmult + Z * zmult + Y;
                             if (mVoxels[index] == 1)
                             {
-                                schematic.AddVoxel(X, Y, Z, Color.Wheat);
+                                schematic.AddVoxel(X, Y, Z, Color.Wheat.ToFileToVoxCoreColor());
                             }
                         }
                     }

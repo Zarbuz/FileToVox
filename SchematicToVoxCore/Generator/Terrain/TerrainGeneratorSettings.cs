@@ -7,6 +7,7 @@ using FileToVoxCore.Schematics.Tools;
 using BiomeSettings = FileToVox.Generator.Terrain.Data.BiomeSettings;
 using TerrainGeneratorDataSettings = FileToVox.Generator.Terrain.Data.TerrainGeneratorDataSettings;
 using TerrainStepType = FileToVox.Generator.Terrain.Data.TerrainStepType;
+using FileToVox.Extensions;
 
 namespace FileToVox.Generator.Terrain
 {

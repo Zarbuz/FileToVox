@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using FileToVox.Converter.PaletteSchematic;
 
 namespace FileToVox
 {

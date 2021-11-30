@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using FileToVox.Extensions;
 using FileToVoxCore.Extensions;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Color = FileToVoxCore.Drawing.Color;
 using FctExtensions = FileToVox.Extensions.FctExtensions;
 
 namespace FileToVox.Converter
@@ -67,7 +68,7 @@ namespace FileToVox.Converter
                             {
                                 for (uint x = 0; x < sizeX; x++)
                                 {
-                                    Color data = reader.ReadUInt32().UIntToColor();
+                                    FileToVoxCore.Drawing.Color data = reader.ReadUInt32().UIntToColor();
                                     if (data.A != 0)
                                     {
                                         voxels.Add(new VoxelDTO(

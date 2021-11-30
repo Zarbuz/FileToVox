@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using FileToVoxCore.Drawing;
 using Newtonsoft.Json;
 
 namespace FileToVox.Generator.Terrain.Data

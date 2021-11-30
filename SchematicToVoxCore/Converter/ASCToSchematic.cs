@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using FileToVox.Extensions;
 using FileToVoxCore.Schematics;
 
 namespace FileToVox.Converter
@@ -72,7 +73,7 @@ namespace FileToVox.Converter
                 {
                     if (points[i, j] != nodata)
                     {
-                        schematic.AddVoxel(i, (int)points[i,j], j, Color.White);
+                        schematic.AddVoxel(i, (int)points[i,j], j, Color.White.ToFileToVoxCoreColor());
                     }
                 }
             }

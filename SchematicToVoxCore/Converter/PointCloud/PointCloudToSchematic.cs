@@ -5,7 +5,6 @@ using FileToVoxCore.Utils;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace FileToVox.Converter.PointCloud
 {

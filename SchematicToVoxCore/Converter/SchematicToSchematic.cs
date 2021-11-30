@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using FileToVox.Extensions;
 using FileToVoxCore.Extensions;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Utils;

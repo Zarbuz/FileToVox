@@ -7,6 +7,7 @@ using FileToVox.Converter.Image;
 using FileToVox.Extensions;
 using FileToVoxCommon.Generator.Heightmap.Data;
 using FileToVoxCore.Schematics;
+using Color = System.Drawing.Color;
 
 namespace FileToVox.Utils
 {

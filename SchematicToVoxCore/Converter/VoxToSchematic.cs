@@ -5,6 +5,7 @@ using FileToVoxCore.Utils;
 using FileToVoxCore.Vox;
 using MoreLinq;
 using System.Drawing;
+using FileToVox.Extensions;
 
 namespace FileToVox.Converter
 {
@@ -20,7 +21,7 @@ namespace FileToVox.Converter
 		public override Schematic WriteSchematic()
 		{
 			Schematic schematic = new Schematic();
-			Color[] colorsPalette = mVoxModel.Palette;
+			FileToVoxCore.Drawing.Color[] colorsPalette = mVoxModel.Palette;
 			using (ProgressBar progressbar = new ProgressBar())
 			{
 				int minX = (int) mVoxModel.TransformNodeChunks.MinBy(t => t.TranslationAt().X).TranslationAt().X;
@@ -42,8 +43,8 @@ namespace FileToVox.Converter
 							for (int x = 0; x < data.VoxelsWide; x++)
 							{
 								int indexColor = data.Get(x, y, z);
-								Color color = colorsPalette[indexColor];
-								if (color != Color.Empty)
+								FileToVoxCore.Drawing.Color color = colorsPalette[indexColor];
+								if (color != FileToVoxCore.Drawing.Color.Empty)
 								{
 									schematic.AddVoxel((int)(z + worldPositionFrame.X - minX), (int)(y + (worldPositionFrame.Z - minZ)), (int)(x + worldPositionFrame.Y - minY), color.ColorToUInt());
 								}

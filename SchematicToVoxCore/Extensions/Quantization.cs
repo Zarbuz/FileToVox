@@ -4,6 +4,7 @@ using System.Drawing;
 using FileToVoxCore.Extensions;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Utils;
+using Color = FileToVoxCore.Drawing.Color;
 
 namespace FileToVox.Extensions
 {
@@ -64,7 +65,7 @@ namespace FileToVox.Extensions
                 Color color = voxel.Color.UIntToColor();
                 int x = i % width;
                 int y = i / width;
-                bitmap.SetPixel(x, y, color);
+                bitmap.SetPixel(x, y, color.ToSystemDrawingColor());
             }
 
             return bitmap;

@@ -6,6 +6,8 @@ using FileToVox.Converter.Image;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Schematics.Tools;
 using FileToVoxCore.Utils;
+using FileToVoxCore.Drawing;
+using Color = FileToVoxCore.Drawing.Color;
 
 namespace FileToVox.Extensions
 {
@@ -63,6 +65,22 @@ namespace FileToVox.Extensions
         {
             return (uint)((color.A << 24) | (color.R << 16) |
                           (color.G << 8) | (color.B << 0));
+        }
+
+        public static uint ColorToUInt(this System.Drawing.Color color)
+        {
+	        return (uint)((color.A << 24) | (color.R << 16) |
+	                      (color.G << 8) | (color.B << 0));
+        }
+
+        public static Color ToFileToVoxCoreColor(this System.Drawing.Color color)
+        {
+	        return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        public static System.Drawing.Color ToSystemDrawingColor(this Color color)
+        {
+	        return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
         public static uint ByteArrayToUInt(byte r, byte g, byte b, byte a)
