@@ -59,7 +59,7 @@ namespace FileToVox
 
 			try
 			{
-				List<string> extra = (args.Length > 0) ? options.Parse(args) : options.Parse(CheckArgumentsFile());
+				List<string> extra = options.Parse(args);
 				DisplayInformations();
 				CheckHelp(options);
 				CheckArguments();
@@ -97,34 +97,7 @@ namespace FileToVox
 			Console.WriteLine("[INFO] Author: @Zarbuz. Contact : https://twitter.com/Zarbuz");
 		}
 
-		private static string[] CheckArgumentsFile()
-		{
-			if (!File.Exists("settings.ini"))
-			{
-				File.Create("settings.ini");
-			}
-
-			Console.WriteLine("[INFO] Reading arguments from settings.ini");
-			string[] args = new string[0];
-			using (StreamReader file = new StreamReader("settings.ini"))
-			{
-				string line;
-				while ((line = file.ReadLine()) != null)
-				{
-					if (line.Contains("#"))
-					{
-						continue;
-					}
-
-					Console.WriteLine($"[INFO] {line}");
-					args = line.Split(" ");
-				}
-			}
-
-			return args;
-		}
-
-		private static void CheckHelp(OptionSet options)
+        private static void CheckHelp(OptionSet options)
 		{
 			if (SHOW_HELP)
 			{
