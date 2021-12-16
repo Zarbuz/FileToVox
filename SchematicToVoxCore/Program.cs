@@ -267,7 +267,7 @@ namespace FileToVox
 					return new VoxToSchematic(path);
 				case ".obj":
 				case ".fbx":
-					return new MeshToSchematic(path, GRID_SIZE, COLOR_LIMIT, MESH_SEGMENT_X, MESH_SEGMENT_Y, MESH_SUBSAMPLE, MESH_SKIP_CAPTURE);
+					throw new Exception("[FAILED] Voxelization of 3D models is no longer done in FileToVox but with MeshSampler. Check the url : https://github.com/Zarbuz/FileToVox/releases for download link");
 				default:
 					return null;
 			}
@@ -292,7 +292,7 @@ namespace FileToVox
 			{
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE);
 				schematic = converterPalette.ConvertSchematic(schematic);
-				return writer.WriteModel(Schematic.CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
+				return writer.WriteModel(FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
 			}
 
 			if (INPUT_SHADER_FILE != null)
@@ -301,7 +301,7 @@ namespace FileToVox
 				schematic = jsonParser.WriteSchematic();
 			}
 
-			return writer.WriteModel(Schematic.CHUNK_SIZE, FormatOutputDestination(OUTPUT_PATH), null, schematic);
+			return writer.WriteModel(FormatOutputDestination(OUTPUT_PATH), null, schematic);
 		}
 
 		private static string FormatOutputDestination(string outputPath)
