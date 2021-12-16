@@ -21,6 +21,18 @@ FileToVox can import a folder of images (.PNG) where each image is a layer. (Use
 
 It support world region, so you can convert a terrain bigger than 126^3 voxels ! 
 
+# MeshSampler
+
+MeshSampler is an external program from FileToVox that allow you to voxelize 3D objects. 
+
+Features:
+
+- Load OBJ, FBX, GTLF files
+- Support textures and materials
+- Export directly into .vox
+
+More informations [here](https://github.com/Zarbuz/FileToVox/wiki/7.-MeshSampler-V2)
+
 # Wiki
 
 Please read the documentation of FileToVox [here](https://github.com/Zarbuz/FileToVox/wiki/1.-Introduction)
