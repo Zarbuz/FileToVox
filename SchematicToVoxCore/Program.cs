@@ -8,6 +8,7 @@ using NDesk.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FileToVox.Converter.PaletteSchematic;
 
@@ -149,18 +150,7 @@ namespace FileToVox
 		private static bool ProcessFile()
 		{
 			string path = Path.GetFullPath(INPUT_PATH);
-			bool isFolder = false;
-			if (!Directory.Exists(path))
-			{
-				if (!File.Exists(path))
-				{
-					throw new FileNotFoundException("[ERROR] Input file not found at: ", path);
-				}
-			}
-			else
-			{
-				isFolder = true;
-			}
+			bool isFolder = Directory.Exists(path);
 
 			if (!string.IsNullOrEmpty(INPUT_SHADER_FILE))
 			{
@@ -173,10 +163,22 @@ namespace FileToVox
 			try
 			{
 				AbstractToSchematic converter;
+				string[] files = INPUT_PATH.Split(";");
 				if (isFolder)
 				{
-					converter = new FolderImageToSchematic(path, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
+					List<string> images = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png")).ToList();
+					converter = new MultipleImageToSchematic(images, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
 					return SchematicToVox(converter);
+				}
+				if (files.Length > 0)
+				{
+					converter = new MultipleImageToSchematic(files.ToList(), EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
+					return SchematicToVox(converter);
+				}
+
+				if (!File.Exists(path))
+				{
+					throw new FileNotFoundException("[ERROR] File not found at: " + path);
 				}
 
 				converter = GetConverter(path);
