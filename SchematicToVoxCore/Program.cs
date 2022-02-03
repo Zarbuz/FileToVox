@@ -142,6 +142,8 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
 			if (Schematic.DEBUG)
 				Console.WriteLine("[INFO] Enabled option: debug");
+			if (DISABLE_QUANTIZATION)
+				Console.WriteLine("[INFO] Enabled option: disable-quantization");
 
 			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(OUTPUT_PATH));
 		}
