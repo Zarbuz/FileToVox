@@ -20,6 +20,12 @@ namespace FileToVox.Quantizer
 				image = image.ConvertToFormat32();
 			}
 
+			if (Program.DisableQuantization())
+			{
+				Console.WriteLine("[WARNING] By disabling quantization, only the first 255 unique colors will be taken into account");
+				return image;
+			}
+
 			mMaxColor = maxColorCount + 1;
 			mMaxColor = Math.Min(mMaxColor, 256);
 			int colorCount = mMaxColor;

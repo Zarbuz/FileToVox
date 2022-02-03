@@ -25,13 +25,11 @@ namespace FileToVox
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
 		private static bool COLOR;
-
+		private static bool DISABLE_QUANTIZATION;
 
 		private static float GRID_SIZE = 10;
 		private static int HEIGHT_MAP = 1;
 		private static int COLOR_LIMIT = 256;
-
-
 
 		public static void Main(string[] args)
 		{
@@ -50,6 +48,7 @@ namespace FileToVox
 				{"p|palette=", "set the palette", v => INPUT_PALETTE_FILE = v },
 				{"gs|grid-size=", "set the grid-size", (float v) => GRID_SIZE = v},
 				{"d|debug", "enable the debug mode", v => Schematic.DEBUG = v != null},
+				{"dq|disable-quantization", "Disable the quantization step ", v => DISABLE_QUANTIZATION= v != null},
 			};
 
 			try
@@ -92,7 +91,7 @@ namespace FileToVox
 			Console.WriteLine("[INFO] Author: @Zarbuz. Contact : https://twitter.com/Zarbuz");
 		}
 
-        private static void CheckHelp(OptionSet options)
+		private static void CheckHelp(OptionSet options)
 		{
 			if (SHOW_HELP)
 			{
@@ -143,7 +142,7 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Enabled option: heightmap (value=" + HEIGHT_MAP + ")");
 			if (Schematic.DEBUG)
 				Console.WriteLine("[INFO] Enabled option: debug");
-			
+
 			Console.WriteLine("[INFO] Specified output path: " + Path.GetFullPath(OUTPUT_PATH));
 		}
 
@@ -286,6 +285,11 @@ namespace FileToVox
 				VoxReader reader = new VoxReader();
 				reader.LoadModel(FormatOutputDestination(OUTPUT_PATH));
 			}
+		}
+
+		public static bool DisableQuantization()
+		{
+			return DISABLE_QUANTIZATION;
 		}
 	}
 }
