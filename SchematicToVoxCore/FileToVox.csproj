@@ -11,6 +11,7 @@
     <Version>1.14.1</Version>
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
