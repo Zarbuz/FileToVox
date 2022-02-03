@@ -11,6 +11,11 @@ namespace FileToVox.Converter
             PathFile = path;
         }
 
+        protected AbstractToSchematic()
+        {
+
+        }
+
         public abstract Schematic WriteSchematic();
 
     }

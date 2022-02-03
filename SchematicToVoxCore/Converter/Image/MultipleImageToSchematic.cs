@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using FileToVox.Extensions;
+﻿using FileToVox.Extensions;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Utils;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace FileToVox.Converter.Image
 {
-	public class FolderImageToSchematic : AbstractToSchematic
+	public class MultipleImageToSchematic : AbstractToSchematic
     {
         private readonly bool mExcavate;
         private readonly string mInputColorFile;
         private readonly int mColorLimit;
-        public FolderImageToSchematic(string path, bool excavate, string inputColorFile, int colorLimit) : base(path)
+        private readonly List<string> mImages;
+        public MultipleImageToSchematic(List<string> images, bool excavate, string inputColorFile, int colorLimit)
         {
+	        mImages = images;
             mExcavate = excavate;
             mInputColorFile = inputColorFile;
             mColorLimit = colorLimit;
@@ -23,8 +23,8 @@ namespace FileToVox.Converter.Image
 
         public override Schematic WriteSchematic()
         {
-            int height = Directory.GetFiles(PathFile, "*.*", SearchOption.AllDirectories).Count(s => s.EndsWith(".png"));
-            Console.WriteLine("[INFO] Count files in the folder : " + height);
+	        int height = mImages.Count;
+            Console.WriteLine("[INFO] Total images to process: " + mImages.Count);
 
             List<Voxel> blocks = new List<Voxel>();
             Bitmap bitmapColor = null;
@@ -39,10 +39,10 @@ namespace FileToVox.Converter.Image
 
             using (ProgressBar progressbar = new ProgressBar())
             {
-                string[] files = Directory.GetFiles(PathFile);
-                for (int i = 0; i < files.Length; i++)
+                for (int i = 0; i < mImages.Count; i++)
                 {
-                    string file = files[i];
+                    string file = mImages[i];
+                    Console.WriteLine("[INFO] Reading file: " + file);
                     Bitmap bitmap = new Bitmap(file);
                     DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
                     for (int x = 0; x < directBitmap.Width; x++)
@@ -72,7 +72,7 @@ namespace FileToVox.Converter.Image
                         }
                     }
                     directBitmap.Dispose();
-                    progressbar.Report(i / (float)files.Length);
+                    progressbar.Report(i / (float)mImages.Count);
                 }
             }
 
