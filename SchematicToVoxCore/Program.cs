@@ -167,13 +167,13 @@ namespace FileToVox
 				string[] files = INPUT_PATH.Split(";");
 				if (isFolder)
 				{
-					List<string> images = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png")).ToList();
+					List<string> images = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png") && !string.IsNullOrEmpty(s)).ToList();
 					converter = new MultipleImageToSchematic(images, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
 					return SchematicToVox(converter);
 				}
 				if (files.Length > 0)
 				{
-					converter = new MultipleImageToSchematic(files.ToList(), EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
+					converter = new MultipleImageToSchematic(files.Where(s => s.EndsWith(".png") && !string.IsNullOrEmpty(s)).ToList(), EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
 					return SchematicToVox(converter);
 				}
 
