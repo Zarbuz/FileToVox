@@ -171,7 +171,7 @@ namespace FileToVox
 					converter = new MultipleImageToSchematic(images, EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
 					return SchematicToVox(converter);
 				}
-				if (files.Length > 0)
+				if (files.Length > 1)
 				{
 					converter = new MultipleImageToSchematic(files.Where(s => s.EndsWith(".png") && !string.IsNullOrEmpty(s)).ToList(), EXCAVATE, INPUT_COLOR_FILE, COLOR_LIMIT);
 					return SchematicToVox(converter);
