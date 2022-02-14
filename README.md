@@ -23,7 +23,7 @@ It support world region, so you can convert a terrain bigger than 126^3 voxels !
 
 # MeshToVox
 
-MeshSampler is an external program from FileToVox that allow you to voxelize 3D objects. 
+MeshToVox is an external program from FileToVox that allow you to voxelize 3D objects files. 
 
 Features:
 
