@@ -27,7 +27,7 @@ MeshSampler is an external program from FileToVox that allow you to voxelize 3D 
 
 Features:
 
-- Load OBJ, FBX, GTLF files
+- Load OBJ, FBX, GTLF, STL files
 - Support textures and materials
 - Export directly into .vox
 
