@@ -31,7 +31,7 @@ Features:
 - Support textures and materials
 - Export directly into .vox
 
-More informations [here](https://github.com/Zarbuz/FileToVox/wiki/7.-MeshSampler-V2)
+More informations [here](https://github.com/Zarbuz/FileToVox/wiki/7.-MeshToVox)
 
 # Wiki
 
