@@ -229,7 +229,7 @@ namespace FileToVox
 					return new VoxToSchematic(path);
 				case ".obj":
 				case ".fbx":
-					throw new Exception("[FAILED] Voxelization of 3D models is no longer done in FileToVox but with MeshSampler. Check the url : https://github.com/Zarbuz/FileToVox/releases for download link");
+					throw new Exception("[FAILED] Voxelization of 3D models is no longer done in FileToVox but with MeshToVox. Check the url : https://github.com/Zarbuz/FileToVox/releases for download link");
 				default:
 					return null;
 			}
