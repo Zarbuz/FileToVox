@@ -6,12 +6,12 @@
     <StartupObject>FileToVox.Program</StartupObject>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
-    <ApplicationIcon />
     <Authors>Zarbuz</Authors>
     <Version>1.15</Version>
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -53,7 +53,7 @@ namespace FileToVox.Extensions
             return blocks;
         }
 
-        private static Bitmap CreateBitmapFromColors(List<Voxel> blocks)
+		private static Bitmap CreateBitmapFromColors(List<Voxel> blocks)
         {
             int width = blocks.Count;
 
