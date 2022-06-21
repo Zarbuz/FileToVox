@@ -308,7 +308,7 @@ namespace FileToVox.Converter.PointCloud
             while ((line = reader.ReadLine()) != null)
             {
                 string[] strings = line.Split(' ');
-                if (strings.Length > 6)
+                if (strings.Length >= 6)
                 {
                     try
                     {
