@@ -34,7 +34,7 @@ namespace FileToVox.Converter
 				string line;
 				int counter = 0;
 				// Read the file and display it line by line.  
-				StreamReader file = new StreamReader(@"schematics/config.txt");
+				StreamReader file = new StreamReader(@"./schematics/config.txt");
 				Console.WriteLine("[INFO] Started to read config.txt for loading blocks colors");
 				while ((line = file.ReadLine()) != null)
 				{
