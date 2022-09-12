@@ -1,6 +1,7 @@
 ﻿using FileToVox.Extensions;
 using FileToVoxCore.Schematics;
-using FileToVoxCore.Utils;
+using ImageMagick;
+using nQuant;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,13 +42,16 @@ namespace FileToVox.Converter.Image
 			{
 				string file = mImages[i];
 				Console.WriteLine("[INFO] Reading file: " + file);
-				Bitmap bitmap = new Bitmap(file);
-				DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
-				for (int x = 0; x < directBitmap.Width; x++)
+				MagickImage bitmap = new MagickImage(file);
+				var pixels = bitmap.GetPixels();
+
+				for (int x = 0; x < bitmap.Width; x++)
 				{
-					for (int y = 0; y < directBitmap.Length; y++)
+					for (int y = 0; y < bitmap.Height; y++)
 					{
-						Color color = directBitmap.GetPixel(x, y);
+						IPixel<ushort> pixel = pixels.GetPixel(x, y);
+						Color color = Color.FromArgb(pixel.GetChannel(4), pixel.GetChannel(0), pixel.GetChannel(1), pixel.GetChannel(2));
+
 						if (color != Color.Empty && color != Color.Transparent && color != Color.Black && (color.R != 0 && color.G != 0 && color.B != 0))
 						{
 							if (mInputColorFile != null)
@@ -60,7 +64,7 @@ namespace FileToVox.Converter.Image
 
 							if (mExcavate)
 							{
-								CheckNeighbor(ref blocks, directBitmap, color, i, x, y);
+								CheckNeighbor(ref blocks, bitmap, color, i, x, y);
 							}
 							else
 							{
@@ -69,7 +73,6 @@ namespace FileToVox.Converter.Image
 						}
 					}
 				}
-				directBitmap.Dispose();
 			}
 
 			List<Voxel> list = Quantization.ApplyQuantization(blocks, mColorLimit);
@@ -79,14 +82,23 @@ namespace FileToVox.Converter.Image
 			return schematic;
 		}
 
-		private void CheckNeighbor(ref List<Voxel> blocks, DirectBitmap bitmap, Color color, int i, int x, int y)
+		private void CheckNeighbor(ref List<Voxel> blocks, MagickImage bitmap, Color color, int i, int x, int y)
 		{
-			if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Length)
+			var pixels = bitmap.GetPixels();
+
+			if (x - 1 >= 0 && x + 1 < bitmap.Width && y - 1 >= 0 && y + 1 < bitmap.Height)
 			{
-				Color left = bitmap.GetPixel(x - 1, y);
-				Color top = bitmap.GetPixel(x, y - 1);
-				Color right = bitmap.GetPixel(x + 1, y);
-				Color bottom = bitmap.GetPixel(x, y + 1);
+				IPixel<ushort> pixelLeft = pixels.GetPixel(x - 1, y);
+				Color left = Color.FromArgb(pixelLeft.GetChannel(4), pixelLeft.GetChannel(0), pixelLeft.GetChannel(1), pixelLeft.GetChannel(2));
+
+				IPixel<ushort> pixelTop = pixels.GetPixel(x , y -1);
+				Color top = Color.FromArgb(pixelTop.GetChannel(4), pixelTop.GetChannel(0), pixelTop.GetChannel(1), pixelTop.GetChannel(2));
+
+				IPixel<ushort> pixelRight = pixels.GetPixel(x + 1, y);
+				Color right = Color.FromArgb(pixelRight.GetChannel(4), pixelRight.GetChannel(0), pixelRight.GetChannel(1), pixelRight.GetChannel(2));
+
+				IPixel<ushort> pixelBottom = pixels.GetPixel(x, y + 1);
+				Color bottom = Color.FromArgb(pixelBottom.GetChannel(4), pixelBottom.GetChannel(0), pixelBottom.GetChannel(1), pixelBottom.GetChannel(2));
 
 				bool leftColor = left != Color.Empty && left != Color.Transparent && left != Color.Black && (left.R != 0 && left.G != 0 && left.B != 0);
 				bool topColor = top != Color.Empty && top != Color.Transparent && top != Color.Black && (top.R != 0 && top.G != 0 && top.B != 0);

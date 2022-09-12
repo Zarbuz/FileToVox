@@ -17,7 +17,7 @@ namespace FileToVox.Quantizer
 		{
 			if (image.PixelFormat != PixelFormat.Format32bppArgb)
 			{
-				image = image.ConvertToFormat32();
+				image = ConvertToFormat32(image);
 			}
 
 			if (Program.DisableQuantization())
@@ -33,6 +33,17 @@ namespace FileToVox.Quantizer
 			IEnumerable<Box> cubes = this.SplitData(ref colorCount, moments);
 			QuantizedPalette quantizedPalette = this.GetQuantizedPalette(colorCount, moments, cubes, alphaThreshold);
 			return ProcessImagePixels((Image)image, quantizedPalette);
+		}
+
+		private static Bitmap ConvertToFormat32(Bitmap bitmap)
+		{
+			Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+			using (Graphics gr = Graphics.FromImage(clone))
+			{
+				gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+			}
+
+			return clone;
 		}
 
 		private static Bitmap ProcessImagePixels(Image sourceImage, QuantizedPalette palette)
