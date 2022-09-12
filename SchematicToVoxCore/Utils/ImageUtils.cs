@@ -54,7 +54,6 @@ namespace FileToVox.Utils
 
 			MagickImage grayscale = new MagickImage(loadImageParam.TexturePath);
 			grayscale.Grayscale();
-			int depth = grayscale.Depth;
 
 			IPixelCollection<ushort> pixelCollectionBitmap = bitmap.GetPixels();
 			IPixelCollection<ushort> pixelCollectionGrayscale = grayscale.GetPixels();
@@ -84,13 +83,13 @@ namespace FileToVox.Utils
 					for (int y = 0; y < h; y++)
 					{
 						IPixel<ushort> pixel = pixelCollectionBitmap.GetPixel(x, y);
-						Color color = Color.FromArgb(pixel.GetChannel(4), pixel.GetChannel(0), pixel.GetChannel(1), pixel.GetChannel(2));
+						Color color = pixel.GetPixelColor();
 						Color finalColor;
 
 						if (pixelCollectionBitmapColor != null)
 						{
 							IPixel<ushort> p = pixelCollectionBitmapColor.GetPixel(x, y);
-							Color c = Color.FromArgb(p.GetChannel(4), p.GetChannel(0), p.GetChannel(1), p.GetChannel(2));
+							Color c = p.GetPixelColor();
 							finalColor = c;
 						}
 						else if (loadImageParam.EnableColor)
@@ -122,7 +121,7 @@ namespace FileToVox.Utils
 								}
 								else
 								{
-									int computeHeight = GetHeight(depth, pixelCollectionGrayscale.GetPixel(x, y), loadImageParam.Height);
+									int computeHeight = GetHeight(pixelCollectionGrayscale.GetPixel(x, y), loadImageParam.Height);
 									AddMultipleVoxels(ref schematic, h, computeHeight, x, y, finalColor);
 								}
 							}
@@ -160,15 +159,13 @@ namespace FileToVox.Utils
 
 		private static void GenerateFromMinNeighbor(ref Schematic schematic, GenerateFromMinNeighborParam param)
 		{
-			int depth = param.GrayscaleImage.Depth;
-
-			int computeHeight = GetHeight(depth, param.PixelCollection.GetPixel(param.X, param.Y), param.Height);
+			int computeHeight = GetHeight(param.PixelCollection.GetPixel(param.X, param.Y), param.Height);
 			if (param.X - 1 >= 0 && param.X + 1 < param.GrayscaleImage.Width && param.Y - 1 >= 0 && param.Y + 1 < param.GrayscaleImage.Height)
 			{
-				int heightLeft = GetHeight(depth, param.PixelCollection.GetPixel(param.X - 1, param.Y), param.Height);
-				int heightTop = GetHeight(depth, param.PixelCollection.GetPixel(param.X, param.Y - 1), param.Height);
-				int heightRight = GetHeight(depth, param.PixelCollection.GetPixel(param.X + 1, param.Y), param.Height);
-				int heightBottom = GetHeight(depth, param.PixelCollection.GetPixel(param.X, param.Y + 1), param.Height);
+				int heightLeft = GetHeight(param.PixelCollection.GetPixel(param.X - 1, param.Y), param.Height);
+				int heightTop = GetHeight(param.PixelCollection.GetPixel(param.X, param.Y - 1), param.Height);
+				int heightRight = GetHeight( param.PixelCollection.GetPixel(param.X + 1, param.Y), param.Height);
+				int heightBottom = GetHeight( param.PixelCollection.GetPixel(param.X, param.Y + 1), param.Height);
 
 				var list = new List<int>
 				{
@@ -192,14 +189,15 @@ namespace FileToVox.Utils
 			}
 		}
 
-		private static int GetHeight(int depth, IPixel<ushort> pixel, int heightFactor)
+		private static int GetHeight(IPixel<ushort> pixel, int heightFactor)
 		{
-			int average = (depth == 48 ? 196605 : 765);
+			int average = 196605;
+			
 			float intensity = (pixel.GetChannel(0) + pixel.GetChannel(1) + pixel.GetChannel(2)) / (float)average;
 			int height = (int)(intensity * heightFactor);
 			return height;
 		}
-		
+
 
 		#endregion
 	}
