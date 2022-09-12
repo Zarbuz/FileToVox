@@ -101,7 +101,7 @@ namespace FileToVox.Utils
 							finalColor = Color.White;
 						}
 
-						if (color.A != 0)
+						if (bitmap.HasAlpha && color.A != 0 || !bitmap.HasAlpha)
 						{
 							if (loadImageParam.Height != 1)
 							{
@@ -191,9 +191,9 @@ namespace FileToVox.Utils
 
 		private static int GetHeight(IPixel<ushort> pixel, int heightFactor)
 		{
-			int average = 196605;
-			
-			float intensity = (pixel.GetChannel(0) + pixel.GetChannel(1) + pixel.GetChannel(2)) / (float)average;
+			int average = Math.Min(pixel.Channels, 3) * ushort.MaxValue;
+			int total = pixel.GetChannel(0) + pixel.GetChannel(1) + pixel.GetChannel(2);
+			float intensity = total / (float)average;
 			int height = (int)(intensity * heightFactor);
 			return height;
 		}
