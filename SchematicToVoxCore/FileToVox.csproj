@@ -68,24 +68,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="JsonPresets\heightmapGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseBase.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseDetail.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseMoisture.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\shaderGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\terrainGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="schematics\config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
