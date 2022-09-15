@@ -15,17 +15,6 @@ namespace FileToVox.Converter.Image
         protected readonly string ColorPath;
         protected readonly int ColorLimit;
 
-        [StructLayout(LayoutKind.Explicit)]
-        public struct RGB
-        {
-	        // Structure of pixel for a 24 bpp bitmap
-	        [FieldOffset(0)] public byte blue;
-	        [FieldOffset(1)] public byte green;
-	        [FieldOffset(2)] public byte red;
-	        [FieldOffset(3)] public byte alpha;
-	        [FieldOffset(0)] public int argb;
-        }
-
         public ImageToSchematic(string path, string colorPath, int height, bool excavate, bool color, int colorLimit) : base(path)
         {
             ColorPath = colorPath;

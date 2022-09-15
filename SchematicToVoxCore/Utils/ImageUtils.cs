@@ -24,7 +24,7 @@ namespace FileToVox.Utils
 
 				if (loadImageParam.ColorLimit != 256 || colorBitmap.UniqueColors().TotalColors > 256)
 				{
-					colorBitmap.Quantize(new QuantizeSettings()
+					Quantization.Quantize(colorBitmap, new QuantizeSettings()
 					{
 						Colors = loadImageParam.ColorLimit,
 					});
@@ -33,11 +33,10 @@ namespace FileToVox.Utils
 			}
 			else if (loadImageParam.EnableColor)
 			{
-				bitmap.Quantize(new QuantizeSettings()
+				Quantization.Quantize(bitmap, new QuantizeSettings()
 				{
-					Colors = loadImageParam.ColorLimit
+					Colors = loadImageParam.ColorLimit,
 				});
-
 			}
 
 			Schematic schematic = WriteSchematicIntern(bitmap, colorBitmap, loadImageParam);
@@ -122,7 +121,8 @@ namespace FileToVox.Utils
 								else
 								{
 									int computeHeight = GetHeight(pixelCollectionGrayscale.GetPixel(x, y), loadImageParam.Height);
-									AddMultipleVoxels(ref schematic, h, computeHeight, x, y, finalColor);
+									AddMultipleVoxels(ref schematic, 0, computeHeight, x, y, finalColor);
+
 								}
 							}
 							else
