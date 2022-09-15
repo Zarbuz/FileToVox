@@ -4,6 +4,7 @@ using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Color = FileToVoxCore.Drawing.Color;
 
 namespace FileToVox.Extensions
@@ -20,65 +21,74 @@ namespace FileToVox.Extensions
 			image.Quantize(settings);
 		}
 
-		public static List<Voxel> ApplyQuantization(List<Voxel> blocks, int colorLimit)
+		public static List<Voxel> ApplyQuantization(List<Voxel> voxels, int colorLimit)
 		{
-			Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
-			try
+			if (voxels.Count == 0)
 			{
-				if (blocks.Count == 0)
-				{
-					Console.WriteLine("[WARNING] No voxels to quantize, skipping this part...");
-					return blocks;
-				}
+				Console.WriteLine("[WARNING] No voxels to quantize, skipping this part...");
+				return voxels;
+			}
 
-				Console.WriteLine("[INFO] Started quantization of all colors ...");
-				using (ProgressBar progressBar = new ProgressBar())
+			if (Program.DisableQuantization())
+			{
+				Console.WriteLine("[WARNING] By disabling quantization, only the first 255 unique colors will be taken into account");
+				return voxels;
+			}
+
+			colorLimit = Math.Min(colorLimit, 256);
+			Console.WriteLine("[INFO] Started quantization of all colors ...");
+			using (ProgressBar progressBar = new ProgressBar())
+			{
+
+				Dictionary<Color, int> histo = new Dictionary<Color, int>();
+				foreach (Color color in voxels.Select(voxel => voxel.Color.UIntToColor()))
 				{
-	                using (Bitmap bitmap = CreateBitmapFromColors(blocks))
+					if (histo.ContainsKey(color))
 					{
-		                using (Bitmap quantized = quantizer.QuantizeImage(bitmap, 10, 70, colorLimit))
-						{
-						//Console.WriteLine(quantized.PixelFormat);
-						//Bitmap reducedBitmap = new Bitmap(quantized);
-			                int width = quantized.Size.Width;
-						for (int i = 0; i < blocks.Count; i++)
-						{
-							int x = i % width;
-							int y = i / width;
-				                blocks[i] = new Voxel(blocks[i].X, blocks[i].Y, blocks[i].Z, quantized.GetPixel(x, y).ColorToUInt());
-							progressBar.Report(i / (float)blocks.Count);
-						}
+						histo[color]++;
 					}
-	                }
-
+					else
+					{
+						histo[color] = 1;
+					}
 				}
 
-				Console.WriteLine("[INFO] Done.");
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e);
+				IOrderedEnumerable<KeyValuePair<Color, int>> result1 = histo.OrderByDescending(a => a.Value);
+				List<Color> mostUsedColor = result1.Select(x => x.Key).Take(colorLimit).ToList();
+				double temp;
+				Dictionary<Color, Double> dist = new Dictionary<Color, double>();
+				Dictionary<Color, Color> mapping = new Dictionary<Color, Color>();
+				foreach (KeyValuePair<Color, int> p in result1)
+				{
+					dist.Clear();
+					foreach (Color pp in mostUsedColor)
+					{
+						temp = Math.Abs(p.Key.R - pp.R) +
+							   Math.Abs(p.Key.G - pp.G) +
+							   Math.Abs(p.Key.B - pp.B);
+						dist.Add(pp, temp);
+					}
+					var min = dist.OrderBy(k => k.Value).FirstOrDefault();
+					mapping.Add(p.Key, min.Key);
+				}
+
+				//Console.WriteLine(quantized.PixelFormat);
+				//Bitmap reducedBitmap = new Bitmap(quantized);
+				for (int i = 0; i < voxels.Count; i++)
+				{
+					Color c = voxels[i].Color.UIntToColor();
+					Color replaceColor = mapping[c];
+
+					voxels[i] = new Voxel(voxels[i].X, voxels[i].Y, voxels[i].Z, replaceColor.ColorToUInt());
+					progressBar.Report(i / (float)voxels.Count);
+				}
+
 			}
 
-			return blocks;
+			Console.WriteLine("[INFO] Done.");
+			return voxels;
 		}
 
-		private static Bitmap CreateBitmapFromColors(List<Voxel> blocks)
-		{
-            int width = blocks.Count;
 
-            Bitmap bitmap = new Bitmap(width, 1);
-
-			for (int i = 0; i < blocks.Count; i++)
-			{
-				Voxel voxel = blocks[i];
-				Color color = voxel.Color.UIntToColor();
-				int x = i % width;
-				int y = i / width;
-                bitmap.SetPixel(x, y, color.ToSystemDrawingColor());
-			}
-
-            return bitmap;
-		}
 	}
 }
