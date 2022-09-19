@@ -94,6 +94,7 @@ namespace FileToVox.Converter.PointCloud
 					progressbar.Report(i / (float)data.BodyVertices.Count);
 				}
 			}
+
 			Console.WriteLine("[INFO] Done.");
 
 			//minX = vertices.MinBy(t => t.X);

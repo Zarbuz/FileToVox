@@ -1,6 +1,6 @@
 ﻿using FileToVox.Converter;
 using FileToVox.Converter.Image;
-using FileToVox.Converter.Json;
+using FileToVox.Converter.PaletteSchematic;
 using FileToVox.Converter.PointCloud;
 using FileToVoxCore.Schematics;
 using FileToVoxCore.Vox;
@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using FileToVox.Converter.PaletteSchematic;
 
 namespace FileToVox
 {
@@ -20,7 +19,6 @@ namespace FileToVox
 		private static string OUTPUT_PATH;
 		private static string INPUT_COLOR_FILE;
 		private static string INPUT_PALETTE_FILE;
-		private static string INPUT_SHADER_FILE;
 
 		private static bool SHOW_HELP;
 		private static bool EXCAVATE;
@@ -37,7 +35,6 @@ namespace FileToVox
 			{
 				{"i|input=", "input path", v => INPUT_PATH = v},
 				{"o|output=", "output path", v => OUTPUT_PATH = v},
-				{"s|shaders=", "input shader path", v => INPUT_SHADER_FILE = v},
 				{"c|color", "enable color when generating heightmap", v => COLOR = v != null},
 				{"cm|color-from-file=", "load colors from file", v => INPUT_COLOR_FILE = v },
 				{"cl|color-limit=", "set the maximal number of colors for the palette", (int v) => COLOR_LIMIT =v },
@@ -126,8 +123,6 @@ namespace FileToVox
 				Console.WriteLine("[INFO] Specified input color file: " + INPUT_COLOR_FILE);
 			if (INPUT_PALETTE_FILE != null)
 				Console.WriteLine("[INFO] Specified palette file: " + INPUT_PALETTE_FILE);
-			if (INPUT_SHADER_FILE != null)
-				Console.WriteLine("[INFO] Specified shaders file: " + INPUT_SHADER_FILE);
 			if (COLOR_LIMIT != 256)
 				Console.WriteLine("[INFO] Specified color limit: " + COLOR_LIMIT);
 			if (GRID_SIZE != 10)
@@ -153,14 +148,6 @@ namespace FileToVox
 			string path = Path.GetFullPath(INPUT_PATH);
 			bool isFolder = Directory.Exists(path);
 
-			if (!string.IsNullOrEmpty(INPUT_SHADER_FILE))
-			{
-				string pathShaders = Path.GetFullPath(INPUT_SHADER_FILE);
-				if (!File.Exists(pathShaders))
-				{
-					throw new FileNotFoundException("[ERROR] Input shaders file not found at: ", pathShaders);
-				}
-			}
 			try
 			{
 				AbstractToSchematic converter;
@@ -214,17 +201,14 @@ namespace FileToVox
 				case ".ply":
 					return new PLYToSchematic(path, GRID_SIZE, COLOR_LIMIT);
 				case ".png":
-					return new PNGToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
+				case ".tif":
+					return new ImageToSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".qb":
 					return new QBToSchematic(path);
 				case ".schematic":
 					return new SchematicToSchematic(path, EXCAVATE);
-				case ".tif":
-					return new TIFtoSchematic(path, INPUT_COLOR_FILE, HEIGHT_MAP, EXCAVATE, COLOR, COLOR_LIMIT);
 				case ".xyz":
 					return new XYZToSchematic(path, GRID_SIZE, COLOR_LIMIT);
-				case ".json":
-					return new JsonToSchematic(path);
 				case ".vox":
 					return new VoxToSchematic(path);
 				case ".obj":
@@ -255,12 +239,6 @@ namespace FileToVox
 				PaletteSchematicConverter converterPalette = new PaletteSchematicConverter(INPUT_PALETTE_FILE);
 				schematic = converterPalette.ConvertSchematic(schematic);
 				return writer.WriteModel(FormatOutputDestination(OUTPUT_PATH), converterPalette.GetPalette(), schematic);
-			}
-
-			if (INPUT_SHADER_FILE != null)
-			{
-				JsonToSchematic jsonParser = new JsonToSchematic(INPUT_SHADER_FILE, schematic);
-				schematic = jsonParser.WriteSchematic();
 			}
 
 			return writer.WriteModel(FormatOutputDestination(OUTPUT_PATH), null, schematic);

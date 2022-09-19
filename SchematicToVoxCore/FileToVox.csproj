@@ -7,7 +7,7 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <Authors>Zarbuz</Authors>
-    <Version>1.15.1</Version>
+    <Version>1.16</Version>
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -31,19 +31,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
+    <PackageReference Include="FileToVoxCore" Version="1.2.0" />
     <PackageReference Include="fNbt" Version="0.6.4" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.1.0" />
     <PackageReference Include="NDesk.Options.Core" Version="1.2.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="nQuant" Version="1.0.3" />
     <PackageReference Include="runtime.osx.10.10-x64.CoreCompat.System.Drawing" Version="6.0.5.128" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FileToVoxCommon\FileToVoxCommon.csproj">
-      <Private>true</Private>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -53,24 +53,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="JsonPresets\heightmapGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseBase.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseDetail.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\noise\NoiseMoisture.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\shaderGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="JsonPresets\terrainGenerator.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="schematics\config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

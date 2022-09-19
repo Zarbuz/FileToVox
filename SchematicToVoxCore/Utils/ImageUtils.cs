@@ -1,30 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using FileToVox.Converter.Image;
-using FileToVox.Extensions;
-using FileToVoxCommon.Generator.Heightmap.Data;
+﻿using FileToVox.Extensions;
 using FileToVoxCore.Schematics;
+using FileToVoxCore.Utils;
+using ImageMagick;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Color = System.Drawing.Color;
 
 namespace FileToVox.Utils
 {
 	public static class ImageUtils
 	{
-		public static Bitmap ConvertToFormat32(this Bitmap bitmap)
-		{
-			Bitmap clone = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
-			using (Graphics gr = Graphics.FromImage(clone))
-			{
-				gr.DrawImage(bitmap, new Rectangle(0, 0, clone.Width, clone.Height));
-			}
+		#region PublicMethods
 
-			return clone;
-		}
-
-		public static Schematic WriteSchematicFromImage(Bitmap bitmap, Bitmap colorBitmap, HeightmapStep heightmapStep)
+		public static Schematic WriteSchematicFromImage(MagickImage bitmap, MagickImage colorBitmap, LoadImageParam loadImageParam)
 		{
 			if (colorBitmap != null)
 			{
@@ -33,34 +22,44 @@ namespace FileToVox.Utils
 					throw new ArgumentException("[ERROR] Image color is not the same size of the original image");
 				}
 
-				if (heightmapStep.ColorLimit != 256 || colorBitmap.CountColor() > 256)
+				if (loadImageParam.ColorLimit != 256 || colorBitmap.UniqueColors().TotalColors > 256)
 				{
-					Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
-					colorBitmap = quantizer.QuantizeImage(colorBitmap, 10, 70, heightmapStep.ColorLimit);
+					Quantization.Quantize(colorBitmap, new QuantizeSettings()
+					{
+						Colors = loadImageParam.ColorLimit,
+					});
 				}
 
 			}
-			else if (heightmapStep.EnableColor)
+			else if (loadImageParam.EnableColor)
 			{
-				if (heightmapStep.ColorLimit != 256 || bitmap.CountColor() > 256)
+				Quantization.Quantize(bitmap, new QuantizeSettings()
 				{
-					Quantizer.Quantizer quantizer = new Quantizer.Quantizer();
-					bitmap = quantizer.QuantizeImage(bitmap, 10, 70, heightmapStep.ColorLimit);
-				}
+					Colors = loadImageParam.ColorLimit,
+				});
 			}
 
-			Schematic schematic = WriteSchematicIntern(bitmap, colorBitmap, heightmapStep);
+			Schematic schematic = WriteSchematicIntern(bitmap, colorBitmap, loadImageParam);
 			return schematic;
 		}
 
-		public static Schematic WriteSchematicIntern(Bitmap bitmap, Bitmap bitmapColor, HeightmapStep heightmapStep)
+		#endregion
+
+		#region PrivateMethods
+
+		private static Schematic WriteSchematicIntern(MagickImage bitmap, MagickImage bitmapColor, LoadImageParam loadImageParam)
 		{
 			Schematic schematic = new Schematic();
 
-			Bitmap bitmapBlack = Grayscale.MakeGrayscale3(bitmap);
-			DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack, heightmapStep.Height);
-			DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
-			DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor, 1);
+			MagickImage grayscale = new MagickImage(loadImageParam.TexturePath);
+			grayscale.Grayscale();
+
+			IPixelCollection<ushort> pixelCollectionBitmap = bitmap.GetPixels();
+			IPixelCollection<ushort> pixelCollectionGrayscale = grayscale.GetPixels();
+			IPixelCollection<ushort> pixelCollectionBitmapColor = bitmapColor != null ? bitmapColor.GetPixels() : null;
+			//DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack, heightmapStep.Height);
+			//DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
+			//DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor, 1);
 
 
 			if (bitmap.Width > Schematic.MAX_WORLD_WIDTH || bitmap.Height > Schematic.MAX_WORLD_LENGTH)
@@ -68,7 +67,7 @@ namespace FileToVox.Utils
 				throw new ArgumentException($"Image is too big (max size ${Schematic.MAX_WORLD_WIDTH}x${Schematic.MAX_WORLD_LENGTH} px)");
 			}
 
-			using (FileToVoxCore.Utils.ProgressBar progressbar = new FileToVoxCore.Utils.ProgressBar())
+			using (ProgressBar progressbar = new ProgressBar())
 			{
 				Console.WriteLine("[INFO] Started to write schematic from picture...");
 				Console.WriteLine("[INFO] Picture Width: " + bitmap.Width);
@@ -82,25 +81,53 @@ namespace FileToVox.Utils
 				{
 					for (int y = 0; y < h; y++)
 					{
-						Color color = directBitmap.GetPixel(x, y);
-						Color finalColor = !string.IsNullOrEmpty(heightmapStep.ColorTexturePath) ? directBitmapColor.GetPixel(x, y) : (heightmapStep.EnableColor) ? color : Color.White;
-						if (color.A != 0)
+						IPixel<ushort> pixel = pixelCollectionBitmap.GetPixel(x, y);
+						Color color = pixel.GetPixelColor();
+						Color finalColor;
+
+						if (pixelCollectionBitmapColor != null)
 						{
-							if (heightmapStep.Height != 1)
+							IPixel<ushort> p = pixelCollectionBitmapColor.GetPixel(x, y);
+							Color c = p.GetPixelColor();
+							finalColor = c;
+						}
+						else if (loadImageParam.EnableColor)
+						{
+							finalColor = color;
+						}
+						else
+						{
+							finalColor = Color.White;
+						}
+
+						if (bitmap.HasAlpha && color.A != 0 || !bitmap.HasAlpha)
+						{
+							if (loadImageParam.Height != 1)
 							{
-								if (heightmapStep.Excavate)
+								if (loadImageParam.Excavate)
 								{
-									GenerateFromMinNeighbor(ref schematic, directBitmapBlack, w, h, finalColor, x, y, heightmapStep.Height, heightmapStep.Offset, heightmapStep.RotationMode, heightmapStep.Reverse);
+									GenerateFromMinNeighborParam param = new()
+									{
+										X = x,
+										Y = y,
+										PixelCollection = pixelCollectionGrayscale,
+										GrayscaleImage = grayscale,
+										Color = finalColor,
+										Height = loadImageParam.Height
+									};
+
+									GenerateFromMinNeighbor(ref schematic, param);
 								}
 								else
 								{
-									int computeHeight = directBitmapBlack.GetHeight(x, y) + heightmapStep.Offset;
-									AddMultipleBlocks(ref schematic, heightmapStep.Offset, computeHeight, x, y, finalColor, heightmapStep.RotationMode);
+									int computeHeight = GetHeight(pixelCollectionGrayscale.GetPixel(x, y), loadImageParam.Height);
+									AddMultipleVoxels(ref schematic, 0, computeHeight, x, y, finalColor);
+
 								}
 							}
 							else
 							{
-								AddSingleVoxel(ref schematic, x, heightmapStep.Offset, y, finalColor, heightmapStep.RotationMode, heightmapStep.Reverse);
+								AddSingleVoxel(ref schematic, x, h, y, finalColor);
 							}
 						}
 						progressbar.Report((i++ / (float)size));
@@ -112,108 +139,86 @@ namespace FileToVox.Utils
 			return schematic;
 		}
 
-		public static void AddMultipleBlocks(ref Schematic schematic, int min, int max, int x, int y, Color color, RotationMode rotationMode)
+		private static void AddMultipleVoxels(ref Schematic schematic, int min, int max, int x, int y, Color color)
 		{
-			switch (rotationMode)
+			for (int i = min; i < max; i++)
 			{
-				case RotationMode.X:
-					for (int i = min; i < max; i++)
-					{
-						AddBlock(ref schematic, new Voxel((ushort)i, (ushort)y, (ushort)x, color.ColorToUInt()));
-					}
-					break;
-				case RotationMode.Y:
-					for (int i = min; i < max; i++)
-					{
-						AddBlock(ref schematic, new Voxel((ushort)x, (ushort)i, (ushort)y, color.ColorToUInt()));
-					}
-					break;
-				case RotationMode.Z:
-					for (int i = min; i < max; i++)
-					{
-						AddBlock(ref schematic, new Voxel((ushort)y, (ushort)x, (ushort)i, color.ColorToUInt()));
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(rotationMode), rotationMode, null);
+				schematic.AddVoxel(new Voxel((ushort)x, (ushort)i, (ushort)y, color.ColorToUInt()));
 			}
 		}
 
-		public static void AddSingleVoxel(ref Schematic schematic, int x, int y, int z, Color color, RotationMode rotationMode, bool reverse)
+		private static void AddSingleVoxel(ref Schematic schematic, int x, int y, int z, Color color)
 		{
-			Voxel voxel;
-			ushort finalY;
-			ushort finalX;
-			ushort finalZ;
-			switch (rotationMode)
-			{
-				case RotationMode.X:
-					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_WIDTH - y);
-					finalX = (ushort)(x);
-					finalZ = (ushort)(z);
-					voxel = new Voxel(finalY, finalZ, finalX, color.ColorToUInt());
-					break;
-				case RotationMode.Y: //historic 
-					finalX = (ushort)(x);
-					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_HEIGHT - y);
-					finalZ = (ushort)(z);
-					voxel = new Voxel(finalX, finalY, finalZ, color.ColorToUInt());
-					break;
-				case RotationMode.Z:
-					finalX = (ushort)(x);
-					finalY = (ushort)(!reverse ? y : Schematic.MAX_WORLD_LENGTH - y);
-					finalZ = (ushort)(z);
-					voxel = new Voxel(finalZ, finalX, finalY, color.ColorToUInt());
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(rotationMode), rotationMode, null);
-			}
-			AddBlock(ref schematic, voxel);
+			ushort finalX = (ushort)(x);
+			ushort finalY = (ushort)(y);
+			ushort finalZ = (ushort)(z);
+			Voxel voxel = new(finalX, finalY, finalZ, color.ColorToUInt());
 
-		}
-
-		public static void AddBlock(ref Schematic schematic, Voxel voxel)
-		{
 			schematic.AddVoxel(voxel);
 		}
 
-		public static void GenerateFromMinNeighbor(ref Schematic schematic, DirectBitmap blackBitmap, int w, int h, Color color, int x, int y, int height, int offset, RotationMode rotationMode, bool reverse)
+		private static void GenerateFromMinNeighbor(ref Schematic schematic, GenerateFromMinNeighborParam param)
 		{
-			int computeHeight = blackBitmap.GetHeight(x, y) + offset;
-			try
+			int computeHeight = GetHeight(param.PixelCollection.GetPixel(param.X, param.Y), param.Height);
+			if (param.X - 1 >= 0 && param.X + 1 < param.GrayscaleImage.Width && param.Y - 1 >= 0 && param.Y + 1 < param.GrayscaleImage.Height)
 			{
-				if (x - 1 >= 0 && x + 1 < w && y - 1 >= 0 && y + 1 < h)
+				int heightLeft = GetHeight(param.PixelCollection.GetPixel(param.X - 1, param.Y), param.Height);
+				int heightTop = GetHeight(param.PixelCollection.GetPixel(param.X, param.Y - 1), param.Height);
+				int heightRight = GetHeight( param.PixelCollection.GetPixel(param.X + 1, param.Y), param.Height);
+				int heightBottom = GetHeight( param.PixelCollection.GetPixel(param.X, param.Y + 1), param.Height);
+
+				var list = new List<int>
 				{
-					int heightLeft = blackBitmap.GetHeight(x - 1, y) + offset;
-					int heightTop = blackBitmap.GetHeight(x, y - 1) + offset;
-					int heightRight = blackBitmap.GetHeight(x + 1, y) + offset;
-					int heightBottom = blackBitmap.GetHeight(x, y + 1) + offset;
+					heightLeft, heightTop, heightRight, heightBottom
+				};
 
-					var list = new List<int>
-						{
-							heightLeft, heightTop, heightRight, heightBottom
-						};
-
-					int min = list.Min();
-					if (min < computeHeight)
-					{
-						AddMultipleBlocks(ref schematic, min, computeHeight, x, y, color, rotationMode);
-					}
-					else
-					{
-						int finalHeight = (computeHeight - 1 < 0) ? 0 : computeHeight - 1;
-						AddSingleVoxel(ref schematic, x, finalHeight, y, color, rotationMode, reverse);
-					}
+				int min = list.Min();
+				if (min < computeHeight)
+				{
+					AddMultipleVoxels(ref schematic, min, computeHeight, param.X, param.Y, param.Color);
 				}
 				else
 				{
-					AddMultipleBlocks(ref schematic, offset, computeHeight, x, y, color, rotationMode);
+					int finalHeight = (computeHeight - 1 < 0) ? 0 : computeHeight - 1;
+					AddSingleVoxel(ref schematic, param.X, finalHeight, param.Y, param.Color);
 				}
 			}
-			catch (IndexOutOfRangeException)
+			else
 			{
-				Console.WriteLine($"[ERROR] x: {x}, y: {y}, schematic width: {schematic.Width}, schematic length: {schematic.Length}");
+				AddMultipleVoxels(ref schematic, 0, computeHeight, param.X, param.Y, param.Color);
 			}
 		}
+
+		private static int GetHeight(IPixel<ushort> pixel, int heightFactor)
+		{
+			int average = Math.Min(pixel.Channels, 3) * ushort.MaxValue;
+			int total = pixel.GetChannel(0) + pixel.GetChannel(1) + pixel.GetChannel(2);
+			float intensity = total / (float)average;
+			int height = (int)(intensity * heightFactor);
+			return height;
+		}
+
+
+		#endregion
+	}
+
+	public class GenerateFromMinNeighborParam
+	{
+		public MagickImage GrayscaleImage;
+		public IPixelCollection<ushort> PixelCollection;
+		public Color Color;
+		public int X;
+		public int Y;
+		public int Height;
+	}
+
+	public class LoadImageParam
+	{
+		public int Height { get; set; }
+		public bool Excavate { get; set; }
+		public bool EnableColor { get; set; }
+		public string TexturePath { get; set; }
+		public string ColorTexturePath { get; set; }
+		public int ColorLimit { get; set; }
 	}
 }
