@@ -3,7 +3,6 @@ using FileToVoxCore.Utils;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Color = FileToVoxCore.Drawing.Color;
 
