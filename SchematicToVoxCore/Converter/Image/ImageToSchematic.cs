@@ -3,7 +3,6 @@ using FileToVoxCore.Schematics;
 using ImageMagick;
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace FileToVox.Converter.Image
 {

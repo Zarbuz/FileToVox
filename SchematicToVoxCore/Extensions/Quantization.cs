@@ -54,25 +54,22 @@ namespace FileToVox.Extensions
 
 				IOrderedEnumerable<KeyValuePair<Color, int>> result1 = histo.OrderByDescending(a => a.Value);
 				List<Color> mostUsedColor = result1.Select(x => x.Key).Take(colorLimit).ToList();
-				double temp;
-				Dictionary<Color, Double> dist = new Dictionary<Color, double>();
+				Dictionary<Color, double> dist = new Dictionary<Color, double>();
 				Dictionary<Color, Color> mapping = new Dictionary<Color, Color>();
 				foreach (KeyValuePair<Color, int> p in result1)
 				{
 					dist.Clear();
 					foreach (Color pp in mostUsedColor)
 					{
-						temp = Math.Abs(p.Key.R - pp.R) +
-							   Math.Abs(p.Key.G - pp.G) +
-							   Math.Abs(p.Key.B - pp.B);
+						double temp = Math.Abs(p.Key.R - pp.R) +
+						              Math.Abs(p.Key.G - pp.G) +
+						              Math.Abs(p.Key.B - pp.B);
 						dist.Add(pp, temp);
 					}
-					var min = dist.OrderBy(k => k.Value).FirstOrDefault();
+					KeyValuePair<Color, double> min = dist.OrderBy(k => k.Value).FirstOrDefault();
 					mapping.Add(p.Key, min.Key);
 				}
 
-				//Console.WriteLine(quantized.PixelFormat);
-				//Bitmap reducedBitmap = new Bitmap(quantized);
 				for (int i = 0; i < voxels.Count; i++)
 				{
 					Color c = voxels[i].Color.UIntToColor();
