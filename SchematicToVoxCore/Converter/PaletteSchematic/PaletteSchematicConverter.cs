@@ -5,25 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using ImageMagick;
 using Color = FileToVoxCore.Drawing.Color;
 
 namespace FileToVox.Converter.PaletteSchematic
 {
 	public class PaletteSchematicConverter
 	{
-		private List<Color> _colors;
+		private readonly List<Color> _colors;
 
 		public PaletteSchematicConverter(string palettePath)
 		{
 			_colors = new List<Color>();
-			Bitmap bitmap = new Bitmap(palettePath);
+			MagickImage bitmap = new MagickImage(palettePath);
+			IPixelCollection<ushort> pixels = bitmap.GetPixels();
 			for (int x = 0; x < bitmap.Width; x++)
 			{
 				for (int y = 0; y < bitmap.Height; y++)
 				{
 					if (_colors.Count < 256)
 					{
-						_colors.Add(bitmap.GetPixel(x, y).ToFileToVoxCoreColor());
+						_colors.Add(pixels.GetPixel(x, y).GetPixelColor().ToFileToVoxCoreColor());
 					}
 				}
 			}
