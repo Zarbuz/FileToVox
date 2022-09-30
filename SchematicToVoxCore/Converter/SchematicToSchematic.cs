@@ -140,13 +140,10 @@ namespace FileToVox.Converter
 							int blockId = rawSchematic.Blocks[index];
 							if (blockId != 0)
 							{
-								Voxel voxel = new Voxel((ushort) x, (ushort) y, (ushort) z, GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]).ColorToUInt());
-								if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel, 0, rawSchematic.Heigth) || !mExcavate))
+								Voxel voxel = new Voxel((ushort)x, (ushort)y, (ushort)z, GetBlockColor(rawSchematic.Blocks[index], rawSchematic.Data[index]).ColorToUInt());
+								if ((mExcavate && IsBlockConnectedToAir(rawSchematic, voxel) || !mExcavate))
 								{
-									if (!schematic.ContainsVoxel(x, y, z))
-									{
-										schematic.AddVoxel(x, y, z, voxel.Color);
-									}
+									schematic.AddVoxel(x, y, z, voxel.Color);
 								}
 							}
 
@@ -160,9 +157,9 @@ namespace FileToVox.Converter
 			return schematic;
 		}
 
-		private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Voxel voxel, int minY, int maxY)
+		private bool IsBlockConnectedToAir(RawSchematic rawSchematic, Voxel voxel)
 		{
-			if (voxel.X - 1 >= 0 && voxel.X + 1 < rawSchematic.Width && voxel.Y - 1 >= minY && voxel.Y + 1 < maxY && voxel.Z - 1 >= 0 && voxel.Z < rawSchematic.Length)
+			if (voxel.X - 1 >= 0 && voxel.X + 1 < rawSchematic.Width && voxel.Y - 1 >= 0 && voxel.Y + 1 < rawSchematic.Heigth && voxel.Z - 1 >= 0 && voxel.Z < rawSchematic.Length)
 			{
 				int indexLeftX = (voxel.Y * rawSchematic.Length + voxel.Z) * rawSchematic.Width + (voxel.X - 1);
 				int indexRightX = (voxel.Y * rawSchematic.Length + voxel.Z) * rawSchematic.Width + (voxel.X + 1);
@@ -172,12 +169,21 @@ namespace FileToVox.Converter
 
 				int indexAhead = (voxel.Y * rawSchematic.Length + voxel.Z + 1) * rawSchematic.Width + voxel.X;
 				int indexBehind = (voxel.Y * rawSchematic.Length + voxel.Z - 1) * rawSchematic.Width + voxel.X;
-				return (rawSchematic.Blocks[indexLeftX] == 0 || rawSchematic.Blocks[indexRightX] == 0
-					|| rawSchematic.Blocks[indexTop] == 0 || rawSchematic.Blocks[indexBottom] == 0
-					|| rawSchematic.Blocks[indexAhead] == 0 || rawSchematic.Blocks[indexBehind] == 0);
+
+				return IsBlockAccepted(rawSchematic.Blocks[indexLeftX]) ||
+					   IsBlockAccepted(rawSchematic.Blocks[indexRightX]) ||
+					   IsBlockAccepted(rawSchematic.Blocks[indexTop]) ||
+					   IsBlockAccepted(rawSchematic.Blocks[indexBottom]) ||
+					   IsBlockAccepted(rawSchematic.Blocks[indexAhead]) ||
+					   IsBlockAccepted(rawSchematic.Blocks[indexBehind]);
 
 			}
 			return false;
+		}
+
+		private static bool IsBlockAccepted(int blockID)
+		{
+			return blockID is 0 or 8 or 9;
 		}
 
 		private Color GetBlockColor(int blockID, int data)
