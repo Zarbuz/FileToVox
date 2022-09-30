@@ -51,16 +51,8 @@ namespace FileToVox.Utils
 		{
 			Schematic schematic = new Schematic();
 
-			MagickImage grayscale = new MagickImage(loadImageParam.TexturePath);
-			grayscale.Grayscale();
-
 			IPixelCollection<ushort> pixelCollectionBitmap = bitmap.GetPixels();
-			IPixelCollection<ushort> pixelCollectionGrayscale = grayscale.GetPixels();
 			IPixelCollection<ushort> pixelCollectionBitmapColor = bitmapColor != null ? bitmapColor.GetPixels() : null;
-			//DirectBitmap directBitmapBlack = new DirectBitmap(bitmapBlack, heightmapStep.Height);
-			//DirectBitmap directBitmap = new DirectBitmap(bitmap, 1);
-			//DirectBitmap directBitmapColor = new DirectBitmap(bitmapColor, 1);
-
 
 			if (bitmap.Width > Schematic.MAX_WORLD_WIDTH || bitmap.Height > Schematic.MAX_WORLD_LENGTH)
 			{
@@ -110,8 +102,8 @@ namespace FileToVox.Utils
 									{
 										X = x,
 										Y = y,
-										PixelCollection = pixelCollectionGrayscale,
-										GrayscaleImage = grayscale,
+										PixelCollection = pixelCollectionBitmap,
+										GrayscaleImage = bitmap,
 										Color = finalColor,
 										Height = loadImageParam.Height
 									};
@@ -120,7 +112,7 @@ namespace FileToVox.Utils
 								}
 								else
 								{
-									int computeHeight = GetHeight(pixelCollectionGrayscale.GetPixel(x, y), loadImageParam.Height);
+									int computeHeight = GetHeight(pixelCollectionBitmap.GetPixel(x, y), loadImageParam.Height);
 									AddMultipleVoxels(ref schematic, 0, computeHeight, x, y, finalColor);
 
 								}
