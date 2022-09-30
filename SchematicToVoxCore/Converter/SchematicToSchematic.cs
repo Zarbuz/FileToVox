@@ -113,6 +113,9 @@ namespace FileToVox.Converter
 
 		private Schematic CreateSchematic(RawSchematic rawSchematic)
 		{
+			Console.WriteLine("[INFO] Height: " + rawSchematic.Heigth);
+			Console.WriteLine("[INFO] Length: " + rawSchematic.Length);
+			Console.WriteLine("[INFO] Width: " + rawSchematic.Width);
 			if (rawSchematic.Heigth > Schematic.MAX_WORLD_HEIGHT || rawSchematic.Length > Schematic.MAX_WORLD_LENGTH || rawSchematic.Width > Schematic.MAX_WORLD_WIDTH)
 			{
 				throw new Exception("Schematic is too big");
